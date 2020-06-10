@@ -16,6 +16,8 @@ ENV PYTHONUNBUFFERED 1
 ENV LD_LIBRARY_PATH /opt/oracle
 ENV BASE_DIR /usr/local/metamapper/
 
+RUN groupadd -r metamapper && useradd -r -m -g metamapper metamapper
+
 # Ubuntu packages
 RUN apt-get update -y && apt-get install -y \
     libxml2-dev \
