@@ -1,0 +1,89 @@
+application: metamapper
+
+container:
+  image: metamapper
+  registry: 618554486416.dkr.ecr.us-west-2.amazonaws.com
+
+config:
+  megapool:
+    environment:
+      DJANGO_ENV: production
+      METAMAPPER_DB_HOST:
+        provider: ssm
+        key: /metamapper/db_hostname
+      METAMAPPER_DB_USER:
+        provider: ssm
+        key: /metamapper/db_username
+      METAMAPPER_DB_PASSWORD:
+        provider: ssm
+        key: /metamapper/db_password
+      METMAPPER_SECRET_KEY:
+        provider: ssm
+        key: /metamapper/secret_key
+      METAMAPPER_FERNET_KEYS:
+        provider: ssm
+        key: /metamapper/fernet_keys
+      METAMAPPER_JWT_SECRET:
+        provider: ssm
+        key: /metamapper/jwt_secret
+      METAMAPPER_CELERY_BROKER_URL:
+        provider: ssm
+        key: /metamapper/celery_broker_url
+      METAMAPPER_EMAIL_HOST: email-smtp.us-west-2.amazonaws.com
+      METAMAPPER_EMAIL_HOST_USER:
+        provider: ssm
+        key: /metamapper/aws_access_key_id
+      METAMAPPER_EMAIL_HOST_PASSWORD:
+        provider: ssm
+        key: /metamapper/aws_secret_access_key
+      METAMAPPER_EMAIL_PORT: 587
+      METAMAPPER_GRAPHQL_ORIGIN: https://app.metamapper.dev
+      METAMAPPER_WEBSERVER_ORIGIN: https://app.metamapper.dev
+      METAMAPPER_FILE_STORAGE_BACKEND: storages.backends.s3boto3.S3Boto3Storage
+      AWS_ACCESS_KEY_ID:
+        provider: ssm
+        key: /metamapper/aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        provider: ssm
+        key: /metamapper/aws_secret_access_key
+      AWS_STORAGE_BUCKET_NAME: metamapper-io
+      OAUTH2_GITHUB_CLIENT_ID:
+        provider: ssm
+        key: /metamapper/github_client_id
+      OAUTH2_GITHUB_CLIENT_SECRET:
+        provider: ssm
+        key: /metamapper/github_client_secret
+services:
+  web:
+    command: gunicorn metamapper.wsgi -b 0.0.0.0:5000
+    resources:
+      cpu: 256
+      memory: 512
+    expose:
+      - protocol: https
+        port: 5000
+        health_check_path: /health
+        scheme: internet-facing
+    domains:
+      megapool:
+        fqdn: app.metamapper.dev
+  scheduler:
+    command: celery -A metamapper beat -l info
+    resources:
+      cpu: 128
+      memory: 256
+  worker:
+    command: celery -A metamapper worker -l info
+    resources:
+      cpu: 256
+      memory: 512
+  flower:
+    command: flower -A metamapper --port=5555
+    resources:
+      cpu: 256
+      memory: 512
+    expose:
+      - protocol: http
+        port: 5555
+        health_check_path: /health
+        scheme: internet-facing

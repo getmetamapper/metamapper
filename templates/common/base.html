@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+.btn-primary {
+  margin-bottom: 10px;
+  min-width: 60%;
+  width: auto !important;
+}
+.btn-primary td {
+  background-color: #000000; 
+  border-radius: 25px;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+  font-size: 14px; 
+  text-align: center;
+  vertical-align: top; 
+}
+.btn-primary td a {
+  background-color: #000000;
+  border: solid 1px #000000;
+  border-radius: 25px;
+  border-width: 10px 20px;
+  display: inline-block;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 2;
+  text-decoration: none;
+}
+table.center {
+  margin: 0 auto;
+}
+</style>
+</head>
+<body bgcolor="#f6f6f6">
+<body style="font-family: sans-serif; background: #f5f5f5; padding: 20px;">
+  <table cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr> 
+      <td colspan="1" height="20"></td> 
+    </tr> 
+   <tr>
+     <td width="100%" align="center">
+       <table cellspacing="0" cellpadding="0" border="0" width="480">
+         <tr>
+           <td style="background-color: #000000 !important; text-transform: uppercase; padding: 18px; text-align: center; color: #FFF">
+              Metamapper
+            </td>
+         </tr>
+         <tr>
+           <td style="background-color: white; padding:18px 18px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 21px; color: #000000" width="480">
+            {% block content %}
+            {% endblock %}
+           </td>
+         </tr>
+         <tr>
+           <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #999999; padding: 12px; text-align: center; background-color: #000000 !important">
+            <p style="margin: 6px">
+              Copyright &copy; {{ now.year }} Metamapper. All Rights Reserved.
+            </p>
+           </td>
+         </tr>
+       </table>
+     </td>
+   </tr>
+ </table>
+</body>
+</html>

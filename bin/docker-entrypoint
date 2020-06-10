@@ -1,0 +1,63 @@
+#!/bin/bash
+set -e
+
+GUNICORN_CONFIG_PATH=${METAMAPPER_GUNICORN_CONFIG_PATH:='./metamapper/config/gunicorn.py'}
+
+# Starts the Metamapper web server. We recommend running a few
+# of these behind a load balancer.
+webserver() {
+    gunicorn metamapper.wsgi -c ${GUNICORN_CONFIG_PATH}
+}
+
+# Starts the Metamapper scheduler, which queues periodic tasks for
+# workers to process.
+scheduler() {
+    celery beat --app metamapper -l ${METAMAPPER_CELERY_LOG_LEVEL:='info'}
+}
+
+# Starts a Metamapper worker.
+worker() {
+    celery worker --app metamapper -l ${METAMAPPER_CELERY_LOG_LEVEL:='info'}
+}
+
+flower() {
+    flower -A metamapper --port=${METAMAPPER_FLOWER_PORT:='5555'}
+}
+
+shell() {
+    python manage.py shell
+}
+
+migrate() {
+    python manage.py migrate
+}
+
+case "$1" in
+  worker)
+    shift
+    worker
+    ;;
+  webserver)
+    shift
+    webserver
+    ;;
+  scheduler)
+    shift
+    scheduler
+    ;;
+  shell)
+    shift
+    shell
+    ;;
+  migrate)
+    shift
+    migrate
+    ;;
+  manage)
+    shift
+    exec python manage.py $*
+    ;;
+  *)
+    exec "$@"
+    ;;
+esac

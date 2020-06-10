@@ -1,0 +1,73 @@
+[
+  {
+    "fields": {
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "object_id": "UOA8JNoQIhNy",
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "The number of items ordered by the customer.",
+      "text": "The number of items ordered by the customer.",
+      "author_id": 1,
+      "content_type_id": 10
+    },
+    "model": "comments.comment",
+    "pk": "JFokD7yrBa32"
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "object_id": "UOA8JNoQIhNy",
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "What is the unit of this field?",
+      "text": "What is the unit of this field?",
+      "author_id": 2,
+      "content_type_id": 10
+    },
+    "model": "comments.comment",
+    "pk": "7iWstUHydyCJ"
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "object_id": "UOA8JNoQIhNy",
+      "parent_id": "7iWstUHydyCJ",
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "This comment should probably be deleted.",
+      "text": "This comment should probably be deleted.",
+      "author_id": 1,
+      "content_type_id": 10
+    },
+    "model": "comments.comment",
+    "pk": "x1ov3KgWPz45"
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "object_id": "tThdqoa6Huxs",
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "An unrelaed comment that will not show up in search tests.",
+      "text": "An unrelaed comment that will not show up in search tests.",
+      "author_id": 2,
+      "content_type_id": 9
+    },
+    "model": "comments.comment",
+    "pk": "lME0etbyVdN7"
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "object_id": "Hh2eS38kpRX0",
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "Details about a customer order.",
+      "text": "Details about a customer order.",
+      "author_id": 1,
+      "content_type_id": 9
+    },
+    "model": "comments.comment",
+    "pk": "uIqX67zqcjFT"
+  }
+]

@@ -1,0 +1,83 @@
+.authentication {
+  height: 100vh;
+}
+.authentication .auth-form {
+  background: #FFFFFF;
+  padding: 40px;
+  margin-top: 25%;
+}
+.authentication .auth-form h2 {
+  text-align: center;
+}
+.authentication .auth-form .ant-form-item-label {
+  line-height: initial;
+  margin: 10px 0;
+}
+.authentication .auth-form .ant-btn.ant-btn-primary {
+  margin-top: 10px;
+}
+.authentication .auth-links {
+  margin-top: 20px;
+}
+.authentication .auth-links p {
+  margin-bottom: 5px;
+  text-align: center;
+}
+.authentication .auth-links p:last-child {
+  margin-bottom: 0;
+}
+.authentication .auth-links a {
+  margin-left: 5px;
+}
+.logout {
+  margin: 40px auto;
+  text-align: center;
+}
+
+// Tablets (portrait)
+@media (min-width: 768px) and (max-width: 1024px) {
+  .authentication {
+    height: 100vh;
+  }
+  .authentication .auth-form {
+    padding: 20px;
+  }
+  .authentication .ant-row > .ant-col {
+    margin-left: 0;
+    width: 100%;
+  }
+  .authentication .signup-form .name-input {
+    width: 100%;
+  }
+  .authentication .signup-form .ant-form-item-label {
+    margin-top: 20px;
+  }  
+}
+
+// Smartphones (Portrait)
+@media (max-width: 767px) {
+  .authentication {
+    height: 100vh;
+    background: #FFFFFF;
+  }
+  .authentication {
+    margin: 0;
+    margin-bottom: 56px;
+  }
+  .authentication .auth-form {
+    padding: 20px;
+  }
+  .authentication .ant-row > .ant-col {
+    margin-left: 0;
+    width: 100%;
+  }
+  .authentication .signup-form .name-input {
+    width: 100%;
+  }
+  .authentication .signup-form .name-input.ant-col-offset-1 {
+    margin: 0;
+  }
+  .authentication .signup-form .ant-form-item-label {
+    margin-top: 20px;
+  }
+}

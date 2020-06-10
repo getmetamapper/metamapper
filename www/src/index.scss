@@ -1,0 +1,73 @@
+@import '~antd/dist/antd.css';
+
+$color-layout: #F7F8FA;
+$color-navbar: #000000;
+$color-primary: #1890ff;
+$color-links: #1890ff;
+$color-links-hover: #11A4CD;
+$color-border: #e8e8e8;
+
+@import './pages/_overrides.scss';
+@import './pages/_navigation.scss';
+@import './pages/Authentication/_authentication.scss';
+@import './pages/Workspaces/_workspaces.scss';
+@import './pages/WorkspaceSettings/_workspacesettings.scss';
+@import './pages/Datastores/_datastores.scss';
+@import './pages/Omnisearch/_omnisearch.scss';
+
+.comments {
+  .ant-card-body {
+    padding: 0;
+    .create-comment {
+      margin-top: 12px;
+      .create-comment-btn {
+        margin-top: 12px;
+      }
+    }
+    > .create-comment {
+      padding: 12px 24px;
+    }
+    .ant-comment-nested {
+      .create-comment {
+        padding: 12px 0;
+      }
+    }
+  }
+}
+.comment {
+  background-color: #FFFFFF;
+  padding: 12px;
+  .comment {
+    border-left: 1px solid #e8e8e8;
+    margin-top: 12px;
+    padding-bottom: 0;
+  }
+  .ant-comment-actions {
+    margin-bottom: 0;
+  }
+  .ant-comment-inner {
+    padding: 0;
+  }
+}
+
+
+trix-toolbar .trix-button-group {
+  border-radius: 0;
+}
+trix-toolbar .trix-button {
+  border-bottom: 0;
+}
+.trix-button-group--block-tools,
+.trix-button--icon-code {
+  border-left: 0 !important;
+}
+.trix-button--icon-heading-1,
+.trix-button--icon-quote,
+.trix-button--icon-decrease-nesting-level,
+.trix-button--icon-increase-nesting-level,
+.trix-button-group.trix-button-group--file-tools {
+  display: none;
+}
+.trix-button-group.trix-button-group--block-tools {
+  margin-left: 0 !important;
+}

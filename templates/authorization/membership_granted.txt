@@ -1,0 +1,11 @@
+You ({{ to_address }}) have been designated as {{ permissions }} for the {{ workspace_name }} organization.
+
+You can access this program by logging in to Metamapper using this link:
+
+{{ domain }}/login
+
+{% if user_exists %}
+To access this organization, please log in with the Metamapper account associated with the above email address.
+{% else %}
+To log in, please use the above email and a secure password to create a new Metamapper account.
+{% endif %}

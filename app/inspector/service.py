@@ -1,0 +1,106 @@
+# -*- coding: utf-8 -*-
+import sshtunnel
+import paramiko
+
+from functools import wraps
+from io import StringIO
+
+from app.definitions.models import Datastore
+
+from app.inspector.engines import snowflake_inspector
+from app.inspector.engines import postgresql_inspector
+from app.inspector.engines import redshift_inspector
+from app.inspector.engines import sqlserver_inspector
+from app.inspector.engines import mysql_inspector
+from app.inspector.engines import oracle_inspector
+
+
+engines = {
+    Datastore.MYSQL: mysql_inspector.MySQLInspector,
+    Datastore.POSTGRESQL: postgresql_inspector.PostgresInspector,
+    Datastore.REDSHIFT: redshift_inspector.RedshiftInspector,
+    Datastore.SNOWFLAKE: snowflake_inspector.SnowflakeInspector,
+    Datastore.SQLSERVER: sqlserver_inspector.SQLServerInspector,
+    Datastore.ORACLE: oracle_inspector.OracleInspector,
+}
+
+
+def with_ssh_tunnel():
+    """Create an SSH tunnel when applicable.
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(datastore, *args, **kwargs):
+            """Execution function.
+            """
+            if not datastore.ssh_enabled:
+                return func(datastore)
+            ssh_pkey = datastore.workspace.ssh_private_key
+            with sshtunnel.SSHTunnelForwarder(
+                (datastore.ssh_host, datastore.ssh_port),
+                ssh_username=datastore.ssh_user,
+                ssh_pkey=paramiko.RSAKey.from_private_key(StringIO(ssh_pkey)),
+                remote_bind_address=(datastore.host, datastore.port),
+            ) as server:
+                return func(datastore, server.local_bind_host, server.local_bind_port)
+        return wrapper
+    return decorator
+
+
+def construct_conn_dict(datastore, override_host=None, override_port=None):
+    """Struct for Datastore connection parameters.
+    """
+    host = override_host or datastore.host
+    port = override_port or datastore.port
+    return {
+        'host': host,
+        'username': datastore.username,
+        'password': datastore.password,
+        'port': port,
+        'database': datastore.database,
+    }
+
+
+def get_inspector_class(engine):
+    """Helper function to get the inspector class.
+    """
+    return engines[engine]
+
+
+def get_engine(datastore, override_host=None, override_port=None):
+    """Helper function to instantiate the engine.
+    """
+    config = construct_conn_dict(
+        datastore,
+        override_host,
+        override_port,
+    )
+    return get_inspector_class(datastore.engine)(**config)
+
+
+@with_ssh_tunnel()
+def version(datastore, override_host=None, override_port=None):
+    """Retrieve the Datastore version as a string.
+    """
+    return get_engine(datastore, override_host, override_port).version
+
+
+@with_ssh_tunnel()
+def tables_and_views(datastore, override_host=None, override_port=None):
+    """Retrieve table and view definitions associated with a Datastore.
+    """
+    return get_engine(datastore, override_host, override_port).get_tables_and_views()
+
+
+@with_ssh_tunnel()
+def indexes(datastore, override_host=None, override_port=None):
+    """Retrieve indexes associated with a Datastore.
+    """
+    return get_engine(datastore, override_host, override_port).get_indexes()
+
+
+@with_ssh_tunnel()
+def verify_connection(datastore, override_host=None, override_port=None):
+    """Verify the ability to connect to the datastore.
+    """
+    return get_engine(datastore, override_host, override_port).verify_connection()

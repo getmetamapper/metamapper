@@ -1,0 +1,245 @@
+# -*- coding: utf-8 -*-
+import graphene
+import graphene.relay as relay
+
+import app.definitions.models as models
+import utils.connections as connections
+
+from django.forms.models import model_to_dict
+
+from graphene_django import DjangoObjectType
+from graphene.types.generic import GenericScalar
+
+from app.revisioner.schema import RunType
+from app.inspector.service import get_inspector_class
+
+from app.authorization.mixins import AuthNode
+from app.authorization.permissions import WorkspaceTeamMembersOnly
+
+
+class IndexColumnType(graphene.ObjectType):
+    """GraphQL representation of a IndexColumn.
+    """
+    name = graphene.String()
+    ordinal_position = graphene.Int()
+
+
+class IndexType(AuthNode, DjangoObjectType):
+    """GraphQL representation of a Index.
+    """
+    permission_classes = (WorkspaceTeamMembersOnly,)
+    scope_to_workspace = True
+
+    columns = graphene.List(IndexColumnType)
+
+    class Meta:
+        model = models.Index
+        filter_fields = {}
+        interfaces = (relay.Node,)
+        connection_class = connections.DefaultConnection
+        exclude_fields = []
+
+    def resolve_columns(instance, info):
+        """Should return IndexColumn so we can access ordinal_position field.
+        """
+        return info.context.loaders.index_columns.load(instance.pk)
+
+
+class ColumnType(AuthNode, DjangoObjectType):
+    """GraphQL representation of a Column.
+    """
+    permission_classes = (WorkspaceTeamMembersOnly,)
+    scope_to_workspace = True
+
+    comments_count = graphene.Int()
+    full_data_type = graphene.String()
+
+    class Meta:
+        model = models.Column
+        filter_fields = {}
+        interfaces = (relay.Node,)
+        connection_class = connections.DefaultConnection
+        exclude_fields = []
+
+    @classmethod
+    def get_node(cls, info, id):
+        """We should only return tables related to the current workspace.
+        """
+        return models.Column.objects.filter(
+            workspace=info.context.workspace,
+            id=id,
+        ).first()
+
+    def resolve_comments_count(instance, info):
+        """Counter of the existing comments on the column.
+        """
+        return info.context.loaders.column_comment_counts.load(instance.pk)
+
+    def resolve_full_data_type(instance, info):
+        """Decorated version of the `data_type` field.
+        """
+        return instance.full_data_type
+
+
+class TableType(AuthNode, DjangoObjectType):
+    """GraphQL representation of a Table.
+    """
+    permission_classes = (WorkspaceTeamMembersOnly,)
+    scope_to_workspace = True
+
+    properties = GenericScalar()
+
+    class Meta:
+        model = models.Table
+        filter_fields = {}
+        interfaces = (relay.Node,)
+        connection_class = connections.DefaultConnection
+        exclude_fields = []
+
+    @classmethod
+    def get_node(cls, info, id):
+        """We should only return tables related to the current workspace.
+        """
+        return models.Table.objects.filter(
+            workspace=info.context.workspace,
+            id=id,
+        ).first()
+
+    def resolve_kind(instance, info):
+        """Capitalize the `kind` attribute.
+        """
+        return instance.kind[0].upper() + instance.kind[1:].lower()
+
+    def resolve_columns(instance, info):
+        """Should return the associated Columns.
+        """
+        return info.context.loaders.table_columns.load(instance.pk)
+
+
+class SchemaType(AuthNode, DjangoObjectType):
+    """GraphQL representation of a Datastore.
+    """
+    permission_classes = (WorkspaceTeamMembersOnly,)
+    scope_to_workspace = True
+
+    tables = graphene.List(TableType, first=graphene.Int(required=False))
+
+    class Meta:
+        model = models.Schema
+        filter_fields = {}
+        interfaces = (relay.Node,)
+        connection_class = connections.DefaultConnection
+        exclude_fields = []
+
+    @classmethod
+    def get_node(cls, info, id):
+        """We should only return schemas related to the current workspace.
+        """
+        return models.Schema.objects.filter(
+            workspace=info.context.workspace,
+            id=id,
+        ).first()
+
+    def resolve_tables(instance, info, first=None):
+        """Retrieve all of the Table objects associated with this Schema.
+        """
+        return info.context.loaders.schema_tables.load(instance.pk)
+
+
+class JdbcConnectionType(graphene.ObjectType):
+    """GraphQL representation of a JDBC connection.
+    """
+    engine = graphene.String()
+    host = graphene.String()
+    username = graphene.String()
+    database = graphene.String()
+    port = graphene.Int()
+
+
+class SSHTunnelConfigType(graphene.ObjectType):
+    """GraphQL representation of SSH tunnel configuration.
+    """
+    is_enabled = graphene.Boolean()
+    host = graphene.String()
+    user = graphene.String()
+    port = graphene.Int()
+    public_key = graphene.String()
+
+
+class DatastoreType(AuthNode, DjangoObjectType):
+    """GraphQL representation of a Datastore.
+    """
+    permission_classes = (WorkspaceTeamMembersOnly,)
+    scope_to_workspace = True
+
+    jdbc_connection = graphene.Field(JdbcConnectionType)
+
+    ssh_config = graphene.Field(SSHTunnelConfigType)
+
+    schemas = graphene.List(SchemaType, first=graphene.Int(required=False))
+
+    latest_run = graphene.Field(RunType)
+
+    has_indexes = graphene.Boolean()
+    has_constraints = graphene.Boolean()
+    has_completed_run = graphene.Boolean()
+
+    class Meta:
+        model = models.Datastore
+        filter_fields = {}
+        interfaces = (relay.Node,)
+        connection_class = connections.DefaultConnection
+        only_fields = (
+            'id',
+            'pk',
+            'name',
+            'slug',
+            'is_enabled',
+            'version',
+            'short_desc',
+            'tags',
+            'jdbc_connection',
+            'created_at',
+            'updated_at',
+        )
+
+    def resolve_jdbc_connection(instance, info):
+        """Returns JDBC connection information as a separate object.
+        """
+        return model_to_dict(instance, ['engine', 'host', 'username', 'database', 'port'])
+
+    def resolve_ssh_config(instance, info):
+        """Returns SSH tunnel settings for the datastore.
+        """
+        return {
+            'is_enabled': instance.ssh_enabled,
+            'host': instance.ssh_host,
+            'user': instance.ssh_user,
+            'port': instance.ssh_port,
+            'public_key': info.context.workspace.ssh_public_key,
+        }
+
+    def resolve_schemas(instance, info, first=None):
+        """Retrieve all of the schemas for a given datastore.
+        """
+        return instance.schemas.all().order_by('name')
+
+    def resolve_latest_run(instance, info):
+        """Retrieve the most recent run for the Schema.
+        """
+        return instance.last_committed_run
+
+    def resolve_has_indexes(instance, info):
+        """Some engines have indexes and others do not.
+        """
+        return get_inspector_class(instance.engine).has_indexes()
+
+    def resolve_has_constraints(instance, info):
+        """Some engines have constraints and others do not.
+        """
+        return get_inspector_class(instance.engine).has_indexes()
+
+    def resolve_has_completed_run(instance, info):
+        """Check if the datastore has a completed run.
+        """
+        return instance.has_completed_run

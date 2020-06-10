@@ -1,0 +1,7 @@
+errors:
+  User:
+    email:
+      exists: A user already exists with that email, bro!
+  Workspace:
+    slug:
+      exists: A workspace already exists with that slug, bro!

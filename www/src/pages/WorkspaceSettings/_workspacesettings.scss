@@ -1,0 +1,129 @@
+.workspace {
+  .breadcrumbs-wrapper {
+    border: 0;
+  }
+}
+.workspace-settings {
+  margin-bottom: 40px;
+  .workspace-settings-content {
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .ant-card-body {
+    padding: 0;
+  }
+  .ant-menu {
+    font-size: 15px;
+    .ant-menu-item:first-child {
+      margin-top: 0 !important;
+    }
+    .ant-menu-item:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+.team-member-list .ant-table {
+  border: 1px solid #e8e8e8;
+  border-bottom: 0;
+}
+.invite-user-to-workspace {
+  margin-bottom: 24px;
+  .ant-input {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    width: 300px;
+  }
+  .ant-select-selection--single {
+    height: 34px;
+    width: 100px;
+    .ant-select-selection__rendered {
+      line-height: 34px;
+    }
+  }
+}
+.team-member-list {
+  .ant-table-pagination.ant-pagination {
+  margin-bottom: 0;
+  }
+}
+.user-display-name {
+  .avatar {
+    float: left;
+    display: inline-block;
+    line-height: 40px;
+  }
+  .metadata {
+    display: inline-block;
+    margin-left: 12px;
+
+    .email {
+      color: #797979;
+    }
+  }
+}
+
+.update-user-permissions {
+  .ant-select-selection--single {
+    height: 34px;
+    width: 100px;
+    .ant-select-selection__rendered {
+      line-height: 34px;
+    }
+  }
+  .ant-btn {
+    padding: 0 10px;
+    margin-left: 5px;
+  }
+}
+
+.custom-fields-table {
+  .ant-table {
+    border-top: 1px solid #e8e8e8;
+    margin-top: 16px;
+  }
+  .ant-table-content {
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+  }
+}
+.sso-connections-table {
+  .ant-table {
+    border: 1px solid #e8e8e8;
+    border-bottom: 0;
+  }
+  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td {
+    background: #FFFFFF;
+  }
+}
+.sso-connection-setup-form {
+  .steps-content {
+    padding: 24px;
+  }
+}
+.sso-domain-setup {
+  margin: 24px 0;
+  .ant-input {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 300px;
+  }
+}
+.sso-domains {
+  .sso-domains-table {
+    .ant-table {
+      border: 1px solid #e8e8e8;
+      border-bottom: 0;
+    }
+  }
+}
+.add-sso-connection-btn {
+  margin-bottom: 20px;
+}
+.sso-connection-setup-form small {
+  margin: 10px;
+  display: block;
+  margin-top: 0;
+}
+.workspace-saml-setup, .workspace-saml-editing {
+  margin-top: 40px;
+}

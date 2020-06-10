@@ -1,0 +1,125 @@
+errors:
+  User:
+    fname:
+      blank: The first name field cannot be blank.
+      nulled: The first name field is required.
+      max_length: The first name field must be less than 60 characters.
+    lname:
+      blank: The last name field cannot be blank.
+      nulled: The last name field is required.
+      max_length: The last name field must be less than 60 characters.
+    email:
+      blank: The email field cannot be blank.
+      nulled: The email field is required.
+      exists: User with this email already exists.
+      invalid: The provided email address is improperly formatted.
+    password:
+      too_weak: The provided password is not strong enough.
+    current_password:
+      wrong_password: The password you provided is incorrect.
+  Workspace:
+    name:
+      blank: Workspace name cannot be blank.
+      nulled: The workspace name field is required.
+      min_length: Workspace name must be less than 255 characters.
+      max_length: Workspace name must be at least 3 characters.
+    email:
+      blank: Workspace email cannot be blank.
+      nulled: The workspace email field is required.
+      invalid: The provided email address is improperly formatted.
+    slug:
+      blank: Workspace slug cannot be blank.
+      nulled: The workspace slug field is required.
+      exists: A workspace already exists with that slug.
+      invalid: Workspace slug is improperly formatted.
+      min_length: Workspace slug must be less than 50 characters.
+      max_length: Workspace slug must be at least 3 characters.
+  Membership:
+    email:
+      exists: User with this email already exists.
+      invalid: The provided email address is improperly formatted.
+      only_owner: You cannot leave this workspace as you are the only owner.
+      self_update: You cannot alter your own membership.
+    permissions:
+      invalid_choice: The provided permission group is not valid.
+  Datastore:
+    engine:
+      nulled: Please select a valid engine type.
+      invalid_choice: The selected engine is not supported.
+    username:
+      blank: Username is required.
+      nulled: Username is required.
+      invalid: Username is improperly formatted.
+      max_length: The database username is limited to 128 characters.
+    password:
+      blank: Password is required.
+      nulled: Password is required.
+      max_length: The database password is limited to 128 characters.
+    database:
+      blank: Database name is required.
+      nulled: Database name is required.
+      invalid: Database name is improperly formatted.
+      max_length: The database name is limited to 255 characters.
+    port:
+      invalid: Datastore port is required.
+      nulled: Datastore port is required.
+      min_length: Datastore port value must be between 0 and 65535.
+      max_length: Datastore port value must be between 0 and 65535.
+    ssh:
+      invalid: Please verify that the provided SSH information is correct.
+    ssh_host:
+      invalid: Enter a valid IPv4 or IPv6 address.
+    ssh_user:
+      invalid: SSH username appears to be an invalid format.
+      max_length: SSH username should be less than 128 characters.
+    ssh_port:
+      min_length: SSH port value must be between 0 and 65535.
+      max_length: SSH port value must be between 0 and 65535.
+    jdbc_connection:
+      invalid: Could not connect to datastore with these credentials.
+    ssh_connection:
+      invalid: Could not open SSH connection.
+    name:
+      blank: Please provide a nickname for the datastore.
+      nulled: Please provide a nickname for the datastore.
+      max_length: The datastore nickname is limited to 50 characters.
+    tags:
+      max_length: This resource can only have up to 10 tags.
+      item_max_length: Tags are limited to 30 characters.
+    short_desc:
+      max_length: The datastore description is limited to 140 characters.
+  Table:
+    tags:
+      max_length: This resource can only have up to 10 tags.
+      item_max_length: Tags are limited to 30 characters.
+    short_desc:
+      max_length: Table description cannot be longer than 140 characters.
+  Column:
+    short_desc:
+      max_length: Column description cannot be longer than 50 characters.
+  CustomField:
+    field_name:
+      blank: Custom field name is required.
+      nulled: Custom field name is required.
+      max_length: Custom field name is limited to 30 characters.
+    field_type:
+      nulled: Please choose a valid custom field type.
+      invalid_choice: Please choose a valid custom field type.
+    short_desc:
+      max_length: Custom field descriptions cannot be longer than 60 characters.
+    choices:
+      required: Enum fields require a list of allowed input value.
+      empty: Enum fields require a list of allowed input value.
+    none:
+      unique: Custom field with this name already exists.
+  Comments:
+    html:
+      blank: Comment cannot be empty.
+      nulled: Comment cannot be empty.
+  SSOConnection:
+    none:
+      protected: You cannot delete the default connection.
+  SSODomain:
+    domain:
+      unique: Domain has already been claimed.
+      invalid: Domain is not valid.

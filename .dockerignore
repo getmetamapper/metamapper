@@ -1,0 +1,16 @@
+.notes
+
+.env
+.venv
+env/
+venv/
+ENV/
+
+www/node_modules
+www/build
+www/coverage
+
+celerybeat.pid
+celerybeat-schedule
+
+staticfiles

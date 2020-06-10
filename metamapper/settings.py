@@ -1,0 +1,416 @@
+"""
+Django settings for metamapper project.
+"""
+import datetime as dt
+import logging
+import os
+import sys
+
+from corsheaders.defaults import default_headers
+from django.core.management.utils import get_random_secret_key
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+REACT_APP_DIR = os.path.join(BASE_DIR, 'www')
+
+# Testing
+
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+
+if TESTING:
+    logging.disable(logging.CRITICAL)
+
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'testutils', 'fixtures'),
+    os.path.join(BASE_DIR, 'app', 'revisioner', 'tests', 'fixtures'),
+]
+
+DJANGO_ENV = os.getenv('ENVIRONMENT', 'development')
+
+SECRET_KEY = os.getenv('METMAPPER_SECRET_KEY', default=get_random_secret_key())
+
+DEBUG = DJANGO_ENV not in ('staging', 'production')
+
+WEBSERVER_ORIGIN = os.getenv('METAMAPPER_WEBSERVER_ORIGIN', 'http://localhost:5000')
+
+GRAPHQL_ORIGIN = os.getenv('METAMAPPER_GRAPHQL_ORIGIN', 'http://localhost:5000')
+
+ALLOWED_HOSTS = ['*']
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = (
+    WEBSERVER_ORIGIN,
+    GRAPHQL_ORIGIN,
+)
+
+CORS_ALLOW_HEADERS = default_headers + (
+    'X-Workspace-Id',
+)
+
+# Application definition
+VENDOR_APPS = [
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
+    'graphene_django',
+]
+
+METAMAPPER_APPS = [
+    'app.authentication.apps.Config',
+    'app.authorization.apps.Config',
+    'app.definitions.apps.Config',
+    'app.comments.apps.Config',
+    'app.customfields.apps.Config',
+    'app.inspector.apps.Config',
+    'app.notifications.apps.Config',
+    'app.omnisearch.apps.Config',
+    'app.revisioner.apps.Config',
+    'app.sso.apps.Config',
+    'app.votes.apps.Config',
+    'app.audit.apps.Config',
+]
+
+INSTALLED_APPS = VENDOR_APPS + METAMAPPER_APPS
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'metamapper.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'metamapper.wsgi.application'
+
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('METAMAPPER_DB_NAME', 'metamapper'),
+        'USER': os.getenv('METAMAPPER_DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('METAMAPPER_DB_PASSWORD', 'postgres'),
+        'HOST': os.getenv('METAMAPPER_DB_HOST', 'database'),
+        'PORT': os.getenv('METAMAPPER_DB_PORT', 5432),
+    }
+}
+
+# Used when hard resets on migrations during development.
+DB_RESET = os.getenv('DB_RESET')
+#
+# Password validation
+# https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'authentication.User'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+#
+# Internationalization
+# https://docs.djangoproject.com/en/2.1/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
+#
+# GraphQL / Graphene
+# https://github.com/graphql-python/graphene-django
+
+GRAPHENE = {
+    'SCHEMA': 'metamapper.graphql.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
+}
+
+if DEBUG:
+    GRAPHENE['MIDDLEWARE'].append('graphene_django.debug.DjangoDebugMiddleware')
+
+GRAPHQL_JWT = {
+    'JWT_SECRET_KEY': os.getenv('METAMAPPER_JWT_SECRET'),
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_AUDIENCE': WEBSERVER_ORIGIN,
+    'JWT_LEEWAY': 30,
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_EXPIRATION_DELTA': dt.timedelta(hours=24),
+    'JWT_REFRESH_EXPIRATION_DELTA': dt.timedelta(days=3),
+}
+#
+# Static files (CSS, JavaScript, Images)
+#
+# We turn off all of these settings since Metamapper serves the compiled React assets
+# via a custom view.
+
+STATIC_HOST = ''
+
+STATIC_URL = None
+
+STATICFILES_DIRS = []
+
+STATIC_ROOT = None
+
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+#
+# Email
+# https://docs.djangoproject.com/en/3.0/topics/email/
+
+EMAIL_BACKEND = os.getenv('METAMAPPER_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.getenv('METAMAPPER_EMAIL_HOST')
+EMAIL_HOST_USER = os.getenv('METAMAPPER_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('METAMAPPER_EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.getenv('METAMAPPER_EMAIL_PORT')
+EMAIL_DEFAULT_FROM = os.getenv('METAMAPPER_EMAIL_FROM_ADDRESS', 'friends@metamapper.io')
+#
+# Encryption
+#
+# Certain metastore fields are encrypted, such as password and SSH keys.
+
+FERNET_KEYS = os.getenv('METAMAPPER_FERNET_KEYS', '').split(',')
+#
+# Logging (https://docs.python.org/3/library/logging.html)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '[{asctime}] [{lineno}] [{levelname}] [{name}] (pid: {process:d}) {message}',
+            'style': '{',
+        },
+        'metamapper': {
+            'format': '[{asctime}] [{basename}:{linenum}] [{levelname}] [{name}] (pid: {process:d}) {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'graphql_log_filter': {
+            '()': 'utils.logging.filters.GraphQLLocatedErrorFilter',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default'
+        },
+        'metamapper': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'metamapper'
+        },
+    },
+    'loggers': {
+        'app': {
+            'handlers': ['metamapper'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'metamapper': {
+            'handlers': ['metamapper'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'graphql.execution.utils': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'filters': ['graphql_log_filter'],
+        },
+        'celery': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'celery.beat': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'utils': {
+            'handlers': ['metamapper'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    }
+}
+#
+# OAuth2 (optional)
+#
+# Metamapper supports three types of single sign-on: SAML 2.0 via any IdP
+# and OAuth2 via Google and Github.
+#
+# To enable Google or Github SSO, we need to have the proper client and secret
+# setup to communicate with the respective provider API.
+#
+# If the client and secret are not found, you will not be able to set up a
+# SSO connection with that provider.
+
+GITHUB_CLIENT_ID = os.getenv('OAUTH2_GITHUB_CLIENT_ID')
+GITHUB_CLIENT_SECRET = os.getenv('OAUTH2_GITHUB_CLIENT_SECRET')
+GITHUB_ENABLED = GITHUB_CLIENT_SECRET and GITHUB_CLIENT_SECRET
+
+GOOGLE_CLIENT_ID = os.getenv('OAUTH2_GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('OAUTH2_GOOGLE_CLIENT_SECRET')
+GOOGLE_ENABLED = GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
+#
+# Caching Layer (optional)
+#
+# Metmapper offers an optional caching layer using
+# django-cacheops (https://github.com/Suor/django-cacheops). It uses redis
+# as backend for ORM cache to speed up your queries.
+#
+CACHEOPS_REDIS = os.getenv('METAMAPPER_CACHEOPS_REDIS_URL')
+
+# If the CACHEOPS_REDIS variable isn't set, we assume you don't want
+# the cache, so we disable it.
+if CACHEOPS_REDIS:
+    CACHEOPS = {
+        'authentication.user': {
+            'ops': 'get', 'timeout': 60 * 15,
+        },
+        'authentication.workspace': {
+            'ops': 'get', 'timeout': 60 * 15,
+        },
+        'definitions.*': {
+            'ops': {'fetch', 'get'}, 'timeout': 60 * 30,
+        },
+        'revisioner.*': {
+            'ops': {'fetch', 'get'}, 'timeout': 60 * 15,
+        },
+        'comments.comment': {
+            'ops': {'fetch', 'get'}, 'timeout': 60 * 15,
+        },
+    }
+#
+# Search
+#
+# Metamapper supports searching on some of the database objects it indexes. We default
+# to using Postgres full-text search, though have plans to roll out Elasticsearch and Solr at some point.
+#
+# You can also roll out your own search interface as long as it implements the same interface.
+#
+SEARCH_BACKEND = os.getenv(
+    'METAMAPPER_SEARCH_BACKEND',
+    'app.omnisearch.backends.postgres_search_backend.PostgresSearchBackend',
+)
+
+#
+# Django Storages (required)
+# (https://django-storages.readthedocs.io/en/1.9.1/index.html)
+#
+# Metamapper stores persists objects (e.g., schema crawls) in blob storage.
+#
+# Currently, we use the default FileSystemStorage backend for local testing purposes.
+#
+DEFAULT_FILE_STORAGE = os.getenv(
+    'METAMAPPER_FILE_STORAGE_BACKEND',
+    'django.core.files.storage.FileSystemStorage',
+)
+
+FILE_STORAGE_BUCKET = os.getenv('METAMAPPER_FILE_STORAGE_BUCKET')
+
+MEDIA_ROOT = os.getenv('METAMAPPER_MEDIA_ROOT', '')
+#
+# AWS S3 Configuration
+# https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+#
+# We recommend using a service role if possible to access AWS. However,
+# we do support IAM key/secret pairs if necessary.
+#
+
+AWS_STORAGE_BUCKET_NAME = FILE_STORAGE_BUCKET
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
+AWS_DEFAULT_ACL = os.getenv('METAMAPPER_FILE_STORAGE_BUCKET_ACL', 'private')
+
+AWS_S3_FILE_OVERWRITE = True
+#
+# Google Cloud Storage Configuration
+# https://django-storages.readthedocs.io/en/latest/backends/gcloud.html
+#
+# You can use GCP instead of S3. We authenticate via service account permissions
+# and a key available to your Metamappeer instance via GOOGLE_APPLICATION_CREDENTIALS.
+#
+
+GS_BUCKET_NAME = FILE_STORAGE_BUCKET
+
+GS_DEFAULT_ACL = os.getenv('METAMAPPER_FILE_STORAGE_BUCKET_ACL', 'private')
+
+GS_FILE_OVERWRITE = True
+#
+# Override Metamapper settings.py configuration
+#
+# You can reference a Python file to override any of the constants in this file. The
+# provided file must be discoverable via the PYTHONPATH.
+#
+
+# OVERRIDE_MODULE_PATH = os.getenv('METAMAPPER_SETTINGS_OVERRIDE_MODULE')
+
+# if OVERRIDE_MODULE_PATH:
+#     __import__(OVERRIDE_MODULE_PATH, globals={"__name__": __name__})
+
+
+# https://code.djangoproject.com/wiki/SplitSettings

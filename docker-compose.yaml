@@ -1,0 +1,92 @@
+version: '3.4'
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+services:
+  database:
+    << : *restart_policy
+    image: postgres:9.6
+    ports:
+      - 5430:5432
+    volumes:
+      - metamapperDB:/var/lib/postgresql/data
+    networks:
+      - metamapper
+    environment:
+      POSTGRES_PASSWORD: postgres
+  rabbitmq:
+    << : *restart_policy
+    image: rabbitmq:3.6
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+     - metamapper
+  server:
+    << : *restart_policy
+    env_file:
+      - .env
+    image: metamapper
+    command: webserver
+    volumes:
+      - ./:/usr/local/metamapper
+    ports:
+      - 5050:5050
+    depends_on:
+      - database
+    networks:
+      - metamapper
+  worker:
+    << : *restart_policy
+    env_file:
+      - .env
+    image: metamapper
+    command: worker
+    depends_on:
+      - database
+      - rabbitmq
+    volumes:
+      - ./:/usr/local/metamapper
+    networks:
+      - metamapper
+  scheduler:
+    << : *restart_policy
+    env_file:
+      - .env
+    image: metamapper
+    command: scheduler
+    depends_on:
+      - database
+      - rabbitmq
+    volumes:
+      - ./:/usr/local/metamapper
+    networks:
+      - metamapper
+  redis:
+    << : *restart_policy
+    image: redis:alpine
+    networks:
+     - metamapper
+  flower:
+    << : *restart_policy
+    env_file:
+      - .env
+    image: metamapper
+    command: flower
+    volumes:
+      - ./:/usr/local/metamapper
+    ports:
+      - 5555:5555
+    depends_on:
+      - database
+      - worker
+      - scheduler
+    networks:
+      - metamapper
+volumes:
+  metamapperDB:
+    driver: local
+  elasticdata:
+    driver: local
+networks:
+  metamapper:
+    driver: bridge

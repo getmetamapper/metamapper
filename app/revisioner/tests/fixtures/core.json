@@ -1,0 +1,42 @@
+[
+  {
+    "fields": {
+      "name": "Acme Corporation",
+      "slug": "acmecorp",
+      "creator_id": 1,
+      "created_at": "2010-08-31 17:53:31Z",
+      "updated_at": "2010-08-31 17:53:31Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c"
+  },
+  {
+    "fields": {
+      "fname": "Hiro",
+      "lname": "Protagonist",
+      "email": "hiro@metaverse.io",
+      "created_at": "2010-08-31 17:53:31Z",
+      "updated_at": "2010-08-31 17:53:31Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "name": "Postgres",
+      "slug": "metamapper",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:43.385781+00:00",
+      "updated_at": "2020-02-27 17:25:43.385893+00:00",
+      "host": "database.host",
+      "port": 5432,
+      "username": "admin",
+      "password": "password1234",
+      "engine": "postgresql",
+      "version": "9.6.1"
+    },
+    "model": "definitions.datastore",
+    "pk": "s4N8p5g0wjiS"
+  }
+]

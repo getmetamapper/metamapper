@@ -1,0 +1,72 @@
+[
+  {
+    "fields": {
+      "field_name": "Purpose",
+      "field_type": "TEXT",
+      "validators": {},
+      "short_desc": "What this datastore is used for.",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "content_type_id": 7,
+      "created_at": "2015-08-31 17:53:31Z",
+      "updated_at": "2015-08-31 17:53:31Z"
+    },
+    "model": "customfields.customfield",
+    "pk": "iPOhV1HazLW6"
+  },
+  {
+    "fields": {
+      "field_name": "Ownership",
+      "field_type": "ENUM",
+      "validators": {"choices": ["Marketing", "Finance", "Analytics", "Engineering"]},
+      "short_desc": "",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "content_type_id": 7,
+      "created_at": "2015-08-31 17:53:31Z",
+      "updated_at": "2015-08-31 17:53:31Z"
+    },
+    "model": "customfields.customfield",
+    "pk": "ow5W0kw0CK0i"
+  },
+  {
+    "fields": {
+      "field_name": "Data Steward",
+      "field_type": "USER",
+      "validators": {},
+      "short_desc": "The person most knowledgeable of the data.",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "content_type_id": 9,
+      "created_at": "2015-08-31 17:53:31Z",
+      "updated_at": "2015-08-31 17:53:31Z"
+    },
+    "model": "customfields.customfield",
+    "pk": "YjOTcEUsymIU"
+  },
+  {
+    "fields": {
+      "field_name": "Product Area",
+      "field_type": "ENUM",
+      "validators": {"choices": ["Marketing", "Finance", "Analytics", "Engineering"]},
+      "short_desc": "Part of the business that table is relevant to.",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "content_type_id": 9,
+      "created_at": "2015-08-31 17:53:31Z",
+      "updated_at": "2015-08-31 17:53:31Z"
+    },
+    "model": "customfields.customfield",
+    "pk": "p0tqRz5QJ9yC"
+  },
+  {
+    "fields": {
+      "field_name": "Update Cadence",
+      "field_type": "ENUM",
+      "validators": {"choices": ["Hourly", "Daily", "Weekly", "Monthly", "Real-time"]},
+      "short_desc": "How often this table is updated.",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "content_type_id": 9,
+      "created_at": "2015-08-31 17:53:31Z",
+      "updated_at": "2015-08-31 17:53:31Z"
+    },
+    "model": "customfields.customfield",
+    "pk": "zI5j91vH0cfI"
+  }
+]

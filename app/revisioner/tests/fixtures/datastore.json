@@ -1,0 +1,2082 @@
+[
+  {
+    "fields": {
+      "name": "app",
+      "datastore_id": "s4N8p5g0wjiS",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.196431+00:00",
+      "updated_at": "2020-02-27 17:25:55.196482+00:00",
+      "object_id": "16441",
+      "tags": ["one", "two", "three"]
+    },
+    "model": "definitions.schema",
+    "pk": "tThdqoa6Huxs"
+  },
+  {
+    "fields": {
+      "name": "customers",
+      "schema_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "object_id": "16442",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "custom_properties": {
+        "p0tqRz5QJ9yC": "Finance",
+        "YjOTcEUsymIU": 3
+      }
+    },
+    "model": "definitions.table",
+    "pk": "nctDse8X6qLb"
+  },
+  {
+    "fields": {
+      "name": "customernumber",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.774833+00:00",
+      "updated_at": "2020-02-27 17:25:55.774867+00:00",
+      "object_id": "16442/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "wvV0qTZsfsyO"
+  },
+  {
+    "fields": {
+      "name": "customername",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.774979+00:00",
+      "updated_at": "2020-02-27 17:25:55.775008+00:00",
+      "object_id": "16442/2",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "lME0etbyVdN7"
+  },
+  {
+    "fields": {
+      "name": "contactlastname",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775118+00:00",
+      "updated_at": "2020-02-27 17:25:55.775142+00:00",
+      "object_id": "16442/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": "",
+      "short_desc": "Related to the customer"
+    },
+    "model": "definitions.column",
+    "pk": "dc4H54wkpukA"
+  },
+  {
+    "fields": {
+      "name": "contactfirstname",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775216+00:00",
+      "updated_at": "2020-02-27 17:25:55.775311+00:00",
+      "object_id": "16442/4",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "sjNHWBgIFhBC"
+  },
+  {
+    "fields": {
+      "name": "phone",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775384+00:00",
+      "updated_at": "2020-02-27 17:25:55.775406+00:00",
+      "object_id": "16442/5",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 5,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "WLUk84PIBpRL"
+  },
+  {
+    "fields": {
+      "name": "addressline1",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775477+00:00",
+      "updated_at": "2020-02-27 17:25:55.775498+00:00",
+      "object_id": "16442/6",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 6,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "z1K76crFcg7Q"
+  },
+  {
+    "fields": {
+      "name": "addressline2",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775569+00:00",
+      "updated_at": "2020-02-27 17:25:55.775591+00:00",
+      "object_id": "16442/7",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 7,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": "NULL::character varying"
+    },
+    "model": "definitions.column",
+    "pk": "f9aOlBIPt7KR"
+  },
+  {
+    "fields": {
+      "name": "city",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775662+00:00",
+      "updated_at": "2020-02-27 17:25:55.775683+00:00",
+      "object_id": "16442/8",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 8,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "yHWvsRvPcq40"
+  },
+  {
+    "fields": {
+      "name": "state",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775753+00:00",
+      "updated_at": "2020-02-27 17:25:55.775775+00:00",
+      "object_id": "16442/9",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 9,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": "NULL::character varying"
+    },
+    "model": "definitions.column",
+    "pk": "XxGb8EZiyZ8J"
+  },
+  {
+    "fields": {
+      "name": "postalcode",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775845+00:00",
+      "updated_at": "2020-02-27 17:25:55.775866+00:00",
+      "object_id": "16442/10",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 10,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 15,
+      "default_value": "NULL::character varying"
+    },
+    "model": "definitions.column",
+    "pk": "s16XIqa0j16S"
+  },
+  {
+    "fields": {
+      "name": "country",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.775937+00:00",
+      "updated_at": "2020-02-27 17:25:55.775958+00:00",
+      "object_id": "16442/11",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 11,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "Qx5t6tsaGrZ2"
+  },
+  {
+    "fields": {
+      "name": "salesrepemployeenumber",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776029+00:00",
+      "updated_at": "2020-02-27 17:25:55.776050+00:00",
+      "object_id": "16442/12",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 12,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "L2m61ZXdo25b"
+  },
+  {
+    "fields": {
+      "name": "creditlimit",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776121+00:00",
+      "updated_at": "2020-02-27 17:25:55.776143+00:00",
+      "object_id": "16442/13",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 13,
+      "data_type": "numeric",
+      "numeric_scale": 2,
+      "max_length": 10,
+      "default_value": "NULL::numeric"
+    },
+    "model": "definitions.column",
+    "pk": "ckrCXZiwip9L"
+  },
+  {
+    "fields": {
+      "name": "customers_pkey",
+      "table_id": "nctDse8X6qLb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.867963+00:00",
+      "updated_at": "2020-02-27 17:25:55.867997+00:00",
+      "object_id": "16449",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX customers_pkey ON app.customers USING btree (customernumber)"
+    },
+    "model": "definitions.index",
+    "pk": "7uwxL65vCWc7"
+  },
+  {
+    "fields": {
+      "index_id": "7uwxL65vCWc7",
+      "column_id": "wvV0qTZsfsyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.877521+00:00",
+      "updated_at": "2020-02-27 17:25:55.877559+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "name": "departments",
+      "schema_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.339463+00:00",
+      "updated_at": "2020-02-27 17:25:55.339642+00:00",
+      "object_id": "16522",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "got35fs8LymV"
+  },
+  {
+    "fields": {
+      "name": "id",
+      "table_id": "got35fs8LymV",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776213+00:00",
+      "updated_at": "2020-02-27 17:25:55.776235+00:00",
+      "object_id": "16522/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": "nextval('app.departments_id_seq'::regclass)"
+    },
+    "model": "definitions.column",
+    "pk": "jeGFqE06Mp06"
+  },
+  {
+    "fields": {
+      "name": "dept_name",
+      "table_id": "got35fs8LymV",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778933+00:00",
+      "updated_at": "2020-02-27 17:25:55.778954+00:00",
+      "object_id": "16522/2",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 40,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "H73kDbFONDtX"
+  },
+  {
+    "fields": {
+      "name": "departments_dept_name_key",
+      "table_id": "got35fs8LymV",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868552+00:00",
+      "updated_at": "2020-02-27 17:25:55.868574+00:00",
+      "object_id": "16528",
+      "is_unique": true,
+      "is_primary": false,
+      "sql": "CREATE UNIQUE INDEX departments_dept_name_key ON app.departments USING btree (dept_name)"
+    },
+    "model": "definitions.index",
+    "pk": "1Gl5bDQRAk4B"
+  },
+  {
+    "fields": {
+      "index_id": "1Gl5bDQRAk4B",
+      "column_id": "H73kDbFONDtX",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.887063+00:00",
+      "updated_at": "2020-02-27 17:25:55.887090+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "name": "departments_pkey",
+      "table_id": "got35fs8LymV",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868632+00:00",
+      "updated_at": "2020-02-27 17:25:55.868653+00:00",
+      "object_id": "16526",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX departments_pkey ON app.departments USING btree (id)"
+    },
+    "model": "definitions.index",
+    "pk": "xfNxuLE31C9C"
+  },
+  {
+    "fields": {
+      "index_id": "xfNxuLE31C9C",
+      "column_id": "jeGFqE06Mp06",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.888229+00:00",
+      "updated_at": "2020-02-27 17:25:55.888254+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "name": "orderdetails",
+      "schema_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.341915+00:00",
+      "updated_at": "2020-02-27 17:25:55.341960+00:00",
+      "object_id": "16501",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "Details about an order",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "Hh2eS38kpRX0"
+  },
+  {
+    "fields": {
+      "name": "ordernumber",
+      "table_id": "Hh2eS38kpRX0",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779025+00:00",
+      "updated_at": "2020-02-27 17:25:55.779046+00:00",
+      "object_id": "16501/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "XEwuYtOQyAyX"
+  },
+  {
+    "fields": {
+      "name": "productcode",
+      "table_id": "Hh2eS38kpRX0",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779117+00:00",
+      "updated_at": "2020-02-27 17:25:55.779138+00:00",
+      "object_id": "16501/2",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 2,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 15,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "EBLoI3rnfMc5"
+  },
+  {
+    "fields": {
+      "name": "quantityordered",
+      "table_id": "Hh2eS38kpRX0",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779208+00:00",
+      "updated_at": "2020-02-27 17:25:55.779229+00:00",
+      "object_id": "16501/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "UOA8JNoQIhNy"
+  },
+  {
+    "fields": {
+      "name": "priceeach",
+      "table_id": "Hh2eS38kpRX0",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779359+00:00",
+      "updated_at": "2020-02-27 17:25:55.779382+00:00",
+      "object_id": "16501/4",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "numeric",
+      "numeric_scale": 2,
+      "max_length": 10,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "ljbL6sdaSWLN"
+  },
+  {
+    "fields": {
+      "name": "orderlinenumber",
+      "table_id": "Hh2eS38kpRX0",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779452+00:00",
+      "updated_at": "2020-02-27 17:25:55.779474+00:00",
+      "object_id": "16501/5",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 5,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "KmXp9RMt3d2Y"
+  },
+  {
+    "fields": {
+      "name": "orderdetails_pkey",
+      "table_id": "Hh2eS38kpRX0",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868712+00:00",
+      "updated_at": "2020-02-27 17:25:55.868733+00:00",
+      "object_id": "16504",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX orderdetails_pkey ON app.orderdetails USING btree (ordernumber, productcode)"
+    },
+    "model": "definitions.index",
+    "pk": "HYs6hRJDUkqL"
+  },
+  {
+    "fields": {
+      "index_id": "HYs6hRJDUkqL",
+      "column_id": "XEwuYtOQyAyX",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.889324+00:00",
+      "updated_at": "2020-02-27 17:25:55.889350+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "index_id": "HYs6hRJDUkqL",
+      "column_id": "EBLoI3rnfMc5",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.890417+00:00",
+      "updated_at": "2020-02-27 17:25:55.890443+00:00",
+      "ordinal_position": 2
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "name": "orders",
+      "schema_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.342069+00:00",
+      "updated_at": "2020-02-27 17:25:55.342097+00:00",
+      "object_id": "16465",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "z9wctGAOaXyO"
+  },
+  {
+    "fields": {
+      "name": "ordernumber",
+      "table_id": "z9wctGAOaXyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779544+00:00",
+      "updated_at": "2020-02-27 17:25:55.779566+00:00",
+      "object_id": "16465/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "MCrfiBzpTfWr"
+  },
+  {
+    "fields": {
+      "name": "orderdate",
+      "table_id": "z9wctGAOaXyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779637+00:00",
+      "updated_at": "2020-02-27 17:25:55.779659+00:00",
+      "object_id": "16465/2",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "ZPz8iiqMxfT4"
+  },
+  {
+    "fields": {
+      "name": "requireddate",
+      "table_id": "z9wctGAOaXyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779729+00:00",
+      "updated_at": "2020-02-27 17:25:55.779751+00:00",
+      "object_id": "16465/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "IaQ3D9HJ70Gq"
+  },
+  {
+    "fields": {
+      "name": "shippeddate",
+      "table_id": "z9wctGAOaXyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779821+00:00",
+      "updated_at": "2020-02-27 17:25:55.779842+00:00",
+      "object_id": "16465/4",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "eiwVKkQMeQp7"
+  },
+  {
+    "fields": {
+      "name": "status",
+      "table_id": "z9wctGAOaXyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.779913+00:00",
+      "updated_at": "2020-02-27 17:25:55.779934+00:00",
+      "object_id": "16465/5",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 5,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 15,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "GCkg1hN4Kv7u"
+  },
+  {
+    "fields": {
+      "name": "comments",
+      "table_id": "z9wctGAOaXyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780005+00:00",
+      "updated_at": "2020-02-27 17:25:55.780027+00:00",
+      "object_id": "16465/6",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 6,
+      "data_type": "text",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "PIZS9kQTWLSy"
+  },
+  {
+    "fields": {
+      "name": "customernumber",
+      "table_id": "z9wctGAOaXyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780101+00:00",
+      "updated_at": "2020-02-27 17:25:55.780123+00:00",
+      "object_id": "16465/7",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 7,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "F4NWJ9jqK82f"
+  },
+  {
+    "fields": {
+      "name": "orders_pkey",
+      "table_id": "z9wctGAOaXyO",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868792+00:00",
+      "updated_at": "2020-02-27 17:25:55.868813+00:00",
+      "object_id": "16471",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX orders_pkey ON app.orders USING btree (ordernumber)"
+    },
+    "model": "definitions.index",
+    "pk": "aem8uFE1rbud"
+  },
+  {
+    "fields": {
+      "index_id": "aem8uFE1rbud",
+      "column_id": "MCrfiBzpTfWr",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.891503+00:00",
+      "updated_at": "2020-02-27 17:25:55.891530+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "name": "payments",
+      "schema_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.342324+00:00",
+      "updated_at": "2020-02-27 17:25:55.342351+00:00",
+      "object_id": "16478",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "Q3OPkWPCoHzE"
+  },
+  {
+    "fields": {
+      "name": "customernumber",
+      "table_id": "Q3OPkWPCoHzE",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780193+00:00",
+      "updated_at": "2020-02-27 17:25:55.780215+00:00",
+      "object_id": "16478/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "mkRAka3RWpLo"
+  },
+  {
+    "fields": {
+      "name": "checknumber",
+      "table_id": "Q3OPkWPCoHzE",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780347+00:00",
+      "updated_at": "2020-02-27 17:25:55.780369+00:00",
+      "object_id": "16478/2",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 2,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "NeUsbqj1HTyj"
+  },
+  {
+    "fields": {
+      "name": "paymentdate",
+      "table_id": "Q3OPkWPCoHzE",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780439+00:00",
+      "updated_at": "2020-02-27 17:25:55.780461+00:00",
+      "object_id": "16478/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "zGRJh9FrkrVN"
+  },
+  {
+    "fields": {
+      "name": "amount",
+      "table_id": "Q3OPkWPCoHzE",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780531+00:00",
+      "updated_at": "2020-02-27 17:25:55.780553+00:00",
+      "object_id": "16478/4",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "numeric",
+      "numeric_scale": 2,
+      "max_length": 10,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "mJsBLXCjper8"
+  },
+  {
+    "fields": {
+      "name": "payments_pkey",
+      "table_id": "Q3OPkWPCoHzE",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868872+00:00",
+      "updated_at": "2020-02-27 17:25:55.868893+00:00",
+      "object_id": "16481",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX payments_pkey ON app.payments USING btree (customernumber, checknumber)"
+    },
+    "model": "definitions.index",
+    "pk": "kKEJEvD8j0e4"
+  },
+  {
+    "fields": {
+      "index_id": "kKEJEvD8j0e4",
+      "column_id": "mkRAka3RWpLo",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.892547+00:00",
+      "updated_at": "2020-02-27 17:25:55.892574+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "index_id": "kKEJEvD8j0e4",
+      "column_id": "NeUsbqj1HTyj",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.893608+00:00",
+      "updated_at": "2020-02-27 17:25:55.893637+00:00",
+      "ordinal_position": 2
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "name": "productlines",
+      "schema_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.342439+00:00",
+      "updated_at": "2020-02-27 17:25:55.342466+00:00",
+      "object_id": "16456",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "hvyEqN4paDND"
+  },
+  {
+    "fields": {
+      "name": "productline",
+      "table_id": "hvyEqN4paDND",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780623+00:00",
+      "updated_at": "2020-02-27 17:25:55.780645+00:00",
+      "object_id": "16456/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "uaGrJ4wWyIUb"
+  },
+  {
+    "fields": {
+      "name": "textdescription",
+      "table_id": "hvyEqN4paDND",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780715+00:00",
+      "updated_at": "2020-02-27 17:25:55.780737+00:00",
+      "object_id": "16456/2",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 4000,
+      "default_value": "NULL::character varying"
+    },
+    "model": "definitions.column",
+    "pk": "Khg08s102k0y"
+  },
+  {
+    "fields": {
+      "name": "htmldescription",
+      "table_id": "hvyEqN4paDND",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780808+00:00",
+      "updated_at": "2020-02-27 17:25:55.780830+00:00",
+      "object_id": "16456/3",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "text",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "1iLZt693dSPG"
+  },
+  {
+    "fields": {
+      "name": "image",
+      "table_id": "hvyEqN4paDND",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780900+00:00",
+      "updated_at": "2020-02-27 17:25:55.780921+00:00",
+      "object_id": "16456/4",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "bytea",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "bAMwAOXOPqtq"
+  },
+  {
+    "fields": {
+      "name": "productlines_pkey",
+      "table_id": "hvyEqN4paDND",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868951+00:00",
+      "updated_at": "2020-02-27 17:25:55.868973+00:00",
+      "object_id": "16463",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX productlines_pkey ON app.productlines USING btree (productline)"
+    },
+    "model": "definitions.index",
+    "pk": "zc4E95NPGbrP"
+  },
+  {
+    "fields": {
+      "index_id": "zc4E95NPGbrP",
+      "column_id": "uaGrJ4wWyIUb",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.895068+00:00",
+      "updated_at": "2020-02-27 17:25:55.895099+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "name": "products",
+      "schema_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.342572+00:00",
+      "updated_at": "2020-02-27 17:25:55.342600+00:00",
+      "object_id": "16488",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "SOi79CDr9xSL"
+  },
+  {
+    "fields": {
+      "name": "productcode",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.780991+00:00",
+      "updated_at": "2020-02-27 17:25:55.781013+00:00",
+      "object_id": "16488/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 15,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "E8HpWO6dJ0cJ"
+  },
+  {
+    "fields": {
+      "name": "productname",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781083+00:00",
+      "updated_at": "2020-02-27 17:25:55.781105+00:00",
+      "object_id": "16488/2",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 70,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "b54l1JpZ9nQn"
+  },
+  {
+    "fields": {
+      "name": "productline",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781175+00:00",
+      "updated_at": "2020-02-27 17:25:55.781197+00:00",
+      "object_id": "16488/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": "",
+      "short_desc": "Hello, world."
+    },
+    "model": "definitions.column",
+    "pk": "nnJpuRu1FYBm"
+  },
+  {
+    "fields": {
+      "name": "productscale",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781328+00:00",
+      "updated_at": "2020-02-27 17:25:55.781353+00:00",
+      "object_id": "16488/4",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 10,
+      "default_value": "",
+      "short_desc": "Goodbye, world."
+    },
+    "model": "definitions.column",
+    "pk": "xAMHA4bgVdL7"
+  },
+  {
+    "fields": {
+      "name": "productvendor",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781424+00:00",
+      "updated_at": "2020-02-27 17:25:55.781446+00:00",
+      "object_id": "16488/5",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 5,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "ieHJzsPz5ODk"
+  },
+  {
+    "fields": {
+      "name": "productdescription",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781516+00:00",
+      "updated_at": "2020-02-27 17:25:55.781538+00:00",
+      "object_id": "16488/6",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 6,
+      "data_type": "text",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "jki5tj4MquJo"
+  },
+  {
+    "fields": {
+      "name": "quantityinstock",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781608+00:00",
+      "updated_at": "2020-02-27 17:25:55.781630+00:00",
+      "object_id": "16488/7",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 7,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "zjfuAfs7mcth"
+  },
+  {
+    "fields": {
+      "name": "buyprice",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781701+00:00",
+      "updated_at": "2020-02-27 17:25:55.781722+00:00",
+      "object_id": "16488/8",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 8,
+      "data_type": "numeric",
+      "numeric_scale": 2,
+      "max_length": 10,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "r53iZfcvICKp"
+  },
+  {
+    "fields": {
+      "name": "msrp",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781793+00:00",
+      "updated_at": "2020-02-27 17:25:55.781815+00:00",
+      "object_id": "16488/9",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 9,
+      "data_type": "numeric",
+      "numeric_scale": 2,
+      "max_length": 10,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "nFybW6WH8igQ"
+  },
+  {
+    "fields": {
+      "name": "products_pkey",
+      "table_id": "SOi79CDr9xSL",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.869031+00:00",
+      "updated_at": "2020-02-27 17:25:55.869052+00:00",
+      "object_id": "16494",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX products_pkey ON app.products USING btree (productcode)"
+    },
+    "model": "definitions.index",
+    "pk": "Agcf5Xs91CD1"
+  },
+  {
+    "fields": {
+      "index_id": "Agcf5Xs91CD1",
+      "column_id": "E8HpWO6dJ0cJ",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.896395+00:00",
+      "updated_at": "2020-02-27 17:25:55.896421+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "name": "sales_representatives",
+      "schema_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.342687+00:00",
+      "updated_at": "2020-02-27 17:25:55.342714+00:00",
+      "object_id": "16516",
+      "kind": "view",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "Dvi2FtCydFiN"
+  },
+  {
+    "fields": {
+      "name": "customernumber",
+      "table_id": "Dvi2FtCydFiN",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781885+00:00",
+      "updated_at": "2020-02-27 17:25:55.781906+00:00",
+      "object_id": "16516/1",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "IR5X8A7dqVUW"
+  },
+  {
+    "fields": {
+      "name": "customername",
+      "table_id": "Dvi2FtCydFiN",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.781977+00:00",
+      "updated_at": "2020-02-27 17:25:55.781998+00:00",
+      "object_id": "16516/2",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 50,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "Gm8Vv7EXr2DX"
+  },
+  {
+    "fields": {
+      "name": "salesrepemployeenumber",
+      "table_id": "Dvi2FtCydFiN",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.782072+00:00",
+      "updated_at": "2020-02-27 17:25:55.782094+00:00",
+      "object_id": "16516/3",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "yRkJZQqjuxPt"
+  },
+  {
+    "fields": {
+      "name": "emp_no",
+      "table_id": "Dvi2FtCydFiN",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.782227+00:00",
+      "updated_at": "2020-02-27 17:25:55.782249+00:00",
+      "object_id": "16516/4",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "yekcrJLHGqC0"
+  },
+  {
+    "fields": {
+      "name": "name",
+      "table_id": "Dvi2FtCydFiN",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.782320+00:00",
+      "updated_at": "2020-02-27 17:25:55.782342+00:00",
+      "object_id": "16516/5",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 5,
+      "data_type": "text",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "OWgbQh2CCUxV"
+  },
+  {
+    "fields": {
+      "name": "employees",
+      "datastore_id": "s4N8p5g0wjiS",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.196569+00:00",
+      "updated_at": "2020-02-27 17:25:55.196588+00:00",
+      "object_id": "16386",
+      "tags": []
+    },
+    "model": "definitions.schema",
+    "pk": "k95I5dLPLz7t"
+  },
+  {
+    "fields": {
+      "name": "current_dept_emp",
+      "schema_id": "k95I5dLPLz7t",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.339860+00:00",
+      "updated_at": "2020-02-27 17:25:55.339898+00:00",
+      "object_id": "16437",
+      "kind": "view",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "5Fz1zavB4gxF"
+  },
+  {
+    "fields": {
+      "name": "emp_no",
+      "table_id": "5Fz1zavB4gxF",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776370+00:00",
+      "updated_at": "2020-02-27 17:25:55.776392+00:00",
+      "object_id": "16437/1",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "Pjxye1Nd5Fh5"
+  },
+  {
+    "fields": {
+      "name": "dept_no",
+      "table_id": "5Fz1zavB4gxF",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776480+00:00",
+      "updated_at": "2020-02-27 17:25:55.776503+00:00",
+      "object_id": "16437/2",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "character",
+      "numeric_scale": null,
+      "max_length": 4,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "tb38arEh8vM6"
+  },
+  {
+    "fields": {
+      "name": "from_date",
+      "table_id": "5Fz1zavB4gxF",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776574+00:00",
+      "updated_at": "2020-02-27 17:25:55.776595+00:00",
+      "object_id": "16437/3",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "fRVSbzk5IzVY"
+  },
+  {
+    "fields": {
+      "name": "to_date",
+      "table_id": "5Fz1zavB4gxF",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776665+00:00",
+      "updated_at": "2020-02-27 17:25:55.776687+00:00",
+      "object_id": "16437/4",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "WPQl0KhKoO37"
+  },
+  {
+    "fields": {
+      "name": "departments",
+      "schema_id": "k95I5dLPLz7t",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.339999+00:00",
+      "updated_at": "2020-02-27 17:25:55.340027+00:00",
+      "object_id": "16392",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "IFMwWB5gtslY"
+  },
+  {
+    "fields": {
+      "name": "dept_no",
+      "table_id": "IFMwWB5gtslY",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776757+00:00",
+      "updated_at": "2020-02-27 17:25:55.776779+00:00",
+      "object_id": "16392/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "character",
+      "numeric_scale": null,
+      "max_length": 4,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "VZGFwAQS0YgX"
+  },
+  {
+    "fields": {
+      "name": "dept_name",
+      "table_id": "IFMwWB5gtslY",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776849+00:00",
+      "updated_at": "2020-02-27 17:25:55.776870+00:00",
+      "object_id": "16392/2",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 40,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "mIWnUu0u06dg"
+  },
+  {
+    "fields": {
+      "name": "started_on",
+      "table_id": "IFMwWB5gtslY",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.776940+00:00",
+      "updated_at": "2020-02-27 17:25:55.776961+00:00",
+      "object_id": "16392/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "timestamp without time zone",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "bDSph9apBU0n"
+  },
+  {
+    "fields": {
+      "name": "departments_dept_name_key",
+      "table_id": "IFMwWB5gtslY",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868072+00:00",
+      "updated_at": "2020-02-27 17:25:55.868095+00:00",
+      "object_id": "16397",
+      "is_unique": true,
+      "is_primary": false,
+      "sql": "CREATE UNIQUE INDEX departments_dept_name_key ON employees.departments USING btree (dept_name)"
+    },
+    "model": "definitions.index",
+    "pk": "O28PtpREm03T"
+  },
+  {
+    "fields": {
+      "index_id": "O28PtpREm03T",
+      "column_id": "mIWnUu0u06dg",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.879660+00:00",
+      "updated_at": "2020-02-27 17:25:55.879690+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "name": "departments_pkey",
+      "table_id": "IFMwWB5gtslY",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868230+00:00",
+      "updated_at": "2020-02-27 17:25:55.868253+00:00",
+      "object_id": "16395",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX departments_pkey ON employees.departments USING btree (dept_no)"
+    },
+    "model": "definitions.index",
+    "pk": "4FCT7dKOhqfg"
+  },
+  {
+    "fields": {
+      "index_id": "4FCT7dKOhqfg",
+      "column_id": "VZGFwAQS0YgX",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.880746+00:00",
+      "updated_at": "2020-02-27 17:25:55.880776+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "name": "dept_emp",
+      "schema_id": "k95I5dLPLz7t",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.340114+00:00",
+      "updated_at": "2020-02-27 17:25:55.340482+00:00",
+      "object_id": "16418",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "6AfNjBIelPr7"
+  },
+  {
+    "fields": {
+      "name": "emp_no",
+      "table_id": "6AfNjBIelPr7",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777032+00:00",
+      "updated_at": "2020-02-27 17:25:55.777053+00:00",
+      "object_id": "16418/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "yZDuuTSbevpS"
+  },
+  {
+    "fields": {
+      "name": "dept_no",
+      "table_id": "6AfNjBIelPr7",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777123+00:00",
+      "updated_at": "2020-02-27 17:25:55.777154+00:00",
+      "object_id": "16418/2",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 2,
+      "data_type": "character",
+      "numeric_scale": null,
+      "max_length": 4,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "2o6jqxgEkY8r"
+  },
+  {
+    "fields": {
+      "name": "from_date",
+      "table_id": "6AfNjBIelPr7",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777224+00:00",
+      "updated_at": "2020-02-27 17:25:55.777306+00:00",
+      "object_id": "16418/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "IDbAzTDk4O7N"
+  },
+  {
+    "fields": {
+      "name": "to_date",
+      "table_id": "6AfNjBIelPr7",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777380+00:00",
+      "updated_at": "2020-02-27 17:25:55.777401+00:00",
+      "object_id": "16418/4",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "67zmd2Qx5LVD"
+  },
+  {
+    "fields": {
+      "name": "dept_emp_pkey",
+      "table_id": "6AfNjBIelPr7",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868312+00:00",
+      "updated_at": "2020-02-27 17:25:55.868333+00:00",
+      "object_id": "16421",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX dept_emp_pkey ON employees.dept_emp USING btree (emp_no, dept_no)"
+    },
+    "model": "definitions.index",
+    "pk": "iw8n31YvGhI6"
+  },
+  {
+    "fields": {
+      "index_id": "iw8n31YvGhI6",
+      "column_id": "yZDuuTSbevpS",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.881787+00:00",
+      "updated_at": "2020-02-27 17:25:55.881815+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "index_id": "iw8n31YvGhI6",
+      "column_id": "2o6jqxgEkY8r",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.882821+00:00",
+      "updated_at": "2020-02-27 17:25:55.882849+00:00",
+      "ordinal_position": 2
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "name": "dept_emp_latest_date",
+      "schema_id": "k95I5dLPLz7t",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.340994+00:00",
+      "updated_at": "2020-02-27 17:25:55.341032+00:00",
+      "object_id": "16433",
+      "kind": "view",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "FYO71GS5ZMzC"
+  },
+  {
+    "fields": {
+      "name": "emp_no",
+      "table_id": "FYO71GS5ZMzC",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777472+00:00",
+      "updated_at": "2020-02-27 17:25:55.777493+00:00",
+      "object_id": "16433/1",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "FCfcOYCvfepx"
+  },
+  {
+    "fields": {
+      "name": "from_date",
+      "table_id": "FYO71GS5ZMzC",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777564+00:00",
+      "updated_at": "2020-02-27 17:25:55.777585+00:00",
+      "object_id": "16433/2",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "P2sL5e71pWRV"
+  },
+  {
+    "fields": {
+      "name": "to_date",
+      "table_id": "FYO71GS5ZMzC",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777656+00:00",
+      "updated_at": "2020-02-27 17:25:55.777677+00:00",
+      "object_id": "16433/3",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "hTO9jrPD3YXJ"
+  },
+  {
+    "fields": {
+      "name": "dept_manager",
+      "schema_id": "k95I5dLPLz7t",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.341341+00:00",
+      "updated_at": "2020-02-27 17:25:55.341387+00:00",
+      "object_id": "16399",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "1gNZhLaozXxz"
+  },
+  {
+    "fields": {
+      "name": "dept_no",
+      "table_id": "1gNZhLaozXxz",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777747+00:00",
+      "updated_at": "2020-02-27 17:25:55.777768+00:00",
+      "object_id": "16399/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "character",
+      "numeric_scale": null,
+      "max_length": 4,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "wy9lVPaIX14w"
+  },
+  {
+    "fields": {
+      "name": "emp_no",
+      "table_id": "1gNZhLaozXxz",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777839+00:00",
+      "updated_at": "2020-02-27 17:25:55.777861+00:00",
+      "object_id": "16399/2",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 2,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "IEN3kN0F4s2g"
+  },
+  {
+    "fields": {
+      "name": "from_date",
+      "table_id": "1gNZhLaozXxz",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.777934+00:00",
+      "updated_at": "2020-02-27 17:25:55.777962+00:00",
+      "object_id": "16399/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "rz5IO2xQoxvj"
+  },
+  {
+    "fields": {
+      "name": "to_date",
+      "table_id": "1gNZhLaozXxz",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778035+00:00",
+      "updated_at": "2020-02-27 17:25:55.778057+00:00",
+      "object_id": "16399/4",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "RHcrvCd0zmBM"
+  },
+  {
+    "fields": {
+      "name": "extras",
+      "table_id": "1gNZhLaozXxz",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778132+00:00",
+      "updated_at": "2020-02-27 17:25:55.778153+00:00",
+      "object_id": "16399/5",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 5,
+      "data_type": "text",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "W9AEfczDxBhL"
+  },
+  {
+    "fields": {
+      "name": "rating",
+      "table_id": "1gNZhLaozXxz",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778224+00:00",
+      "updated_at": "2020-02-27 17:25:55.778311+00:00",
+      "object_id": "16399/6",
+      "is_nullable": true,
+      "is_primary": false,
+      "ordinal_position": 6,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": "5"
+    },
+    "model": "definitions.column",
+    "pk": "89hUtFEh83S6"
+  },
+  {
+    "fields": {
+      "name": "dept_manager_pkey",
+      "table_id": "1gNZhLaozXxz",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868392+00:00",
+      "updated_at": "2020-02-27 17:25:55.868413+00:00",
+      "object_id": "16406",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX dept_manager_pkey ON employees.dept_manager USING btree (emp_no, dept_no)"
+    },
+    "model": "definitions.index",
+    "pk": "fzjAEmqJ0gxm"
+  },
+  {
+    "fields": {
+      "index_id": "fzjAEmqJ0gxm",
+      "column_id": "IEN3kN0F4s2g",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.883914+00:00",
+      "updated_at": "2020-02-27 17:25:55.883942+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "index_id": "fzjAEmqJ0gxm",
+      "column_id": "wy9lVPaIX14w",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.885001+00:00",
+      "updated_at": "2020-02-27 17:25:55.885028+00:00",
+      "ordinal_position": 2
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "name": "employees",
+      "schema_id": "k95I5dLPLz7t",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.341550+00:00",
+      "updated_at": "2020-02-27 17:25:55.341584+00:00",
+      "object_id": "16387",
+      "kind": "base table",
+      "tags": [],
+      "short_desc": "",
+      "properties": {}
+    },
+    "model": "definitions.table",
+    "pk": "4ogJRCI8pu2p"
+  },
+  {
+    "fields": {
+      "name": "emp_no",
+      "table_id": "4ogJRCI8pu2p",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778383+00:00",
+      "updated_at": "2020-02-27 17:25:55.778405+00:00",
+      "object_id": "16387/1",
+      "is_nullable": false,
+      "is_primary": true,
+      "ordinal_position": 1,
+      "data_type": "integer",
+      "numeric_scale": 0,
+      "max_length": 32,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "6cA4S20IQDI4"
+  },
+  {
+    "fields": {
+      "name": "birth_date",
+      "table_id": "4ogJRCI8pu2p",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778475+00:00",
+      "updated_at": "2020-02-27 17:25:55.778496+00:00",
+      "object_id": "16387/2",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 2,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "PsjEAuGvIVa9"
+  },
+  {
+    "fields": {
+      "name": "first_name",
+      "table_id": "4ogJRCI8pu2p",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778567+00:00",
+      "updated_at": "2020-02-27 17:25:55.778588+00:00",
+      "object_id": "16387/3",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 3,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 14,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "L8UkPphOOr7g"
+  },
+  {
+    "fields": {
+      "name": "last_name",
+      "table_id": "4ogJRCI8pu2p",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778659+00:00",
+      "updated_at": "2020-02-27 17:25:55.778680+00:00",
+      "object_id": "16387/4",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 4,
+      "data_type": "character varying",
+      "numeric_scale": null,
+      "max_length": 16,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "ZsgjSo7RVWJl"
+  },
+  {
+    "fields": {
+      "name": "hire_date",
+      "table_id": "4ogJRCI8pu2p",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778750+00:00",
+      "updated_at": "2020-02-27 17:25:55.778772+00:00",
+      "object_id": "16387/5",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 5,
+      "data_type": "date",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "88zOmcq4JKMU"
+  },
+  {
+    "fields": {
+      "name": "created_at",
+      "table_id": "4ogJRCI8pu2p",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.778842+00:00",
+      "updated_at": "2020-02-27 17:25:55.778863+00:00",
+      "object_id": "16387/6",
+      "is_nullable": false,
+      "is_primary": false,
+      "ordinal_position": 6,
+      "data_type": "timestamp without time zone",
+      "numeric_scale": null,
+      "max_length": null,
+      "default_value": ""
+    },
+    "model": "definitions.column",
+    "pk": "EGiQPnCvFQjh"
+  },
+  {
+    "fields": {
+      "name": "employees_pkey",
+      "table_id": "4ogJRCI8pu2p",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.868472+00:00",
+      "updated_at": "2020-02-27 17:25:55.868494+00:00",
+      "object_id": "16390",
+      "is_unique": true,
+      "is_primary": true,
+      "sql": "CREATE UNIQUE INDEX employees_pkey ON employees.employees USING btree (emp_no)"
+    },
+    "model": "definitions.index",
+    "pk": "KHD8XM2x2CZL"
+  },
+  {
+    "fields": {
+      "index_id": "KHD8XM2x2CZL",
+      "column_id": "6cA4S20IQDI4",
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "created_at": "2020-02-27 17:25:55.886012+00:00",
+      "updated_at": "2020-02-27 17:25:55.886039+00:00",
+      "ordinal_position": 1
+    },
+    "model": "definitions.indexcolumn",
+    "pk": 8
+  }
+]

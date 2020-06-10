@@ -1,0 +1,478 @@
+# -*- coding: utf-8 -*-
+from django.contrib.contenttypes.fields import ContentType
+from django.contrib.postgres.fields import ArrayField, JSONField
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db import models
+
+from django.contrib.contenttypes.fields import GenericRelation
+
+from app.authentication.models import Workspace
+from app.comments.models import Comment
+from app.customfields.models import CustomPropertiesModel
+from app.revisioner.mixins import RevisableModel
+
+from utils.delete.models import SoftDeletionModel
+from utils.encrypt.fields import EncryptedCharField
+from utils.managers import SearchManager
+from utils.mixins.models import (
+    StringPrimaryKeyModel, TimestampedModel, AuditableModel
+)
+from utils.postgres.managers import PostgresManager
+from utils.shortcuts import generate_unique_slug
+
+
+def make_audit_kwargs(instance):
+    """Make the parameters for logging audit activity.
+    """
+    content_type = ContentType.objects.get_for_model(instance)
+
+    return {
+        'target_object_id': instance.pk,
+        'target_content_type_id': content_type.pk,
+        'extras': {
+            'datastore_id': instance.datastore_id,
+        }
+    }
+
+
+class Datastore(StringPrimaryKeyModel,
+                AuditableModel,
+                CustomPropertiesModel,
+                TimestampedModel):
+    """Represents a JDBC connectable datastore.
+    """
+    POSTGRESQL = 'postgresql'
+    SQLSERVER = 'sqlserver'
+    MYSQL = 'mysql'
+    REDSHIFT = 'redshift'
+    SNOWFLAKE = 'snowflake'
+    ORACLE = 'oracle'
+
+    ENGINE_CHOICES = (
+        (POSTGRESQL, 'PostgreSQL'),
+        (SQLSERVER, 'SQL Server'),
+        (MYSQL, 'MySQL'),
+        (REDSHIFT, 'Redshift'),
+        (SNOWFLAKE, 'Snowflake'),
+        (ORACLE, 'Oracle'),
+    )
+
+    REQUIRED_SSH_FIELDS = [
+        'ssh_host',
+        'ssh_user',
+        'ssh_port',
+    ]
+
+    workspace = models.ForeignKey(
+        to=Workspace,
+        on_delete=models.CASCADE,
+        related_name='datastores',
+    )
+
+    audited_fields = [
+        'name',
+        'short_desc',
+        'tags',
+        'is_enabled',
+        'custom_properties',
+        'host',
+        'username',
+        'password',
+        'database',
+        'port',
+        'ssh_enabled',
+        'ssh_host',
+        'ssh_port',
+        'ssh_user',
+    ]
+
+    name = models.CharField(max_length=255, null=False, blank=False)
+    slug = models.CharField(max_length=300, null=False, blank=False)
+    tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
+    is_enabled = models.BooleanField(default=True)
+    version = models.CharField(max_length=255, null=False, blank=False)
+
+    engine = models.CharField(max_length=16, choices=ENGINE_CHOICES, null=False, blank=False)
+    host = models.CharField(max_length=255, null=False, blank=False)
+    username = models.CharField(max_length=128, null=False, blank=False)
+    password = EncryptedCharField(max_length=128, null=False, blank=False)
+    database = models.CharField(max_length=128, null=False, blank=False)
+    port = models.PositiveIntegerField(null=False, blank=False, validators=[MaxValueValidator(65535)])
+    extras = JSONField(default=dict)
+
+    ssh_enabled = models.BooleanField(default=False)
+    ssh_host = models.CharField(max_length=128, null=True, blank=False)
+    ssh_port = models.PositiveIntegerField(null=True, blank=False, validators=[MaxValueValidator(65535)])
+    ssh_user = models.CharField(max_length=128, null=True, blank=False)
+
+    short_desc = models.CharField(max_length=140, null=False, blank=True)
+
+    objects = models.Manager()
+    search_objects = SearchManager(fields=['name', 'engine', 'tags'])
+
+    class Meta:
+        unique_together = ('workspace', 'name',)
+
+    def __init__(self, *args, **kwargs):
+        super(Datastore, self).__init__(*args, **kwargs)
+        self.__slug = self.slug
+
+    def __str__(self):
+        return self.slug
+
+    def save(self, *args, **kwargs):
+        """Override `save` method to set the `slug` attribute.
+        """
+        if not self.slug or self.__slug != self.slug:
+            self.slug = generate_unique_slug(
+                self.__class__,
+                self.name,
+            )
+        return super().save(*args, **kwargs)
+
+    @property
+    def datastore_id(self):
+        """Alias for the `pk` for audit reasons.
+        """
+        return self.pk
+
+    @property
+    def parent_resource(self):
+        """Alias for the `parent` for audit reasons.
+        """
+        return None
+
+    @property
+    def revisioner_label(self):
+        """Decorator function for label in Revisioner output.
+        """
+        return self.name
+
+    @property
+    def display_name(self):
+        """The displayable name of the object.
+        """
+        return self.name
+
+    @property
+    def most_recent_run(self):
+        """Get the most recent Revisioner run.
+        """
+        return self.run_history.order_by('-created_on', '-created_at').first()
+
+    @property
+    def last_committed_run(self):
+        """Get the most recent Revisioner completed run.
+        """
+        return (
+            self.run_history
+                .filter(finished_at__isnull=False)
+                .order_by('-created_on')
+                .first()
+        )
+
+    @property
+    def has_completed_run(self):
+        """Check if the datastore has a completed run.
+        """
+        return self.run_history.filter(finished_at__isnull=False).count() > 0
+
+    def connection_was_changed(self):
+        """Check if the JDBC connection was updated.
+        """
+        jdbc_fields = [
+            'host',
+            'username',
+            'password',
+            'port',
+            'database',
+        ]
+        return self.is_dirty(*jdbc_fields)
+
+
+class Schema(StringPrimaryKeyModel,
+             AuditableModel,
+             RevisableModel,
+             SoftDeletionModel,
+             TimestampedModel):
+    """Represents a schema within a datastore.
+    """
+    audited_fields = [
+        'short_desc',
+        'tags',
+    ]
+
+    object_id = models.CharField(max_length=256, null=True, default=None)
+
+    datastore = models.ForeignKey(
+        to=Datastore,
+        on_delete=models.CASCADE,
+        related_name='schemas',
+    )
+
+    workspace = models.ForeignKey(
+        to=Workspace,
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
+    tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
+
+    @property
+    def parent_resource(self):
+        return self.datastore
+
+    @property
+    def display_name(self):
+        """The displayable name of the object.
+        """
+        return self.name
+
+    class Meta:
+        unique_together = ('datastore', 'name',)
+
+    def __str__(self):
+        return self.name
+
+
+class Table(StringPrimaryKeyModel,
+            AuditableModel,
+            CustomPropertiesModel,
+            RevisableModel,
+            SoftDeletionModel,
+            TimestampedModel):
+    """Represents a table within a schema.
+    """
+    audited_fields = [
+        'custom_properties',
+        'short_desc',
+        'tags',
+    ]
+
+    comments = GenericRelation(Comment, related_query_name="table")
+
+    object_id = models.CharField(max_length=256, null=True, default=None)
+
+    schema = models.ForeignKey(
+        to=Schema,
+        on_delete=models.CASCADE,
+        related_name='tables',
+    )
+
+    workspace = models.ForeignKey(
+        to=Workspace,
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
+    tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
+    kind = models.CharField(max_length=100, null=False, blank=False)
+
+    short_desc = models.CharField(max_length=140, null=False, blank=True)
+    properties = JSONField(default=dict)
+
+    class Meta:
+        unique_together = ('schema', 'name',)
+
+    @property
+    def parent_resource(self):
+        return self.schema
+
+    @property
+    def display_name(self):
+        """The displayable name of the object.
+        """
+        return self.name
+
+    @property
+    def datastore_id(self):
+        return self.schema.datastore_id
+
+    @property
+    def datastore_slug(self):
+        return self.schema.datastore.slug
+
+    @property
+    def search_label(self):
+        return '%s.%s' % (self.schema.name, self.name)
+
+    @property
+    def search_pathname(self):
+        return '/datastores/%s/definition/%s/%s/overview' % (
+            self.datastore_slug,
+            self.schema.name,
+            self.name,
+        )
+
+    def as_search_result(self):
+        return {
+            'pathname': self.search_pathname,
+            'label': self.search_label,
+            'description': self.short_desc,
+            'datastore_id': self.datastore_id,
+        }
+
+
+class Column(StringPrimaryKeyModel,
+             AuditableModel,
+             TimestampedModel,
+             SoftDeletionModel,
+             RevisableModel):
+    """Represents a column within a table.
+    """
+    audited_fields = [
+        'short_desc',
+        'tags',
+    ]
+
+    comments = GenericRelation(Comment, related_query_name="column")
+
+    object_id = models.CharField(max_length=256, null=True, default=None)
+
+    table = models.ForeignKey(
+        to=Table,
+        on_delete=models.CASCADE,
+        related_name='columns',
+    )
+
+    workspace = models.ForeignKey(
+        to=Workspace,
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
+    ordinal_position = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
+    data_type = models.CharField(max_length=255, null=False, blank=False)
+    max_length = models.IntegerField(null=True)
+    numeric_scale = models.IntegerField(null=True)
+    is_primary = models.BooleanField(null=False, default=False)
+    is_nullable = models.BooleanField(null=False)
+    default_value = models.CharField(max_length=255, null=False, blank=True)
+    comment = models.TextField(blank=True)
+    short_desc = models.CharField(max_length=50, null=False, blank=True)
+
+    class Meta:
+        unique_together = ('table', 'name',)
+
+    @property
+    def parent_resource(self):
+        return self.table
+
+    @property
+    def display_name(self):
+        """The displayable name of the object.
+        """
+        return self.name
+
+    @property
+    def datastore_id(self):
+        return self.table.datastore_id
+
+    @property
+    def datastore_slug(self):
+        return self.table.datastore_slug
+
+    @property
+    def search_label(self):
+        return '%s.%s.%s' % (self.table.schema.name, self.table.name, self.name)
+
+    @property
+    def search_pathname(self):
+        return '/datastores/%s/definition/%s/%s/columns' % (
+            self.datastore_slug,
+            self.table.schema.name,
+            self.table.name,
+        )
+
+    def as_search_result(self):
+        return {
+            'pathname': self.search_pathname,
+            'label': self.search_label,
+            'description': self.short_desc,
+            'datastore_id': self.datastore_id,
+        }
+
+    @property
+    def full_data_type(self):
+        dtype = self.data_type
+        if self.max_length:
+            dtype = '{0}({1}'.format(dtype, self.max_length)
+            if self.numeric_scale:
+                dtype = '{0}, {1}'.format(dtype, self.numeric_scale)
+            dtype = dtype + ')'
+        return dtype
+
+
+class Index(StringPrimaryKeyModel,
+            RevisableModel,
+            TimestampedModel):
+    """Represents a index within a table.
+    """
+    object_id = models.CharField(max_length=256, null=True, default=None)
+
+    table = models.ForeignKey(
+        to=Table,
+        on_delete=models.CASCADE,
+        related_name='indexes',
+    )
+
+    workspace = models.ForeignKey(
+        to=Workspace,
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    name = models.CharField(db_index=True, max_length=512)
+    kind = models.CharField(max_length=50)
+
+    is_primary = models.BooleanField(null=False, default=False)
+    is_unique = models.BooleanField(null=False, default=False)
+
+    sql = models.TextField(null=True)
+
+    columns = models.ManyToManyField(Column, through=u'IndexColumn')
+
+    @property
+    def display_name(self):
+        """The displayable name of the object.
+        """
+        return self.name
+
+    @property
+    def parent_resource(self):
+        return self.table
+
+    @property
+    def datastore_id(self):
+        return self.table.datastore_id
+
+    class Meta:
+        unique_together = ('table', 'name',)
+
+
+class IndexColumn(TimestampedModel):
+    """Relationship between an index and multiple existing columns.
+    """
+    workspace = models.ForeignKey(
+        to=Workspace,
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    index = models.ForeignKey(
+        to=Index,
+        on_delete=models.CASCADE,
+        related_name='index_columns',
+    )
+
+    column = models.ForeignKey(to=Column, on_delete=models.CASCADE)
+
+    ordinal_position = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
+
+    objects = PostgresManager()
+
+    class Meta:
+        unique_together = ('index', 'column', 'workspace',)
