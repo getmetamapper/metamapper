@@ -402,15 +402,17 @@ GS_DEFAULT_ACL = os.getenv('METAMAPPER_FILE_STORAGE_BUCKET_ACL', 'private')
 GS_FILE_OVERWRITE = True
 #
 # Override Metamapper settings.py configuration
+# https://code.djangoproject.com/wiki/SplitSettings
 #
 # You can reference a Python file to override any of the constants in this file. The
 # provided file must be discoverable via the PYTHONPATH.
 #
 
-# OVERRIDE_MODULE_PATH = os.getenv('METAMAPPER_SETTINGS_OVERRIDE_MODULE')
+OVERRIDE_MODULE_PATH = os.getenv('METAMAPPER_SETTINGS_OVERRIDE_MODULE')
 
-# if OVERRIDE_MODULE_PATH:
-#     __import__(OVERRIDE_MODULE_PATH, globals={"__name__": __name__})
+if OVERRIDE_MODULE_PATH:
+    config_module = __import__(OVERRIDE_MODULE_PATH, globals(), locals(), 'metamapper')
 
-
-# https://code.djangoproject.com/wiki/SplitSettings
+    for setting in dir(config_module):
+        if setting == setting.upper():
+            locals()[setting] = getattr(config_module, setting)
