@@ -7,7 +7,6 @@ import { Table } from "antd"
 
 import { map, uniqBy, flatten } from "lodash"
 import { components } from "app/Common/EditableCell"
-import FirstRunPending from "app/Datastores/RunHistory/FirstRunPending"
 import UpdateTableMetadata from "graphql/mutations/UpdateTableMetadata"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 

@@ -12,12 +12,6 @@
   "viewportWidth": 1600,
   "viewportHeight": 1024,
   "testFiles": [
-    "authentication.spec.js",
-    "user.spec.js",
-    "workspace.spec.js",
-    "team.spec.js",
-    "customfields.spec.js",
-    "sso.spec.js",
     "omnisearch.spec.js",
     "datastores.spec.js",
     "datastore_overview.spec.js",
@@ -27,6 +21,12 @@
     "table_comments.spec.js",
     "table_columns.spec.js",
     "table_column_comments.spec.js",
-    "table_indexes.spec.js"
+    "table_indexes.spec.js",
+    "authentication.spec.js",
+    "customfields.spec.js",
+    "sso.spec.js",
+    "workspace.spec.js",
+    "team.spec.js",
+    "user.spec.js"
   ]
 }

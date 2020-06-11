@@ -27,6 +27,10 @@ const withGetDatastoreWithTableList = graphql(GetDatastoreWithTableList, {
 
     const { datastoreBySlug } = data
 
+    if (!datastoreBySlug) {
+      return res
+    }
+
     return {
       datastore: datastoreBySlug,
       schemas: datastoreBySlug.schemas,

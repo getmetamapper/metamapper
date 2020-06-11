@@ -58,15 +58,16 @@ class End2EndRevisionerTests(TestCase):
         finally:
             clean_uploads_folder(datastore.id, run.id)
 
+        content_types = revisioners.get_content_types()
+
         for case in cases:
             resource = None
             if 'model' in case:
                 resource = (
-                    revisioners.CONTENT_TYPES[case['model']]
-                               .model_class()
-                               .objects
-                               .filter(**case.get('filters', {}))
-                               .first()
+                    content_types[case['model']].model_class()
+                                                .objects
+                                                .filter(**case.get('filters', {}))
+                                                .first()
                 )
             for assertion in case['assertions']:
                 message = '\n'.join([

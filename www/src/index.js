@@ -7,6 +7,8 @@ import { InMemoryCache } from "apollo-cache-inmemory"
 import Route from "app/Navigation/Route"
 import NotFound from "app/Errors/NotFound"
 import WorkspaceRedirect from "pages/Workspaces/WorkspaceRedirect"
+
+// eslint-disable-next-line
 import trix from "trix" /* eslint-disable no-unused-vars */
 
 import "./index.scss"

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from base64 import b64encode, b64decode
-from unittest import mock
+from base64 import b64decode
 
-from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.test import TestCase, Client
 from django.urls import reverse

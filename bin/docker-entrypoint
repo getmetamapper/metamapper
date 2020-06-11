@@ -3,6 +3,14 @@ set -e
 
 GUNICORN_CONFIG_PATH=${METAMAPPER_GUNICORN_CONFIG_PATH:='./metamapper/config/gunicorn.py'}
 
+shell() {
+    python manage.py shell
+}
+
+migrate() {
+    DB_SETUP=1 python manage.py migrate
+}
+
 # Starts the Metamapper web server. We recommend running a few
 # of these behind a load balancer.
 webserver() {
@@ -24,14 +32,6 @@ flower() {
     flower -A metamapper --port=${METAMAPPER_FLOWER_PORT:='5555'}
 }
 
-shell() {
-    python manage.py shell
-}
-
-migrate() {
-    python manage.py migrate
-}
-
 case "$1" in
   worker)
     shift
@@ -44,6 +44,11 @@ case "$1" in
   scheduler)
     shift
     scheduler
+    ;;
+  ci-webserver)
+    shift
+    migrate
+    webserver
     ;;
   shell)
     shift

@@ -8,7 +8,7 @@
       "html": "The number of items ordered by the customer.",
       "text": "The number of items ordered by the customer.",
       "author_id": 1,
-      "content_type_id": 10
+      "content_type": ["definitions", "column"]
     },
     "model": "comments.comment",
     "pk": "JFokD7yrBa32"
@@ -22,7 +22,7 @@
       "html": "What is the unit of this field?",
       "text": "What is the unit of this field?",
       "author_id": 2,
-      "content_type_id": 10
+      "content_type": ["definitions", "column"]
     },
     "model": "comments.comment",
     "pk": "7iWstUHydyCJ"
@@ -37,7 +37,7 @@
       "html": "This comment should probably be deleted.",
       "text": "This comment should probably be deleted.",
       "author_id": 1,
-      "content_type_id": 10
+      "content_type": ["definitions", "column"]
     },
     "model": "comments.comment",
     "pk": "x1ov3KgWPz45"
@@ -51,7 +51,7 @@
       "html": "An unrelaed comment that will not show up in search tests.",
       "text": "An unrelaed comment that will not show up in search tests.",
       "author_id": 2,
-      "content_type_id": 9
+      "content_type": ["definitions", "table"]
     },
     "model": "comments.comment",
     "pk": "lME0etbyVdN7"
@@ -65,7 +65,7 @@
       "html": "Details about a customer order.",
       "text": "Details about a customer order.",
       "author_id": 1,
-      "content_type_id": 9
+      "content_type": ["definitions", "table"]
     },
     "model": "comments.comment",
     "pk": "uIqX67zqcjFT"

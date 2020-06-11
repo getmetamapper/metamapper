@@ -1,15 +1,16 @@
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
+import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("user.spec.js", () => {
   before(() => {
     cy.resetdb()
   })
 
-  describe("edit user profile", () => {
-    let email = "readonly@metamapper.io"
+  let oldEmail = "other.readonly@metamapper.io"
+  let newEmail = "burton.guster@metamapper.io"
 
+  describe("edit user profile", () => {
     beforeEach(() => {
-      cy.login(email, "password1234")
+      cy.login(oldEmail, "password1234")
         .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}`).wait(1000))
 
       cy.getByTestId("Navbar.Dropdown").click()
@@ -22,7 +23,7 @@ describe("user.spec.js", () => {
       cy.fillInputs({
         "UpdateUserProfileForm.FirstName": "Burton",
         "UpdateUserProfileForm.LastName": "Guster",
-        "UpdateUserProfileForm.Email": email,
+        "UpdateUserProfileForm.Email": oldEmail,
       })
 
       cy.getByTestId("UpdateUserProfileForm.Submit").click()
@@ -37,7 +38,7 @@ describe("user.spec.js", () => {
       cy.fillInputs({
         "UpdateUserProfileForm.FirstName": "Burton",
         "UpdateUserProfileForm.LastName": "Guster",
-        "UpdateUserProfileForm.Email": email,
+        "UpdateUserProfileForm.Email": oldEmail,
         "UpdateUserProfileForm.CurrentPassword": "bananas",
       })
 
@@ -69,7 +70,7 @@ describe("user.spec.js", () => {
       {
         describe: "validate name length",
         inputs: {
-          "Email": { value: email, error: null },
+          "Email": { value: oldEmail, error: null },
           "FirstName": {
             value: (Math.random()*1e256).toString(36),
             error: "This field must be less than 60 characters.",
@@ -101,7 +102,7 @@ describe("user.spec.js", () => {
       cy.fillInputs({
         "UpdateUserProfileForm.FirstName": "Gary",
         "UpdateUserProfileForm.LastName": "Scott",
-        "UpdateUserProfileForm.Email": "michael.scott@metamapper.io",
+        "UpdateUserProfileForm.Email": "owner@metamapper.io",
         "UpdateUserProfileForm.CurrentPassword": "password1234",
       })
 
@@ -137,7 +138,7 @@ describe("user.spec.js", () => {
       cy.fillInputs({
         "UpdateUserProfileForm.FirstName": "Burton",
         "UpdateUserProfileForm.LastName": "Guster",
-        "UpdateUserProfileForm.Email": "burton.guster@metamapper.io",
+        "UpdateUserProfileForm.Email": newEmail,
         "UpdateUserProfileForm.CurrentPassword": "password1234",
       })
 
@@ -163,8 +164,6 @@ describe("user.spec.js", () => {
   })
 
   describe("edit user password", () => {
-    let email = "owner@metamapper.io"
-
     const passwords = {
       current: "password1234",
       newSafe: "Ccbc;gNr$-L+6@Z]",
@@ -173,7 +172,7 @@ describe("user.spec.js", () => {
     }
 
     beforeEach(() => {
-      cy.login(email, "password1234")
+      cy.login(newEmail, "password1234", DEFAULT_WORKSPACE_ID)
         .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}`).wait(1000))
 
       cy.getByTestId("Navbar.Dropdown").click()
@@ -229,7 +228,6 @@ describe("user.spec.js", () => {
     })
 
     it("using UI", () => {
-
       cy.fillInputs({
         "UpdatePasswordForm.CurrentPassword": passwords.current,
         "UpdatePasswordForm.NewPassword": passwords.newSafe,
@@ -257,7 +255,7 @@ describe("user.spec.js", () => {
       cy.logout()
       cy.location("pathname").should("equal", "/login")
 
-      cy.getByTestId("LoginPromptForm.Email").type(email)
+      cy.getByTestId("LoginPromptForm.Email").type(newEmail)
       cy.contains("button", "Continue with Email").click()
 
       cy.getByTestId("LoginForm.Password").type(passwords.newSafe)

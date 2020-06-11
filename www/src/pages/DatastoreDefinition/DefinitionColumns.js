@@ -10,7 +10,6 @@ import ColumnDefinitionDetails from "app/Datastores/DatastoreDefinition/ColumnDe
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
 import withGetDatastoreWithTableList from "graphql/withGetDatastoreWithTableList"
 import withGetTableColumns from "graphql/withGetTableColumns"
-import withLoader from "hoc/withLoader"
 
 class DatastoreColumns extends Component {
   constructor(props) {

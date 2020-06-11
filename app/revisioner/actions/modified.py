@@ -2,7 +2,7 @@
 from app.definitions.models import Schema, Table, Column, Index, IndexColumn
 
 from app.revisioner.collectors import ObjectCollector
-from app.revisioner.revisioners import KLASS_MAP, CONTENT_TYPES
+from app.revisioner.revisioners import KLASS_MAP, get_content_type_for_model
 
 from utils.postgres.types import ConflictAction
 
@@ -14,7 +14,7 @@ class GenericModifyAction(object):
         self.run = run
         self.datastore = datastore
         self.model = KLASS_MAP[self.model_name]
-        self.content_type = CONTENT_TYPES[self.model_name]
+        self.content_type = get_content_type_for_model(self.model)
         self.revisions = self.run.revisions.modified().filter(resource_type=self.content_type)
         self.collector = self.get_collector()
 

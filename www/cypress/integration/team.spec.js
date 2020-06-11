@@ -1,10 +1,6 @@
 import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("team.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   afterEach(() => {
     cy.logout()
   })
@@ -13,7 +9,7 @@ describe("team.spec.js", () => {
 
   describe("user list", () => {
     it("displays the list of users", () => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.quickLogin("owner")
         .then(() =>
           cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
 
@@ -30,7 +26,7 @@ describe("team.spec.js", () => {
   describe("invite user", () => {
     doesNotHavePermission.forEach((permission) => {
       it(`fails with ${permission} permission`, () => {
-        cy.login(`${permission}@metamapper.io`, "password1234", DEFAULT_WORKSPACE_ID)
+        cy.quickLogin(permission)
           .then(() =>
             cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
 
@@ -42,7 +38,7 @@ describe("team.spec.js", () => {
     })
 
     it("fails with an invalid email", () => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.quickLogin("owner")
         .then(() =>
           cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
 
@@ -62,7 +58,7 @@ describe("team.spec.js", () => {
     })
 
     it("submits with default permissions", () => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.quickLogin("owner")
         .then(() =>
           cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
 
@@ -140,10 +136,13 @@ describe("team.spec.js", () => {
     let userFixtures = [
       {from: "Readonly", to: "Member"},
       {from: "Readonly", to: "Owner"},
+      {from: "Readonly", to: "Readonly"},
       {from: "Member", to: "Readonly"},
       {from: "Member", to: "Owner"},
+      {from: "Member", to: "Member"},
       {from: "Owner", to: "Readonly"},
       {from: "Owner", to: "Member"},
+      {from: "Owner", to: "Owner"},
     ]
 
     userFixtures.forEach((user) => {
@@ -180,10 +179,6 @@ describe("team.spec.js", () => {
   })
 
   describe("remove user", () => {
-    before(() => {
-      cy.resetdb()
-    })
-
     let targetEmail = "other.owner@metamapper.io"
 
     doesNotHavePermission.forEach((permission) => {

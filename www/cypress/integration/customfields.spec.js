@@ -9,9 +9,9 @@ describe("customfields.spec.js", () => {
 
   describe("list of custom fields", () => {
     beforeEach(() => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
-        .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/customfields`).wait(1000))
+      cy.quickLogin("owner")
+        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+        .then(() => cy.contains("Custom Fields").click())
     })
 
     it("displays the right meta title", () => {
@@ -59,10 +59,10 @@ describe("customfields.spec.js", () => {
 
   kinds.forEach(kind => {
     describe(`add custom ${kind.toLowerCase()} field`, () => {
-      it(`fails with readonly permission`, () => {
-        cy.login(`readonly@metamapper.io`, "password1234", DEFAULT_WORKSPACE_ID)
-          .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/customfields`).wait(1000))
+      it("fails with readonly permission", () => {
+        cy.quickLogin("readonly")
+          .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+          .then(() => cy.contains("Custom Fields").click())
 
         cy.contains(kind).click()
         cy.contains(`Add Custom ${kind} Field`).should("be.disabled")
@@ -77,9 +77,9 @@ describe("customfields.spec.js", () => {
 
       describe("as owner", () => {
         beforeEach(() => {
-          cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
-            .then(() =>
-              cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/customfields`).wait(1000))
+          cy.quickLogin("owner")
+            .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+            .then(() => cy.contains("Custom Fields").click())
         })
 
         describe(`create custom ${kind.toLowerCase()} field`, () => {

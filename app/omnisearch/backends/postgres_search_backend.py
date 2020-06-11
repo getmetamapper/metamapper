@@ -14,7 +14,7 @@ import app.omnisearch.stopwords as stopwords
 
 from app.definitions.models import Table, Column
 from app.comments.models import Comment
-from app.revisioner.revisioners import CONTENT_TYPES
+from app.revisioner.revisioners import get_content_types
 
 
 class OrSearchQuery(SearchQuery):
@@ -172,9 +172,11 @@ class CommentModelSearchAdapter(ModelSearchAdapter):
     def annotate_with_datastore(self, queryset):
         """Add the datastore to the query, which will be used to filter if necessary.
         """
+        content_types = get_content_types()
+
         case_statement = Case(
-            When(content_type=CONTENT_TYPES['Table'], then=F('table__schema__datastore_id')),
-            When(content_type=CONTENT_TYPES['Column'], then=F('column__table__schema__datastore_id')),
+            When(content_type=content_types['Table'], then=F('table__schema__datastore_id')),
+            When(content_type=content_types['Column'], then=F('column__table__schema__datastore_id')),
             default=Value(""),
             output_field=CharField(),
         )

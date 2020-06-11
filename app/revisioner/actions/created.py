@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from app.definitions.models import Column
 from app.revisioner.collectors import ObjectCollector
-from app.revisioner.revisioners import KLASS_MAP, CONTENT_TYPES
+from app.revisioner.revisioners import KLASS_MAP, get_content_type_for_model
 from celery.utils.log import get_task_logger
 
 
@@ -15,7 +15,7 @@ class GenericCreateAction(object):
         self.run = run
         self.datastore = datastore
         self.model = KLASS_MAP[self.model_name]
-        self.content_type = CONTENT_TYPES[self.model_name]
+        self.content_type = get_content_type_for_model(self.model)
         self.revisions = self.run.revisions.created().filter(resource_type_id=self.content_type.id)
         self.num_revisions = self.revisions.count()
 

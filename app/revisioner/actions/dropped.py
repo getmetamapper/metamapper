@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from app.revisioner.revisioners import KLASS_MAP, CONTENT_TYPES
+from app.revisioner.revisioners import KLASS_MAP, get_content_type_for_model
 
 
 class GenericDropAction(object):
@@ -9,7 +9,7 @@ class GenericDropAction(object):
         self.run = run
         self.datastore = datastore
         self.model = KLASS_MAP[self.model_name]
-        self.content_type = CONTENT_TYPES[self.model_name]
+        self.content_type = get_content_type_for_model(self.model)
         self.revisions = self.run.revisions.dropped().filter(resource_type=self.content_type)
 
     def get_resource_ids(self):
