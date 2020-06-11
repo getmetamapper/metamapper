@@ -30,7 +30,7 @@ migrate:
 	@docker-compose run --rm server python manage.py migrate
 
 reset-db: start
-	@docker exec metamapper_server_1 bash www/cypress/cmd/resetdb.sh
+	@docker-compose run --rm server bash www/cypress/cmd/resetdb.sh
 
 rebuild-db: stop
 	@docker-compose start database
