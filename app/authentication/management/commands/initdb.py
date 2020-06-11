@@ -4,7 +4,6 @@ reset_db command
 
 originally from https://github.com/django-extensions/django-extensions
 """
-import os
 import logging
 import psycopg2 as Database
 
@@ -29,7 +28,7 @@ logger = logging.getLogger('metamapper.commands.initdb')
 
 
 @retry((OperationalError, Database.OperationalError), delay=1.5)
-def create_database(database_name, owner, conn_params, is_verbose, close_sessions=True):
+def create_database(database_name, owner, conn_params, is_verbose, close_sessions=True):  # noqa: C901
     """Create database with the provided parameters. We add a retry mechanism
     in case we need to wait for the database to start.
     """

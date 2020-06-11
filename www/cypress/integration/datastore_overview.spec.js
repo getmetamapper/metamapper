@@ -1,10 +1,6 @@
 import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("datastore_overview.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   const datastore = {
     name: 'Postgres',
     slug: 'metamapper',

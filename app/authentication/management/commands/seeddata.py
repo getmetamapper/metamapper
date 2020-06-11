@@ -24,4 +24,3 @@ class Command(loaddata.Command):
                 continue
             user.set_password("password1234")
             user.save()
-            self.stdout.write(self.style.SUCCESS('Successfully updated "%s"' % user.email))

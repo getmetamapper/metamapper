@@ -21,7 +21,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     networks:
      - metamapper
-  server:
+  webserver:
     << : *restart_policy
     env_file:
       - .env

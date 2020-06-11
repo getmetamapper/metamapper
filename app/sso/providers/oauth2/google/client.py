@@ -73,7 +73,7 @@ class GoogleClient(object):
             params=self.get_default_params(
                 code=code,
                 grant_type="authorization_code",
-                redirect_uri="{0}/oauth2/google/callback".format(settings.GRAPHQL_ORIGIN),
+                redirect_uri="{0}/oauth2/google/callback".format(settings.WEBSERVER_ORIGIN),
             ),
         )
 

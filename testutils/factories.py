@@ -94,6 +94,20 @@ def underscoreObject(instance):
     return "_".join(factory.Faker('domain_word').generate().split("-"))
 
 
+def domainWord(instance):
+    """Create an unique domain name.
+    """
+    return factory.Faker('domain_word').generate() + str(random.randint(5, 1500))
+
+
+def domain(instance):
+    """Create an unique domain name.
+    """
+    domain_wrd = domainWord(instance)
+    domain_end = random.choice(["com", "org", "gov", "io", "co", "net", "edu"])
+    return ".".join([domain_wrd, domain_end])
+
+
 def randomContentType(instance):
     """Get a random content type object.
     """
@@ -217,7 +231,7 @@ class CustomFieldFactory(factory.django.DjangoModelFactory):
     workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
     content_type = factory.LazyAttribute(randomContentType)
 
-    field_name = factory.Faker('domain_word')
+    field_name = factory.LazyAttribute(domainWord)
     field_type = factory.LazyAttribute(lambda i: random.choice(customfields.CustomField.FIELD_TYPE_CHOICES)[0])
     short_desc = factory.Faker('sentence', nb_words=3)
 
@@ -268,7 +282,7 @@ class SSOConnectionFactory(factory.django.DjangoModelFactory):
 
 class SSODomainFactory(factory.django.DjangoModelFactory):
     workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
-    domain = factory.Faker('domain_name')
+    domain = factory.LazyAttribute(domain)
 
     class Meta:
         model = ssomodels.SSODomain

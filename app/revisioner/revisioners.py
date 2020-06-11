@@ -38,15 +38,13 @@ def get_content_type_for_model(model):
     return ContentType.objects.get_for_model(model)
 
 
-CONTENT_TYPES = {
-    k: get_content_type_for_model(m)
-    for k, m in KLASS_MAP.items()
-}
-
-CONTENT_TYPE_MAPPING = {
-    c.id: c
-    for k, c in CONTENT_TYPES.items()
-}
+def get_content_types():
+    """Get content types for the provided models.
+    """
+    return {
+        k: get_content_type_for_model(m)
+        for k, m in KLASS_MAP.items()
+    }
 
 
 class RevisionMixin(object):
@@ -85,7 +83,7 @@ class RevisionMixin(object):
         """
         if not self.parent_resource:
             return None
-        return CONTENT_TYPES[self.parent_resource.__class__.__name__]
+        return get_content_type_for_model(self.parent_resource.__class__)
 
     @property
     def parent_resource_revision_id(self):
@@ -253,7 +251,9 @@ class SchemaRevisioner(Revisioner):
         'object_id',
     ]
 
-    resource_type = CONTENT_TYPES['Schema']
+    @property
+    def resource_type(self):
+        return get_content_type_for_model(Schema)
 
 
 @track_revised_properties
@@ -271,7 +271,9 @@ class TableRevisioner(Revisioner):
         'object_id',
     ]
 
-    resource_type = CONTENT_TYPES['Table']
+    @property
+    def resource_type(self):
+        return get_content_type_for_model(Table)
 
     @on_modify_property
     def modified_table_schema(self, **properties):
@@ -327,7 +329,9 @@ class ColumnRevisioner(Revisioner):
         'default_value',
     ]
 
-    resource_type = CONTENT_TYPES['Column']
+    @property
+    def resource_type(self):
+        return get_content_type_for_model(Column)
 
 
 @track_revised_properties
@@ -351,7 +355,9 @@ class IndexRevisioner(Revisioner):
         'is_unique',
     ]
 
-    resource_type = CONTENT_TYPES['Index']
+    @property
+    def resource_type(self):
+        return get_content_type_for_model(Index)
 
     @on_modify_property
     def modified_index_columns(self, **properties):

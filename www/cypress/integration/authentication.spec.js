@@ -67,7 +67,7 @@ describe("authentication.spec.js", () => {
       continueWithEmail(validUser.email)
 
       // fill in the CORRECT password
-      cy.getByTestId("LoginForm.Password").type("password1234")
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
       cy.contains("button", "Sign In").click()
 
       // confirm we have logged in successfully
@@ -200,9 +200,7 @@ describe("authentication.spec.js", () => {
         "be.visible"
       )
     })
-
   })
-
 
   describe("logout", () => {
     beforeEach(() => {

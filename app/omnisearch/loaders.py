@@ -4,7 +4,7 @@ from promise.dataloader import DataLoader
 
 from app.comments.models import Comment
 from app.definitions.models import Column, Table
-from app.revisioner.revisioners import CONTENT_TYPES
+from app.revisioner.revisioners import get_content_types
 
 
 class OmnisearchResultLoader(DataLoader):
@@ -13,6 +13,8 @@ class OmnisearchResultLoader(DataLoader):
     def batch_load_fn(self, result_tuples):
         """Input is provided as a list of tuples: ("pk", "model_name",)
         """
+        content_types = get_content_types()
+
         ident = {'Column': [], 'Table': [], 'Comment': []}
         for pk, model_name in result_tuples:
             ident[model_name].append(pk)
@@ -32,7 +34,7 @@ class OmnisearchResultLoader(DataLoader):
         table_comments = (
             Comment.objects
                    .filter(id__in=ident['Comment'])
-                   .filter(content_type=CONTENT_TYPES['Table'])
+                   .filter(content_type=content_types['Table'])
                    .prefetch_related('content_object', 'content_object__schema')
         )
 
@@ -44,7 +46,7 @@ class OmnisearchResultLoader(DataLoader):
         column_comments = (
             Comment.objects
                    .filter(id__in=ident['Comment'])
-                   .filter(content_type=CONTENT_TYPES['Column'])
+                   .filter(content_type=content_types['Column'])
                    .prefetch_related('content_object', 'content_object__table', 'content_object__table__schema')
         )
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from app.definitions.models import Table, Column, Index
-from app.revisioner.revisioners import CONTENT_TYPES
+from app.revisioner.revisioners import get_content_types
 
 
 class ObjectCollector(object):
@@ -84,6 +84,7 @@ class DefinitionCollector(object):
     def __init__(self, datastore, *args, **kwargs):
         self.datastore = datastore
         self.workspace = self.datastore.workspace
+        self.content_types = get_content_types()
         self.schemas = ObjectCollector(
             self.datastore.schemas.all()
         )
@@ -125,7 +126,7 @@ class DefinitionCollector(object):
         """Search cache by creation revision.
         """
         for name, collector in self.mapper.items():
-            if content_type and content_type != CONTENT_TYPES[name]:
+            if content_type and content_type != self.content_types[name]:
                 continue
             resource = collector.find_by_revision(revision_id)
             if resource:

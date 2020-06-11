@@ -121,7 +121,7 @@ class GoogleClientTests(unittest.TestCase):
                 'client_secret': settings.GOOGLE_CLIENT_SECRET,
                 'code': 'surething',
                 'grant_type': 'authorization_code',
-                'redirect_uri': 'http://localhost:5050/oauth2/google/callback',
+                'redirect_uri': f'{settings.WEBSERVER_ORIGIN}/oauth2/google/callback',
             }
         )
 

@@ -1,0 +1,121 @@
+version: 2.1
+x-build-docker-image-job: &build-docker-image-job
+  docker:
+    - image: circleci/node:12
+  steps:
+    - setup_remote_docker
+    - checkout
+    - run: sleep 1
+jobs:
+  backend-lint:
+    docker:
+      - image: circleci/python:3.7.0
+    steps:
+      - checkout
+      - run: sudo pip install flake8 --quiet
+      - run: make lint-py
+  backend-tests:
+    docker:
+      - image: circleci/python:3.7.0
+      - image: circleci/postgres:9.6
+        name: database
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: metamapper
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
+      - restore_cache:
+          key: pipenv-v1-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Install Linux dependencies
+          command: |
+            sudo pip install pipenv tblib --quiet && \
+            sudo apt-get update -y && \
+            sudo apt-get install -y g++ libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+      - run:
+          name: Install Python dependencies
+          command: sudo pipenv install --dev --system
+      - save_cache:
+          key: pipenv-v1-{{ checksum "Pipfile.lock" }}
+          paths:
+            - "/usr/local/lib/python3.7/site-packages"
+      - run:
+          name: Wait for database
+          command: dockerize -wait tcp://database:5432 -timeout 2m
+      - run:
+          name: Run database migrations
+          command: DB_SETUP=1 python manage.py migrate
+      - run:
+          name: Run test suite
+          command: python manage.py test --parallel=4
+  frontend-tests:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          key: npm-{{ checksum "./www/package-lock.json" }}
+      - run: make install-npm-pkgs
+      - save_cache:
+          key: npm-{{ checksum "./www/package-lock.json" }}
+          paths:
+            - ./www/node_modules
+      - run: make test-js
+  frontend-e2e-tests:
+    environment:
+      COMPOSE_FILE: .circleci/docker-compose.cypress.yml
+      COMPOSE_PROJECT_NAME: cypress
+    docker:
+      - image: circleci/buildpack-deps:trusty
+    steps:
+      - checkout
+      - setup_remote_docker
+      # - run: docker-compose up -d
+      # - run: sleep 20
+      # - run:
+      #     name: Seed the database
+      #     command: docker-compose run webserver bash www/cypress/cmd/resetdb.sh
+      # - run:
+      #     name: Run integration tests
+      #     command: docker-compose run cypress npx cypress run --spec "www/cypress/integration/*.spec.js"
+  build-preview-docker-image: *build-docker-image-job
+  build-primary-docker-image: *build-docker-image-job
+workflows:
+  main:
+    jobs:
+      - backend-lint
+      - backend-tests:
+          requires:
+            - backend-lint
+      - frontend-tests:
+          requires:
+            - backend-lint
+      - frontend-e2e-tests:
+          requires:
+            - backend-tests
+            - frontend-tests
+      - build-preview-docker-image:
+          requires:
+            - backend-tests
+            - frontend-tests
+            - frontend-e2e-tests
+          filters:
+            branches:
+              only:
+                - master
+      - hold:
+          type: approval
+          requires:
+            - backend-tests
+            - frontend-tests
+            - frontend-e2e-tests
+          filters:
+            branches:
+              only:
+                - /release\/.*/
+      - build-primary-docker-image:
+          requires:
+            - hold

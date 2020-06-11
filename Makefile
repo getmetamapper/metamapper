@@ -15,10 +15,10 @@ help:
 	@echo ""
 	@echo "See contents of Makefile for more targets."
 
-setup: build install-npm-pkgs start migrate
+setup: install-npm-pkgs resetdb stop
 
 install-npm-pkgs:
-	@npm install --prefix www
+	@npm install --prefix www --quiet
 
 build-assets:
 	@npm run build --prefix www
@@ -26,17 +26,20 @@ build-assets:
 build-docker:
 	@docker build --build-arg env=development -t metamapper --rm ./
 
-migrate:
-	@docker-compose run --rm server python manage.py migrate
+initdb:
+	@docker-compose run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0
 
-reset-db: start
-	@docker-compose run --rm server bash www/cypress/cmd/resetdb.sh
+migrate:
+	@docker-compose run -e DB_SETUP=1 --rm webserver python manage.py migrate
+
+resetdb:
+	@docker-compose run --rm webserver bash www/cypress/cmd/resetdb.sh
 
 rebuild-db: stop
 	@docker-compose start database
 	@docker exec metamapper_database_1 dropdb metamapper -U postgres
 	@docker exec metamapper_database_1 createdb metamapper -U postgres
-	@docker-compose run -e DB_RESET=1 --rm server python manage.py migrate
+	@docker-compose run -e DB_RESET=1 --rm webserver python manage.py migrate
 
 start:
 	@rm -f celerybeat.pid
@@ -54,23 +57,21 @@ frontend:
 	@npm run start --prefix www
 
 shell:
-	@docker-compose run --rm server python manage.py shell
+	@docker-compose run --rm webserver python manage.py shell
 
-cypress: start
+cypress: resetdb
 	@npx cypress open
 
-test-ci: test-py test-js test-cypress
-
 test-py:
-	@echo "--> Running Python (server) tests"
+	@echo "--> Running Python (webserver) tests"
 	@find . -name \*.pyc -delete
-	@docker-compose --log-level ERROR run --rm server python manage.py test
+	@docker-compose --log-level ERROR run --rm webserver python manage.py test
 
 test-js:
 	@echo "--> Running JavaScript (client) tests"
-	@npm run test --prefix www -- --coverage
+	@npm run test --prefix www
 
-test-cypress: start
+test-cypress: resetdb
 	@echo "--> Opening Cypress.io (integration tests)"
 	@npx cypress run --spec "www/cypress/integration/*.spec.js"
 

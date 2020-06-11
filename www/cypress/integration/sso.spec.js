@@ -172,7 +172,7 @@ describe("sso.spec.js", () => {
 
     it("fails with a domain that is already claimed", () => {
       cy.fillInputs({
-        "SSODomainSetupForm.Domain": "flipthenews.com"
+        "SSODomainSetupForm.Domain": "metamapper.dev"
       })
 
       cy.getByTestId("SSODomainSetupForm.Submit").click()

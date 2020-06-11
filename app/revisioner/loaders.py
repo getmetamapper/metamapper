@@ -8,12 +8,10 @@ from promise.dataloader import DataLoader
 from app.revisioner.models import Revision
 from app.revisioner.collectors import DefinitionCollector
 
-from app.revisioner.revisioners import CONTENT_TYPE_MAPPING
+from app.revisioner.revisioners import get_content_types
 
 
 class RelatedRevisionResourceLoader(DataLoader):
-    """
-    """
     def transform_resource(self, resource):
         """Helper function for preparing the returned object.
         """
@@ -44,11 +42,16 @@ class RelatedRevisionResourceLoader(DataLoader):
             datastore = revisions[0].run.datastore
             collector = DefinitionCollector(datastore)
 
+            content_type_mapping = {
+                c.id: c
+                for _, c in get_content_types().items()
+            }
+
             for revision_id in revision_ids:
                 revision = next(filter(lambda r: r.revision_id == revision_id, revisions))
                 resource = revision.resource
 
-                content_type = CONTENT_TYPE_MAPPING.get(revision.resource_type_id)
+                content_type = content_type_mapping.get(revision.resource_type_id)
 
                 if not resource:
                     resource = collector.find_by_revision(revision.revision_id, content_type)
@@ -56,6 +59,4 @@ class RelatedRevisionResourceLoader(DataLoader):
                 if resource:
                     resources[revision_id] = self.transform_resource(resource)
 
-        return Promise.resolve([
-            resources.get(r) for r in revision_ids
-        ])
+        return Promise.resolve([resources.get(r) for r in revision_ids])

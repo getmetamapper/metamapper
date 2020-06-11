@@ -8,8 +8,7 @@ describe("workspace.spec.js", () => {
 
   describe("list user workspaces", () => {
     beforeEach(() => {
-      cy.login().then(() => cy.visit("/"))
-      cy.visit("/workspaces")
+      cy.quickLogin("owner").then(() => cy.visit("/workspaces"))
     })
 
     it("has the correct meta title", () => {
@@ -107,7 +106,7 @@ describe("workspace.spec.js", () => {
       // It should re-direct to the datastores page since no datastores exist.
       cy.location("pathname").should("equal", "/psych")
 
-      cy.wait(1000)
+      cy
         .then(() => {
           expect(
             window.localStorage.getItem(WORKSPACE_TOKEN)
@@ -119,7 +118,9 @@ describe("workspace.spec.js", () => {
     })
   })
 
-  const updatedSlug = "dunder-mifflin-sabre"
+  const existedSlug = "VanceRefrigeration"
+  const updatedSlug = "sabre"
+  const workspaceId = "bcb8e056-40eb-460f-8326-eebfd9d7a1e2"
 
   describe("update a workspace", () => {
     it("fails when user does not have permission", () => {
@@ -131,9 +132,9 @@ describe("workspace.spec.js", () => {
     })
 
     it("fails with an incorrectly formatted slug", () => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.login("owner@metamapper.io", "password1234", workspaceId)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+          cy.visit(`/${existedSlug}/settings`))
 
       cy.fillInputs({
         "UpdateWorkspaceForm.Slug": "glass half full"
@@ -151,9 +152,9 @@ describe("workspace.spec.js", () => {
     })
 
     it("using UI (as workspace owner)", () => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.login("owner@metamapper.io", "password1234", workspaceId)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+          cy.visit(`/${existedSlug}/settings`))
 
       cy.fillInputs({
         "UpdateWorkspaceForm.Name": "Sabre Printers",
@@ -171,25 +172,25 @@ describe("workspace.spec.js", () => {
 
   describe("delete a workspace", () => {
     it("with readonly permissions", () => {
-      cy.login("readonly@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
-        .then(() =>
-          cy.visit(`/${updatedSlug}/settings`))
+      cy.quickLogin("readonly")
+        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+        .then(() => cy.reload())
 
       cy.formIsDisabled("DeleteWorkspace")
     })
 
     it("with basic permissions", () => {
-      cy.login("member@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
-        .then(() =>
-          cy.visit(`/${updatedSlug}/settings`))
+      cy.quickLogin("member")
+        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+        .then(() => cy.reload())
 
       cy.formIsDisabled("DeleteWorkspace")
     })
 
     it("requires the correct confirmation prompt", () => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.login("owner@metamapper.io", "password1234", workspaceId)
         .then(() =>
-          cy.visit(`/${updatedSlug}/settings`))
+          cy.visit(`/${updatedSlug}/settings`).wait(500))
 
       cy.getByTestId("DeleteWorkspace.Open").click()
 
@@ -201,7 +202,7 @@ describe("workspace.spec.js", () => {
     })
 
     it("with owner permissions", () => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.login("owner@metamapper.io", "password1234", workspaceId)
         .then(() =>
           cy.visit(`/${updatedSlug}/settings`))
 
@@ -222,7 +223,7 @@ describe("workspace.spec.js", () => {
 
       cy.getByTestId("WorkspaceList")
         .should("exist")
-        .and("not.contain", "Dunder Mifflin")
+        .and("not.contain", "Vance Refrigeration")
     })
   })
 
@@ -238,7 +239,7 @@ describe("workspace.spec.js", () => {
     it("when user is unauthorized", () => {
       cy.login("outsider@metamapper.io", "password1234")
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+          cy.visit(`/${existedSlug}/settings`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })
