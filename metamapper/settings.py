@@ -26,9 +26,11 @@ FIXTURE_DIRS = [
     os.path.join(BASE_DIR, 'app', 'revisioner', 'tests', 'fixtures'),
 ]
 
-DJANGO_ENV = os.getenv('ENVIRONMENT', 'development')
+ENV = os.getenv('ENVIRONMENT', 'development')
 
-SECRET_KEY = os.getenv('METMAPPER_SECRET_KEY', default=get_random_secret_key())
+DJANGO_ENV = ENV
+
+SECRET_KEY = os.getenv('METAMAPPER_SECRET_KEY', default=get_random_secret_key())
 
 DEBUG = DJANGO_ENV not in ('staging', 'production')
 
@@ -125,7 +127,7 @@ DATABASES = {
 }
 
 # Used when hard resets on migrations during development.
-DB_RESET = os.getenv('DB_RESET')
+DB_RESET = os.getenv('DB_RESET') or os.getenv('DB_SETUP')
 #
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -179,7 +181,7 @@ if DEBUG:
     GRAPHENE['MIDDLEWARE'].append('graphene_django.debug.DjangoDebugMiddleware')
 
 GRAPHQL_JWT = {
-    'JWT_SECRET_KEY': os.getenv('METAMAPPER_JWT_SECRET'),
+    'JWT_SECRET_KEY': SECRET_KEY,
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_ALLOW_REFRESH': True,
     'JWT_AUDIENCE': WEBSERVER_ORIGIN,
@@ -218,7 +220,7 @@ EMAIL_DEFAULT_FROM = os.getenv('METAMAPPER_EMAIL_FROM_ADDRESS', 'friends@metamap
 #
 # Certain metastore fields are encrypted, such as password and SSH keys.
 
-FERNET_KEYS = os.getenv('METAMAPPER_FERNET_KEYS', '').split(',')
+FERNET_KEYS = os.getenv('METAMAPPER_FERNET_KEY', '').split(',')
 #
 # Logging (https://docs.python.org/3/library/logging.html)
 
@@ -240,7 +242,7 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugTrue',
         },
         'graphql_log_filter': {
-            '()': 'utils.logging.filters.GraphQLLocatedErrorFilter',
+            '()': 'utils.logging.filters.SuppressGraphqlErrorFilter',
         }
     },
     'handlers': {
@@ -263,6 +265,11 @@ LOGGING = {
         },
         'metamapper': {
             'handlers': ['metamapper'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'metamapper.commands': {
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,
         },

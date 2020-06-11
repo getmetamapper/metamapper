@@ -9,7 +9,7 @@ from django.apps import apps
 
 # set the default Django settings module for the 'celery' program.
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'metamapper.settings')
-environ.setdefault('METAMAPPER_CELERY_CONFIG_MODULE', 'metamapper.configs.celery')
+environ.setdefault('METAMAPPER_CELERY_CONFIG_MODULE', 'metamapper.config.celery')
 
 app = Celery('metamapper')
 app.config_from_envvar('METAMAPPER_CELERY_CONFIG_MODULE')
