@@ -117,8 +117,9 @@ workflows:
             - frontend-e2e-tests
           filters:
             branches:
-              only:
-                - /releases\/.*/
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/
       - build-primary-docker-image:
           context: dockerhub
           requires:
