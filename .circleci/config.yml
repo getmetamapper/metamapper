@@ -118,7 +118,7 @@ workflows:
           filters:
             branches:
               only:
-                - /release\/.*/
+                - /releases\/.*/
       - build-primary-docker-image:
           context: dockerhub
           requires:
