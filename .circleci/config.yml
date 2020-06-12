@@ -119,7 +119,7 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /^\d+\.\d+\.\d+$/
+              only: /^v\d+\.\d+\.\d+$/
       - build-primary-docker-image:
           context: dockerhub
           requires:
