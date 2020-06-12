@@ -31,6 +31,7 @@ snowflake-connector-python = "*"
 factory-boy = "*"
 flower = "*"
 freezegun = "*"
+python-semantic-release = "==4.6.0"
 
 [requires]
 python_version = ">=3.6"

@@ -1,4 +1,22 @@
 #!/bin/bash
 set -e
 
-echo "Publishing..."
+VERSION=$(cat .version)
+
+docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+if [ $CIRCLE_BRANCH = master ]
+then
+    docker build --build-arg skip_dev_deps=true -t metamapper/metamapper:preview -t metamapper/metamapper:$CIRCLE_BUILD_NUM .
+
+    docker push metamapper/metamapper:preview
+    echo "Built: metamapper/metamapper:preview"
+
+    docker push metamapper/preview:$CIRCLE_BUILD_NUM
+    echo "Built: metamapper/preview:$CIRCLE_BUILD_NUM"
+else
+    docker build --build-arg skip_dev_deps=true -t metamapper/metamapper:$VERSION .
+
+    docker push metamapper/metamapper:$VERSION
+    echo "Built: metamapper/metamapper:$VERSION"
+fi

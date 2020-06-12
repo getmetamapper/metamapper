@@ -5,7 +5,9 @@ x-build-docker-image-job: &build-docker-image-job
   steps:
     - setup_remote_docker
     - checkout
-    - run: sleep 1
+    - run:
+        name: Publish to Docker Hub
+        command: ./bin/docker-publish
 jobs:
   backend-lint:
     docker:
@@ -84,7 +86,7 @@ jobs:
   build-preview-docker-image: *build-docker-image-job
   build-primary-docker-image: *build-docker-image-job
 workflows:
-  main:
+  pipeline:
     jobs:
       - backend-lint
       - backend-tests:
@@ -98,6 +100,7 @@ workflows:
             - backend-tests
             - frontend-tests
       - build-preview-docker-image:
+          context: dockerhub
           requires:
             - backend-tests
             - frontend-tests
@@ -117,5 +120,6 @@ workflows:
               only:
                 - /release\/.*/
       - build-primary-docker-image:
+          context: dockerhub
           requires:
             - hold
