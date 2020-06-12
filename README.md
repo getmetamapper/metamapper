@@ -2,6 +2,12 @@
 
 Metamapper is a metadata management platform that aims to minimize decisions made based on bad data. It's a self-updating data catalog complete with full-text search, an integrated commenting system, and much more.
 
+<p align="center">
+  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-1.png" width="290">
+  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-2.png" width="290">
+  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-3.png" width="290">
+</p>
+
 ## What we're trying to accomplish
 
 Growing organizations rely on data and analytics to drive decisions. With the emergence of tools like [Airflow](https://github.com/apache/airflow) and companies like [Segment](https://segment.com/) and [Fivetran](https://get.fivetran.com/demo), it's never been easier to get data into your warehouse.
@@ -23,7 +29,7 @@ Here are a few features of Metamapper:
 
 ## Getting started
 
-TBD.
+Recommended deployment method is through [Docker](https://www.docker.com/). Setup instructions can be found in [this Github repo](https://github.com/metamapper-io/metamapper-setup).
 
 ## Supported datastores
 
@@ -38,7 +44,7 @@ Metamapper currently supports automatic crawling and indexing of six SQL-based r
 
 ## Resources
 
-- [User Documentation](.github/user-guide.pdf)
+- [User Documentation](.github/user-guide.pdf) (coming soon)
 - [Contributing](CONTRIBUTING.md)
 - [Issue Tracker](https://github.com/metamapper-io/metamapper/issues)
 - [Roadmap](https://trello.com/b/QT28sJAz/metamapper-io)
