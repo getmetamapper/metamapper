@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-GUNICORN_CONFIG_PATH=${METAMAPPER_GUNICORN_CONFIG_PATH:='./metamapper/config/gunicorn.py'}
+GUNICORN_CONFIG_PATH=${METAMAPPER_GUNICORN_CONFIG_PATH:='./metamapper/conf/gunicorn.py'}
 
 shell() {
     python manage.py shell
