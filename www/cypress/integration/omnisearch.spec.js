@@ -1,10 +1,6 @@
 import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("omnisearch.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   describe("search from home page", () => {
     beforeEach(() => {
       cy.quickLogin("owner").then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/`)).then(() => cy.reload())
@@ -90,7 +86,7 @@ describe("omnisearch.spec.js", () => {
 
   describe("404", () => {
     it("when workspace does not exist", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login("member@metamapper.io", "password1234")
         .then(() =>
           cy.visit("/does-not-exist/search"))
 

@@ -1,18 +1,18 @@
 version: '3.4'
 x-metamapper-defaults: &metamapper_service
-  build: ../
+  image: metamapper:cypress
   depends_on:
-    - postgres
+    - database
     - redis
   environment:
-    METAMAPPER_DB_HOST: postgres
+    METAMAPPER_DB_HOST: database
     METAMAPPER_CELERY_BROKER_URL: "redis://redis:6379/0"
     METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
 services:
   redis:
     image: redis:3.0-alpine
     restart: unless-stopped
-  postgres:
+  database:
     image: postgres:9.6-alpine
     environment:
       POSTGRES_USER: postgres
@@ -20,20 +20,27 @@ services:
       POSTGRES_DB: metamapper
     restart: unless-stopped
   webserver:
-    command: ["./wait-for-it.sh", "postgres:5432", "--", "./bin/docker-entrypoint", "ci-webserver"]
+    build: ../
+    command: ["./wait-for-it.sh", "database:5432", "--", "./bin/docker-entrypoint", "ci-webserver"]
     ports:
       - "5050:5050"
     << : *metamapper_service
   scheduler:
     command: ["./wait-for-it.sh", "webserver:5050", "--", "./bin/docker-entrypoint", "scheduler"]
+    depends_on:
+      - webserver
     << : *metamapper_service
   worker:
     command: ["./wait-for-it.sh", "webserver:5050", "--", "./bin/docker-entrypoint", "worker"]
+    depends_on:
+      - webserver
     << : *metamapper_service
   cypress:
     build:
       context: ../
       dockerfile: .circleci/Dockerfile.cypress
     environment:
-      METAMAPPER_DB_HOST: postgres
+      METAMAPPER_DB_HOST: database
       CYPRESS_baseUrl: "http://webserver:5050"
+    volumes:
+      - ./screenshots:/usr/src/app/www/cypress/screenshots/

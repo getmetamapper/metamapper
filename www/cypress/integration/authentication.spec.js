@@ -12,10 +12,6 @@ const continueWithEmail = (email) =>{
 }
 
 describe("authentication.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   describe("login", () => {
     const validUser = {
       email: "owner@metamapper.io",

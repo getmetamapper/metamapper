@@ -5,10 +5,6 @@ const getCommentByText = (commentText) => {
 }
 
 describe("table_column_comments.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   const datastore = {
     name: 'Postgres',
     slug: 'metamapper',

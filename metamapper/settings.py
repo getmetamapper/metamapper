@@ -30,6 +30,8 @@ ENV = os.getenv('ENVIRONMENT', 'development')
 
 DJANGO_ENV = ENV
 
+CI = bool(os.getenv('CI', False))
+
 SECRET_KEY = os.getenv('METAMAPPER_SECRET_KEY', default=get_random_secret_key())
 
 DEBUG = DJANGO_ENV not in ('staging', 'production')

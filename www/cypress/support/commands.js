@@ -8,8 +8,6 @@
 import { queryAsString } from "../../src/graphql/mutations/AuthenticateUser"
 import { AUTH_TOKEN, WORKSPACE_TOKEN, DEFAULT_WORKSPACE_ID } from "../../src/lib/constants"
 
-Cypress.Commands.add("resetdb", () => cy.log("make resetdb"));
-
 Cypress.Commands.add("login", (email = "owner@metamapper.io", password = "password1234", workspaceId = null) => {
   cy.request({
     url: "/graphql",

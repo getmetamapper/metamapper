@@ -1,13 +1,4 @@
 version: 2.1
-x-build-docker-image-job: &build-docker-image-job
-  docker:
-    - image: circleci/node:12
-  steps:
-    - setup_remote_docker
-    - checkout
-    - run:
-        name: Publish to Docker Hub
-        command: ./bin/docker-publish
 jobs:
   backend-lint:
     docker:
@@ -70,21 +61,28 @@ jobs:
     environment:
       COMPOSE_FILE: .circleci/docker-compose.cypress.yml
       COMPOSE_PROJECT_NAME: cypress
-    docker:
-      - image: circleci/buildpack-deps:trusty
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
+      - run: docker-compose up -d
+      - run: |
+            docker-compose run --rm worker \
+              timeout 60 bash \
+                -c 'until $(curl -Isf -o /dev/null http://webserver:5050/); do printf '.'; sleep 0.5; done'
+      - run: bash .circleci/cypress-runner.sh
+      - store_artifacts:
+          path: .circleci/screenshots
+          destination: artifact-file
+  build-preview-docker-image:
+    docker:
+      - image: circleci/node:12
+    steps:
       - setup_remote_docker
-      # - run: docker-compose up -d
-      # - run: sleep 20
-      # - run:
-      #     name: Seed the database
-      #     command: docker-compose run webserver bash www/cypress/cmd/resetdb.sh
-      # - run:
-      #     name: Run integration tests
-      #     command: docker-compose run cypress npx cypress run --spec "www/cypress/integration/*.spec.js"
-  build-preview-docker-image: *build-docker-image-job
-  build-primary-docker-image: *build-docker-image-job
+      - checkout
+      - run:
+          name: Publish to Docker Hub
+          command: ./bin/docker-publish
 workflows:
   pipeline:
     jobs:
@@ -109,18 +107,3 @@ workflows:
             branches:
               only:
                 - master
-      - hold:
-          type: approval
-          requires:
-            - backend-tests
-            - frontend-tests
-            - frontend-e2e-tests
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d+\.\d+\.\d+$/
-      - build-primary-docker-image:
-          context: dockerhub
-          requires:
-            - hold

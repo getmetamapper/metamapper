@@ -1,17 +1,13 @@
 import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("user.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   let oldEmail = "other.readonly@metamapper.io"
   let newEmail = "burton.guster@metamapper.io"
 
   describe("edit user profile", () => {
     beforeEach(() => {
       cy.login(oldEmail, "password1234")
-        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}`).wait(1000))
+        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}`))
 
       cy.getByTestId("Navbar.Dropdown").click()
 
@@ -173,7 +169,7 @@ describe("user.spec.js", () => {
 
     beforeEach(() => {
       cy.login(newEmail, "password1234", DEFAULT_WORKSPACE_ID)
-        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}`).wait(1000))
+        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}`))
 
       cy.getByTestId("Navbar.Dropdown").click()
 

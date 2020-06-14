@@ -2,10 +2,6 @@ import { WORKSPACE_TOKEN } from "../../src/lib/constants"
 import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("workspace.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   describe("list user workspaces", () => {
     beforeEach(() => {
       cy.quickLogin("owner").then(() => cy.visit("/workspaces"))
@@ -31,7 +27,7 @@ describe("workspace.spec.js", () => {
 
       cy.location("pathname").should("equal", "/VanceRefrigeration")
 
-      cy.wait(2000)
+      cy.wait(1000)
         .then(() => {
           expect(
             window.localStorage.getItem(WORKSPACE_TOKEN)

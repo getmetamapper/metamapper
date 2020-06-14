@@ -1,4 +1,4 @@
-FROM cypress/browsers:chrome67
+FROM cypress/browsers:node12.6.0-chrome77
 
 ENV APP /usr/src/app
 WORKDIR $APP

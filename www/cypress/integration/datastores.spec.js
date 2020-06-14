@@ -1,10 +1,6 @@
 import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("datastores.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   const fixture = {
     name: 'Metastore',
     slug: 'metastore',

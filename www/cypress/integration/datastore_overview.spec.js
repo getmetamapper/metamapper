@@ -145,13 +145,10 @@ describe("datastore_overview.spec.js", () => {
 
     // Tests for when the logged in user is of READONLY status.
     describe("as readonly", () => {
-      beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(databaseUri))
-      })
-
       it("is disabled", () => {
-        cy.getByTestId("DatastoreTags.Add")
-          .should("not.be.visible")
+        cy.quickLogin("readonly").then(() => cy.visit(databaseUri))
+
+        cy.getByTestId("DatastoreTags.Add").should("not.be.visible")
 
         cy.contains("Add a tag").should("not.be.visible")
       })

@@ -25,7 +25,7 @@ Here are a few features of Metamapper:
 - *Change detection*: Detects when data definitions change between schema inspection runs. Useful for alerting uncommunicated changes.
 - *Annotations:* Supports comments on almost every object so your team can crowdsource knowledge about data assets.
 - *Custom Properties:* Easily attach custom metadata to databases and tables, such as data steward or ETL process references.
-- *Search:* Everything is indexed and searchable via [Elasicsearch](https://github.com/elastic/elasticsearch). Self-service data analytics, here we come.
+- *Search:* Everything is indexed and [searchable](https://www.postgresql.org/docs/9.5/textsearch.html). Self-service data analytics, here we come.
 
 ## Getting started
 
