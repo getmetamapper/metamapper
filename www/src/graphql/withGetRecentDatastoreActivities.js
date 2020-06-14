@@ -21,15 +21,18 @@ const withGetRecentDatastoreActivities = graphql(GetRecentDatastoreActivities, {
       return res
     }
 
+    const {
+      recentDatastoreActivities: activities
+    } = data
+
+    if (!activities || !activities.hasOwnProperty("edges")) {
+      return res
+    }
+
     data.stopPolling()
 
-    const activities = map(
-      data.recentDatastoreActivities.edges,
-      ({ node }) => node
-    )
-
     return {
-      recentDatastoreActivities: activities,
+      recentDatastoreActivities: map(activities.edges, ({ node }) => node),
     }
   },
 })

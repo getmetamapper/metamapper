@@ -7,10 +7,6 @@ const testTableColumnValue = (column, callback) => {
 }
 
 describe("table_columns.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   const datastore = {
     name: 'Postgres',
     slug: 'metamapper',

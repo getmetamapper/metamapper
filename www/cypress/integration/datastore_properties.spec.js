@@ -73,7 +73,7 @@ describe("datastore_overview.spec.js", () => {
       describe(`as ${permission}`, () => {
         beforeEach(() => {
           cy.quickLogin(permission)
-            .then(() => cy.visit(databaseUri).wait(1000))
+            .then(() => cy.visit(databaseUri))
             .then(() => cy.getByTestId("CustomProperties.Edit").click())
         })
 

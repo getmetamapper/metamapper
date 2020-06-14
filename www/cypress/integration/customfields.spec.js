@@ -1,10 +1,6 @@
 import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("customfields.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   let kinds = ["Datastore", "Table"]
 
   describe("list of custom fields", () => {

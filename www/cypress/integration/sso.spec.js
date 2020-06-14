@@ -1,10 +1,6 @@
 import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("sso.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   let doesNotHavePermission = ["readonly", "member"]
 
   describe("list of connections", () => {

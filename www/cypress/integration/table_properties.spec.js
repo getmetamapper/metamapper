@@ -1,10 +1,6 @@
 import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("table_properties.spec.js", () => {
-  before(() => {
-    cy.resetdb()
-  })
-
   const datastore = {
     name: 'Postgres',
     slug: 'metamapper',
@@ -102,7 +98,7 @@ describe("table_properties.spec.js", () => {
       describe(`as ${permission}`, () => {
         beforeEach(() => {
           cy.quickLogin(permission)
-            .then(() => cy.visit(overviewUri).wait(1000))
+            .then(() => cy.visit(overviewUri).wait(250))
             .then(() => cy.getByTestId("CustomProperties.Edit").click())
         })
 

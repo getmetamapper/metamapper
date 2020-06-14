@@ -11,7 +11,7 @@ describe("team.spec.js", () => {
     it("displays the list of users", () => {
       cy.quickLogin("owner")
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
       cy.title().should("eq", "Users - dunder-mifflin - Metamapper")
 
@@ -28,7 +28,7 @@ describe("team.spec.js", () => {
       it(`fails with ${permission} permission`, () => {
         cy.quickLogin(permission)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
         cy.formIsDisabled("InviteUserToTeamForm", [
             "Email",
@@ -40,7 +40,7 @@ describe("team.spec.js", () => {
     it("fails with an invalid email", () => {
       cy.quickLogin("owner")
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
       let invalidEmail = "henry.spencer"
 
@@ -60,7 +60,7 @@ describe("team.spec.js", () => {
     it("submits with default permissions", () => {
       cy.quickLogin("owner")
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
       let validEmail = "henry.spencer@psych.ca"
 
@@ -92,7 +92,7 @@ describe("team.spec.js", () => {
       it(`fails without ${permission} permission`, () => {
         cy.login(`${permission}@metamapper.io`, "password1234", DEFAULT_WORKSPACE_ID)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
         cy.contains(
           "These settings can only be edited by users with the administrator role."
@@ -115,7 +115,7 @@ describe("team.spec.js", () => {
 
       cy.login(yourself, "password1234", DEFAULT_WORKSPACE_ID)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
       cy.get(`tr[data-row-key="${yourself}"]`).within(() => {
         cy.get("td").eq(1).find(".ant-tag").should("have.class", "editable")
@@ -153,7 +153,7 @@ describe("team.spec.js", () => {
 
         cy.login(loggedInUser, "password1234", DEFAULT_WORKSPACE_ID)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
         cy.get(`tr[data-row-key="${targetEmail}"]`).within(() => {
           cy.get("td").eq(1).find(".ant-tag").should("have.class", "editable")
@@ -185,7 +185,7 @@ describe("team.spec.js", () => {
       it(`fails without ${permission} permission`, () => {
         cy.login(`${permission}@metamapper.io`, "password1234", DEFAULT_WORKSPACE_ID)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
         cy.get(`tr[data-row-key="${targetEmail}"]`).within(() => {
           cy.get("td").eq(0).contains(targetEmail)
@@ -197,7 +197,7 @@ describe("team.spec.js", () => {
     it("using UI", () => {
       cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
       cy.get(`tr[data-row-key="${targetEmail}"]`).within(() => {
         cy.get("td").eq(0).contains(targetEmail)
@@ -223,7 +223,7 @@ describe("team.spec.js", () => {
 
       cy.login(email, "password1234", DEFAULT_WORKSPACE_ID)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
       cy.get(`tr[data-row-key="${email}"]`).within(() => {
         cy.get("td").eq(0).contains(email)
@@ -236,7 +236,7 @@ describe("team.spec.js", () => {
 
       cy.login(email, "password1234", DEFAULT_WORKSPACE_ID)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`).wait(1000))
+          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
 
       cy.get(`tr[data-row-key="${email}"]`).within(() => {
         cy.get("td").eq(0).contains(email)
