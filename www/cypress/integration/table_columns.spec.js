@@ -129,7 +129,7 @@ describe("table_columns.spec.js", () => {
 
       it("with invalid input", () => {
         testTableColumnValue("phone", () => {
-          const input = "This is the office phone number of the customer, which is too long of a description"
+          const input = "This is the office phone number of the customer, which is too long of a description. It's definitely over 90 characters."
 
           cy.get("td").eq(descIndex).click().then(() => {
             cy.getByTestId("EditableCell.Input").should("be.visible")
@@ -140,7 +140,7 @@ describe("table_columns.spec.js", () => {
           cy.get("td").eq(descIndex).find(".editable-cell-value-wrap").should("have.value", "")
         })
 
-        cy.contains(".ant-message-error", "Column description cannot be longer than 50 characters.").should(
+        cy.contains(".ant-message-error", "Column description cannot be longer than 90 characters.").should(
           "be.visible"
         )
 
