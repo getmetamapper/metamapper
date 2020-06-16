@@ -63,7 +63,6 @@ jobs:
       COMPOSE_PROJECT_NAME: cypress
     machine:
       image: ubuntu-1604:202004-01
-      docker_layer_caching: true
     steps:
       - checkout
       - run: docker-compose up -d
