@@ -137,7 +137,7 @@ class CustomFieldSerializerUpdateTests(cases.SerializerTestCase):
         """Generate testing data.
         """
         attributes = {
-            'field_name': helpers.faker.company(),
+            'field_name': 'Data Ownership',
         }
         attributes.update(**overrides)
         return attributes
