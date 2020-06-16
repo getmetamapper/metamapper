@@ -70,7 +70,8 @@ jobs:
             docker-compose run --rm worker \
               timeout 60 bash \
                 -c 'until $(curl -Isf -o /dev/null http://webserver:5050/); do printf '.'; sleep 0.5; done'
-      - run: bash .circleci/cypress-runner.sh
+      - run: docker-compose run --rm webserver bash www/cypress/cmd/resetdb.sh
+      - run: docker-compose run --rm cypress npx cypress run --spec "www/cypress/integration/*.spec.js" --headless --browser chrome
       - store_artifacts:
           path: .circleci/screenshots
           destination: artifact-file
