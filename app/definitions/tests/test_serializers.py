@@ -633,7 +633,7 @@ class ColumnSerializerUpdateTests(cases.SerializerTestCase):
             'short_desc': [
                 {
                     'code': 'max_length',
-                    'value': helpers.faker.pystr(51, 75),
+                    'value': helpers.faker.pystr(91, 105),
                 },
             ],
         }
