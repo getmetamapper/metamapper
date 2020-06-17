@@ -96,7 +96,10 @@ class CustomPropertiesModel(models.Model):
     def get_custom_fields(self, **kwargs):
         """Retrieve the custom fields associated with this model.
         """
-        return self.content_type.custom_fields.filter(workspace=self.workspace, **kwargs)
+        return self.content_type.custom_fields.exclude(id__in=self.disabled_custom_fields).filter(
+            workspace_id=self.workspace_id,
+            **kwargs,
+        )
 
     def get_related_user(self, user_id):
         """Retrieve the workspace team member.
@@ -110,6 +113,7 @@ class CustomPropertiesModel(models.Model):
         """
         custom_fields = self.get_custom_fields().order_by('created_at')
         custom_output = {}
+
         for f in custom_fields:
             value = self.custom_properties.get(f.pk)
             if f.is_user_type:

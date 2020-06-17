@@ -292,6 +292,41 @@
     line-height: 36px;
   }
 }
+.custom-properties-settings {
+  margin-top: 24px;
+  .ant-card-body {
+    padding: 0;
+  }
+  .custom-properties-settings-header {
+    padding: 24px;
+    padding-bottom: 0;
+  }
+  .custom-property-settings-form {
+    padding: 24px;
+    padding-top: 0;
+    .ant-alert {
+      padding: 16px;
+    }
+    .custom-property-settings-fieldset {
+      margin-top: 24px;
+      margin-bottom: 12px;
+      .ant-form-item {
+        margin-bottom: 6px;
+      }
+      .ant-checkbox-group {
+        display: block;
+        margin-top: 12px;
+      }
+      .ant-checkbox-group-item {
+        display: block;
+        margin-bottom: 12px;
+      }
+      .ant-checkbox-wrapper {
+        margin-right: 8px;
+      }
+    }
+  }
+}
 .custom-fields-form {
   .ant-form-item-label {
     text-align: right;

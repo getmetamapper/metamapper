@@ -200,6 +200,8 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'short_desc',
             'tags',
             'jdbc_connection',
+            'disabled_datastore_properties',
+            'disabled_table_properties',
             'created_at',
             'updated_at',
         )

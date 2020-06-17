@@ -243,6 +243,142 @@ class UpdateDatastoreMetadataTests(cases.GraphQLTestCase):
         self.assertPermissionDenied(response)
 
 
+class DisableDatastoreCustomFieldsTests(cases.GraphQLTestCase):
+    """Tests disabling certain custom fields.
+    """
+    load_data = ['workspaces.json', 'users.json', 'customfields.json']
+
+    factory = factories.DatastoreFactory
+
+    operation = 'disableDatastoreCustomFields'
+    statement = '''
+    mutation DisableDatastoreCustomFields(
+      $id: ID!,
+      $disabledDatastoreProperties: [String],
+      $disabledTableProperties: [String],
+    ) {
+      disableDatastoreCustomFields(input: {
+        id: $id,
+        disabledDatastoreProperties: $disabledDatastoreProperties,
+        disabledTableProperties: $disabledTableProperties,
+      }) {
+        datastore {
+          id
+          disabledDatastoreProperties
+          disabledTableProperties
+        }
+        errors {
+          resource
+          field
+          code
+        }
+      }
+    }
+    '''
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should update the datastore.
+        """
+        resource = resource = self.factory(workspace=self.workspace)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        d_customfield = self.workspace.custom_fields.filter(
+            content_type__model="datastore",
+        ).first()
+
+        t_customfield = self.workspace.custom_fields.filter(
+            content_type__model="table",
+        ).first()
+
+        variables = {
+            'id': globalid,
+            'disabledDatastoreProperties': [
+                d_customfield.pk,
+            ],
+            'disabledTableProperties': [
+                t_customfield.pk,
+            ],
+        }
+
+        response = self.execute(variables=variables)
+        response = response['data'][self.operation]
+
+        self.assertEqual(response, {
+            'datastore': {
+                'id': globalid,
+                'disabledDatastoreProperties': variables['disabledDatastoreProperties'],
+                'disabledTableProperties': variables['disabledTableProperties'],
+            },
+            'errors': None,
+        })
+
+        self.assertInstanceUpdated(
+            resource,
+            disabled_datastore_properties=variables['disabledDatastoreProperties'],
+            disable_table_properties=variables['disabledTableProperties'],
+        )
+
+        self.assertInstanceCreated(
+            audit.Activity,
+            verb='updated allowed properties',
+            **serializers.get_audit_kwargs(resource),
+        )
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_with_fake_custom_field(self):
+        """It should save without the fake field.
+        """
+        resource = resource = self.factory(workspace=self.workspace)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        t_customfield = self.workspace.custom_fields.filter(
+            content_type__model="table",
+        ).first()
+
+        variables = {
+            'id': globalid,
+            'disabledTableProperties': [
+                t_customfield.pk,
+                "abcdefghijklmnop",
+            ],
+        }
+
+        response = self.execute(variables=variables)
+        response = response['data'][self.operation]
+
+        self.assertEqual(response, {
+            'datastore': {
+                'id': globalid,
+                'disabledDatastoreProperties': [],
+                'disabledTableProperties': [t_customfield.pk],
+            },
+            'errors': None,
+        })
+
+        self.assertInstanceUpdated(
+            resource,
+            disable_table_properties=[t_customfield.pk],
+        )
+
+    @decorators.as_someone(['READONLY', 'OUTSIDER'])
+    def test_unauthorized(self):
+        """It should return a "Permission Denied" error.
+        """
+        resource = resource = self.factory(workspace=self.workspace)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        variables = {
+            'id': globalid,
+            'disabledDatastoreProperties': [],
+            'disabledTableProperties': [],
+        }
+
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
+
+
 class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
     """Tests for updating a datastore.
     """

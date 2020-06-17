@@ -6,11 +6,12 @@ import { withWriteAccess } from "hoc/withPermissionsRequired"
 import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import DeleteDatastore from "app/Datastores/DeleteDatastore"
 import DatastoreSettingsForm from "app/Datastores/DatastoreSettings/DatastoreSettingsForm"
+import AllowedCustomPropertySettings from "app/Datastores/DatastoreSettings/AllowedCustomPropertySettings"
 import UpdateDatastoreMetadataMutation from "graphql/mutations/UpdateDatastoreMetadata"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 
-class ConnectionSettings extends Component {
+class DatastoreSettings extends Component {
   constructor(props) {
     super(props)
 
@@ -106,6 +107,16 @@ class ConnectionSettings extends Component {
                 </div>
               )}
             </Card>
+            <Card className="custom-properties-settings">
+              <div className="custom-properties-settings-header">
+                <h3>Allowed Custom Properties</h3>
+                <Divider />
+              </div>
+              <AllowedCustomPropertySettings
+                datastore={datastore}
+                hasPermission={hasPermission}
+              />
+            </Card>
           </Col>
         </Row>
       </DatastoreLayout>
@@ -124,4 +135,4 @@ const enhance = compose(
   withGraphQLMutation
 )
 
-export default enhance(ConnectionSettings)
+export default enhance(DatastoreSettings)
