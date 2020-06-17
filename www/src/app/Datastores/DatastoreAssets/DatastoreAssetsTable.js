@@ -4,9 +4,9 @@ import { withUserContext } from "context/UserContext"
 import { withRouter, Link } from "react-router-dom"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { Table } from "antd"
-
 import { map, uniqBy, flatten } from "lodash"
 import { components } from "app/Common/EditableCell"
+import FirstRunPending from "app/Datastores/RunHistory/FirstRunPending"
 import UpdateTableMetadata from "graphql/mutations/UpdateTableMetadata"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 
@@ -105,7 +105,7 @@ class DatastoreAssetsTable extends Component {
   }
 
   render() {
-    const { hasPermission } = this.props
+    const { datastore, hasPermission } = this.props
     const { dataSource } = this.state
 
     const columns = this.columns.map((col) => {
@@ -123,6 +123,10 @@ class DatastoreAssetsTable extends Component {
         }),
       }
     })
+
+    if (datastore.firstRunIsPending) {
+      return <FirstRunPending datastore={datastore} />
+    }
 
     return (
       <span data-test="DatastoreAssetsTable">
