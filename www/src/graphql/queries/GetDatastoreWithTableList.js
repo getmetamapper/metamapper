@@ -25,6 +25,7 @@ export default gql`
           shortDesc
         }
       }
+      firstRunIsPending
       latestRun {
         createdOn
         finishedAt

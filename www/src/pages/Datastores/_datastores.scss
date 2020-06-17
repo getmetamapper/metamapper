@@ -106,6 +106,13 @@
   border: 1px solid #e8e8e8;
   border-bottom: 0;
 }
+.first-run-pending {
+  text-align: center;
+  margin-top: 24px;
+  .ant-spin.ant-spin-spinning {
+    margin-top: 24px;
+  }
+}
 .datastore-engine-icon {
   .ant-avatar {
     border-radius: 0;
@@ -265,7 +272,7 @@
   }
 }
 .table-definition-details {
-  border: 0; 
+  border: 0;
   border-bottom: 1px solid #e8e8e8;
   h3 {
     margin-bottom: 0;

@@ -115,12 +115,13 @@ describe("table_columns.spec.js", () => {
           })
 
           cy.get("td").eq(5).click()
-          cy.get("td").eq(descIndex).find(".editable-cell-value-wrap").should("have.value", "")
         })
 
         cy.contains(".ant-message-success", "Description was saved.").should(
           "be.visible"
         )
+
+        testTableColumnValue("customernumber", () => cy.get("td").eq(descIndex).should("have.value", ""))
 
         // Should persist after reload.
         cy.reload().then(() =>
@@ -137,12 +138,16 @@ describe("table_columns.spec.js", () => {
           })
 
           cy.get("td").eq(5).click()
-          cy.get("td").eq(descIndex).find(".editable-cell-value-wrap").should("have.value", "")
         })
 
-        cy.contains(".ant-message-error", "Column description cannot be longer than 90 characters.").should(
+        cy.contains(
+          ".ant-message-error",
+          "Column description cannot be longer than 90 characters."
+        ).should(
           "be.visible"
         )
+
+        testTableColumnValue("phone", () => cy.get("td").eq(descIndex).should("have.value", ""))
 
         // Should persist after reload.
         cy.reload().then(() =>
