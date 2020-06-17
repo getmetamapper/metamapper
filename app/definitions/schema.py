@@ -182,7 +182,8 @@ class DatastoreType(AuthNode, DjangoObjectType):
 
     has_indexes = graphene.Boolean()
     has_constraints = graphene.Boolean()
-    has_completed_run = graphene.Boolean()
+
+    first_run_is_pending = graphene.Boolean()
 
     class Meta:
         model = models.Datastore
@@ -199,6 +200,8 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'short_desc',
             'tags',
             'jdbc_connection',
+            'disabled_datastore_properties',
+            'disabled_table_properties',
             'created_at',
             'updated_at',
         )
@@ -239,7 +242,7 @@ class DatastoreType(AuthNode, DjangoObjectType):
         """
         return get_inspector_class(instance.engine).has_indexes()
 
-    def resolve_has_completed_run(instance, info):
+    def resolve_first_run_is_pending(instance, info):
         """Check if the datastore has a completed run.
         """
-        return instance.has_completed_run
+        return not instance.has_completed_run and not instance.schemas.count()

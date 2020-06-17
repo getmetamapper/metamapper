@@ -13,6 +13,8 @@ from django.db import transaction
 from django.contrib.contenttypes.fields import ContentType
 from django.utils import timezone
 
+from app.customfields.models import CustomField
+
 from sshtunnel import BaseSSHTunnelForwarderError
 from utils.mixins.serializers import MetamapperSerializer
 
@@ -208,6 +210,71 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
 
         if instance.connection_was_changed():
             self.validate_connection(instance)
+
+        return instance
+
+
+class DisableCustomFieldsSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """Update the disabled custom properties for the provided Datastore.
+    """
+    disabled_datastore_properties = serializers.ListField(
+        child=serializers.CharField(max_length=20, trim_whitespace=True),
+        allow_empty=True,
+        allow_null=True,
+        required=False,
+    )
+
+    disabled_table_properties = serializers.ListField(
+        child=serializers.CharField(max_length=20, trim_whitespace=True),
+        allow_empty=True,
+        allow_null=True,
+        required=False,
+    )
+
+    class Meta:
+        model = models.Datastore
+        fields = ('disabled_datastore_properties', 'disabled_table_properties')
+
+    def create(self, validated_data):
+        raise NotImplementedError('DisableCustomFieldsSerializer cannot create Datastore instances.')
+
+    def validate_disabled_datastore_properties(self, custom_field_ids):
+        """Ensure that the custom fields actually exist.
+        """
+        custom_fields = CustomField.objects.filter(
+            content_type__model='datastore',
+            workspace_id=self.instance.workspace_id,
+        ).values_list('id', flat=True)
+
+        return [c for c in custom_field_ids if c in custom_fields]
+
+    def validate_disabled_table_properties(self, custom_field_ids):
+        """Ensure that the custom properties actually exist.
+        """
+        custom_fields = CustomField.objects.filter(
+            content_type__model='table',
+            workspace_id=self.instance.workspace_id,
+        ).values_list('id', flat=True)
+
+        return [c for c in custom_field_ids if c in custom_fields]
+
+    @audit.capture_activity(
+        verb='updated allowed properties',
+        hydrater=get_audit_kwargs,
+        capture_changes=True,
+    )
+    def update(self, instance, validated_data):
+        """Update the provided Table instance.
+        """
+        instance.disabled_datastore_properties = validated_data.get(
+            'disabled_datastore_properties',
+            instance.disabled_datastore_properties,
+        )
+
+        instance.disabled_table_properties = validated_data.get(
+            'disabled_table_properties',
+            instance.disabled_table_properties,
+        )
 
         return instance
 

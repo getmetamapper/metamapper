@@ -12,7 +12,8 @@ export default gql`
       isEnabled
       shortDesc
       hasIndexes
-      hasConstraints
+      disabledDatastoreProperties
+      disabledTableProperties
       jdbcConnection {
         engine
         host

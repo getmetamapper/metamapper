@@ -89,11 +89,29 @@ class UpdateDatastoreMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation
 
         is_enabled = graphene.Boolean(required=False)
         short_desc = graphene.String(required=False)
+
         name = graphene.String(required=False)
         tags = graphene.List(graphene.String, required=False)
 
     class Meta:
         serializer_class = serializers.DatastoreSerializer
+
+    datastore = graphene.Field(schema.DatastoreType)
+
+
+class DisableDatastoreCustomFields(mixins.UpdateMutationMixin, relay.ClientIDMutation):
+    """Update the disabled custom fields on a datastore.
+    """
+    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+
+    class Input:
+        id = graphene.ID(required=True)
+
+        disabled_datastore_properties = graphene.List(graphene.String, required=False)
+        disabled_table_properties = graphene.List(graphene.String, required=False)
+
+    class Meta:
+        serializer_class = serializers.DisableCustomFieldsSerializer
 
     datastore = graphene.Field(schema.DatastoreType)
 
@@ -177,6 +195,9 @@ class Mutation(graphene.ObjectType):
 
     update_datastore_metadata = UpdateDatastoreMetadata.Field()
     update_datastore_jdbc_connection = UpdateDatastoreJdbcConnection.Field()
+
+    disable_datastore_custom_fields = DisableDatastoreCustomFields.Field()
+
     test_jdbc_connection = TestJdbcConnection.Field()
 
     update_table_metadata = UpdateTableMetadata.Field()

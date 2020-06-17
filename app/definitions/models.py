@@ -107,6 +107,12 @@ class Datastore(StringPrimaryKeyModel,
 
     short_desc = models.CharField(max_length=140, null=False, blank=True)
 
+    # List of custom fields that should be disabled for this datastore.
+    disabled_datastore_properties = ArrayField(models.CharField(max_length=20), default=list)
+
+    # List of custom fields that should be disabled for all tables within this datastore.
+    disabled_table_properties = ArrayField(models.CharField(max_length=20), default=list)
+
     objects = models.Manager()
     search_objects = SearchManager(fields=['name', 'engine', 'tags'])
 
@@ -176,6 +182,10 @@ class Datastore(StringPrimaryKeyModel,
         """Check if the datastore has a completed run.
         """
         return self.run_history.filter(finished_at__isnull=False).count() > 0
+
+    @property
+    def disabled_custom_fields(self):
+        return self.disabled_datastore_properties
 
     def connection_was_changed(self):
         """Check if the JDBC connection was updated.
@@ -285,6 +295,10 @@ class Table(StringPrimaryKeyModel,
         """The displayable name of the object.
         """
         return self.name
+
+    @property
+    def disabled_custom_fields(self):
+        return self.schema.datastore.disabled_table_properties
 
     @property
     def datastore_id(self):
