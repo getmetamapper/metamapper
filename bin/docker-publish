@@ -9,8 +9,8 @@ then
 
     docker build --build-arg env=production -t metamapper/preview:$VERSION_TAG .
 
-    docker push metamapper/preview:$CIRCLE_SHA1
-    echo "Pushed: metamapper/preview:$CIRCLE_SHA1"
+    docker push metamapper/preview:$VERSION_TAG
+    echo "Pushed: metamapper/preview:$VERSION_TAG"
 else
     VERSION=$(python -c "from metamapper import __version__; print(__version__)")
     VERSION_TAG="v$VERSION"
