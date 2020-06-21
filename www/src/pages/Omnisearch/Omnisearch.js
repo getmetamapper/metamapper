@@ -6,8 +6,28 @@ import { withUserContext } from "context/UserContext"
 import { Row, Col, Input } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withGetDatastoreCount from "graphql/withGetDatastoreCount"
 
 class Omnisearch extends Component {
+  componentDidMount() {
+    this.shouldNavigateAway()
+  }
+
+  componentDidUpdate() {
+    this.shouldNavigateAway()
+  }
+
+  shouldNavigateAway() {
+    const {
+      currentWorkspace: { slug },
+      datastoreCount,
+    } = this.props
+
+    if (datastoreCount === 0) {
+      this.props.history.push(`/${slug}/datastores`)
+    }
+  }
+
   handleSearch = (value) => {
     const {
       currentWorkspace: { slug },
@@ -54,6 +74,7 @@ const withNotFound = withNotFoundHandler(({
 export default compose(
   withRouter,
   withUserContext,
+  withGetDatastoreCount,
   withLargeLoader,
   withNotFound,
 )(Omnisearch)

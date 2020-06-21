@@ -100,7 +100,7 @@ describe("workspace.spec.js", () => {
       cy.getByTestId("WorkspaceSetupForm.Submit").click()
 
       // It should re-direct to the datastores page since no datastores exist.
-      cy.location("pathname").should("equal", "/psych")
+      cy.location("pathname").should("equal", "/psych/datastores/new")
 
       cy
         .then(() => {
@@ -120,9 +120,9 @@ describe("workspace.spec.js", () => {
 
   describe("update a workspace", () => {
     it("fails when user does not have permission", () => {
-      cy.login("member@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.login("member@metamapper.io", "password1234", workspaceId)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
+          cy.visit(`/${existedSlug}/settings`))
 
       cy.formIsDisabled("UpdateWorkspaceForm")
     })

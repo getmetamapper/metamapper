@@ -1,6 +1,6 @@
 import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
-describe("datastore_overview.spec.js", () => {
+describe("datastore_properties.spec.js", () => {
   const datastore = {
     name: 'Postgres',
     slug: 'metamapper',

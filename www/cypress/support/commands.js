@@ -42,7 +42,7 @@ Cypress.Commands.add("fillInputs", (elements, { wait = 0, force = true } = {}) =
         if ($el.hasClass('ant-select-selection')) {
           cy.get($el)
             .click()
-            .then(() => cy.get("li[role=\"option\"]").contains(value).click());
+            .then(() => cy.get("li").contains(value).click());
         } else {
           cy.get($el).filter(":visible").clear({ force }).type(value);
         }
