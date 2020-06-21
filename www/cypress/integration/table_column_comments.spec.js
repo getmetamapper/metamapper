@@ -189,13 +189,17 @@ describe("table_column_comments.spec.js", () => {
       getCommentByText(commentOne).within(() => cy.getByTestId("DeleteComment.Submit").should("not.be.visible"))
     })
 
-    it("cannot vote for a comment", () => {
-      getCommentByText(commentTwo).within(() => {
-        cy.getByTestId("VoteForComment.UP").contains("2")
-        cy.getByTestId("VoteForComment.UP.Submit").click().then(() => cy.wait(500))
-        cy.getByTestId("VoteForComment.UP").contains("2")
-      })
-    })
+    // it("cannot vote for a comment", () => {
+    //   getCommentByText(commentTwo).within(() => {
+    //     cy.getByTestId("VoteForComment.DOWN").then(($btn) => {
+    //       const value = $btn.text()
+
+    //       cy.getByTestId("VoteForComment.DOWN.Submit").click()
+
+    //       $btn.contains(value)
+    //     })
+    //   })
+    // })
   })
 
   describe("final thoughts", () => {

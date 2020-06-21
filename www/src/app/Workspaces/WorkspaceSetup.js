@@ -30,7 +30,7 @@ class WorkspaceSetup extends Component {
       this.props.config.setCurrentWorkspace(workspace)
       this.props.refreshUser()
 
-      window.location.href = `/${workspace.slug}`
+      window.location.href = `/${workspace.slug}/datastores/new`
     }
   }
 

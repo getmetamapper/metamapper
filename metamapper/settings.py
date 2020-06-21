@@ -213,9 +213,11 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 EMAIL_BACKEND = os.getenv('METAMAPPER_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = os.getenv('METAMAPPER_EMAIL_HOST')
-EMAIL_HOST_USER = os.getenv('METAMAPPER_EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('METAMAPPER_EMAIL_HOST_PASSWORD')
-EMAIL_PORT = os.getenv('METAMAPPER_EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('METAMAPPER_EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.getenv('METAMAPPER_EMAIL_PASSWORD')
+EMAIL_PORT = os.getenv('METAMAPPER_EMAIL_PORT', 25)
+EMAIL_USE_TLS = bool(os.getenv('METAMAPPER_EMAIL_USE_TLS', False))
+EMAIL_USE_SSL = bool(os.getenv('METAMAPPER_EMAIL_USE_SSL', False))
 EMAIL_DEFAULT_FROM = os.getenv('METAMAPPER_EMAIL_FROM_ADDRESS', 'friends@metamapper.io')
 #
 # Encryption
@@ -314,12 +316,12 @@ LOGGING = {
 # If the client and secret are not found, you will not be able to set up a
 # SSO connection with that provider.
 
-GITHUB_CLIENT_ID = os.getenv('OAUTH2_GITHUB_CLIENT_ID')
-GITHUB_CLIENT_SECRET = os.getenv('OAUTH2_GITHUB_CLIENT_SECRET')
+GITHUB_CLIENT_ID = os.getenv('METAMAPPER_GITHUB_CLIENT_ID')
+GITHUB_CLIENT_SECRET = os.getenv('METAMAPPER_GITHUB_CLIENT_SECRET')
 GITHUB_ENABLED = GITHUB_CLIENT_SECRET and GITHUB_CLIENT_SECRET
 
-GOOGLE_CLIENT_ID = os.getenv('OAUTH2_GOOGLE_CLIENT_ID')
-GOOGLE_CLIENT_SECRET = os.getenv('OAUTH2_GOOGLE_CLIENT_SECRET')
+GOOGLE_CLIENT_ID = os.getenv('METAMAPPER_GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('METAMAPPER_GOOGLE_CLIENT_SECRET')
 GOOGLE_ENABLED = GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 #
 # Caching Layer (optional)
@@ -378,7 +380,7 @@ DEFAULT_FILE_STORAGE = os.getenv(
 
 FILE_STORAGE_BUCKET = os.getenv('METAMAPPER_FILE_STORAGE_BUCKET')
 
-MEDIA_ROOT = os.getenv('METAMAPPER_MEDIA_ROOT', '')
+MEDIA_ROOT = os.getenv('METAMAPPER_MEDIA_ROOT', 'uploads/')
 #
 # AWS S3 Configuration
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html

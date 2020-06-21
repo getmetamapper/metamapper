@@ -174,7 +174,7 @@ class DatastoreSetupForm extends Component {
     const { current } = this.state
     const {
       datastoreEngines,
-      workspace: { sshPublicKey },
+      workspace,
       form,
       hasPermission,
       isSubmitting,
@@ -236,7 +236,15 @@ class DatastoreSetupForm extends Component {
                   )}
                 </div>
                 <div className={current === 1 ? "" : "hidden"}>
-                  <h3>Provide your credentials</h3>
+                  <h3>
+                    <span>Provide your credentials</span>
+                    <span className="datastore-credentials-icon">
+                      <Avatar
+                        shape="square"
+                        src={`/assets/static/img/datastores/dialects/${form.getFieldValue("engine")}.png`}
+                      />
+                    </span>
+                  </h3>
                   <p>
                     Please enter the credentials from your database provider
                     into the form below. The username and password must have
@@ -244,7 +252,7 @@ class DatastoreSetupForm extends Component {
                   </p>
                   <ConnectionSettingsFieldset
                     engine={form.getFieldValue("engine")}
-                    publicKey={sshPublicKey}
+                    publicKey={workspace ? workspace.sshPublicKey : null}
                     form={form}
                     onChange={this.handleConnectionChange}
                     hasPermission={hasPermission}

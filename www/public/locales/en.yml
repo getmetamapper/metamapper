@@ -96,7 +96,7 @@ errors:
       max_length: Table description cannot be longer than 140 characters.
   Column:
     short_desc:
-      max_length: Column description cannot be longer than 50 characters.
+      max_length: Column description cannot be longer than 90 characters.
   CustomField:
     field_name:
       blank: Custom field name is required.

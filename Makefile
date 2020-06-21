@@ -73,7 +73,7 @@ test-js:
 
 test-cypress: resetdb
 	@echo "--> Opening Cypress.io (integration tests)"
-	@npx cypress run --spec "www/cypress/integration/*.spec.js"
+	@npx cypress run --spec "www/cypress/integration/*.spec.js" --headless --browser chrome
 
 lint: lint-py lint-js
 

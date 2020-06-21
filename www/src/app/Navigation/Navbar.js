@@ -36,7 +36,7 @@ const Navbar = ({ config, currentUser }) => {
                 </Link>
               </Menu.Item>
             )}
-            <Menu.Item key="dropdown">
+            <Menu.Item key="dropdown" data-test="Navbar.Dropdown">
               <Dropdown
                 className="navbar-dropdown"
                 placement="bottomRight"
@@ -80,7 +80,7 @@ const Navbar = ({ config, currentUser }) => {
                   </Menu>
                 }
               >
-                <span className="link ant-dropdown-link" data-test="Navbar.Dropdown">
+                <span className="link ant-dropdown-link">
                   <UserAvatar noColor {...currentUser} />
                 </span>
               </Dropdown>

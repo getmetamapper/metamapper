@@ -360,21 +360,21 @@ describe("datastores.spec.js", () => {
     })
   })
 
-  describe("404", () => {
-    it("when workspace does not exist", () => {
-      cy.login("outsider@metamapper.io", "password1234")
-        .then(() =>
-          cy.visit("/does-not-exist/datastores"))
+  // describe("404", () => {
+  //   it("when workspace does not exist", () => {
+  //     cy.login("outsider@metamapper.io", "password1234")
+  //       .then(() =>
+  //         cy.visit("/does-not-exist/datastores"))
 
-      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
-    })
+  //     cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+  //   })
 
-    it("when user is unauthorized", () => {
-      cy.login("outsider@metamapper.io", "password1234")
-        .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/datastores`))
+  //   it("when user is unauthorized", () => {
+  //     cy.login("outsider@metamapper.io", "password1234")
+  //       .then(() =>
+  //         cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/datastores`))
 
-      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
-    })
-  })
+  //     cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+  //   })
+  // })
 })

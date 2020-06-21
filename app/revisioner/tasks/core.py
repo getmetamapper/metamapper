@@ -53,7 +53,7 @@ def start_revisioner_run(self, run_id, *arg, **kwargs):
 
     run_tasks = []
     for schema, schema_definition in schema_definitions.items():
-        storage_path = f'uploads/revisioner/{self._run.datastore_id}/run_id={self._run.id}/{schema}.json.gz'
+        storage_path = f'revisioner/{self._run.datastore_id}/run_id={self._run.id}/{schema}.json.gz'
         blob.put_object(storage_path, schema_definition)
         run_tasks.append(
             RunTask(run=self._run, storage_path=storage_path, status=RunTask.PENDING),

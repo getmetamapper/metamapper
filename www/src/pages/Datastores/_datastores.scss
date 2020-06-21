@@ -215,6 +215,20 @@
 
 .datastore-setup {
   margin-top: 40px;
+
+  .datastore-credentials-icon {
+    float: right;
+
+    .ant-avatar {
+      min-height: 60px;
+      min-width: 60px;
+    }
+
+    img {
+      -o-object-fit: contain;
+      object-fit: contain;
+    }
+  }
   .datastore-setup-form {
     .steps-action {
       padding-top: 20px;

@@ -1,4 +1,5 @@
 import { AUTH_TOKEN, WORKSPACE_TOKEN } from "../../src/lib/constants"
+import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 // Mimic the login prompt form process. This should redirect
 // the user to `/login/email` if the email is registered, otherwise it
@@ -77,7 +78,7 @@ describe("authentication.spec.js", () => {
           ).to.be.a("string")
         })
 
-      cy.contains("The search engine for your data.").should("be.visible")
+      cy.location("pathname").should("equal", "/ctd/datastores")
     })
   })
 
@@ -200,11 +201,13 @@ describe("authentication.spec.js", () => {
 
   describe("logout", () => {
     beforeEach(() => {
-      cy.login().then(() => cy.visit("/"))
+      cy.login().then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/`))
     })
 
     it("shows login page after logout", () => {
+      cy.getByTestId("Navbar.Dropdown").should("be.visible")
       cy.getByTestId("Navbar.Dropdown").click()
+
       cy.contains("Sign Out").click()
 
       cy.location("pathname").should("equal", "/login")
