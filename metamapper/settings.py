@@ -72,6 +72,7 @@ METAMAPPER_APPS = [
     'app.comments.apps.Config',
     'app.customfields.apps.Config',
     'app.inspector.apps.Config',
+    'app.healthchecks.apps.Config',
     'app.notifications.apps.Config',
     'app.omnisearch.apps.Config',
     'app.revisioner.apps.Config',
