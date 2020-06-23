@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+import json
 import os
 import six
-import json
 
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.views.generic import View
-from django.core.exceptions import ValidationError
-from django.contrib.contenttypes.models import ContentType
 
 from graphql import GraphQLError
 from graphene_django.views import GraphQLView
