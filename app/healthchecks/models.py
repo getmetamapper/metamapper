@@ -3,6 +3,11 @@ from django.db import models, transaction
 from django.utils import timezone
 
 
+HEALTHY = "healthy"
+UNHEALTHY = "unhealthy"
+NOT_CONFIGURED = "not_configured"
+
+
 class HeartbeatManager(models.Manager):
     """Django manager for the healthchecks.Heartbeat model.
     """
@@ -12,6 +17,7 @@ class HeartbeatManager(models.Manager):
         with transaction.atomic():
             self.get_queryset().delete()
             self.create(ts=timezone.now())
+        return self.first()
 
 
 class Heartbeat(models.Model):
@@ -20,3 +26,12 @@ class Heartbeat(models.Model):
     ts = models.DateTimeField(primary_key=True, null=False)
 
     objects = HeartbeatManager()
+
+    @property
+    def status(self):
+        if (timezone.now() - self.ts).total_seconds() < (60 * 3):
+            return HEALTHY
+        return UNHEALTHY
+
+    def __str__(self):
+        return 'Heartbeat<%s>' % self.ts

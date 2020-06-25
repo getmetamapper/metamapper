@@ -15,16 +15,18 @@ app = Celery('metamapper')
 app.config_from_envvar('METAMAPPER_CELERY_CONFIG_MODULE')
 app.autodiscover_tasks(lambda: [n.name for n in apps.get_app_configs()])
 
-use_scheduler = getenv('METAMAPPER_DISABLE_SCHEDULER') is not None
-
-beat_schedule = {
+app.conf.beat_schedule = {
+    'beat-scheduler-healthcheck': {
+        'task': 'app.healthchecks.tasks.heartbeat',
+        'schedule': crontab(),
+    },
     'create-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.create_runs',
         'schedule': crontab(hour='*/1'),
     },
     'queue-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.queue_runs',
-        'schedule': crontab(minute='*/15'),
+        'schedule': crontab(minute='*/20'),
     },
     'queue-domain-verification': {
         'task': 'app.sso.tasks.queue_domain_verifications',
@@ -35,6 +37,3 @@ beat_schedule = {
         'schedule': crontab(minute=0, hour='*/4'),
     },
 }
-
-if use_scheduler:
-    app.conf.beat_schedule = beat_schedule
