@@ -52,6 +52,6 @@ urlpatterns = [
             ],
         ),
     ),
-    url(r'^health/?$', healthcheck),
+    url(r'^health/?$', healthcheck, name="healthcheck"),
     url(r'^', ReactAppView.as_view()),
 ]
