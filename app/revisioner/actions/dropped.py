@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-from app.revisioner.revisioners import KLASS_MAP, get_content_type_for_model
+from app.definitions.models import Schema, Table, Column, Index
+from app.revisioner.revisioners import get_content_type_for_model
 
 
 class GenericDropAction(object):
     """Generic mixin for a bulk DROPPED action based on revisions.
     """
-    def __init__(self, run, datastore):
+    def __init__(self, run, datastore, logger, *args, **kwargs):
         self.run = run
         self.datastore = datastore
-        self.model = KLASS_MAP[self.model_name]
-        self.content_type = get_content_type_for_model(self.model)
+        self.logger = logger
+        self.content_type = get_content_type_for_model(self.model_class)
         self.revisions = self.run.revisions.dropped().filter(resource_type=self.content_type)
 
     def get_resource_ids(self):
@@ -20,7 +21,7 @@ class GenericDropAction(object):
     def apply(self):
         """Apply DELETE action to all dropped models.
         """
-        response = self.model.objects.filter(id__in=self.get_resource_ids()).delete()
+        response = self.model_class.objects.filter(id__in=self.get_resource_ids()).delete()
         if isinstance(response, tuple):
             return response[0]
         return response
@@ -29,25 +30,25 @@ class GenericDropAction(object):
 class SchemaDropAction(GenericDropAction):
     """docstring for SchemaDropAction
     """
-    model_name = 'Schema'
+    model_class = Schema
 
 
 class TableDropAction(GenericDropAction):
     """docstring for SchemaDropAction
     """
-    model_name = 'Table'
+    model_class = Table
 
 
 class ColumnDropAction(GenericDropAction):
     """docstring for ColumnDropAction
     """
-    model_name = 'Column'
+    model_class = Column
 
 
 class IndexDropAction(GenericDropAction):
     """docstring for IndexDropAction
     """
-    model_name = 'Index'
+    model_class = Index
 
 
 def get_actions(*args, **kwargs):

@@ -1,0 +1,206 @@
+[
+  {
+    "fields": {
+      "name": "Santa Barbara Police Department",
+      "slug": "sbpd",
+      "creator_id": 99120,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "9ae42db2-d205-463f-b5a3-61b77a0b1df7"
+  },
+  {
+    "fields": {
+      "name": "Psych",
+      "slug": "psych",
+      "creator_id": 99120,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf"
+  },
+  {
+    "fields": {
+      "fname": "Burton",
+      "lname": "Guster",
+      "email": "owner.team@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 99120
+  },
+  {
+    "fields": {
+      "fname": "Bruton",
+      "lname": "Gaster",
+      "email": "other.owner.team@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 99125
+  },
+  {
+    "fields": {
+      "fname": "John",
+      "lname": "Slade",
+      "email": "member.team@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 990234
+  },
+  {
+    "fields": {
+      "fname": "Hummingbird",
+      "lname": "Saltalamacchia",
+      "email": "other.member.team@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 991741
+  },
+  {
+    "fields": {
+      "fname": "Methuselah",
+      "lname": "Honeysuckle",
+      "email": "readonly.team@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 991765
+  },
+  {
+    "fields": {
+      "fname": "Lavender",
+      "lname": "Gooms",
+      "email": "outsider.team@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 99132
+  },
+  {
+    "fields": {
+      "workspace_id": "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+      "user_id": "owner.team@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 763
+  },
+  {
+    "fields": {
+      "workspace_id": "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+      "user_id": "member.team@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 764
+  },
+  {
+    "fields": {
+      "workspace_id": "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+      "user_id": "other.member.team@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 788
+  },
+  {
+    "fields": {
+      "workspace_id": "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+      "user_id": "readonly.team@metamapper.test",
+      "permissions": "READONLY",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 765
+  },
+  {
+    "fields": {
+      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "user_id": "owner.team@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 768
+  },
+  {
+    "fields": {
+      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "user_id": "member.team@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 769
+  },
+  {
+    "fields": {
+      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "user_id": "other.member.team@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 770
+  },
+  {
+    "fields": {
+      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "user_id": "readonly.team@metamapper.test",
+      "permissions": "READONLY",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 771
+  },
+  {
+    "fields": {
+      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "user_id": "other.owner.team@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 781
+  },
+  {
+    "fields": {
+      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "user_id": "outsider.team@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 1281
+  }
+]

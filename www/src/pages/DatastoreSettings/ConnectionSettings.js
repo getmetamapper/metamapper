@@ -2,11 +2,13 @@ import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
 import { Card, Col, Divider, Form, Row } from "antd"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
+import { withLargeLoader } from "hoc/withLoader"
 import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import ConnectionSettingsForm from "app/Datastores/ConnectionSettings/ConnectionSettingsForm"
 import UpdateDatastoreJdbcConnectionMutation from "graphql/mutations/UpdateDatastoreJdbcConnection"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
+import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
 class ConnectionSettings extends Component {
   constructor(props) {
@@ -93,6 +95,10 @@ class ConnectionSettings extends Component {
   }
 }
 
+const withNotFound = withNotFoundHandler(({ datastore }) => {
+  return !datastore || !datastore.hasOwnProperty("id")
+})
+
 const withForm = Form.create()
 
 const enhance = compose(
@@ -100,7 +106,9 @@ const enhance = compose(
   withWriteAccess,
   withGetDatastoreSettings,
   graphql(UpdateDatastoreJdbcConnectionMutation),
-  withGraphQLMutation
+  withGraphQLMutation,
+  withLargeLoader,
+  withNotFound,
 )
 
 export default enhance(ConnectionSettings)

@@ -1,51 +1,103 @@
-import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("team.spec.js", () => {
-  afterEach(() => {
-    cy.logout()
-  })
 
-  let doesNotHavePermission = ["readonly", "member"]
+  const workspace = {
+    id: "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+    name: "Santa Barbara Police Department",
+    slug: "sbpd",
+  }
+
+  const otherWorkspace = {
+    id: "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+    name: "Psych",
+    slug: "psych",
+  }
+
+  const owner = {
+    fname: "Burton",
+    lname: "Guster",
+    email: "owner.team@metamapper.test",
+    password: "password1234",
+  }
+
+  const otherOwner = {
+    fname: "Bruton",
+    lname: "Gaster",
+    email: "other.owner.team@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    fname: "John",
+    lname: "Slade",
+    email: "member.team@metamapper.test",
+    password: "password1234",
+  }
+
+  const otherMember = {
+    fname: "Hummingbird",
+    lname: "Saltalamacchia",
+    email: "other.member.team@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    fname: "Methuselah",
+    lname: "Honeysuckle",
+    email: "readonly.team@metamapper.test",
+    password: "password1234",
+  }
+
+  const outsider = {
+    fname: "Lavender",
+    lname: "Gooms",
+    email: "outsider.team@metamapper.test",
+    password: "password1234",
+  }
+
+  const doesNotHavePermission = [
+    { permission: "member", user: member },
+    { permission: "readonly", user: readonly },
+  ]
 
   describe("user list", () => {
     it("displays the list of users", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+          cy.visit(`/${workspace.slug}/settings/users`))
 
-      cy.title().should("eq", "Users - dunder-mifflin - Metamapper")
+      cy.title().should("eq", `Users - ${workspace.slug} - Metamapper`)
 
       cy.getByTestId("WorkspaceUsersTable")
         .should("exist")
-        .and("contain", "owner@metamapper.io")
-        .and("contain", "member@metamapper.io")
-        .and("contain", "readonly@metamapper.io")
+        .and("contain", owner.email)
+        .and("contain", member.email)
+        .and("contain", readonly.email)
+        .and("contain", otherMember.email)
     })
   })
 
   describe("invite user", () => {
-    doesNotHavePermission.forEach((permission) => {
+    doesNotHavePermission.forEach(({ permission, user }) => {
       it(`fails with ${permission} permission`, () => {
-        cy.quickLogin(permission)
+        cy.login(user.email, user.password, workspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+            cy.visit(`/${workspace.slug}/settings/users`))
 
         cy.formIsDisabled("InviteUserToTeamForm", [
-            "Email",
-            "Submit",
+          "Email",
+          "Submit",
         ])
       })
     })
 
     it("fails with an invalid email", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
-
-      let invalidEmail = "henry.spencer"
+          cy.visit(`/${workspace.slug}/settings/users`))
 
       cy.fillInputs({
-        "InviteUserToTeamForm.Email": invalidEmail,
+        "InviteUserToTeamForm.Email": "gus.tt.showbiz",
       })
 
       cy.getByTestId("InviteUserToTeamForm.Submit").click()
@@ -58,11 +110,11 @@ describe("team.spec.js", () => {
     })
 
     it("submits with default permissions", () => {
-      cy.quickLogin("owner")
-        .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+      const validEmail = "control.alt.delete@psych.ca"
 
-      let validEmail = "henry.spencer@psych.ca"
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() =>
+          cy.visit(`/${workspace.slug}/settings/users`))
 
       cy.fillInputs({
         "InviteUserToTeamForm.Email": validEmail,
@@ -86,13 +138,11 @@ describe("team.spec.js", () => {
   })
 
   describe("update permissions", () => {
-    let targetEmail = "owner@metamapper.io"
-
-    doesNotHavePermission.forEach((permission) => {
+    doesNotHavePermission.forEach(({ permission, user }) => {
       it(`fails without ${permission} permission`, () => {
-        cy.login(`${permission}@metamapper.io`, "password1234", DEFAULT_WORKSPACE_ID)
+        cy.login(user.email, user.password, workspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+            cy.visit(`/${workspace.slug}/settings/users`))
 
         cy.contains(
           "These settings can only be edited by users with the administrator role."
@@ -100,24 +150,22 @@ describe("team.spec.js", () => {
           "be.visible"
         )
 
-        cy.get(`tr[data-row-key="${targetEmail}"]`).within(() => {
+        cy.get(`tr[data-row-key="${owner.email}"]`).within(() => {
           cy.get("td").eq(1).find(".ant-tag").should("not.have.class", "editable")
           cy.get("td").eq(1).find(".ant-tag").click()
           cy.get("td").eq(1).find(".ant-select-selection-selected-value").should("not.be.visible")
         })
 
-        cy.getByTestId("WorkspaceUsersTable").should("exist").and("contain", targetEmail)
+        cy.getByTestId("WorkspaceUsersTable").should("exist").and("contain", owner.email)
       })
     })
 
     it("cannot update yourself", () => {
-      let yourself = "owner@metamapper.io"
-
-      cy.login(yourself, "password1234", DEFAULT_WORKSPACE_ID)
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+          cy.visit(`/${workspace.slug}/settings/users`))
 
-      cy.get(`tr[data-row-key="${yourself}"]`).within(() => {
+      cy.get(`tr[data-row-key="${owner.email}"]`).within(() => {
         cy.get("td").eq(1).find(".ant-tag").should("have.class", "editable")
         cy.get("td").eq(1).find(".ant-tag").click()
         cy.get("td").eq(1).find(".ant-select-selection-selected-value").click()
@@ -130,7 +178,7 @@ describe("team.spec.js", () => {
         "be.visible"
       )
 
-      cy.getByTestId("WorkspaceUsersTable").should("exist").and("contain", yourself)
+      cy.getByTestId("WorkspaceUsersTable").should("exist").and("contain", owner.email)
     })
 
     let userFixtures = [
@@ -146,14 +194,12 @@ describe("team.spec.js", () => {
     ]
 
     userFixtures.forEach((user) => {
-      let targetEmail = `${user.from.toLowerCase()}@metamapper.io`
+      let targetEmail = `${user.from.toLowerCase()}.team@metamapper.test`
 
       it(`can update from ${user.from} to ${user.to}`, () => {
-        let loggedInUser = "other.owner@metamapper.io"
-
-        cy.login(loggedInUser, "password1234", DEFAULT_WORKSPACE_ID)
+        cy.login(otherOwner.email, otherOwner.password, otherWorkspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+            cy.visit(`/${otherWorkspace.slug}/settings/users`))
 
         cy.get(`tr[data-row-key="${targetEmail}"]`).within(() => {
           cy.get("td").eq(1).find(".ant-tag").should("have.class", "editable")
@@ -179,28 +225,28 @@ describe("team.spec.js", () => {
   })
 
   describe("remove user", () => {
-    let targetEmail = "other.owner@metamapper.io"
+    const emailToRemove = otherMember.email
 
-    doesNotHavePermission.forEach((permission) => {
+    doesNotHavePermission.forEach(({ permission, user }) => {
       it(`fails without ${permission} permission`, () => {
-        cy.login(`${permission}@metamapper.io`, "password1234", DEFAULT_WORKSPACE_ID)
+        cy.login(user.email, user.password, workspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+            cy.visit(`/${workspace.slug}/settings/users`))
 
-        cy.get(`tr[data-row-key="${targetEmail}"]`).within(() => {
-          cy.get("td").eq(0).contains(targetEmail)
+        cy.get(`tr[data-row-key="${emailToRemove}"]`).within(() => {
+          cy.get("td").eq(0).contains(emailToRemove)
           cy.get("td").eq(2).contains("Remove").should("be.disabled")
         })
       })
     })
 
     it("using UI", () => {
-      cy.login("owner@metamapper.io", "password1234", DEFAULT_WORKSPACE_ID)
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+          cy.visit(`/${workspace.slug}/settings/users`))
 
-      cy.get(`tr[data-row-key="${targetEmail}"]`).within(() => {
-        cy.get("td").eq(0).contains(targetEmail)
+      cy.get(`tr[data-row-key="${emailToRemove}"]`).within(() => {
+        cy.get("td").eq(0).contains(emailToRemove)
         cy.get("td").eq(2).contains("Remove").should("not.be.disabled")
         cy.get("td").eq(2).contains("Remove").click()
       })
@@ -215,31 +261,27 @@ describe("team.spec.js", () => {
 
       cy.getByTestId("WorkspaceUsersTable")
         .should("exist")
-        .and("not.contain", targetEmail)
+        .and("not.contain", emailToRemove)
     })
 
-    it("removing yourself as last owner", () => {
-      let email = "owner@metamapper.io"
-
-      cy.login(email, "password1234", DEFAULT_WORKSPACE_ID)
+    it("cannot remove yourself as last owner", () => {
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+          cy.visit(`/${workspace.slug}/settings/users`))
 
-      cy.get(`tr[data-row-key="${email}"]`).within(() => {
-        cy.get("td").eq(0).contains(email)
+      cy.get(`tr[data-row-key="${owner.email}"]`).within(() => {
+        cy.get("td").eq(0).contains(owner.email)
         cy.get("td").eq(2).contains("Leave").should("be.disabled")
       })
     })
 
-    it("removing yourself", () => {
-      let email = "member@metamapper.io"
-
-      cy.login(email, "password1234", DEFAULT_WORKSPACE_ID)
+    it("removing yourself as regular user", () => {
+      cy.login(member.email, member.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+          cy.visit(`/${workspace.slug}/settings/users`))
 
-      cy.get(`tr[data-row-key="${email}"]`).within(() => {
-        cy.get("td").eq(0).contains(email)
+      cy.get(`tr[data-row-key="${member.email}"]`).within(() => {
+        cy.get("td").eq(0).contains(member.email)
         cy.get("td").eq(2).contains("Leave").should("not.be.disabled")
         cy.get("td").eq(2).contains("Leave").trigger("mouseover")
         cy.get("td").eq(2).contains("Leave").click()
@@ -248,15 +290,16 @@ describe("team.spec.js", () => {
       cy.contains("Yes").click()
 
       cy.location("pathname").should("equal", "/workspaces")
+
       cy.getByTestId("WorkspaceList")
         .should("exist")
-        .and("not.contain", "Dunder Mifflin")
+        .and("not.contain", workspace.name)
     })
   })
 
   describe("404", () => {
     it("when workspace does not exist", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login(owner.email, owner.password, otherWorkspace.id)
         .then(() =>
           cy.visit("/does-not-exist/settings/users"))
 
@@ -264,9 +307,9 @@ describe("team.spec.js", () => {
     })
 
     it("when user is unauthorized", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login(outsider.email, outsider.password, otherWorkspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/users`))
+          cy.visit(`/${workspace.slug}/settings/users`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })

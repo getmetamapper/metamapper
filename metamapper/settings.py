@@ -23,6 +23,7 @@ if TESTING:
 
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR, 'testutils', 'fixtures'),
+    os.path.join(BASE_DIR, 'www', 'cypress', 'fixtures'),
     os.path.join(BASE_DIR, 'app', 'revisioner', 'tests', 'fixtures'),
 ]
 

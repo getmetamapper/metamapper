@@ -1,17 +1,52 @@
-import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
+
 
 describe("customfields.spec.js", () => {
-  let kinds = ["Datastore", "Table"]
+
+  // Fixtures...
+  const workspace = {
+    id: "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+    name: "Satriales",
+    slug: "SatrialesPorkStore",
+  }
+
+  const privateWorkspace = {
+    id: "edef8a81-fab4-4479-b83f-1d886bd0bfa1",
+    name: "Federal Bureau of Investigation",
+    slug: "fbi",
+  }
+
+  const owner = {
+    fname: "Tony",
+    lname: "Soprano",
+    email: "owner.customfields@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    fname: "Silvio",
+    lname: "Dante",
+    email: "member.customfields@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    fname: "Paulie",
+    lname: "Walnuts",
+    email: "readonly.customfields@metamapper.test",
+    password: "password1234",
+  }
+
+  const contentObjectTypes = ["Datastore", "Table"]
 
   describe("list of custom fields", () => {
     beforeEach(() => {
-      cy.quickLogin("owner")
-        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
-        .then(() => cy.contains("Custom Fields").click())
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() =>
+          cy.visit(`/${workspace.slug}/settings/customfields`))
     })
 
     it("displays the right meta title", () => {
-      cy.title().should("eq", `Custom Fields - ${DEFAULT_WORKSPACE_SLUG} - Metamapper`)
+      cy.title().should("eq", `Custom Fields - ${workspace.slug} - Metamapper`)
     })
 
     it("displays Datastore custom fields", () => {
@@ -53,12 +88,12 @@ describe("customfields.spec.js", () => {
     })
   })
 
-  kinds.forEach(kind => {
+  contentObjectTypes.forEach(kind => {
     describe(`add custom ${kind.toLowerCase()} field`, () => {
       it("fails with readonly permission", () => {
-        cy.quickLogin("readonly")
-          .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
-          .then(() => cy.contains("Custom Fields").click())
+        cy.login(readonly.email, readonly.password, workspace.id)
+          .then(() =>
+            cy.visit(`/${workspace.slug}/settings/customfields`))
 
         cy.contains(kind).click()
         cy.contains(`Add Custom ${kind} Field`).should("be.disabled")
@@ -67,15 +102,13 @@ describe("customfields.spec.js", () => {
           cy.get("td").eq(3).should("not.have.value", "Edit")
           cy.get("td").eq(3).should("not.have.value", "Delete")
         })
-
-        cy.logout()
       })
 
       describe("as owner", () => {
         beforeEach(() => {
-          cy.quickLogin("owner")
-            .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings`))
-            .then(() => cy.contains("Custom Fields").click())
+          cy.login(owner.email, owner.password, workspace.id)
+            .then(() =>
+              cy.visit(`/${workspace.slug}/settings/customfields`))
         })
 
         describe(`create custom ${kind.toLowerCase()} field`, () => {
@@ -264,7 +297,7 @@ describe("customfields.spec.js", () => {
 
   describe("404", () => {
     it("when workspace does not exist", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
           cy.visit("/does-not-exist/settings/customfields"))
 
@@ -272,9 +305,9 @@ describe("customfields.spec.js", () => {
     })
 
     it("when user is unauthorized", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/customfields`))
+          cy.visit(`/${privateWorkspace.slug}/settings/customfields`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })

@@ -1,5 +1,4 @@
 import { AUTH_TOKEN, WORKSPACE_TOKEN } from "../../src/lib/constants"
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 // Mimic the login prompt form process. This should redirect
 // the user to `/login/email` if the email is registered, otherwise it
@@ -13,14 +12,30 @@ const continueWithEmail = (email) =>{
 }
 
 describe("authentication.spec.js", () => {
+  // Fixtures...
+  const workspace = {
+    name: "Los Angeles",
+    slug: "los-angeles",
+  }
+
+  const validUser = {
+    fname: "Robert",
+    lname: "Neville",
+    email: "owner.authentication@metamapper.test",
+    password: "password1234",
+  }
+
+  const unregisteredUser = {
+    fname: "Ruth",
+    lname: "Doe",
+    email: "unregistered.authentication@metamapper.test",
+  }
+
+  const strongPassword = "}~Q9%tu$CnU6>nUE"
+
+  const weakPassword = "password1234"
+
   describe("login", () => {
-    const validUser = {
-      email: "owner@metamapper.io",
-      password: "password1234",
-    }
-
-    const unregisteredEmail = "karen.vick@sbpd.gov"
-
     beforeEach(() => {
       cy.visit("/login")
     })
@@ -34,6 +49,8 @@ describe("authentication.spec.js", () => {
 
       // fill in an INCORRECT password
       cy.getByTestId("LoginForm.Password").type("wrong-password")
+
+      // Click to sign in...
       cy.contains("button", "Sign In").click()
 
       // still on /login page plus an error is displayed
@@ -44,15 +61,16 @@ describe("authentication.spec.js", () => {
     })
 
     it("redirects to sign up when email is not registered", () => {
-      continueWithEmail(unregisteredEmail)
+      continueWithEmail(unregisteredUser.email)
 
       // confirm we get redirected to the sign up page
       cy.location("pathname").should("equal", "/signup")
       cy.contains("Create an Account").should("be.visible")
 
+      cy.location("search").should("equal", `?email=${unregisteredUser.email}`)
+
       // Form should be prefilled based on the URL parameter.
-      cy.location("search").should("equal", `?email=${unregisteredEmail}`)
-      cy.getByTestId("SignupForm.Email").should("have.value", unregisteredEmail)
+      cy.getByTestId("SignupForm.Email").should("have.value", unregisteredUser.email)
     })
 
     it("fails to access protected resource", () => {
@@ -68,7 +86,7 @@ describe("authentication.spec.js", () => {
       cy.contains("button", "Sign In").click()
 
       // confirm we have logged in successfully
-      cy.location("pathname").should("equal", "/ctd")
+      cy.location("pathname").should("equal", `/${workspace.slug}`)
         .then(() => {
           expect(
             window.localStorage.getItem(AUTH_TOKEN)
@@ -78,86 +96,11 @@ describe("authentication.spec.js", () => {
           ).to.be.a("string")
         })
 
-      cy.location("pathname").should("equal", "/ctd/datastores")
-    })
-  })
-
-  describe("sign up", () => {
-    let existingUserEmail = "owner@metamapper.io"
-    let strongPassword = "}~Q9%tu$CnU6>nUE"
-    let weakPassword = "password1234"
-
-    beforeEach(() => {
-      cy.visit("/signup")
-    })
-
-    it("has the correct meta title", () => {
-      cy.title().should("eq", "Sign Up - Metamapper")
-    })
-
-    it("fails if the user is already registered", () => {
-      cy.fillInputs({
-        "SignupForm.FirstName": "Sam",
-        "SignupForm.LastName": "Crust",
-        "SignupForm.Email": existingUserEmail,
-        "SignupForm.Password": strongPassword,
-      })
-
-      cy.getByTestId("SignupForm.Submit").click()
-
-      cy.location("pathname").should("equal", "/signup")
-      cy.contains(".ant-alert.ant-alert-error", "User with this email already exists.").should(
-        "be.visible"
-      )
-    })
-
-    it("fails if the password is too weak", () => {
-      cy.fillInputs({
-        "SignupForm.FirstName": "Paulie",
-        "SignupForm.LastName": "Walnuts",
-        "SignupForm.Email": "paulie@sopranos.com",
-        "SignupForm.Password": weakPassword,
-      })
-
-      cy.getByTestId("SignupForm.Submit").click()
-
-      cy.location("pathname").should("equal", "/signup")
-
-      cy.formHasError(
-        "SignupForm.Password",
-        "Password is not strong enough.",
-      )
-    })
-
-    it("using UI", () => {
-      cy.fillInputs({
-        "SignupForm.FirstName": "Paulie",
-        "SignupForm.LastName": "Walnuts",
-        "SignupForm.Email": "paulie@sopranos.com",
-        "SignupForm.Password": strongPassword,
-      })
-
-      cy.getByTestId("SignupForm.Submit").click()
-
-      // It should redirect to the workspaces page. Eventually this should be an onboarding page.
-      cy.location("pathname").should("equal", "/workspaces")
-        .then(() => {
-          expect(
-            window.localStorage.getItem(AUTH_TOKEN)
-          ).to.be.a("string")
-        })
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
     })
   })
 
   describe("reset password", () => {
-    const validUser = {
-      email: "member@metamapper.io",
-    }
-
-    const invalidUser = {
-      email: "nobody@metamapper.io",
-    }
-
     beforeEach(() => {
       cy.visit("/password/reset")
     })
@@ -168,7 +111,7 @@ describe("authentication.spec.js", () => {
 
     it("fails if email does not exist", () => {
       cy.fillInputs({
-        "PasswordResetForm.Email": invalidUser.email,
+        "PasswordResetForm.Email": unregisteredUser.email,
       })
 
       cy.getByTestId("PasswordResetForm.Submit").click()
@@ -199,9 +142,72 @@ describe("authentication.spec.js", () => {
     })
   })
 
+  describe("sign up", () => {
+    beforeEach(() => {
+      cy.visit("/signup")
+    })
+
+    it("has the correct meta title", () => {
+      cy.title().should("eq", "Sign Up - Metamapper")
+    })
+
+    it("fails if the user is already registered", () => {
+      cy.fillInputs({
+        "SignupForm.FirstName": unregisteredUser.fname,
+        "SignupForm.LastName": unregisteredUser.lname,
+        "SignupForm.Email": validUser.email,
+        "SignupForm.Password": strongPassword,
+      })
+
+      cy.getByTestId("SignupForm.Submit").click()
+
+      cy.location("pathname").should("equal", "/signup")
+      cy.contains(".ant-alert.ant-alert-error", "User with this email already exists.").should(
+        "be.visible"
+      )
+    })
+
+    it("fails if the password is too weak", () => {
+      cy.fillInputs({
+        "SignupForm.FirstName": unregisteredUser.fname,
+        "SignupForm.LastName": unregisteredUser.lname,
+        "SignupForm.Email": unregisteredUser.email,
+        "SignupForm.Password": weakPassword,
+      })
+
+      cy.getByTestId("SignupForm.Submit").click()
+
+      cy.location("pathname").should("equal", "/signup")
+
+      cy.formHasError(
+        "SignupForm.Password",
+        "Password is not strong enough.",
+      )
+    })
+
+    it("using UI", () => {
+      cy.fillInputs({
+        "SignupForm.FirstName": unregisteredUser.fname,
+        "SignupForm.LastName": unregisteredUser.lname,
+        "SignupForm.Email": unregisteredUser.email,
+        "SignupForm.Password": strongPassword,
+      })
+
+      cy.getByTestId("SignupForm.Submit").click()
+
+      // It should redirect to the workspaces page. Eventually this should be an onboarding page.
+      cy.location("pathname").should("equal", "/workspaces")
+        .then(() => {
+          expect(
+            window.localStorage.getItem(AUTH_TOKEN)
+          ).to.be.a("string")
+        })
+    })
+  })
+
   describe("logout", () => {
     beforeEach(() => {
-      cy.login().then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/`))
+      cy.login(validUser.email).then(() => cy.visit(`/${workspace.slug}/datastores`))
     })
 
     it("shows login page after logout", () => {

@@ -19,8 +19,6 @@
     "table_properties.spec.js",
     "table_indexes.spec.js",
     "table_columns.spec.js",
-    "table_column_comments.spec.js",
-    "table_comments.spec.js",
     "authentication.spec.js",
     "customfields.spec.js",
     "sso.spec.js",

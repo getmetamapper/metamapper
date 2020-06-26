@@ -1,13 +1,29 @@
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("omnisearch.spec.js", () => {
+  const workspace = {
+    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    slug: "gcc",
+  }
+
+  const member = {
+    email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const outsider = {
+    email: "outsider.definitions@metamapper.test",
+    password: "password1234",
+  }
+
   describe("search from home page", () => {
     beforeEach(() => {
-      cy.quickLogin("owner").then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/`)).then(() => cy.reload())
+      cy.login(member.email, member.password, workspace.id)
+        .then(() =>
+          cy.visit(`/${workspace.slug}`))
     })
 
     it("has the correct meta title", () => {
-      cy.title().should("eq", `Search Your Data – ${DEFAULT_WORKSPACE_SLUG} – Metamapper`)
+      cy.title().should("eq", `Search Your Data – ${workspace.slug} – Metamapper`)
     })
 
     it("displays the searchbox", () => {
@@ -20,35 +36,35 @@ describe("omnisearch.spec.js", () => {
 
     it("can execute a search", () => {
       // Enter a search query...
-      cy.getByTestId("Omnisearch.Searchbox").type("customer order forms{enter}")
+      cy.getByTestId("Omnisearch.Searchbox").type("employee access tracking{enter}")
 
       // The page should change...
-      cy.location("pathname").should("equal", `/${DEFAULT_WORKSPACE_SLUG}/search/results`)
-      cy.location("search").should("equal", '?q=customer%20order%20forms')
+      cy.location("pathname").should("equal", `/${workspace.slug}/search/results`)
+      cy.location("search").should("equal", '?q=employee%20access%20tracking')
 
       // It should return search results...
-      cy.getByTestId("SearchResultItem").should("have.length", 15)
+      cy.getByTestId("SearchResultItem").should("have.length", 6)
     })
   })
 
   describe("view search results", () => {
     beforeEach(() => {
-      cy.quickLogin("owner").then(() => {
-        cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/search/results?q=customer%20order%20forms`)
-        cy.wait(500)
+      cy.login(member.email, member.password, workspace.id).then(() => {
+        cy.visit(`/${workspace.slug}/search/results?q=employee%20access%20tracking`)
+        cy.wait(250)
       })
     })
 
     it("has the correct meta title", () => {
-      cy.title().should("eq", `customer order forms – Search – Metamapper`)
+      cy.title().should("eq", "employee access tracking – Search – Metamapper")
     })
 
     it("can navigate through Table search result", () => {
-      cy.contains("app.orders").click().then(() => {
+      cy.contains("public.audit_activity").click().then(() => {
         cy.location("pathname")
           .should(
             "equal",
-            `/${DEFAULT_WORKSPACE_SLUG}/datastores/metamapper/definition/app/orders/overview`
+            `/${workspace.slug}/datastores/metamapper/definition/public/audit_activity/overview`
           )
 
         cy.contains("Properties").should("be.visible")
@@ -56,11 +72,11 @@ describe("omnisearch.spec.js", () => {
     })
 
     it("can navigate through Column search result", () => {
-      cy.contains("app.payments.customernumber").click().then(() => {
+      cy.contains("public.auth_memberships.email").click().then(() => {
         cy.location("pathname")
           .should(
             "equal",
-            `/${DEFAULT_WORKSPACE_SLUG}/datastores/metamapper/definition/app/payments/columns`
+            `/${workspace.slug}/datastores/metamapper/definition/public/auth_memberships/columns`
           )
 
         cy.contains("Column").should("be.visible")
@@ -69,24 +85,36 @@ describe("omnisearch.spec.js", () => {
       })
     })
 
-    it("can navigate through Comment search result", () => {
-      cy.contains("Comment on app.orderdetails.quantityordered").click().then(() => {
+    it("can navigate through Comment on Table search result", () => {
+      cy.contains("Comment on public.auth_permission").click().then(() => {
         cy.location("pathname")
           .should(
             "equal",
-            `/${DEFAULT_WORKSPACE_SLUG}/datastores/metamapper/definition/app/orderdetails/columns`
+            `/${workspace.slug}/datastores/metamapper/definition/public/auth_permission/overview`
           )
 
-        cy.location("search").should("equal", "?selectedColumn=UOA8JNoQIhNy")
+        cy.contains("Permissions that an employee has in Metamapper.").should("be.visible")
+      })
+    })
 
-        cy.contains("The number of items ordered by the customer.").should("be.visible")
+    it("can navigate through Comment on Column search result", () => {
+      cy.contains("Comment on public.votes.user_id").click().then(() => {
+        cy.location("pathname")
+          .should(
+            "equal",
+            `/${workspace.slug}/datastores/metamapper/definition/public/votes/columns`
+          )
+
+        cy.location("search").should("equal", "?selectedColumn=hrzuBCzQDQ5U")
+
+        cy.contains("The employee that made the action.").should("be.visible")
       })
     })
   })
 
   describe("404", () => {
     it("when workspace does not exist", () => {
-      cy.login("member@metamapper.io", "password1234")
+      cy.login(member.email, member.password, workspace.id)
         .then(() =>
           cy.visit("/does-not-exist/search"))
 
@@ -94,17 +122,17 @@ describe("omnisearch.spec.js", () => {
     })
 
     it("for search page", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login(outsider.email, outsider.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/search`))
+          cy.visit(`/${workspace.slug}/search`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })
 
     it("for search results", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login(outsider.email, outsider.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/search/results`))
+          cy.visit(`/${workspace.slug}/search/results`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })
