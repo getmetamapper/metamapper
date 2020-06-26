@@ -36,7 +36,7 @@
     "build": "craco build",
     "test": "craco test --watchAll=false",
     "lint": "eslint src/",
-    "cypress:install": "npm install --no-save cypress@~4.8.0",
+    "cypress:install": "npm install --no-save cypress@~4.9.0",
     "cypress:open": "cypress open"
   },
   "eslintConfig": {
