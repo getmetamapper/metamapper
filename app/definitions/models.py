@@ -329,6 +329,16 @@ class Table(StringPrimaryKeyModel,
         }
 
 
+class TableProperty(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    table = models.ForeignKey(Table, related_name='table_properties', on_delete=models.DO_NOTHING)
+    value = models.TextField(db_column='property_value')
+
+    class Meta:
+        managed = False
+        db_table = 'definitions_table_properties'
+
+
 class Column(StringPrimaryKeyModel,
              AuditableModel,
              TimestampedModel,

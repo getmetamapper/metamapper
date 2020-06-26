@@ -48,7 +48,6 @@ const errorLink = onError(({ response, operation, graphQLErrors, networkError })
 
 const link = ApolloLink.from([
   authLink,
-  errorLink,
   createUploadLink({ uri: `${ORIGIN_HOST}/graphql` }),
 ])
 
