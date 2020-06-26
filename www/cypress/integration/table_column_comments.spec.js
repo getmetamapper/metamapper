@@ -1,29 +1,50 @@
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
-
 const getCommentByText = (commentText) => {
   return cy.contains(commentText).parentsUntil(".comment")
 }
 
 describe("table_column_comments.spec.js", () => {
+  const workspace = {
+    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    slug: "gcc",
+  }
+
+  const owner = {
+    name: "Jeff Winger",
+    email: "owner.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    email: "readonly.definitions@metamapper.test",
+    password: "password1234",
+  }
+
   const datastore = {
-    name: 'Postgres',
-    slug: 'metamapper',
+    name: "Metamapper",
+    slug: "metamapper",
   }
 
   const table = {
-    schema: 'app',
-    name: 'orderdetails',
+    schema: "public",
+    name: "votes",
   }
 
-  const databaseUri = `/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}`
+  const columnId = "biCu4oK8IDSu"
+
+  const databaseUri = `/${workspace.slug}/datastores/${datastore.slug}`
   const overviewUri = `${databaseUri}/definition/${table.schema}/${table.name}/columns`
 
-  let commentOne = "Here is some information about this table."
-  let commentTwo = "Here is an unrelated comment."
+  const commentOne = "Here is some information about this table."
+  const commentTwo = "Here is an unrelated comment."
 
   describe("as member", () => {
     beforeEach(() => {
-      cy.quickLogin("member").then(() => cy.visit(overviewUri))
+      cy.login(member.email, member.password, workspace.id).then(() => cy.visit(overviewUri))
 
       cy.getByTestId("ColumnDefinitionTable").find("tr").eq(1).within(() => {
         cy.get("td").eq(0).then(() => cy.get(".column-comments-icon").click({ force: true }))
@@ -43,6 +64,7 @@ describe("table_column_comments.spec.js", () => {
       })
 
       cy.wait(1500)
+
       cy.reload()
 
       cy.getByTestId("ColumnDefinitionTable").find("tr").eq(1).within(() => {
@@ -112,14 +134,13 @@ describe("table_column_comments.spec.js", () => {
         cy.contains("Yes").click())
 
       getCommentByText(commentOne).parent().should("have.class", "pinned")
-      getCommentByText(commentOne).parent().contains("Pinned by David Wallace")
+      getCommentByText(commentOne).parent().contains(`Pinned by ${owner.name}`)
     })
   })
 
   describe("as another team member", () => {
     beforeEach(() => {
-      cy.quickLogin("owner").then(() => cy.visit(overviewUri + '?selectedColumn=XEwuYtOQyAyX'))
-      cy.wait(500)
+      cy.login(owner.email, owner.password, workspace.id).then(() => cy.visit(`${overviewUri}?selectedColumn=${columnId}`))
     })
 
     it("can reply to a comment", () => {
@@ -169,8 +190,7 @@ describe("table_column_comments.spec.js", () => {
 
   describe("as readonly", () => {
     beforeEach(() => {
-      cy.quickLogin("readonly").then(() => cy.visit(overviewUri + '?selectedColumn=XEwuYtOQyAyX'))
-      cy.wait(500)
+      cy.login(readonly.email, readonly.password, workspace.id).then(() => cy.visit(`${overviewUri}?selectedColumn=${columnId}`))
     })
 
     it("cannot create comment", () => {
@@ -188,24 +208,11 @@ describe("table_column_comments.spec.js", () => {
     it("cannot delete comment", () => {
       getCommentByText(commentOne).within(() => cy.getByTestId("DeleteComment.Submit").should("not.be.visible"))
     })
-
-    // it("cannot vote for a comment", () => {
-    //   getCommentByText(commentTwo).within(() => {
-    //     cy.getByTestId("VoteForComment.DOWN").then(($btn) => {
-    //       const value = $btn.text()
-
-    //       cy.getByTestId("VoteForComment.DOWN.Submit").click()
-
-    //       $btn.contains(value)
-    //     })
-    //   })
-    // })
   })
 
   describe("final thoughts", () => {
     beforeEach(() => {
-      cy.quickLogin("member").then(() => cy.visit(overviewUri + '?selectedColumn=XEwuYtOQyAyX'))
-      cy.wait(500)
+      cy.login(member.email, member.password, workspace.id).then(() => cy.visit(`${overviewUri}?selectedColumn=${columnId}`))
     })
 
     it("can delete childless comment", () => {

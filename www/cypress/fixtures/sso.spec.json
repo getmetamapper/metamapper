@@ -1,0 +1,168 @@
+[
+  {
+    "fields": {
+      "name": "The Pussycats",
+      "slug": "josie-and-the-pussycats",
+      "creator_id": 2001,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "7fdeecda-18bb-4592-a5d1-e00f18739d02"
+  },
+  {
+    "fields": {
+      "name": "DuJour",
+      "slug": "DuJour",
+      "creator_id": 2004,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "dc909e3d-e10d-4904-ac4c-cf1c567fe211"
+  },
+  {
+    "fields": {
+      "fname": "Josie",
+      "lname": "McCoy",
+      "email": "owner.sso@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 2001
+  },
+  {
+    "fields": {
+      "fname": "Melody",
+      "lname": "Valentine",
+      "email": "member.sso@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 2002
+  },
+  {
+    "fields": {
+      "fname": "Josie",
+      "lname": "McCoy",
+      "email": "readonly.sso@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 2003
+  },
+  {
+    "fields": {
+      "fname": "Wyatt",
+      "lname": "Frame",
+      "email": "outsider.sso@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 2004
+  },
+  {
+    "fields": {
+      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "user_id": "owner.sso@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 654123
+  },
+  {
+    "fields": {
+      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "user_id": "member.sso@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 655123
+  },
+  {
+    "fields": {
+      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "user_id": "readonly.sso@metamapper.test",
+      "permissions": "READONLY",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 656123
+  },
+  {
+    "fields": {
+      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "domain": "metamapper.dev",
+      "verification_token": "kBeRXnSNw7oJF4DlPCz9IDHlLuIOTa3AzoSUl33h",
+      "verified_at": "2010-08-31 17:53:31Z",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "sso.ssodomain",
+    "pk": "scIdjUnLNZWK"
+  },
+  {
+    "fields": {
+      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "domain": "metamapper.net",
+      "verification_token": "UdZp79mqyk6nfk7B27GVlO6m1IEtajoGXMmNHgX0",
+      "attempts": 20,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "sso.ssodomain",
+    "pk": "9AabbDcEez77"
+  },
+  {
+    "fields": {
+      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "domain": "testdomain.com",
+      "verification_token": "BgmPIpJTFZO9SuVFxMHrXOtxJB5gAX7bpzT9nqRy",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "sso.ssodomain",
+    "pk": "ccIyuwVYy3Dr"
+  },
+  {
+    "fields": {
+      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "entity_id": "urn:auth0:metamapper-io",
+      "sso_url": "https://sso.metamapper.dev/oauth/callback/testing",
+      "x509cert": "-----BEGIN CERTIFICATE-----MIIDCzCCAfOgAwIBAgIJZC/zKbXIzEkcMA0GCSqGSIb3DQEBCwUAMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTAeFw0xOTAyMTUwMzUwNDFaFw0zMjEwMjQwMzUwNDFaMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMOUfc2AWAJN7Fv+wZ+R+9CLN3ewimd++0TqV2wIo72Ud/PKM03kfODkWxKwqCHw6j2YZWugbjtmvS7pm/93k3PyyjuOybBawd5IiMw8XAVFvTRmkREl26bwuHFOwWFv7DHpTjbs4cgxm++2Jcx17DgrRIJUpOKjwpFs+kGnlWReTNseF7RAhDTe/7BcArYGdrwVE3nafbGluiZBtjtidD7J1YxnRPep0GaezjRtI6ygxliKDUU3iBwR4k8uCEj3XFjN+UutwgK318SFU2B0rXb1UmIhtpV7ePxYmEKh9A+H8xFclGfiMd1FFQ4eH1PfAOM1ljIzDsKhNJUNnR0PX80CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUtszg6c0bozrLT/cZiqU62gfjwWwwDgYDVR0PAQH/BAQDAgKEMA0GCSqGSIb3DQEBCwUAA4IBAQA0+l+P419AOY88ZFjXhjXM9S0d+4hIKLAg9Yb7tfPs8l4lIEGQnWxvO3XrrPeKfzwfmH1H178gs08xsvZvamQVzMMGjwipOosftxPzpm1xmqVP24tXi7YMbSzIjXzuqCICXuFYaddZm8A+ToZ7tt91uGoXeR6AvSKgYyt0bncgSCYeTkVUuHji3Jq49TfPYvnizRUvCAe7TGKcrEyolRTlYN+fVFSRLbyv8PryAun9mkMAxb/PnmesajqyEG82oaRrbDHfQIPd6BoOTXRyGJD0Ys+SK/GyV4+yykCeAY31kRxnQPZuxVBkgolQxIFa5CSy8XfmMm8dVx3C2RByNCPJ-----END CERTIFICATE-----",
+      "default_permissions": "MEMBER",
+      "provider": "GENERIC",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "sso.ssoconnection",
+    "pk": "VaH1hwOlI0RI"
+  },
+  {
+    "fields": {
+      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "entity_id": "urn:auth0:metamapper-io",
+      "sso_url": "https://sso.metamapper.dev/oauth/callback/testing",
+      "x509cert": "-----BEGIN CERTIFICATE-----MIIDCzCCAfOgAwIBAgIJZC/zKbXIzEkcMA0GCSqGSIb3DQEBCwUAMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTAeFw0xOTAyMTUwMzUwNDFaFw0zMjEwMjQwMzUwNDFaMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMOUfc2AWAJN7Fv+wZ+R+9CLN3ewimd++0TqV2wIo72Ud/PKM03kfODkWxKwqCHw6j2YZWugbjtmvS7pm/93k3PyyjuOybBawd5IiMw8XAVFvTRmkREl26bwuHFOwWFv7DHpTjbs4cgxm++2Jcx17DgrRIJUpOKjwpFs+kGnlWReTNseF7RAhDTe/7BcArYGdrwVE3nafbGluiZBtjtidD7J1YxnRPep0GaezjRtI6ygxliKDUU3iBwR4k8uCEj3XFjN+UutwgK318SFU2B0rXb1UmIhtpV7ePxYmEKh9A+H8xFclGfiMd1FFQ4eH1PfAOM1ljIzDsKhNJUNnR0PX80CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUtszg6c0bozrLT/cZiqU62gfjwWwwDgYDVR0PAQH/BAQDAgKEMA0GCSqGSIb3DQEBCwUAA4IBAQA0+l+P419AOY88ZFjXhjXM9S0d+4hIKLAg9Yb7tfPs8l4lIEGQnWxvO3XrrPeKfzwfmH1H178gs08xsvZvamQVzMMGjwipOosftxPzpm1xmqVP24tXi7YMbSzIjXzuqCICXuFYaddZm8A+ToZ7tt91uGoXeR6AvSKgYyt0bncgSCYeTkVUuHji3Jq49TfPYvnizRUvCAe7TGKcrEyolRTlYN+fVFSRLbyv8PryAun9mkMAxb/PnmesajqyEG82oaRrbDHfQIPd6BoOTXRyGJD0Ys+SK/GyV4+yykCeAY31kRxnQPZuxVBkgolQxIFa5CSy8XfmMm8dVx3C2RByNCPJ-----END CERTIFICATE-----",
+      "default_permissions": "READONLY",
+      "provider": "GENERIC",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "sso.ssoconnection",
+    "pk": "uayGFt47yvTA"
+  }
+]

@@ -2,22 +2,52 @@ import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("datastore_properties.spec.js", () => {
   const datastore = {
-    name: 'Postgres',
+    name: 'Metamapper',
     slug: 'metamapper',
   }
 
-  const databaseUri = `/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}`
+  const workspace = {
+    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    slug: "gcc",
+  }
+
+  const owner = {
+    email: "owner.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    email: "readonly.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const hasPermission = [
+    { permission: "member", user: member },
+    { permission: "owner", user: owner },
+  ]
+
+  const databaseUri = `/${workspace.slug}/datastores/${datastore.slug}`
+
+  const properties = {
+    "Purpose": "J3M63WcYJkwN",
+    "Ownership": "lYj8WxYvKVqj",
+  }
 
   const existingProperties = [
     {
-      pk: 'ow5W0kw0CK0i',
-      label: 'Ownership',
-      value: 'Analytics',
+      pk: properties["Ownership"],
+      label: "Ownership",
+      value: "Engineering",
     },
     {
-      pk: 'iPOhV1HazLW6',
-      label: 'Purpose',
-      value: 'Business Intelligence',
+      pk: properties["Purpose"],
+      label: "Purpose",
+      value: "Business Intelligence",
     },
   ]
 
@@ -25,7 +55,9 @@ describe("datastore_properties.spec.js", () => {
   describe("overview", () => {
     describe("as member", () => {
       beforeEach(() => {
-        cy.quickLogin("member").then(() => cy.visit(databaseUri))
+        cy.login(member.email, member.password, workspace.id)
+          .then(() =>
+            cy.visit(databaseUri))
       })
 
       it("displays the custom properties", () => {
@@ -46,7 +78,9 @@ describe("datastore_properties.spec.js", () => {
 
     describe("as readonly", () => {
       beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(databaseUri))
+        cy.login(readonly.email, readonly.password, workspace.id)
+          .then(() =>
+            cy.visit(databaseUri))
       })
 
       it("displays the custom properties", () => {
@@ -67,12 +101,10 @@ describe("datastore_properties.spec.js", () => {
   })
 
   describe("update properties", () => {
-    let allowedPermissions = ["member", "owner"]
-
-    allowedPermissions.forEach(permission => {
+    hasPermission.forEach(({ permission, user }) => {
       describe(`as ${permission}`, () => {
         beforeEach(() => {
-          cy.quickLogin(permission)
+          cy.login(user.email, user.password, workspace.id)
             .then(() => cy.visit(databaseUri))
             .then(() => cy.getByTestId("CustomProperties.Edit").click())
         })
@@ -80,7 +112,7 @@ describe("datastore_properties.spec.js", () => {
         it("change text field to something", () => {
           const input = "Metadata Management"
 
-          cy.getByTestId("CustomProperties.Input(iPOhV1HazLW6)")
+          cy.getByTestId(`CustomProperties.Input(${properties["Purpose"]})`)
             .should("be.visible")
             .clear()
             .type(input)
@@ -91,13 +123,13 @@ describe("datastore_properties.spec.js", () => {
             "be.visible"
           )
 
-          cy.getByTestId("CustomProperties.Display(iPOhV1HazLW6)")
+          cy.getByTestId(`CustomProperties.Display(${properties["Purpose"]})`)
             .should("be.visible")
             .contains(input)
         })
 
         it("change text field to nothing", () => {
-          cy.getByTestId(`CustomProperties.Input(iPOhV1HazLW6)`)
+          cy.getByTestId(`CustomProperties.Input(${properties["Purpose"]})`)
             .should("be.visible")
             .clear()
 
@@ -107,14 +139,13 @@ describe("datastore_properties.spec.js", () => {
             "be.visible"
           )
 
-          cy.getByTestId("CustomProperties.Display(iPOhV1HazLW6)")
-            .should("have.value", "")
+          cy.getByTestId(`CustomProperties.Display(${properties["Purpose"]})`).should("have.value", "")
         })
 
         it("change multiple fields", () => {
           cy.fillInputs({
-            "CustomProperties.Input(iPOhV1HazLW6)": "Data Warehouse",
-            "CustomProperties.Input(ow5W0kw0CK0i)": "Engineering",
+            "CustomProperties.Input(J3M63WcYJkwN)": "Data Warehouse",
+            "CustomProperties.Input(lYj8WxYvKVqj)": "Engineering",
           })
 
           cy.getByTestId("CustomProperties.Submit").click()
@@ -123,11 +154,11 @@ describe("datastore_properties.spec.js", () => {
             "be.visible"
           )
 
-          cy.getByTestId("CustomProperties.Display(iPOhV1HazLW6)")
+          cy.getByTestId(`CustomProperties.Display(${properties["Purpose"]})`)
             .should("be.visible")
             .contains("Data Warehouse")
 
-          cy.getByTestId("CustomProperties.Display(ow5W0kw0CK0i)")
+          cy.getByTestId(`CustomProperties.Display(${properties["Ownership"]})`)
             .should("be.visible")
             .contains("Engineering")
         })

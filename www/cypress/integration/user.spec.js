@@ -1,40 +1,68 @@
-import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
+
+const openUserSettingsPanel = (pageName = "Profile") =>{
+  cy.getByTestId("Navbar.Dropdown").click()
+  cy.contains("User Settings").click()
+  cy.contains(pageName).click()
+}
 
 describe("user.spec.js", () => {
-  let oldEmail = "other.readonly@metamapper.io"
-  let newEmail = "burton.guster@metamapper.io"
+  // Fixtures...
+  const workspace = {
+    id: "5bd01b7f-9dd0-42e7-b265-3dea81c89a84",
+    name: "Los Pollos Hermanos",
+    slug: "los-pollos-hermanos",
+  }
+
+  const currentUser = {
+    fname: "Walter",
+    lname: "White",
+    email: "current.user@metamapper.test",
+    password: "password1234",
+  }
+
+  const newProperties = {
+    fname: "Werner",
+    lname: "Heisenberg",
+    email: "heisenberg@metamapper.test",
+  }
+
+  const passwords = {
+    incorrect: "password54321",
+    current: "password1234",
+    newSafe: "Ccbc;gNr$-L+6@Z]",
+    newWeak: "banana",
+  }
+
+  const anotherUser = {
+    fname: "Gus",
+    lname: "Fring",
+    email: "another.user@metamapper.test",
+  }
 
   describe("edit user profile", () => {
     beforeEach(() => {
-      cy.login(oldEmail, "password1234")
-        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}`))
+      cy.login(currentUser.email).then(() => cy.visit(`/${workspace.slug}/datastores`))
 
-      cy.getByTestId("Navbar.Dropdown").click()
-
-      cy.contains("User Settings").click();
-      cy.contains("Profile").click();
+      openUserSettingsPanel("Profile")
     })
 
     it("requires a password", () => {
       cy.fillInputs({
-        "UpdateUserProfileForm.FirstName": "Burton",
-        "UpdateUserProfileForm.LastName": "Guster",
-        "UpdateUserProfileForm.Email": oldEmail,
+        "UpdateUserProfileForm.FirstName": newProperties.fname,
+        "UpdateUserProfileForm.LastName": newProperties.lname,
+        "UpdateUserProfileForm.Email": currentUser.email,
       })
 
       cy.getByTestId("UpdateUserProfileForm.Submit").click()
 
-      cy.get(".has-error #currentPassword").should("be.visible")
-      cy.contains(".ant-form-explain", "This field is required.").should(
-        "be.visible"
-      )
+      cy.formHasError("UpdateUserProfileForm.CurrentPassword", "This field is required.")
     })
 
     it("requires a correct password", () => {
       cy.fillInputs({
-        "UpdateUserProfileForm.FirstName": "Burton",
-        "UpdateUserProfileForm.LastName": "Guster",
-        "UpdateUserProfileForm.Email": oldEmail,
+        "UpdateUserProfileForm.FirstName": newProperties.fname,
+        "UpdateUserProfileForm.LastName": newProperties.lname,
+        "UpdateUserProfileForm.Email": currentUser.email,
         "UpdateUserProfileForm.CurrentPassword": "bananas",
       })
 
@@ -66,7 +94,7 @@ describe("user.spec.js", () => {
       {
         describe: "validate name length",
         inputs: {
-          "Email": { value: oldEmail, error: null },
+          "Email": { value: currentUser.email, error: null },
           "FirstName": {
             value: (Math.random()*1e256).toString(36),
             error: "This field must be less than 60 characters.",
@@ -85,7 +113,7 @@ describe("user.spec.js", () => {
           "UpdateUserProfileForm.FirstName": inputs["FirstName"]["value"],
           "UpdateUserProfileForm.LastName": inputs["LastName"]["value"],
           "UpdateUserProfileForm.Email": inputs["Email"]["value"],
-          "UpdateUserProfileForm.CurrentPassword": "password1234",
+          "UpdateUserProfileForm.CurrentPassword": currentUser.password,
         })
 
         cy.getByTestId("UpdateUserProfileForm.Submit").click()
@@ -96,10 +124,10 @@ describe("user.spec.js", () => {
 
     it("requires a unique email address", () => {
       cy.fillInputs({
-        "UpdateUserProfileForm.FirstName": "Gary",
-        "UpdateUserProfileForm.LastName": "Scott",
-        "UpdateUserProfileForm.Email": "owner@metamapper.io",
-        "UpdateUserProfileForm.CurrentPassword": "password1234",
+        "UpdateUserProfileForm.FirstName": newProperties.fname,
+        "UpdateUserProfileForm.LastName": newProperties.lname,
+        "UpdateUserProfileForm.Email": anotherUser.email,
+        "UpdateUserProfileForm.CurrentPassword": currentUser.password,
       })
 
       cy.getByTestId("UpdateUserProfileForm.Submit").click()
@@ -111,31 +139,30 @@ describe("user.spec.js", () => {
 
       cy.reload()
 
-      cy.getByTestId("Navbar.Dropdown").click()
-      cy.contains("User Settings").click();
+      openUserSettingsPanel("Profile")
 
       cy.getByTestId("UpdateUserProfileForm.FirstName").should(
         "not.have.value",
-        "Gary",
+        newProperties.fname,
       )
 
       cy.getByTestId("UpdateUserProfileForm.LastName").should(
         "not.have.value",
-        "Scott",
+        newProperties.lname,
       )
 
       cy.getByTestId("UpdateUserProfileForm.Email").should(
         "not.have.value",
-        "michael.scott@metamapper.io",
+        anotherUser.email,
       )
     })
 
     it("using UI", () => {
       cy.fillInputs({
-        "UpdateUserProfileForm.FirstName": "Burton",
-        "UpdateUserProfileForm.LastName": "Guster",
-        "UpdateUserProfileForm.Email": newEmail,
-        "UpdateUserProfileForm.CurrentPassword": "password1234",
+        "UpdateUserProfileForm.FirstName": newProperties.fname,
+        "UpdateUserProfileForm.LastName": newProperties.lname,
+        "UpdateUserProfileForm.Email": newProperties.email,
+        "UpdateUserProfileForm.CurrentPassword": currentUser.password,
       })
 
       cy.getByTestId("UpdateUserProfileForm.Submit").click()
@@ -147,34 +174,30 @@ describe("user.spec.js", () => {
 
       cy.reload()
 
-      cy.getByTestId("Navbar.Dropdown").click()
-      cy.contains("User Settings").click();
+      openUserSettingsPanel("Profile")
 
-      cy.getByTestId("UpdateUserProfileForm.FirstName").should("have.value", "Burton")
-      cy.getByTestId("UpdateUserProfileForm.LastName").should("have.value", "Guster")
+      cy.getByTestId("UpdateUserProfileForm.FirstName").should(
+        "have.value",
+        newProperties.fname,
+      )
+
+      cy.getByTestId("UpdateUserProfileForm.LastName").should(
+        "have.value",
+        newProperties.lname,
+      )
+
       cy.getByTestId("UpdateUserProfileForm.Email").should(
         "have.value",
-        "burton.guster@metamapper.io",
+        newProperties.email,
       )
     })
   })
 
   describe("edit user password", () => {
-    const passwords = {
-      current: "password1234",
-      newSafe: "Ccbc;gNr$-L+6@Z]",
-      newWeak: "banana",
-      incorrect: "password54321",
-    }
-
     beforeEach(() => {
-      cy.login(newEmail, "password1234", DEFAULT_WORKSPACE_ID)
-        .then(() => cy.visit(`/${DEFAULT_WORKSPACE_SLUG}`))
+      cy.login(newProperties.email).then(() => cy.visit(`/${workspace.slug}`))
 
-      cy.getByTestId("Navbar.Dropdown").click()
-
-      cy.contains("User Settings").click();
-      cy.contains("Security").click();
+      openUserSettingsPanel("Security")
     })
 
     it("requires the correct current password", () => {
@@ -202,10 +225,7 @@ describe("user.spec.js", () => {
 
       cy.getByTestId("UpdatePasswordForm.Submit").click()
 
-      cy.get(".has-error #confirmPassword").should("be.visible")
-      cy.contains(".ant-form-explain", "Confirmation must match new password.").should(
-        "be.visible"
-      )
+      cy.formHasError("UpdatePasswordForm.ConfirmPassword", "Confirmation must match new password.")
     })
 
     it("requires a strong password", () => {
@@ -217,10 +237,7 @@ describe("user.spec.js", () => {
 
       cy.getByTestId("UpdatePasswordForm.Submit").click()
 
-      cy.get(".has-error [data-test=\"UpdatePasswordForm.NewPassword\"]").should("be.visible")
-      cy.contains(".ant-form-explain", "Password is not strong enough.").should(
-        "be.visible"
-      )
+      cy.formHasError("UpdatePasswordForm.NewPassword", "Password is not strong enough.")
     })
 
     it("using UI", () => {
@@ -245,13 +262,15 @@ describe("user.spec.js", () => {
 
       // It should keep the user logged in.
       cy.reload()
+
       cy.contains("The search engine for your data.").should("be.visible")
 
       // It should allow the user to log in with the new password.
       cy.logout()
+
       cy.location("pathname").should("equal", "/login")
 
-      cy.getByTestId("LoginPromptForm.Email").type(newEmail)
+      cy.getByTestId("LoginPromptForm.Email").type(newProperties.email)
       cy.contains("button", "Continue with Email").click()
 
       cy.getByTestId("LoginForm.Password").type(passwords.newSafe)

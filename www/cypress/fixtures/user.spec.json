@@ -1,0 +1,76 @@
+[
+  {
+    "fields": {
+      "name": "Los Pollos Hermanos",
+      "slug": "los-pollos-hermanos",
+      "creator_id": 495,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "5bd01b7f-9dd0-42e7-b265-3dea81c89a84"
+  },
+  {
+    "fields": {
+      "name": "Baby Blue",
+      "slug": "baby-blue",
+      "workspace_id": "5bd01b7f-9dd0-42e7-b265-3dea81c89a84",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "host": "not-a-real.host",
+      "port": 5432,
+      "username": "admin",
+      "password": "password1234",
+      "engine": "postgresql",
+      "version": "9.6.1"
+    },
+    "model": "definitions.datastore",
+    "pk": "p5l1p5gmfy5x"
+  },
+  {
+    "fields": {
+      "fname": "Walter",
+      "lname": "White",
+      "email": "current.user@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 491
+  },
+  {
+    "fields": {
+      "fname": "Gus",
+      "lname": "Fring",
+      "email": "another.user@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 495
+  },
+  {
+    "fields": {
+      "workspace_id": "5bd01b7f-9dd0-42e7-b265-3dea81c89a84",
+      "user_id": "current.user@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 51341
+  },
+  {
+    "fields": {
+      "workspace_id": "5bd01b7f-9dd0-42e7-b265-3dea81c89a84",
+      "user_id": "another.user@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 345802
+  }
+]

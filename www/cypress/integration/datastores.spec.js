@@ -1,21 +1,47 @@
-import { DEFAULT_WORKSPACE_ID, DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("datastores.spec.js", () => {
-  const fixture = {
-    name: 'Metastore',
-    slug: 'metastore',
+  const newDatastore = {
+    name: 'Metamapper Test',
+    slug: 'metamapper-test',
   }
 
-  const inventoryUri = `/${DEFAULT_WORKSPACE_SLUG}/datastores/`
-  const datastoreUri = `${inventoryUri}${fixture.slug}`
+  const workspace = {
+    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    slug: "gcc",
+  }
+
+  const owner = {
+    email: "owner.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    email: "readonly.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const outsider = {
+    email: "outsider.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const inventoryUri = `/${workspace.slug}/datastores/`
+  const datastoreUri = `${inventoryUri}${newDatastore.slug}`
 
   describe("list datastores", () => {
     before(() => {
-      cy.quickLogin("owner").then(() => cy.visit(inventoryUri))
+      cy.login(member.email, member.password, workspace.id)
+        .then(() =>
+          cy.visit(inventoryUri))
     })
 
     it("has the correct meta title", () => {
-      cy.title().should("eq", `Datastores - ${DEFAULT_WORKSPACE_SLUG} - Metamapper`)
+      cy.title().should("eq", `Datastores - ${workspace.slug} - Metamapper`)
     })
 
     it("displays the list of datastores", () => {
@@ -25,13 +51,18 @@ describe("datastores.spec.js", () => {
 
   describe("create datastore", () => {
     it("fails with readonly permission", () => {
-      cy.quickLogin("readonly").then(() => cy.visit(inventoryUri))
+      cy.login(readonly.email, readonly.password, workspace.id)
+        .then(() =>
+          cy.visit(inventoryUri))
+
       cy.contains("New Datastore").click()
       cy.getByTestId("DatastoreSetupForm.ValidateEngine").should("be.disabled")
     })
 
     it("fails when missing fields", () => {
-      cy.quickLogin("owner").then(() => cy.visit(inventoryUri))
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() =>
+          cy.visit(inventoryUri))
 
       cy.contains("New Datastore").click()
       cy.contains("PostgreSQL").click()
@@ -58,7 +89,9 @@ describe("datastores.spec.js", () => {
     })
 
     it("fails when cannot connect", () => {
-      cy.quickLogin("owner").then(() => cy.visit(inventoryUri))
+      cy.login(member.email, member.password, workspace.id)
+        .then(() =>
+          cy.visit(inventoryUri))
 
       cy.contains("New Datastore").click()
       cy.contains("PostgreSQL").click()
@@ -91,13 +124,16 @@ describe("datastores.spec.js", () => {
     })
 
     it("using UI", () => {
-      cy.quickLogin("owner").then(() => cy.visit(inventoryUri))
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() =>
+          cy.visit(inventoryUri))
 
       cy.contains("New Datastore").click()
 
       // It navigates to the correct page.
-      cy.location("pathname").should("equal", `/${DEFAULT_WORKSPACE_SLUG}/datastores/new`)
-      cy.title().should("eq", `Datastore Setup - ${DEFAULT_WORKSPACE_SLUG} - Metamapper`)
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores/new`)
+
+      cy.title().should("eq", `Datastore Setup - ${workspace.slug} - Metamapper`)
 
       // Step 1 - Select a database engine.
       cy.contains("PostgreSQL").click()
@@ -126,13 +162,13 @@ describe("datastores.spec.js", () => {
 
       // Step 3 – Enter metadata about the datastore.
       cy.fillInputs({
-        "DatastoreSettingsFieldset.Nickname": fixture.name,
+        "DatastoreSettingsFieldset.Nickname": newDatastore.name,
       })
 
       cy.getByTestId("DatastoreSetupForm.Submit").click()
 
       // Confirm that the application redirected to the new datastore.
-      cy.title().should("eq", `Datastore Overview - ${fixture.slug} - Metamapper`)
+      cy.title().should("eq", `Datastore Overview - ${newDatastore.slug} - Metamapper`)
 
       cy.location("pathname").should("equal", datastoreUri)
     })
@@ -140,24 +176,23 @@ describe("datastores.spec.js", () => {
 
   describe("run history", () => {
     beforeEach(() => {
-      cy.quickLogin("owner").then(() => cy.visit(datastoreUri).wait(1000))
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() =>
+          cy.visit(datastoreUri))
+
       cy.contains("Run History").click()
     })
 
     it("displays the correct meta title", () => {
-      cy.title().should("eq", `Run History - ${fixture.slug} - Metamapper`)
+      cy.title().should("eq", `Run History - ${newDatastore.slug} - Metamapper`)
     })
 
     it("should navigate to the Run History page", () => {
-      cy.location("pathname")
-        .should(
-          "equal",
-          `/${DEFAULT_WORKSPACE_SLUG}/datastores/${fixture.slug}/runs`
-        )
+      cy.location("pathname").should("equal", `${datastoreUri}/runs`)
 
       cy.getByTestId("RunHistoryTable").should("exist")
 
-      cy.wait(10000).then(() => cy.reload())
+      cy.wait(7500).then(() => cy.reload())
 
       cy.getByTestId("RunHistoryTable").get("tr").within(() => {
         cy.get("td").eq(0).contains("SUCCESS").should("be.visible")
@@ -168,20 +203,19 @@ describe("datastores.spec.js", () => {
   describe("asset catalog", () => {
     describe("as member", () => {
       beforeEach(() => {
-        cy.quickLogin("owner").then(() => cy.visit(datastoreUri))
+        cy.login(owner.email, owner.password, workspace.id)
+          .then(() =>
+            cy.visit(datastoreUri))
+
         cy.contains("Assets").click()
       })
 
       it("displays the correct meta title", () => {
-        cy.title().should("eq", `Datastore Assets - ${fixture.slug} - Metamapper`)
+        cy.title().should("eq", `Datastore Assets - ${newDatastore.slug} - Metamapper`)
       })
 
       it("should navigate to the Data Assets page", () => {
-        cy.location("pathname")
-          .should(
-            "equal",
-            `/${DEFAULT_WORKSPACE_SLUG}/datastores/${fixture.slug}/assets`
-          )
+        cy.location("pathname").should("equal", `${datastoreUri}/assets`)
 
         cy.getByTestId("DatastoreAssetsTable")
           .should("exist")
@@ -210,7 +244,10 @@ describe("datastores.spec.js", () => {
 
     describe("as readonly", () => {
       beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(datastoreUri))
+        cy.login(readonly.email, readonly.password, workspace.id)
+          .then(() =>
+            cy.visit(datastoreUri))
+
         cy.contains("Assets").click()
       })
 
@@ -228,18 +265,34 @@ describe("datastores.spec.js", () => {
         })
       })
     })
+
+    describe("not found", () => {
+      it("when datastore does not exist", () => {
+        cy.login(owner.email, owner.password, workspace.id)
+          .then(() =>
+            cy.visit(`/${inventoryUri}/not-a-database/assets`))
+
+        cy.contains(
+          "Sorry, the page you are looking for doesn't exist."
+        ).should(
+          "be.visible"
+        )
+      })
+    })
   })
 
   describe("update datastore connection", () => {
-
     describe("as member", () => {
       beforeEach(() => {
-        cy.quickLogin("member").then(() => cy.visit(datastoreUri))
+        cy.login(member.email, member.password, workspace.id)
+          .then(() =>
+            cy.visit(datastoreUri))
+
         cy.contains("Connection").click()
       })
 
       it("displays the correct meta title", () => {
-        cy.title().should("eq", `Connection Settings - ${fixture.slug} - Metamapper`)
+        cy.title().should("eq", `Connection Settings - ${newDatastore.slug} - Metamapper`)
       })
 
       it("can update the datastore", () => {
@@ -273,16 +326,33 @@ describe("datastores.spec.js", () => {
 
     describe("as readonly", () => {
       beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(datastoreUri))
+        cy.login(readonly.email, readonly.password, workspace.id)
+          .then(() =>
+            cy.visit(datastoreUri))
+
         cy.contains("Connection").click()
       })
 
       it("displays the correct meta title", () => {
-        cy.title().should("eq", `Connection Settings - ${fixture.slug} - Metamapper`)
+        cy.title().should("eq", `Connection Settings - ${newDatastore.slug} - Metamapper`)
       })
 
       it("cannot update datastore connection", () => {
         cy.formIsDisabled("ConnectionSettingsFieldset")
+      })
+    })
+
+    describe("not found", () => {
+      it("when datastore does not exist", () => {
+        cy.login(owner.email, owner.password, workspace.id)
+          .then(() =>
+            cy.visit(`/${inventoryUri}/not-a-database/connection`))
+
+        cy.contains(
+          "Sorry, the page you are looking for doesn't exist."
+        ).should(
+          "be.visible"
+        )
       })
     })
   })
@@ -290,12 +360,15 @@ describe("datastores.spec.js", () => {
   describe("update datastore metadata", () => {
     describe("as member", () => {
       beforeEach(() => {
-        cy.quickLogin("member").then(() => cy.visit(datastoreUri))
+        cy.login(member.email, member.password, workspace.id)
+          .then(() =>
+            cy.visit(datastoreUri))
+
         cy.contains("Settings").click()
       })
 
       it("displays the correct meta title", () => {
-        cy.title().should("eq", `Datastore Settings - ${fixture.slug} - Metamapper`)
+        cy.title().should("eq", `Datastore Settings - ${newDatastore.slug} - Metamapper`)
       })
 
       it("can update datastore metadata", () => {
@@ -314,23 +387,43 @@ describe("datastores.spec.js", () => {
 
     describe("as readonly", () => {
       beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(datastoreUri))
+        cy.login(readonly.email, readonly.password, workspace.id)
+          .then(() =>
+            cy.visit(datastoreUri))
+
         cy.contains("Settings").click()
       })
 
       it("displays the correct meta title", () => {
-        cy.title().should("eq", `Datastore Settings - ${fixture.slug} - Metamapper`)
+        cy.title().should("eq", `Datastore Settings - ${newDatastore.slug} - Metamapper`)
       })
 
       it("cannot update datastore metadata", () => {
         cy.formIsDisabled("DatastoreSettingsFieldset")
       })
     })
+
+    describe("not found", () => {
+      it("when datastore does not exist", () => {
+        cy.login(owner.email, owner.password, workspace.id)
+          .then(() =>
+            cy.visit(`/${inventoryUri}/not-a-database/settings`))
+
+        cy.contains(
+          "Sorry, the page you are looking for doesn't exist."
+        ).should(
+          "be.visible"
+        )
+      })
+    })
   })
 
   describe("delete datastore", () => {
     it("with readonly permissions", () => {
-      cy.quickLogin("readonly").then(() => cy.visit(datastoreUri))
+      cy.login(readonly.email, readonly.password, workspace.id)
+        .then(() =>
+          cy.visit(datastoreUri))
+
       cy.contains("Settings").click()
 
       // We don't even display the link to delete the datastore.
@@ -338,7 +431,10 @@ describe("datastores.spec.js", () => {
     })
 
     it("with basic permissions", () => {
-      cy.quickLogin("member").then(() => cy.visit(datastoreUri))
+      cy.login(member.email, member.password, workspace.id)
+        .then(() =>
+          cy.visit(datastoreUri))
+
       cy.contains("Settings").click()
 
       cy.getByTestId("DeleteDatastore.Open").click()
@@ -349,32 +445,32 @@ describe("datastores.spec.js", () => {
 
       cy.getByTestId("DeleteDatastore.Submit").click()
 
-      cy.location("pathname").should("equal", `/${DEFAULT_WORKSPACE_SLUG}/datastores`)
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
 
       cy.get(".ant-message-notice").should("be.visible")
       cy.contains(".ant-message-success", "Datastore has been removed.").should(
         "be.visible"
       )
 
-      cy.getByTestId("DatastoreList").should("exist").and("not.contain", fixture.name)
+      cy.getByTestId("DatastoreList").should("exist").and("not.contain", newDatastore.name)
     })
   })
 
-  // describe("404", () => {
-  //   it("when workspace does not exist", () => {
-  //     cy.login("outsider@metamapper.io", "password1234")
-  //       .then(() =>
-  //         cy.visit("/does-not-exist/datastores"))
+  describe("404", () => {
+    it("when workspace does not exist", () => {
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() =>
+          cy.visit("/does-not-exist/datastores"))
 
-  //     cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
-  //   })
+      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+    })
 
-  //   it("when user is unauthorized", () => {
-  //     cy.login("outsider@metamapper.io", "password1234")
-  //       .then(() =>
-  //         cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/datastores`))
+    it("when user is unauthorized", () => {
+      cy.login(outsider.email, outsider.password)
+        .then(() =>
+          cy.visit(`/${workspace.slug}/datastores`))
 
-  //     cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
-  //   })
-  // })
+      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+    })
+  })
 })

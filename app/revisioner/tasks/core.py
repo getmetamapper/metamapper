@@ -38,6 +38,9 @@ def start_revisioner_run(self, run_id, *arg, **kwargs):
     """This task triggers a Revisioner run based on the provided ID. It is the
     primary entrypoint for crawling schemas and populating the Metamapper database.
     """
+    self.log.with_fields(run=run_id)
+    self.log.info('Starting revisioner run.')
+
     self._run = Run.objects.get(pk=run_id)
     self._run.mark_as_started()
 

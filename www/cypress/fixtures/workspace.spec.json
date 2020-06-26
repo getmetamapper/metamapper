@@ -1,0 +1,193 @@
+[
+  {
+    "fields": {
+      "fname": "Naomi",
+      "lname": "Nagata",
+      "email": "owner.workspace@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "fname": "Amos",
+      "lname": "Burton",
+      "email": "member.workspace@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "fname": "James",
+      "lname": "Holden",
+      "email": "readonly.workspace@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "fname": "Camina",
+      "lname": "Drummer",
+      "email": "outsider.workspace@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "name": "Rocinante",
+      "slug": "roci",
+      "creator_id": 3,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "301ccdfe-12d7-49e8-854f-5da614224e7e"
+  },
+  {
+    "fields": {
+      "name": "Nauvoo",
+      "slug": "nauvoo",
+      "creator_id": 4,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "93803742-df66-4cda-bfd6-9e5d1a4eb35f"
+  },
+  {
+    "fields": {
+      "name": "Ceres",
+      "slug": "ceres12345",
+      "creator_id": 3,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "0027d5fe-26a6-4929-9c0f-b312f0395a27"
+  },
+  {
+    "fields": {
+      "name": "MCRN Donnager",
+      "slug": "MCRN-Donnager",
+      "creator_id": 3,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "634cb29e-5ff3-4375-8a0b-f9481bf41d0d"
+  },
+  {
+    "fields": {
+      "workspace_id": "301ccdfe-12d7-49e8-854f-5da614224e7e",
+      "user_id": "owner.workspace@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55551
+  },
+  {
+    "fields": {
+      "workspace_id": "301ccdfe-12d7-49e8-854f-5da614224e7e",
+      "user_id": "member.workspace@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55552
+  },
+  {
+    "fields": {
+      "workspace_id": "301ccdfe-12d7-49e8-854f-5da614224e7e",
+      "user_id": "readonly.workspace@metamapper.test",
+      "permissions": "READONLY",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55553
+  },
+  {
+    "fields": {
+      "workspace_id": "0027d5fe-26a6-4929-9c0f-b312f0395a27",
+      "user_id": "owner.workspace@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55554
+  },
+  {
+    "fields": {
+      "workspace_id": "0027d5fe-26a6-4929-9c0f-b312f0395a27",
+      "user_id": "member.workspace@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55555
+  },
+  {
+    "fields": {
+      "workspace_id": "0027d5fe-26a6-4929-9c0f-b312f0395a27",
+      "user_id": "readonly.workspace@metamapper.test",
+      "permissions": "READONLY",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55556
+  },
+  {
+    "fields": {
+      "workspace_id": "93803742-df66-4cda-bfd6-9e5d1a4eb35f",
+      "user_id": "owner.workspace@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55557
+  },
+  {
+    "fields": {
+      "workspace_id": "93803742-df66-4cda-bfd6-9e5d1a4eb35f",
+      "user_id": "outsider.workspace@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55558
+  },
+  {
+    "fields": {
+      "workspace_id": "634cb29e-5ff3-4375-8a0b-f9481bf41d0d",
+      "user_id": "outsider.workspace@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 55559
+  }
+]

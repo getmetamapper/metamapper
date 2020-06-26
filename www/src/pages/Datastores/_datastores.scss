@@ -69,8 +69,9 @@
   border: 1px solid #e8e8e8;
   border-bottom: 0;
 }
-.datastore-details {
+.ant-card.datastore-details {
   margin-bottom: 24px;
+
   .data-asset-tags {
     margin-top: 12px;
   }
@@ -218,6 +219,7 @@
 
   .datastore-credentials-icon {
     float: right;
+    padding-left: 12px;
 
     .ant-avatar {
       min-height: 60px;
@@ -306,8 +308,10 @@
     line-height: 36px;
   }
 }
-.custom-properties-settings {
+.ant-card.custom-properties-settings {
   margin-top: 24px;
+}
+.custom-properties-settings {
   .ant-card-body {
     padding: 0;
   }
