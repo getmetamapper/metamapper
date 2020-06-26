@@ -16,6 +16,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: metamapper
+          METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
     steps:
       - checkout
       - setup_remote_docker
