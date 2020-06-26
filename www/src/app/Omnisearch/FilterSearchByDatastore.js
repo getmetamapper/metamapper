@@ -15,8 +15,6 @@ class FilterSearchByDatastore extends Component {
   isSelected(datastore) {
     const { selected } = this.props
 
-    console.log(selected)
-
     if (!selected) {
       return false
     }

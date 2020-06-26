@@ -48,8 +48,8 @@
       "object_id": "tThdqoa6Huxs",
       "created_at": "2020-02-27 17:25:55.339009+00:00",
       "updated_at": "2020-02-27 17:25:55.339054+00:00",
-      "html": "An unrelaed comment that will not show up in search tests.",
-      "text": "An unrelaed comment that will not show up in search tests.",
+      "html": "An unrelated comment that will not show up in search tests.",
+      "text": "An unrelated comment that will not show up in search tests.",
       "author_id": 2,
       "content_type": ["definitions", "table"]
     },

@@ -38,7 +38,6 @@ const withGraphQLMutation = (WrappedComponent) => {
         const response = this.props[mutation]({ variables, refetchQueries })
 
         response.then(({ data }) => {
-          console.log(data)
           this.handleSuccess(data, successMessage)
         })
 

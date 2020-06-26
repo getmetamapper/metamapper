@@ -7,7 +7,7 @@ from django.contrib.postgres.search import (
     SearchVector,
     TrigramSimilarity,
 )
-from django.db.models import F, Q, Value, CharField, Case, When
+from django.db.models import F, Q, Value, CharField, DateTimeField, Case, When
 from django.utils.functional import cached_property
 
 import app.omnisearch.stopwords as stopwords
@@ -68,6 +68,10 @@ class ModelSearchAdapter(object):
     def __init__(self, query_string):
         self.query_string = query_string
 
+    @property
+    def base_queryset(self):
+        return self.model_class.objects
+
     @cached_property
     def search_vector(self):
         return None
@@ -90,7 +94,7 @@ class ModelSearchAdapter(object):
 
     def to_queryset(self, **extra_filters):
         return self.filter_queryset(
-            self.annotate_queryset(self.model_class.objects)
+            self.annotate_queryset(self.base_queryset)
         ).filter(
             **extra_filters
         ).values('pk', 'model_name', 'score', 'datastore_id')
@@ -130,10 +134,14 @@ class TableModelSearchAdapter(TrigramSimilarityMixin, ModelSearchAdapter):
 
     trigram_field = 'name'
 
+    @property
+    def base_queryset(self):
+        return self.model_class.objects.annotate(property=F('table_properties__value'))
+
     @cached_property
     def search_vector(self):
         a = SearchVector('name', 'short_desc', weight='A')
-        b = SearchVector('tags', weight='B')
+        b = SearchVector('tags', 'property', weight='B')
         c = SearchVector('schema__name', weight='C')
         return (a + b + c)
 
@@ -166,17 +174,40 @@ class CommentModelSearchAdapter(ModelSearchAdapter):
     model_class = Comment
 
     @cached_property
+    def content_types(self):
+        return get_content_types()
+
+    @cached_property
     def search_vector(self):
         return SearchVector('text')
+
+    @property
+    def base_queryset(self):
+        case_statement_1 = Case(
+            When(content_type=self.content_types['Table'], then=F('table__id')),
+            When(content_type=self.content_types['Column'], then=F('column__id')),
+            output_field=DateTimeField(),
+        )
+        case_statement_2 = Case(
+            When(content_type=self.content_types['Table'], then=F('table__deleted_at')),
+            When(content_type=self.content_types['Column'], then=F('column__deleted_at')),
+            output_field=CharField(),
+        )
+        return (
+            self.model_class
+                .objects
+                .annotate(object_ident=case_statement_1)
+                .annotate(object_deleted_at=case_statement_2)
+                .filter(object_ident__isnull=False)
+                .filter(object_deleted_at=None)
+        )
 
     def annotate_with_datastore(self, queryset):
         """Add the datastore to the query, which will be used to filter if necessary.
         """
-        content_types = get_content_types()
-
         case_statement = Case(
-            When(content_type=content_types['Table'], then=F('table__schema__datastore_id')),
-            When(content_type=content_types['Column'], then=F('column__table__schema__datastore_id')),
+            When(content_type=self.content_types['Table'], then=F('table__schema__datastore_id')),
+            When(content_type=self.content_types['Column'], then=F('column__table__schema__datastore_id')),
             default=Value(""),
             output_field=CharField(),
         )
