@@ -15,7 +15,10 @@ class HealthcheckViewTests(TestCase):
         self.client = Client(HTTP_HOST='example.com')
         self.heartbeat = Heartbeat.objects.beat()
 
-    def test_when_valid(self):
+    @mock.patch('app.healthchecks.tasks.add.apply_async')
+    def test_when_valid(self, mock_task):
+        mock_task.return_value.get.return_value = 8
+
         response = self.client.get(reverse('healthcheck'))
 
         self.assertEqual(response.status_code, 200)
@@ -32,7 +35,10 @@ class HealthcheckViewTests(TestCase):
             },
         })
 
-    def test_scheduler_fails(self):
+    @mock.patch('app.healthchecks.tasks.add.apply_async')
+    def test_scheduler_fails(self, mock_task):
+        mock_task.return_value.get.return_value = 8
+
         Heartbeat.objects.all().delete()
 
         response = self.client.get(reverse('healthcheck'))
