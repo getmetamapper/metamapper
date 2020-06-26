@@ -78,7 +78,7 @@ class GenericMutationMixin(AuthMutation):
         return serializer.save()
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             cls.model_name: instance,
             'errors': errors,
@@ -132,7 +132,7 @@ class GenericMutationMixin(AuthMutation):
                 for field, codes in e.get_codes().items()
             ]
 
-        return cls.prepare_response(instance, errors)
+        return cls.prepare_response(instance, errors, **data)
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **data):
@@ -145,7 +145,7 @@ class GenericMutationMixin(AuthMutation):
         cls.before_hook(info, serializer.instance, data)
 
         if serializer.is_valid():
-            response = cls.perform_mutate(serializer, info)
+            response = cls.perform_mutate(serializer, info, **data)
         else:
             errors = [
                 ErrorType(**error_dict)

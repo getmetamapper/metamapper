@@ -69,7 +69,7 @@ class TestJdbcConnection(mixins.CreateMutationMixin, relay.ClientIDMutation):
         return None
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             'ok': (errors is None),
             'errors': errors,

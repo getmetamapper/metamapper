@@ -27,7 +27,7 @@ class GrantMembership(mixins.CreateMutationMixin, relay.ClientIDMutation):
         return serializer.save(workspace=info.context.workspace)
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             'ok': (errors is None),
             'errors': errors,
@@ -65,7 +65,7 @@ class RevokeMembership(mixins.UpdateMutationMixin, relay.ClientIDMutation):
         )
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             'ok': (errors is None),
             'errors': errors,

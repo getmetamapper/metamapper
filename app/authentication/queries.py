@@ -2,6 +2,7 @@
 import graphene
 import graphene.relay as relay
 
+import app.authentication.models as models
 import app.authentication.schema as schema
 
 from app.authorization.fields import AuthConnectionField
@@ -14,12 +15,15 @@ class Query(graphene.ObjectType):
     me = graphene.Field(schema.UserType)
 
     workspace = relay.Node.Field(schema.WorkspaceType)
+
     my_workspaces = AuthConnectionField(schema.WorkspaceType)
 
     workspace_by_slug = graphene.Field(
         type=schema.WorkspaceType,
         slug=graphene.String(required=True),
     )
+
+    initiate_setup_process = graphene.Field(graphene.Boolean)
 
     @login_required
     def resolve_me(self, info, **kwargs):
@@ -38,3 +42,8 @@ class Query(graphene.ObjectType):
         """Retrieve any workspace by slug.
         """
         return info.context.user.workspaces.filter(slug__iexact=slug.lower()).first()
+
+    def resolve_initiate_setup_process(self, info, **kwargs):
+        """Check to see if Metamapper has been set up.
+        """
+        return models.User.objects.first() is None

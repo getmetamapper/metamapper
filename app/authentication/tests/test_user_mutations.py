@@ -532,3 +532,130 @@ class UpdateUserPasswordTests(cases.GraphQLTestCase):
 
         self.user.refresh_from_db()
         self.assertFalse(self.user.check_password(variables['password']))
+
+
+class AccountSetupTests(cases.GraphQLTestCase):
+    """Test cases for setting up Metamapper for the first time.
+    """
+    authenticated = False
+    operation = 'accountSetup'
+    statement = '''
+    mutation AccountSetup(
+      $fname: String!
+      $lname: String!
+      $email: String!
+      $password: String!
+      $workspaceName: String!
+      $workspaceSlug: String!
+    ) {
+      accountSetup(
+        input: {
+          fname: $fname
+          lname: $lname
+          email: $email
+          password: $password
+          workspaceName: $workspaceName
+          workspaceSlug: $workspaceSlug
+        }
+      ) {
+        jwt
+        workspaceSlug
+        errors {
+          resource
+          field
+          code
+        }
+      }
+    }
+    '''
+
+    def test_register_valid_user(self):
+        """It creates a valid User and Workspace.
+        """
+        variables = {
+            'fname': 'Scott',
+            'lname': 'Cruwys',
+            'email': 'scruwys@metamapper.io',
+            'password': 'passwordOk1431',
+            'workspaceName': 'Community',
+            'workspaceSlug': 'community',
+        }
+
+        response = self.execute(variables=variables)
+        response = response['data'][self.operation]
+
+        self.assertValidJsonWebToken(response['jwt'])
+        self.assertEqual(response['workspaceSlug'], variables['workspaceSlug'])
+        self.assertEqual(response['errors'], None)
+        self.assertInstanceCreated(models.User, email=variables['email'])
+        self.assertInstanceCreated(models.Workspace, slug=variables['workspaceSlug'])
+
+    def test_register_with_invalid_user_inputs(self):
+        """It does not create the User.
+        """
+        variables = {
+            'fname': 'Scott',
+            'lname': '',
+            'email': 'notavalidemail',
+            'password': 'password',
+            'workspaceName': 'Community',
+            'workspaceSlug': 'community',
+        }
+
+        response = self.execute(variables=variables)
+        response = response['data'][self.operation]
+
+        self.assertEqual(response, {
+            'jwt': None,
+            'workspaceSlug': None,
+            'errors': [
+                {
+                    'resource': 'User',
+                    'field': 'lname',
+                    'code': 'blank',
+                },
+                {
+                    'resource': 'User',
+                    'field': 'email',
+                    'code': 'invalid',
+                },
+                {
+                    'resource': 'User',
+                    'field': 'password',
+                    'code': 'too_weak',
+                },
+            ],
+        })
+
+        self.assertInstanceDoesNotExist(models.User, email=variables['email'])
+        self.assertInstanceDoesNotExist(models.Workspace, slug=variables['workspaceSlug'])
+
+    def test_register_with_invalid_workspace_inputs(self):
+        """It does not create the Workspace.
+        """
+        variables = {
+            'fname': 'Sam',
+            'lname': 'Crust',
+            'email': 'sam.crust@metamapper.test',
+            'password': 'thisisasecurepassword$13!',
+            'workspaceName': 'Community',
+            'workspaceSlug': '',
+        }
+
+        response = self.execute(variables=variables)
+        response = response['data'][self.operation]
+
+        self.assertEqual(response, {
+            'jwt': None,
+            'workspaceSlug': None,
+            'errors': [
+                {
+                    'resource': 'User',
+                    'field': 'workspace_slug',
+                    'code': 'blank',
+                },
+            ],
+        })
+
+        self.assertInstanceDoesNotExist(models.User, email=variables['email'])
+        self.assertInstanceDoesNotExist(models.Workspace, slug=variables['workspaceSlug'])

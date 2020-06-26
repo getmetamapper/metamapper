@@ -43,7 +43,7 @@ class Register(mixins.CreateMutationMixin, relay.ClientIDMutation):
     jwt = graphene.Field(graphene.String)
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             cls.model_name: instance,
             'errors': errors,
@@ -154,7 +154,7 @@ class UpdateCurrentUser(mixins.UpdateMutationMixin, relay.ClientIDMutation):
         }
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             cls.model_name: instance,
             'jwt': jwt.get_token(instance),
@@ -207,6 +207,41 @@ class DeleteWorkspace(mixins.DeleteMutationMixin, relay.ClientIDMutation):
         serializer_class = serializers.WorkspaceSerializer
 
 
+class AccountSetup(mixins.CreateMutationMixin, relay.ClientIDMutation):
+    """Mutation for creating a new user and workspace at the same time.
+    """
+    permission_classes = (AllowAny,)
+
+    class Meta:
+        serializer_class = serializers.AccountSetupSerializer
+
+    class Input:
+        fname = graphene.String(required=True)
+        lname = graphene.String(required=True)
+        email = graphene.String(required=True)
+        password = graphene.String(required=True)
+
+        workspace_name = graphene.String(required=True)
+        workspace_slug = graphene.String(required=True)
+
+    jwt = graphene.Field(graphene.String)
+    workspace_slug = graphene.Field(graphene.String)
+
+    @classmethod
+    def prepare_response(cls, instance, errors, **data):
+        """We return the JWT or errors as necessary.
+        """
+        return_kwargs = {
+            'jwt': None,
+            'workspace_slug': None,
+            'errors': errors,
+        }
+        if instance and instance.pk is not None:
+            return_kwargs['workspace_slug'] = data['workspace_slug']
+            return_kwargs['jwt'] = jwt.get_token(instance)
+        return cls(**return_kwargs)
+
+
 class Mutation(graphene.ObjectType):
     # JWT Authentication
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
@@ -225,3 +260,5 @@ class Mutation(graphene.ObjectType):
     create_workspace = CreateWorkspace.Field()
     update_workspace = UpdateWorkspace.Field()
     delete_workspace = DeleteWorkspace.Field()
+
+    account_setup = AccountSetup.Field()

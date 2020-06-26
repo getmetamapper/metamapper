@@ -1,3 +1,4 @@
+import AccountSetup from "pages/Authentication/AccountSetup"
 import LoginPrompt from "pages/Authentication/LoginPrompt"
 import LoginWithToken from "pages/Authentication/LoginWithToken"
 import Login from "pages/Authentication/Login"
@@ -27,6 +28,14 @@ export default [
     component: LoginWithToken,
     path: "/:workspaceSlug/sso/:uid/:singleUseToken",
     namespace: "authentication",
+    isPublic: true,
+    ignoreRedirects: true,
+  },
+  {
+    component: AccountSetup,
+    path: "/account/setup",
+    namespace: "authentication",
+    isProtected: false,
     isPublic: true,
     ignoreRedirects: true,
   },

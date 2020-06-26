@@ -6,6 +6,15 @@
   padding: 40px;
   margin-top: 25%;
 }
+.authentication .auth-form .logo {
+  margin: 0 auto;
+  padding: 0;
+  height: 80px;
+  width: 80px;
+}
+.authentication .auth-form img {
+  width: 100%;
+}
 .authentication .auth-form h2 {
   text-align: center;
 }
@@ -29,6 +38,9 @@
 .authentication .auth-links a {
   margin-left: 5px;
 }
+.authentication .account-setup .auth-form .ant-btn.ant-btn-primary {
+  margin-top: 24px;
+}
 .logout {
   margin: 40px auto;
   text-align: center;
@@ -51,7 +63,7 @@
   }
   .authentication .signup-form .ant-form-item-label {
     margin-top: 20px;
-  }  
+  }
 }
 
 // Smartphones (Portrait)
