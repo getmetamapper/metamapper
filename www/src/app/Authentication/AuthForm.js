@@ -38,6 +38,7 @@ class AuthForm extends React.Component {
 
   handleSubmit = (evt) => {
     evt.preventDefault()
+
     window.localStorage.removeItem(AUTH_TOKEN)
 
     this.props.form.validateFields((err, variables) => {
@@ -71,11 +72,15 @@ class AuthForm extends React.Component {
   }
 
   render() {
-    const { component: Component, title, form, links } = this.props
+    const { component: Component, title, description, form, links } = this.props
     const { alert, submitting } = this.state
     return (
       <div className="auth-form">
+        <div className="logo">
+          <img src="/assets/static/img/brand/icon.png" />
+        </div>
         <h2>{title}</h2>
+        {description}
         <div className="auth-message">
           <AuthMessage
             showIcon

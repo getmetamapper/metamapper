@@ -1,11 +1,12 @@
 @import '~antd/dist/antd.css';
 
 $color-layout: #F7F8FA;
-$color-navbar: #000000;
+$color-navbar: #003945;
 $color-primary: #1890ff;
 $color-links: #1890ff;
 $color-links-hover: #11A4CD;
 $color-border: #e8e8e8;
+
 
 @import './pages/_overrides.scss';
 @import './pages/_navigation.scss';

@@ -10,13 +10,14 @@ jobs:
   backend-tests:
     docker:
       - image: circleci/python:3.7.0
+        environment:
+          METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
       - image: circleci/postgres:9.6
         name: database
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: metamapper
-          METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
     steps:
       - checkout
       - setup_remote_docker

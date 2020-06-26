@@ -35,7 +35,7 @@ class CreateCustomField(mixins.CreateMutationMixin, relay.ClientIDMutation):
         return serializer.save(workspace=info.context.workspace)
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             'custom_field': instance,
             'errors': errors,
@@ -79,7 +79,7 @@ class UpdateCustomField(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     custom_field = graphene.Field(schema.CustomFieldType)
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             'custom_field': instance,
             'errors': errors,
@@ -140,7 +140,7 @@ class UpdateCustomProperties(mixins.UpdateMutationMixin, relay.ClientIDMutation)
         }
 
     @classmethod
-    def prepare_response(cls, instance, errors):
+    def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
             'custom_properties': instance,
             'errors': errors,

@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet"
 import { UserContextProvider } from "context/UserContext"
 import Navbar from "app/Navigation/Navbar"
 import withSessionRequired from "hoc/withSessionRequired"
+import withOpensourceSetupRedirect from "hoc/withOpensourceSetupRedirect"
 
 export default ({
   component: Component,
@@ -14,11 +15,16 @@ export default ({
   ignoreRedirects = false,
   ...restProps
 }) => {
-  const WrappedComponent = withSessionRequired(
+  let WrappedComponent = withSessionRequired(
     Component,
     isProtected,
     ignoreRedirects,
   )
+
+  if (isPublic) {
+    WrappedComponent = withOpensourceSetupRedirect(WrappedComponent, ignoreRedirects)
+  }
+
   return (
     <Route
       {...restProps}

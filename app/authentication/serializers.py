@@ -163,3 +163,76 @@ class WorkspaceSerializer(MetamapperSerializer, serializers.ModelSerializer):
         instance.slug = validated_data.get('slug', instance.slug)
         instance.save()
         return instance
+
+
+class AccountSetupSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """
+    """
+    fname = serializers.CharField(required=True, max_length=60)
+    lname = serializers.CharField(required=True, max_length=60)
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+
+    workspace_name = serializers.CharField(required=True, min_length=3, max_length=255)
+    workspace_slug = serializers.CharField(required=True, min_length=3, max_length=50)
+
+    class Meta:
+        model = models.User
+        fields = (
+            'fname',
+            'lname',
+            'email',
+            'password',
+            'workspace_name',
+            'workspace_slug')
+        write_only_fields = ('password',)
+
+    def validate_password(self, password):
+        try:
+            validate_password(password, user=models.User)
+        except django_exceptions.ValidationError as e:
+            raise serializers.ValidationError(e.messages[0], 'too_weak')
+        return password
+
+    def validate_email(self, email):
+        user = models.User.objects.filter(email__iexact=email).first()
+        if user:
+            raise serializers.ValidationError('User with this email already exists.', 'exists')
+        return email
+
+    def validate_workspace_slug(self, workspace_slug):
+        workspace_exists = models.Workspace.objects.filter(
+            slug__iexact=self.slug_is_valid(workspace_slug.lower())
+        ).exists()
+        if workspace_exists:
+            raise serializers.ValidationError('Slug already exists.', 'exists')
+        return workspace_slug
+
+    def slug_is_valid(self, slug):
+        try:
+            validate_slug(slug)
+        except django_exceptions.ValidationError:
+            raise serializers.ValidationError('Slug is an invalid format.', 'invalid')
+        return slug
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            user_kwargs = {
+                "fname": validated_data["fname"],
+                "lname": validated_data["lname"],
+                "email": validated_data["email"],
+                "password": validated_data["password"],
+            }
+
+            user = models.User.objects.create_user(**user_kwargs)
+
+            workspace_kwargs = {
+                "name": validated_data["workspace_name"],
+                "slug": validated_data["workspace_slug"],
+                "creator": user,
+            }
+
+            workspace = models.Workspace.objects.create(**workspace_kwargs)
+            workspace.grant_membership(user, models.Membership.OWNER)
+
+        return user
