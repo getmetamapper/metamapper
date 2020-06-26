@@ -35,7 +35,7 @@
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "lint": "eslint src/",
-    "cypress:install": "npm install --no-save cypress@~4.8.0",
+    "cypress:install": "npm install --no-save cypress@~4.9.0",
     "cypress:open": "cypress open"
   },
   "eslintConfig": {

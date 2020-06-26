@@ -7,6 +7,7 @@ x-metamapper-defaults: &metamapper_service
   environment:
     METAMAPPER_DB_HOST: database
     METAMAPPER_CELERY_BROKER_URL: "redis://redis:6379/0"
+    METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
     METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
 services:
   redis:
