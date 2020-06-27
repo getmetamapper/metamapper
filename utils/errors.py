@@ -41,13 +41,11 @@ class CannotDeleteDefaultConnection(ValidationError):
 
 
 def format_error(error):
-    # type: (Exception) -> Dict[str, Any]
-    # Protect against UnicodeEncodeError when run in py2 (#216)
     try:
         message = str(error)
     except UnicodeEncodeError:
-        message = error.message.encode("utf-8")  # type: ignore
-    formatted_error = {"message": message}  # type: Dict[str, Any]
+        message = error.message.encode("utf-8")
+    formatted_error = {"message": message}
     if isinstance(error, GraphQLError):
         if error.locations is not None:
             formatted_error["locations"] = [
