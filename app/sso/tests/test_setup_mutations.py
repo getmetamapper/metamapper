@@ -445,7 +445,7 @@ class CreateSSODomainTests(cases.GraphQLTestCase):
 
     @decorators.as_someone(['MEMBER', 'READONLY', 'OUTSIDER'])
     def test_unauthorized(self):
-        """It should raise a PermissionDeniedError.
+        """It should raise a PermissionDenied.
         """
         domain = helpers.faker.domain_name()
         response = self.execute(variables={'domain': domain})
@@ -481,7 +481,7 @@ class RemoveSSODomainTests(cases.GraphQLTestCase):
 
     @decorators.as_someone(['OWNER'])
     def test_valid_removal(self):
-        """It should raise a PermissionDeniedError.
+        """It should raise a PermissionDenied.
         """
         response = self.execute(variables={'id': self.global_id})
         response = response['data'][self.operation]
@@ -495,7 +495,7 @@ class RemoveSSODomainTests(cases.GraphQLTestCase):
 
     @decorators.as_someone(['MEMBER', 'READONLY', 'OUTSIDER'])
     def test_unauthorized(self):
-        """It should raise a PermissionDeniedError.
+        """It should raise a PermissionDenied.
         """
         self.assertPermissionDenied(
             self.execute(variables={'id': self.global_id})

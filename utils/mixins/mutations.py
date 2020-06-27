@@ -12,7 +12,7 @@ from graphene import relay
 from app.authorization.mixins import AuthMutation
 
 from utils.graphql.types import ErrorType
-from utils.errors import PermissionDeniedError, ValidationError
+from utils.errors import PermissionDenied, ValidationError
 
 
 class GenericMutationMixin(AuthMutation):
@@ -175,7 +175,7 @@ class UpdateMutationMixin(GenericMutationMixin):
         instance = cls.get_instance(info, data)
 
         if not instance:
-            raise PermissionDeniedError()
+            raise PermissionDenied()
 
         data = {
             k: v for k, v in data.items()

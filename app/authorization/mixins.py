@@ -4,7 +4,7 @@ import graphene
 from graphene_django.filter import DjangoFilterConnectionField
 
 from app.authorization.permissions import AllowAuthenticated
-from utils.errors import PermissionDeniedError
+from utils.errors import PermissionDenied
 
 
 class AuthNode(object):
@@ -31,7 +31,7 @@ class AuthNode(object):
                 object_instance = None
             return object_instance
         else:
-            raise PermissionDeniedError()
+            raise PermissionDenied()
 
     def resolve_pk(instance, info):
         if isinstance(instance.pk, (float, int)):
@@ -47,7 +47,7 @@ class AuthMutation(object):
     @classmethod
     def mutate(cls, root, info, input):
         if not cls.has_permission(root, info, input):
-            raise PermissionDeniedError()
+            raise PermissionDenied()
         return super().mutate(root, info, input)
 
     @classmethod
@@ -95,7 +95,7 @@ class AuthConnectionField(DjangoFilterConnectionField):
             qs = qs.filter(workspace=info.context.workspace)
 
         if not cls.has_permission(info, node.permission_classes):
-            raise PermissionDeniedError()
+            raise PermissionDenied()
 
         return super(DjangoFilterConnectionField, cls).connection_resolver(
             resolver,

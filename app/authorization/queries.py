@@ -8,7 +8,7 @@ import app.authorization.schema as schema
 from app.authorization.permissions import login_required
 
 from app.authorization.fields import AuthConnectionField
-from utils.errors import PermissionDeniedError
+from utils.errors import PermissionDenied
 
 
 class Query(graphene.ObjectType):
@@ -28,7 +28,7 @@ class Query(graphene.ObjectType):
         _type, node_id = graphql_relay.from_global_id(workspace_id)
 
         if not info.context.user.permissions_for(node_id):
-            raise PermissionDeniedError()
+            raise PermissionDenied()
 
         queryset = models.Membership.objects.filter(workspace_id=node_id)
 
