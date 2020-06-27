@@ -3,12 +3,12 @@ from graphql_jwt.decorators import user_passes_test
 
 from app.authentication.models import Membership
 
-from utils.errors import PermissionDeniedError
+from utils.errors import PermissionDenied
 
 from functools import wraps
 
 
-login_required = user_passes_test(lambda u: u.is_authenticated, PermissionDeniedError)
+login_required = user_passes_test(lambda u: u.is_authenticated, PermissionDenied)
 
 
 def check_for_permissions(context, permissions_list):
@@ -112,7 +112,7 @@ def permissions_required(permission_classes=(AllowAuthenticated,)):
         @wraps(func)
         def func_wrapper(self, info, *args, **kwargs):
             if not all((perm().has_filter_permission(info) for perm in permission_classes)):
-                raise PermissionDeniedError()
+                raise PermissionDenied()
             return func(self, info, *args, **kwargs)
         return func_wrapper
     return the_decorator

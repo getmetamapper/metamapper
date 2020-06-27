@@ -81,7 +81,7 @@ class UpdateComment(mixins.UpdateMutationMixin, relay.ClientIDMutation):
         """
         instance = relay.Node.get_node_from_global_id(info, data[cls.lookup_field])
         if not instance or instance.author_id != info.context.user.id:
-            raise errors.PermissionDeniedError()
+            raise errors.PermissionDenied()
         return instance
 
 
@@ -102,7 +102,7 @@ class DeleteComment(mixins.DeleteMutationMixin, relay.ClientIDMutation):
         """
         instance = relay.Node.get_node_from_global_id(info, data[cls.lookup_field])
         if not instance or instance.author_id != info.context.user.id:
-            raise errors.PermissionDeniedError()
+            raise errors.PermissionDenied()
         return instance
 
 

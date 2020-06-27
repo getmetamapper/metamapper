@@ -121,7 +121,7 @@ class UpdateCustomProperties(mixins.UpdateMutationMixin, relay.ClientIDMutation)
         instance = cls.get_instance(info, data)
 
         if not instance:
-            raise errors.PermissionDeniedError()
+            raise errors.PermissionDenied()
 
         properties = {
             p['id']: p['value']

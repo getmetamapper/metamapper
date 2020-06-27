@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from graphene_django.filter import DjangoFilterConnectionField
 
-from utils.errors import PermissionDeniedError
+from utils.errors import PermissionDenied
 
 from graphene.types import String
 from graphene.types.field import Field
@@ -12,7 +12,7 @@ def wrap_resolver(cls, resolver):
     def wrapped_resolver(root, info, **args):
         try:
             return resolver(root, info, **args)
-        except PermissionDeniedError as e:
+        except PermissionDenied as e:
             return cls(errors=str(e))
     return wrapped_resolver
 
@@ -46,7 +46,7 @@ class AuthConnectionField(DjangoFilterConnectionField):
         node = connection._meta.node
 
         if not cls.has_permission(info, node.permission_classes):
-            raise PermissionDeniedError()
+            raise PermissionDenied()
 
         qs = super().resolve_queryset(connection, iterable, info, args, filtering_args, filterset_class)
 
