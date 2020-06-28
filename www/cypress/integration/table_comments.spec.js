@@ -1,28 +1,48 @@
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
-
 const getCommentByText = (commentText) => {
   return cy.contains(commentText).parentsUntil(".comment")
 }
 
-describe("table_column_comments.spec.js", () => {
+describe("table_comments.spec.js", () => {
+  const workspace = {
+    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    slug: "gcc",
+  }
+
+  const owner = {
+    email: "owner.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    email: "readonly.definitions@metamapper.test",
+    password: "password1234",
+  }
+
   const datastore = {
-    name: 'Postgres',
-    slug: 'metamapper',
+    name: "Metamapper",
+    slug: "metamapper",
   }
 
   const table = {
-    schema: 'app',
-    name: 'customers',
+    schema: "public",
+    name: "audit_activity",
   }
 
-  const databaseUri = `/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}`
+  const databaseUri = `/${workspace.slug}/datastores/${datastore.slug}`
   const overviewUri = `${databaseUri}/definition/${table.schema}/${table.name}/overview`
 
-  let commentOne = "Here is some information about this table."
-  let commentTwo = "Here is an unrelated comment."
+  const commentOne = "Here is some information about this table."
+  const commentTwo = "Here is an unrelated comment."
 
   describe("as member", () => {
-    beforeEach(() => cy.quickLogin("member").then(() => cy.visit(overviewUri)))
+    before(() => {
+      cy.login(member.email, member.password, workspace.id).then(() => cy.visit(overviewUri))
+    })
 
     it("can create comment", () => {
       [commentOne, commentTwo].forEach(commentText => {
@@ -34,6 +54,7 @@ describe("table_column_comments.spec.js", () => {
         )
 
         cy.contains(commentText).should("be.visible")
+
         cy.wait(1000)
       })
     })
@@ -108,8 +129,7 @@ describe("table_column_comments.spec.js", () => {
     it("can pin comment", () => {
       getCommentByText(commentOne).within(() => cy.contains("pin").click())
 
-      cy.get(".ant-popover-content").should("be.visible").within(() =>
-        cy.contains("Yes").click())
+      cy.get(".ant-popover-content").should("be.visible").within(() => cy.contains("Yes").click())
 
       getCommentByText(commentOne).parent().should("have.class", "pinned")
       getCommentByText(commentOne).parent().contains("Pinned by David Wallace")
@@ -117,7 +137,9 @@ describe("table_column_comments.spec.js", () => {
   })
 
   describe("as another team member", () => {
-    beforeEach(() => cy.quickLogin("owner").then(() => cy.visit(overviewUri)))
+    beforeEach(() => {
+      cy.login(owner.email, owner.password, workspace.id).then(() => cy.visit(overviewUri))
+    })
 
     it("can reply to a comment", () => {
       const commentText = "Party at the moon tower!"
@@ -182,41 +204,25 @@ describe("table_column_comments.spec.js", () => {
     it("cannot delete comment", () => {
       getCommentByText(commentOne).within(() => cy.getByTestId("DeleteComment.Submit").should("not.be.visible"))
     })
-
-    // it("cannot vote for a comment", () => {
-    //   getCommentByText(commentTwo).within(() => {
-    //     cy.getByTestId("VoteForComment.DOWN").then(($btn) => {
-    //       const value = $btn.text()
-
-    //       cy.getByTestId("VoteForComment.DOWN.Submit").click()
-
-    //       $btn.contains(value)
-    //     })
-    //   })
-    // })
   })
 
   describe("final thoughts", () => {
     beforeEach(() => {
-      cy.quickLogin("member").then(() => cy.visit(overviewUri))
+      cy.login(member.email, member.password, workspace.id).then(() => cy.visit(overviewUri))
     })
 
     it("can delete childless comment", () => {
-      getCommentByText(commentTwo).within(() =>
-        cy.contains("delete").click())
+      getCommentByText(commentTwo).within(() => cy.contains("delete").click())
 
-      cy.get(".ant-popover-content").should("be.visible").within(() =>
-        cy.contains("Yes").click())
+      cy.get(".ant-popover-content").should("be.visible").within(() => cy.contains("Yes").click())
 
       cy.contains(commentTwo).should("not.be.visible")
     })
 
     it("can delete parent comments", () => {
-      getCommentByText(commentOne).within(() =>
-        cy.contains("delete").click())
+      getCommentByText(commentOne).within(() => cy.contains("delete").click())
 
-      cy.get(".ant-popover-content").should("be.visible").within(() =>
-        cy.contains("Yes").click())
+      cy.get(".ant-popover-content").should("be.visible").within(() => cy.contains("Yes").click())
 
       cy.contains(commentOne).should("not.be.visible")
     })

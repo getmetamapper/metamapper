@@ -1,12 +1,14 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
 import { Col, Drawer, Row } from "antd"
+import { withLargeLoader } from "hoc/withLoader"
 import moment from "moment"
 import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import RunHistoryTable from "app/Datastores/RunHistory/RunHistoryTable"
 import RunRevisionLog from "app/Datastores/RunHistory/RunRevisionLog"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGetDatastoreRunHistory from "graphql/withGetDatastoreRunHistory"
+import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
 const defaultDrawerProps = {
   className: "run-change-log",
@@ -99,6 +101,13 @@ class RunHistory extends Component {
   }
 }
 
-const enhance = compose(withGetDatastoreSettings, withGetDatastoreRunHistory)
+const withNotFound = withNotFoundHandler(({ datastore }) => {
+  return !datastore || !datastore.hasOwnProperty("id")
+})
 
-export default enhance(RunHistory)
+export default compose(
+  withGetDatastoreSettings,
+  withGetDatastoreRunHistory,
+  withLargeLoader,
+  withNotFound,
+)(RunHistory)

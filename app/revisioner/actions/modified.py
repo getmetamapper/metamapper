@@ -2,7 +2,7 @@
 from app.definitions.models import Schema, Table, Column, Index, IndexColumn
 
 from app.revisioner.collectors import ObjectCollector
-from app.revisioner.revisioners import KLASS_MAP, get_content_type_for_model
+from app.revisioner.revisioners import get_content_type_for_model
 
 from utils.postgres.types import ConflictAction
 
@@ -10,11 +10,11 @@ from utils.postgres.types import ConflictAction
 class GenericModifyAction(object):
     """Generic mixin for a bulk CREATED action based on revisions.
     """
-    def __init__(self, run, datastore, *args, **kwargs):
+    def __init__(self, run, datastore, logger, *args, **kwargs):
         self.run = run
         self.datastore = datastore
-        self.model = KLASS_MAP[self.model_name]
-        self.content_type = get_content_type_for_model(self.model)
+        self.logger = logger
+        self.content_type = get_content_type_for_model(self.model_class)
         self.revisions = self.run.revisions.modified().filter(resource_type=self.content_type)
         self.collector = self.get_collector()
 
@@ -57,23 +57,23 @@ class GenericModifyAction(object):
 class SchemaModifyAction(GenericModifyAction):
     """docstring for SchemaModifyAction
     """
-    model_name = 'Schema'
+    model_class = Schema
 
     def get_queryset(self):
         """Get the schemas related to this datastore.
         """
-        return Schema.objects.filter(datastore_id=self.datastore.id)
+        return self.model_class.objects.filter(datastore_id=self.datastore.id)
 
 
 class TableModifyAction(GenericModifyAction):
     """docstring for SchemaModifyAction
     """
-    model_name = 'Table'
+    model_class = Table
 
     def get_queryset(self):
         """Get the schemas related to this datastore.
         """
-        return Table.objects.filter(schema__datastore_id=self.datastore.id)
+        return self.model_class.objects.filter(schema__datastore_id=self.datastore.id)
 
     def modify_schema_id(self, table, field, new_value, revision, *args, **kwargs):
         """If the schema has been renamed, we need to update it manually.
@@ -94,23 +94,23 @@ class TableModifyAction(GenericModifyAction):
 class ColumnModifyAction(GenericModifyAction):
     """docstring for ColumnModifyAction
     """
-    model_name = 'Column'
+    model_class = Column
 
     def get_queryset(self):
         """Get the schemas related to this datastore.
         """
-        return Column.objects.filter(table__schema__datastore_id=self.datastore.id)
+        return self.model_class.objects.filter(table__schema__datastore_id=self.datastore.id)
 
 
 class IndexModifyAction(GenericModifyAction):
     """docstring for IndexModifyAction
     """
-    model_name = 'Index'
+    model_class = Index
 
     def get_queryset(self):
         """Get the schemas related to this datastore.
         """
-        return Index.objects.filter(table__schema__datastore_id=self.datastore.id)
+        return self.model_class.objects.filter(table__schema__datastore_id=self.datastore.id)
 
     def modify_columns(self, index, field, new_value, *args, **kwargs):
         """If columns have been updated, we need to reflect that change.

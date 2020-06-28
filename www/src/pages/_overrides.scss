@@ -157,7 +157,7 @@ textarea.ant-input {
     margin-left: 12px;
   }
 }
-.tags-input .ant-select-selection--multiple > ul > li, 
+.tags-input .ant-select-selection--multiple > ul > li,
 .tags-input .ant-select-selection--multiple .ant-select-selection__rendered > ul > li {
   margin-top: 9px;
 }
@@ -222,7 +222,7 @@ textarea.ant-input {
   width: 100%;
 }
 .radio-icon .ant-radio-button-wrapper {
-  height: initial;
+  height: auto !important;
   padding: 20px;
   line-height: 2.1;
   text-align: center;

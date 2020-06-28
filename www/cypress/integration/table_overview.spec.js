@@ -1,23 +1,49 @@
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("table_overview.spec.js", () => {
+  const workspace = {
+    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    slug: "gcc",
+  }
+
+  const owner = {
+    email: "owner.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    email: "readonly.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const outsider = {
+    email: "outsider.definitions@metamapper.test",
+    password: "password1234",
+  }
+
   const datastore = {
-    name: 'Postgres',
-    slug: 'metamapper',
+    name: "Metamapper",
+    slug: "metamapper",
   }
 
   const table = {
-    schema: 'app',
-    name: 'customers',
+    schema: "public",
+    name: "definitions_table",
   }
 
-  const databaseUri = `/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}`
+  const databaseUri = `/${workspace.slug}/datastores/${datastore.slug}`
   const overviewUri = `${databaseUri}/definition/${table.schema}/${table.name}/overview`
 
   // Tests for the basic UI components of this page.
   describe("overview", () => {
     before(() => {
-      cy.quickLogin("owner").then(() => cy.visit(overviewUri))
+      cy.login(member.email, member.password, workspace.id)
+        .then(() =>
+          cy.visit(overviewUri))
     })
 
     it("has the correct meta title", () => {
@@ -43,9 +69,9 @@ describe("table_overview.spec.js", () => {
 
       cy.getByTestId("TableSchemaSearch.Input")
         .should("be.visible")
-        .type("departments")
+        .type("definitions")
 
-      cy.get(".table-schema-selector").find(".tablename").should("have.length", 2)
+      cy.get(".table-schema-selector").find(".tablename").should("have.length", 6)
     })
   })
 
@@ -55,12 +81,17 @@ describe("table_overview.spec.js", () => {
     // Tests for when the logged in user is of MEMBER status.
     describe("as member", () => {
       beforeEach(() => {
-        cy.quickLogin("member").then(() => cy.visit(overviewUri))
+        cy.login(member.email, member.password, workspace.id)
+          .then(() =>
+            cy.visit(overviewUri))
+
         cy.getByTestId("TableDescription.Container").click()
       })
 
       it("cannot be greater than 140 characters", () => {
-        let invalidInput = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis."
+        let invalidInput = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
+                           "Aenean commodo ligula eget dolor. Aenean massa. Cum sociis" +
+                           " natoque penatibus et magnis."
 
         cy.fillInputs({
           "TableDescription.Input": invalidInput,
@@ -114,7 +145,10 @@ describe("table_overview.spec.js", () => {
     // Tests for when the logged in user is of READONLY status.
     describe("as readonly", () => {
       beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(overviewUri))
+        cy.login(readonly.email, readonly.password, workspace.id)
+            .then(() =>
+              cy.visit(overviewUri))
+
         cy.getByTestId("TableDescription.Container").click()
       })
 
@@ -131,7 +165,9 @@ describe("table_overview.spec.js", () => {
     // Tests for when the logged in user is of MEMBER status.
     describe("as member", () => {
       beforeEach(() => {
-        cy.quickLogin("member").then(() => cy.visit(overviewUri))
+        cy.login(member.email, member.password, workspace.id)
+            .then(() =>
+              cy.visit(overviewUri))
       })
 
       it("can add tags", () => {
@@ -183,7 +219,9 @@ describe("table_overview.spec.js", () => {
     // Tests for when the logged in user is of READONLY status.
     describe("as readonly", () => {
       beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(overviewUri))
+        cy.login(readonly.email, readonly.password, workspace.id)
+            .then(() =>
+              cy.visit(overviewUri))
       })
 
       it("is disabled", () => {
@@ -197,8 +235,9 @@ describe("table_overview.spec.js", () => {
 
   describe("404", () => {
     it("when table definition does not exist", () => {
-      cy.quickLogin("member").then(() =>
-        cy.visit(`${databaseUri}/definition/public/invoice_items/overview`))
+        cy.login(readonly.email, readonly.password, workspace.id)
+          .then(() =>
+            cy.visit(`${databaseUri}/definition/public/invoice_items/overview`))
 
       cy.contains(
         "Sorry, the page you are looking for doesn't exist."
@@ -208,7 +247,9 @@ describe("table_overview.spec.js", () => {
     })
 
     it("when user is unauthorized", () => {
-      cy.quickLogin("outsider").then(() => cy.visit(overviewUri))
+      cy.login(outsider.email, outsider.password, workspace.id)
+          .then(() =>
+            cy.visit(overviewUri))
 
       cy.contains(
         "Sorry, the page you are looking for doesn't exist."
@@ -216,11 +257,9 @@ describe("table_overview.spec.js", () => {
         "be.visible"
       )
     })
-  })
 
-  describe("404", () => {
     it("when workspace does not exist", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
           cy.visit("/does-not-exist/datastores/show-me/definition/potato/salad/overview"))
 
@@ -228,17 +267,17 @@ describe("table_overview.spec.js", () => {
     })
 
     it("when datastore does not exist", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/datastores/show-me/definition/potato/salad/overview`))
+          cy.visit(`/${workspace.slug}/datastores/show-me/definition/potato/salad/overview`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })
 
     it("when table definition does not exist", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}/definition/potato/salad/overview`))
+          cy.visit(`/${workspace.slug}/datastores/${datastore.slug}/definition/potato/salad/overview`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })

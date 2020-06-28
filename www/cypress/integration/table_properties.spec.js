@@ -1,34 +1,70 @@
 import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("table_properties.spec.js", () => {
+  const workspace = {
+    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    slug: "gcc",
+  }
+
+  const owner = {
+    email: "owner.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    email: "readonly.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const outsider = {
+    email: "outsider.definitions@metamapper.test",
+    password: "password1234",
+  }
+
   const datastore = {
-    name: 'Postgres',
-    slug: 'metamapper',
+    name: "Metamapper",
+    slug: "metamapper",
   }
 
   const table = {
-    schema: 'app',
-    name: 'customers',
+    schema: "public",
+    name: "definitions_table",
   }
 
   const databaseUri = `/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}`
   const overviewUri = `${databaseUri}/definition/${table.schema}/${table.name}/overview`
 
+  const hasPermission = [
+    { permission: "member", user: member },
+    { permission: "owner", user: owner },
+  ]
+
+  const properties = {
+    "Product Area": "RmbycHMpdVty",
+    "Data Steward": "Ygh8k2mhVFvY",
+    "ETL": "glsOe3AskUZ2",
+  }
+
   const existingProperties = [
     {
-      pk: 'p0tqRz5QJ9yC',
-      label: 'Product Area',
-      value: 'Finance',
+      pk: properties["Product Area"],
+      label: "Product Area",
+      value: "Analytics",
     },
     {
-      pk: 'YjOTcEUsymIU',
-      label: 'Data Steward',
-      value: 'Dwight Schrute',
+      pk: properties["Data Steward"],
+      label: "Data Steward",
+      value: "Troy Barnes",
     },
     {
-      pk: 'zI5j91vH0cfI',
-      label: 'Update Cadence',
-      value: '',
+      pk: properties["ETL"],
+      label: "ETL",
+      value: "",
     }
   ]
 
@@ -36,7 +72,9 @@ describe("table_properties.spec.js", () => {
   describe("overview", () => {
     describe("as member", () => {
       beforeEach(() => {
-        cy.quickLogin("member").then(() => cy.visit(overviewUri))
+        cy.login(member.email, member.password, workspace.id)
+          .then(() =>
+            cy.visit(overviewUri))
       })
 
       it("displays the custom properties", () => {
@@ -64,7 +102,9 @@ describe("table_properties.spec.js", () => {
 
     describe("as readonly", () => {
       beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(overviewUri))
+        cy.login(readonly.email, readonly.password, workspace.id)
+          .then(() =>
+            cy.visit(overviewUri))
       })
 
       it("displays the custom properties", () => {
@@ -92,21 +132,19 @@ describe("table_properties.spec.js", () => {
   })
 
   describe("update properties", () => {
-    let allowedPermissions = ["member", "owner"]
-
-    allowedPermissions.forEach(permission => {
+    hasPermission.forEach(({ permission, user }) => {
       describe(`as ${permission}`, () => {
         beforeEach(() => {
-          cy.quickLogin(permission)
+          cy.login(user.email, user.password, workspace.id)
             .then(() => cy.visit(overviewUri).wait(250))
             .then(() => cy.getByTestId("CustomProperties.Edit").click())
         })
 
         it("change user field to something else", () => {
-          let input = "Dwight Schrute"
+          let input = "Shirley Bennett"
 
           cy.fillInputs({
-            "CustomProperties.Input(YjOTcEUsymIU)": input
+            "CustomProperties.Input(Ygh8k2mhVFvY)": input
           })
 
           cy.getByTestId("CustomProperties.Submit").click()
@@ -116,14 +154,14 @@ describe("table_properties.spec.js", () => {
             "be.visible"
           )
 
-          cy.getByTestId("CustomProperties.Display(YjOTcEUsymIU)")
+          cy.getByTestId(`CustomProperties.Display(${properties["Data Steward"]})`)
             .should("be.visible")
             .contains(input)
         })
 
         it("change user field to nothing", () => {
           cy.fillInputs({
-            "CustomProperties.Input(zI5j91vH0cfI)": "(reset this property)"
+            "CustomProperties.Input(Ygh8k2mhVFvY)": "(reset this property)"
           })
 
           cy.getByTestId("CustomProperties.Submit").click()
@@ -132,14 +170,14 @@ describe("table_properties.spec.js", () => {
             "be.visible"
           )
 
-          cy.getByTestId("CustomProperties.Display(zI5j91vH0cfI)").should("have.value", "")
+          cy.getByTestId(`CustomProperties.Display(${properties["Data Steward"]})`)
         })
 
         it("change enum field to something else", () => {
-          let input = "Daily"
+          let input = "Marketing"
 
           cy.fillInputs({
-            "CustomProperties.Input(zI5j91vH0cfI)": input
+            "CustomProperties.Input(RmbycHMpdVty)": input
           })
 
           cy.getByTestId("CustomProperties.Submit").click()
@@ -148,14 +186,14 @@ describe("table_properties.spec.js", () => {
             "be.visible"
           )
 
-          cy.getByTestId("CustomProperties.Display(zI5j91vH0cfI)")
+          cy.getByTestId(`CustomProperties.Display(${properties["Product Area"]})`)
             .should("be.visible")
             .contains(input)
         })
 
         it("change enum field to nothing", () => {
           cy.fillInputs({
-            "CustomProperties.Input(zI5j91vH0cfI)": "(reset this property)"
+            "CustomProperties.Input(RmbycHMpdVty)": "(reset this property)"
           })
 
           cy.getByTestId("CustomProperties.Submit").click()
@@ -164,7 +202,7 @@ describe("table_properties.spec.js", () => {
             "be.visible"
           )
 
-          cy.getByTestId("CustomProperties.Display(zI5j91vH0cfI)").should("have.value", "")
+          cy.getByTestId(`CustomProperties.Display(${properties["Product Area"]})`).should("have.value", "")
         })
       })
     })

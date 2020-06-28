@@ -3,6 +3,7 @@ import { compose, graphql } from "react-apollo"
 import { withRouter } from "react-router-dom"
 import { Card, Col, Divider, Form, Row } from "antd"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
+import { withLargeLoader } from "hoc/withLoader"
 import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import DeleteDatastore from "app/Datastores/DeleteDatastore"
 import DatastoreSettingsForm from "app/Datastores/DatastoreSettings/DatastoreSettingsForm"
@@ -10,6 +11,7 @@ import AllowedCustomPropertySettings from "app/Datastores/DatastoreSettings/Allo
 import UpdateDatastoreMetadataMutation from "graphql/mutations/UpdateDatastoreMetadata"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
+import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
 class DatastoreSettings extends Component {
   constructor(props) {
@@ -126,13 +128,19 @@ class DatastoreSettings extends Component {
 
 const withForm = Form.create()
 
+const withNotFound = withNotFoundHandler(({ datastore }) => {
+  return !datastore || !datastore.hasOwnProperty("id")
+})
+
 const enhance = compose(
   withForm,
   withRouter,
   withWriteAccess,
   withGetDatastoreSettings,
   graphql(UpdateDatastoreMetadataMutation),
-  withGraphQLMutation
+  withGraphQLMutation,
+  withLargeLoader,
+  withNotFound,
 )
 
 export default enhance(DatastoreSettings)

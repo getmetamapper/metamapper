@@ -12,7 +12,7 @@ class SSODomainSetup extends Component {
     evt.preventDefault()
 
     this.props.form.validateFields((err, variables) => {
-      if (err) return
+      if (err || !variables.domain) return
 
       const payload = {
         variables,

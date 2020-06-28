@@ -1,35 +1,73 @@
 import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("sso.spec.js", () => {
-  let doesNotHavePermission = ["readonly", "member"]
+
+  const workspace = {
+    id: "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+    name: "The Pussycats",
+    slug: "josie-and-the-pussycats",
+  }
+
+  const otherWorkspace = {
+    id: "dc909e3d-e10d-4904-ac4c-cf1c567fe211",
+    name: "DuJour",
+    slug: "DuJour",
+  }
+
+  const owner = {
+    email: "owner.sso@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    email: "member.sso@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    email: "readonly.sso@metamapper.test",
+    password: "password1234",
+  }
+
+  const outsider = {
+    email: "outsider.sso@metamapper.test",
+    password: "password1234",
+  }
+
+  const defaultConnectionId = "uayGFt47yvTA"
+  const anotherConnectionId = "VaH1hwOlI0RI"
+
+  const doesNotHavePermission = [
+    { permission: "member", user: member },
+    { permission: "readonly", user: readonly },
+  ]
 
   describe("list of connections", () => {
     before(() => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+          cy.visit(`/${workspace.slug}/settings/authentication`))
     })
 
     it("displays the right meta title", () => {
-      cy.title().should("eq", `Authentication - ${DEFAULT_WORKSPACE_SLUG} - Metamapper`)
+      cy.title().should("eq", `Authentication - ${workspace.slug} - Metamapper`)
     })
 
-    it("displays a list of domains", () => {
-      cy.getByTestId("SSODomainsTable").should("exist")
-
-      cy.getByTestId("SSODomainsTable").within(() => {
-        cy.getByTestId("SSODomainsTable.VerificationStatus").should("have.length", 2)
-      })
+    it("displays a list of connections", () => {
+      cy.getByTestId("SSOConnectionsTable").should("exist")
+      cy.getByTestId("SSOConnectionsTable.Name").should("have.length", 2)
     })
   })
 
   describe("create connection", () => {
-    doesNotHavePermission.forEach((permission) => {
-      it(`fails with ${permission} permission`, () => {
-        cy.quickLogin(permission)
+    doesNotHavePermission.forEach(({ permission, user }) => {
+      beforeEach(() => {
+        cy.login(user.email, user.password, workspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+            cy.visit(`/${workspace.slug}/settings/authentication`))
+      })
 
+      it(`fails with ${permission} permission`, () => {
         cy.contains("Connections").should("be.visible")
         cy.getByTestId("SSODomainsTable").should("exist")
         cy.contains("Add New Connection").should("not.be.visible")
@@ -38,12 +76,14 @@ describe("sso.spec.js", () => {
   })
 
   describe("set default connection", () => {
-    doesNotHavePermission.forEach((permission) => {
-      it(`fails with ${permission} permission`, () => {
-        cy.quickLogin(permission)
+    doesNotHavePermission.forEach(({ permission, user }) => {
+      beforeEach(() => {
+        cy.login(user.email, user.password, workspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+            cy.visit(`/${workspace.slug}/settings/authentication`))
+      })
 
+      it(`fails with ${permission} permission`, () => {
         cy.contains("Connections").should("be.visible")
         cy.getByTestId("SSODomainsTable").should("exist")
 
@@ -55,12 +95,12 @@ describe("sso.spec.js", () => {
     })
 
     it("succeeds with valid permission", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+          cy.visit(`/${workspace.slug}/settings/authentication`))
 
       cy.fillInputs({
-        "SetDefaultSSOConnectionForm.Input": "Xm3F2M3RRJpO"
+        "SetDefaultSSOConnectionForm.Input": defaultConnectionId
       })
 
       cy.getByTestId("SetDefaultSSOConnectionForm.Submit").click()
@@ -74,12 +114,14 @@ describe("sso.spec.js", () => {
   })
 
   describe("remove connection", () => {
-    doesNotHavePermission.forEach((permission) => {
-      it(`fails with ${permission} permission`, () => {
-        cy.quickLogin(permission)
+    doesNotHavePermission.forEach(({ permission, user }) => {
+      beforeEach(() => {
+        cy.login(user.email, user.password, workspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+            cy.visit(`/${workspace.slug}/settings/authentication`))
+      })
 
+      it(`fails with ${permission} permission`, () => {
         cy.contains("Connections").should("be.visible")
         cy.getByTestId("SSODomainsTable").should("exist")
         cy.getByTestId("DeleteSSOConnection.Submit").should("be.disabled")
@@ -87,12 +129,12 @@ describe("sso.spec.js", () => {
     })
 
     it("fails with default connection", () => {
-      cy.quickLogin("owner")
-        .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
-
       // We set this audience to the default in a previous test...
-      let defaultAudience = "urn:saml2:metamapper:generic-Xm3F2M3RRJpO"
+      let defaultAudience = `urn:saml2:metamapper:generic-${defaultConnectionId}`
+
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() =>
+          cy.visit(`/${workspace.slug}/settings/authentication`))
 
       cy.getByTestId("SSOConnectionsTable").contains(defaultAudience).parent("tr").within(() => {
         cy.getByTestId("DeleteSSOConnection.Submit").click()
@@ -110,11 +152,11 @@ describe("sso.spec.js", () => {
     })
 
     it("succeeds with valid permission", () => {
-      cy.quickLogin("owner")
-        .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+      let deletedAudience = `urn:saml2:metamapper:generic-${anotherConnectionId}`
 
-      let deletedAudience = "urn:saml2:metamapper:generic-k54Me1G77SnX"
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() =>
+          cy.visit(`/${workspace.slug}/settings/authentication`))
 
       cy.getByTestId("SSOConnectionsTable").contains(deletedAudience).parent("tr").within(() => {
         cy.getByTestId("DeleteSSOConnection.Submit").click()
@@ -133,11 +175,11 @@ describe("sso.spec.js", () => {
   })
 
   describe("create domain", () => {
-    doesNotHavePermission.forEach((permission) => {
+    doesNotHavePermission.forEach(({ permission, user }) => {
       it(`fails with ${permission} permission`, () => {
-        cy.quickLogin(permission)
+        cy.login(user.email, user.password, workspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+            cy.visit(`/${workspace.slug}/settings/authentication`))
 
         cy.formIsDisabled("SSODomainSetupForm", [
           "Domain",
@@ -147,9 +189,9 @@ describe("sso.spec.js", () => {
     })
 
     beforeEach(() => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+          cy.visit(`/${workspace.slug}/settings/authentication`))
     })
 
     it("fails with improperly formatted domain", () => {
@@ -200,20 +242,22 @@ describe("sso.spec.js", () => {
   })
 
   describe("remove domain", () => {
-    doesNotHavePermission.forEach((permission) => {
-      it(`fails with ${permission} permission`, () => {
-        cy.quickLogin(permission)
+    doesNotHavePermission.forEach(({ permission, user }) => {
+      beforeEach(() => {
+        cy.login(user.email, user.password, workspace.id)
           .then(() =>
-            cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+            cy.visit(`/${workspace.slug}/settings/authentication`))
+      })
 
+      it(`fails with ${permission} permission`, () => {
         cy.getByTestId("DeleteSSODomain.Submit").should("be.disabled").contains("Remove")
       })
     })
 
     it("succeeds with valid permission", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+          cy.visit(`/${workspace.slug}/settings/authentication`))
 
       let deletedDomain = "metamapper.net"
 
@@ -235,7 +279,7 @@ describe("sso.spec.js", () => {
 
   describe("404", () => {
     it("when workspace does not exist", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
           cy.visit("/does-not-exist/settings/authentication"))
 
@@ -243,9 +287,9 @@ describe("sso.spec.js", () => {
     })
 
     it("when user is unauthorized", () => {
-      cy.login("outsider@metamapper.io", "password1234")
+      cy.login(member.email, member.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/settings/authentication`))
+          cy.visit(`/${otherWorkspace.slug}/settings/authentication`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })

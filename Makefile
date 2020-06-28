@@ -59,8 +59,15 @@ frontend:
 shell:
 	@docker-compose run --rm webserver python manage.py shell
 
-cypress: resetdb
+cypress-resetdb:
+	@docker-compose run --rm webserver bash www/cypress/cmd/resetdb.sh
+
+cypress: cypress-resetdb
 	@npx cypress open
+
+test-cypress: cypress-resetdb
+	@echo "--> Running Cypress (integration) tests"
+	@npx cypress run --spec "www/cypress/integration/*.spec.js" --headless --browser chrome
 
 test-py:
 	@echo "--> Running Python (webserver) tests"
@@ -70,10 +77,6 @@ test-py:
 test-js:
 	@echo "--> Running JavaScript (client) tests"
 	@npm run test --prefix www
-
-test-cypress: resetdb
-	@echo "--> Opening Cypress.io (integration tests)"
-	@npx cypress run --spec "www/cypress/integration/*.spec.js" --headless --browser chrome
 
 lint: lint-py lint-js
 

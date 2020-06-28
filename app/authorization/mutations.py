@@ -57,7 +57,7 @@ class RevokeMembership(mixins.UpdateMutationMixin, relay.ClientIDMutation):
         is_owner = info.context.user.is_owner(info.context.workspace.pk)
 
         if not is_owner and not info.context.user.check_email(data['email']):
-            raise errors.PermissionDeniedError()
+            raise errors.PermissionDenied()
 
         return models.Membership.objects.get(
             user_id=data['email'],

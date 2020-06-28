@@ -1,5 +1,3 @@
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
-
 const testTableColumnValue = (column, callback) => {
   cy.getByTestId("ColumnDefinitionTable").contains(column).parent().parent("tr").within(() => {
     callback()
@@ -7,26 +5,50 @@ const testTableColumnValue = (column, callback) => {
 }
 
 describe("table_columns.spec.js", () => {
+  const workspace = {
+    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    slug: "gcc",
+  }
+
+  const owner = {
+    email: "owner.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const member = {
+    email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const readonly = {
+    email: "readonly.definitions@metamapper.test",
+    password: "password1234",
+  }
+
   const datastore = {
-    name: 'Postgres',
-    slug: 'metamapper',
+    name: "Metamapper",
+    slug: "metamapper",
   }
 
   const table = {
-    schema: 'app',
-    name: 'customers',
+    schema: "public",
+    name: "revisioner_error",
   }
 
-  const permissions = ["member", "readonly"]
-  const databaseUri = `/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}`
+  const hasPermission = [
+    { permission: "member", user: member },
+    { permission: "owner", user: owner },
+  ]
+
+  const databaseUri = `/${workspace.slug}/datastores/${datastore.slug}`
   const columnsUri = `${databaseUri}/definition/${table.schema}/${table.name}/columns`
 
   // Tests for the basic UI components of this page.
   describe("UI", () => {
-    permissions.forEach(permission => {
+    hasPermission.forEach(({ permission, user }) => {
       describe(`as ${permission}`, () => {
         before(() => {
-          cy.quickLogin(permission).then(() => cy.visit(columnsUri))
+          cy.login(user.email, user.password, workspace.id).then(() => cy.visit(columnsUri))
         })
 
         it("has the correct meta title", () => {
@@ -34,7 +56,7 @@ describe("table_columns.spec.js", () => {
         })
 
         it("renders the columns table", () => {
-          cy.getByTestId("ColumnDefinitionTable").should("exist").find("tbody").find("tr").should("have.length", 13)
+          cy.getByTestId("ColumnDefinitionTable").should("exist").find("tbody").find("tr").should("have.length", 8)
         })
 
         it("renders the correct data types", () => {
@@ -42,10 +64,10 @@ describe("table_columns.spec.js", () => {
             testTableColumnValue(column, () => cy.get("td").eq(3).contains(type))
           }
 
-          testDataType("customernumber", "integer(32)")
-          testDataType("phone", "character varying(50)")
-          testDataType("postalcode", "character varying(15)")
-          testDataType("creditlimit", "numeric(10, 2)")
+          testDataType("id", "integer(32)")
+          testDataType("exc_type", "character varying(40)")
+          testDataType("exc_stacktrace", "text")
+          testDataType("created_at", "timestamp with time zone")
         })
 
         it("renders default values", () => {
@@ -53,23 +75,21 @@ describe("table_columns.spec.js", () => {
             testTableColumnValue(column, () => cy.get("td").eq(5).contains(type))
           }
 
-          testDefaultValue("state", "NULL::character varying")
-          testDefaultValue("postalcode", "NULL::character varying")
-          testDefaultValue("creditlimit", "NULL::numeric")
+          testDefaultValue("id", "nextval('revisioner_error_id_seq'::regclass)")
         })
 
         it("renders the primary key icon", () => {
-          testTableColumnValue("customernumber", () => {
+          testTableColumnValue("id", () => {
             cy.get("td").eq(1).find("i").should("be.visible").should("have.class", "anticon-key")
           })
         })
 
         it("renders nullable indicator", () => {
-          testTableColumnValue("customernumber", () => {
+          testTableColumnValue("id", () => {
             cy.get("td").eq(4).find("i").should("be.visible").should("have.class", "anticon-check-circle")
           })
 
-          testTableColumnValue("state", () => {
+          testTableColumnValue("exc_stacktrace", () => {
             cy.get("td").eq(4).find("i").should("be.visible").should("have.class", "anticon-close-circle")
           })
         })
@@ -82,13 +102,14 @@ describe("table_columns.spec.js", () => {
 
     describe("as member", () => {
       beforeEach(() => {
-        cy.quickLogin("member").then(() => cy.visit(columnsUri))
+        cy.login(member.email, member.password, workspace.id).then(() => cy.visit(columnsUri))
       })
 
       it("with valid input", () => {
-        const input = "Unique ID for a customer"
+        const columnName = "id"
+        const input = "Unique ID for Revisioner error"
 
-        testTableColumnValue("customernumber", () => {
+        testTableColumnValue(columnName, () => {
           cy.get("td").eq(descIndex).click().then(() => {
             cy.getByTestId("EditableCell.Input").should("be.visible")
             cy.fillInputs({"EditableCell.Input": input})
@@ -104,11 +125,13 @@ describe("table_columns.spec.js", () => {
 
         // Should persist after reload.
         cy.reload().then(() =>
-          testTableColumnValue("customernumber", () => cy.get("td").eq(descIndex).contains(input)))
+          testTableColumnValue(columnName, () => cy.get("td").eq(descIndex).contains(input)))
       })
 
       it("can reset input to nothing", () => {
-        testTableColumnValue("customernumber", () => {
+         const columnName = "id"
+
+        testTableColumnValue(columnName, () => {
           cy.get("td").eq(descIndex).click().then(() => {
             cy.getByTestId("EditableCell.Input").should("be.visible")
             cy.getByTestId("EditableCell.Input").clear()
@@ -121,20 +144,25 @@ describe("table_columns.spec.js", () => {
           "be.visible"
         )
 
-        testTableColumnValue("customernumber", () => cy.get("td").eq(descIndex).should("have.value", ""))
+        testTableColumnValue(columnName, () => cy.get("td").eq(descIndex).should("have.value", ""))
 
         // Should persist after reload.
         cy.reload().then(() =>
-          testTableColumnValue("customernumber", () => cy.get("td").eq(descIndex).should("have.value", "")))
+          testTableColumnValue(columnName, () => cy.get("td").eq(descIndex).should("have.value", "")))
       })
 
       it("with invalid input", () => {
-        testTableColumnValue("phone", () => {
-          const input = "This is the office phone number of the customer, which is too long of a description. It's definitely over 90 characters."
+        const columnName = "exc_stacktrace"
+
+        testTableColumnValue(columnName, () => {
+          const input = "This is the full stacktrace of the revisioner error, which is too " +
+                        "long of a description. It's definitely over 90 characters."
 
           cy.get("td").eq(descIndex).click().then(() => {
             cy.getByTestId("EditableCell.Input").should("be.visible")
-            cy.fillInputs({"EditableCell.Input": input})
+            cy.fillInputs({
+              "EditableCell.Input": input
+            })
           })
 
           cy.get("td").eq(5).click()
@@ -147,22 +175,23 @@ describe("table_columns.spec.js", () => {
           "be.visible"
         )
 
-        testTableColumnValue("phone", () => cy.get("td").eq(descIndex).should("have.value", ""))
+        testTableColumnValue(columnName, () => cy.get("td").eq(descIndex).should("have.value", ""))
 
         // Should persist after reload.
         cy.reload().then(() =>
-          testTableColumnValue("phone", () => cy.get("td").eq(descIndex).should("have.value", "")))
+          testTableColumnValue(columnName, () => cy.get("td").eq(descIndex).should("have.value", "")))
       })
     })
 
     describe("as readonly", () => {
       beforeEach(() => {
-        cy.quickLogin("readonly").then(() => cy.visit(columnsUri))
+        cy.login(readonly.email, readonly.password, workspace.id).then(() => cy.visit(columnsUri))
       })
 
       it("cannot edit the description", () => {
-        testTableColumnValue("customernumber", () => {
+        testTableColumnValue("id", () => {
           cy.get("td").eq(descIndex).click()
+
           cy.getByTestId("EditableCell.Input").should("not.be.visible")
         })
       })
@@ -171,7 +200,7 @@ describe("table_columns.spec.js", () => {
 
   describe("404", () => {
     it("when workspace does not exist", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
           cy.visit("/does-not-exist/datastores/show-me/definition/potato/salad/columns"))
 
@@ -179,17 +208,17 @@ describe("table_columns.spec.js", () => {
     })
 
     it("when datastore does not exist", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/datastores/show-me/definition/potato/salad/columns`))
+          cy.visit(`/${workspace.slug}/datastores/show-me/definition/potato/salad/columns`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })
 
     it("when table definition does not exist", () => {
-      cy.quickLogin("owner")
+      cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}/definition/potato/salad/columns`))
+          cy.visit(`/${workspace.slug}/datastores/${datastore.slug}/definition/potato/salad/columns`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })

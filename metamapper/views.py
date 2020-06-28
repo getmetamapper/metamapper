@@ -10,11 +10,11 @@ from django.http import HttpResponse
 from django.views.generic import View
 
 from graphql import GraphQLError
-from graphql.error import format_error as format_graphql_error
 from graphene_django.views import GraphQLView
 
 from app.authentication.models import Workspace
 
+from utils.errors import format_error as format_graphql_error
 from utils.encrypt.fields import EncryptedField
 from utils.logging import Logger
 from utils.uploads import place_files_in_operations

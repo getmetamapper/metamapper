@@ -2,9 +2,11 @@ import React, { Component } from "react"
 import { compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
 import { Col, Row } from "antd"
+import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreLayout"
 import DatastoreAssetsTable from "app/Datastores/DatastoreAssets/DatastoreAssetsTable"
 import withGetDatastoreWithTableList from "graphql/withGetDatastoreWithTableList"
+import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
 class DatastoreAssets extends Component {
   constructor(props) {
@@ -59,7 +61,13 @@ class DatastoreAssets extends Component {
   }
 }
 
+const withNotFound = withNotFoundHandler(({ datastore }) => {
+  return !datastore || !datastore.hasOwnProperty("id")
+})
+
 export default compose(
   withRouter,
-  withGetDatastoreWithTableList
+  withGetDatastoreWithTableList,
+  withLargeLoader,
+  withNotFound,
 )(DatastoreAssets)

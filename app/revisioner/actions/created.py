@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
-from app.definitions.models import Column
+from app.definitions.models import Schema, Table, Index, Column
+
 from app.revisioner.collectors import ObjectCollector
-from app.revisioner.revisioners import KLASS_MAP, get_content_type_for_model
-from celery.utils.log import get_task_logger
-
-
-logger = get_task_logger(__name__)
+from app.revisioner.revisioners import get_content_type_for_model
 
 
 class GenericCreateAction(object):
     """Generic mixin for a bulk CREATED action based on revisions.
     """
-    def __init__(self, run, datastore, *args, **kwargs):
+    def __init__(self, run, datastore, logger, *args, **kwargs):
         self.run = run
         self.datastore = datastore
-        self.model = KLASS_MAP[self.model_name]
-        self.content_type = get_content_type_for_model(self.model)
+        self.logger = logger
+        self.content_type = get_content_type_for_model(self.model_class)
         self.revisions = self.run.revisions.created().filter(resource_type_id=self.content_type.id)
         self.num_revisions = self.revisions.count()
 
@@ -29,20 +26,20 @@ class GenericCreateAction(object):
 
         for i, revision in enumerate(self.revisions):
             attributes = self.get_attributes(revision)
-            if i % 500 == 0 or i == self.num_revisions:
-                logger.info(
-                    '[{0}] Processed {1} of {2}'.format(self.model_name, i, self.num_revisions)
+            if i > 0 and (i % 500 == 0 or i == self.num_revisions):
+                self.logger.info(
+                    '[{0}] Processed {1} of {2}'.format(self.model_class.__name__, i, self.num_revisions)
                 )
             resources.append(
-                self.model.initialize(**attributes)
+                self.model_class.initialize(**attributes)
             )
-        return self.model.objects.bulk_create(resources, batch_size=500, ignore_conflicts=True)
+        return self.model_class.objects.bulk_create(resources, batch_size=500, ignore_conflicts=True)
 
 
 class SchemaCreateAction(GenericCreateAction):
     """docstring for SchemaCreateAction
     """
-    model_name = 'Schema'
+    model_class = Schema
 
     def get_attributes(self, revision):
         """Get the instance attributes from the Revision.
@@ -59,7 +56,7 @@ class SchemaCreateAction(GenericCreateAction):
 class TableCreateAction(GenericCreateAction):
     """docstring for TableCreateAction
     """
-    model_name = 'Table'
+    model_class = Table
 
     def get_attributes(self, revision):
         """Get the instance attributes from the Revision.
@@ -77,7 +74,7 @@ class TableCreateAction(GenericCreateAction):
 class ColumnCreateAction(GenericCreateAction):
     """docstring for ColumnCreateAction
     """
-    model_name = 'Column'
+    model_class = Column
 
     def get_attributes(self, revision):
         """Get the instance attributes from the Revision.
@@ -95,7 +92,7 @@ class ColumnCreateAction(GenericCreateAction):
 class IndexCreateAction(GenericCreateAction):
     """docstring for IndexCreateAction
     """
-    model_name = 'Index'
+    model_class = Index
 
     def get_attributes(self, revision):
         """Get the instance attributes from the Revision.
@@ -118,11 +115,11 @@ class IndexCreateAction(GenericCreateAction):
         column_cache = {}
         for revision in self.revisions:
             attributes, columns = self.get_attributes(revision)
-            instance = self.model.initialize(**attributes)
+            instance = self.model_class.initialize(**attributes)
             resources.append(instance)
             column_cache[instance.pk] = columns
 
-        instances = self.model.objects.bulk_create(resources, batch_size=500)
+        instances = self.model_class.objects.bulk_create(resources, batch_size=500)
         collector = ObjectCollector(
             collection=Column.objects.filter(table__schema__datastore_id=self.datastore.id),
         )
