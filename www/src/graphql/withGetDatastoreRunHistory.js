@@ -25,10 +25,16 @@ const withGetDatastoreRunHistory = graphql(GetDatastoreRunHistory, {
       return res
     }
 
+    const { runHistory } = data
+
+    if (!runHistory || !runHistory.hasOwnProperty("edges")) {
+      return res
+    }
+
     data.stopPolling()
 
     return {
-      runHistory: map(data.runHistory.edges, ({ node }) => node),
+      runHistory: map(runHistory.edges, ({ node }) => node),
     }
   },
 })

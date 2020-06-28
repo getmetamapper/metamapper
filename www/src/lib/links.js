@@ -1,6 +1,7 @@
 import { ApolloLink } from "apollo-link"
-import { onError } from "apollo-link-error"
 import { setContext } from "apollo-link-context"
+import { onError } from "apollo-link-error"
+import { RetryLink } from "apollo-link-retry"
 import jwtDecode from "jwt-decode"
 import { createUploadLink } from "apollo-upload-client"
 import { AUTH_TOKEN, WORKSPACE_TOKEN, ORIGIN_HOST } from "./constants"
@@ -35,18 +36,21 @@ const authLink = setContext((_, { headers }) => {
   return config
 })
 
-const errorLink = onError(({ response, operation, graphQLErrors, networkError }) => {
-  if (graphQLErrors)
-    graphQLErrors.map(({ message, locations, path }) =>
-      console.log(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-      ),
-    );
-
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  // if (graphQLErrors)
+  //   graphQLErrors.forEach(({ message, locations, path }) =>
+  //     console.log(
+  //       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+  //     )
+  //   );
   if (networkError) console.log(`[Network error]: ${networkError}`);
-});
+})
+
+const retryLink = new RetryLink();
 
 const link = ApolloLink.from([
+  retryLink,
+  errorLink,
   authLink,
   createUploadLink({ uri: `${ORIGIN_HOST}/graphql` }),
 ])

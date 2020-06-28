@@ -1,6 +1,6 @@
 # Metamapper
 
-Metamapper is a metadata management platform that aims to minimize decisions made based on bad data. It's a self-updating data catalog complete with full-text search, an integrated commenting system, and much more.
+Metamapper is an open-source metadata management platform that aims to make it easier to share data and its context across your organization. It's a self-updating data catalog complete with full-text search, an integrated commenting system, and much more.
 
 <p align="center">
   <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-1.png" width="290">

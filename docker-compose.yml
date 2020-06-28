@@ -66,22 +66,6 @@ services:
     image: redis:alpine
     networks:
      - metamapper
-  flower:
-    << : *restart_policy
-    env_file:
-      - .env
-    image: metamapper
-    command: flower
-    volumes:
-      - ./:/usr/local/metamapper
-    ports:
-      - 5555:5555
-    depends_on:
-      - database
-      - worker
-      - scheduler
-    networks:
-      - metamapper
 volumes:
   metamapper-database:
     driver: local

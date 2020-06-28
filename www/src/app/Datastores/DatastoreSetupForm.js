@@ -174,16 +174,16 @@ class DatastoreSetupForm extends Component {
     const { current } = this.state
     const {
       datastoreEngines,
-      workspace,
       form,
       hasPermission,
+      workspace,
       isSubmitting,
       onSubmit,
     } = this.props
     return (
       <Card>
         <h3 className="text-centered mb-0">
-          <div>Setup New Datastore</div>
+          <div>Connect a New Datastore</div>
           <small>
             <Link to="/">(nevermind)</Link>
           </small>
@@ -293,7 +293,7 @@ class DatastoreSetupForm extends Component {
 
 export default compose(
   withRouter,
-  withGetDatastoreEngines,
   withGetWorkspaceBySlug,
+  withGetDatastoreEngines,
   graphql(TestJdbcConnection)
 )(DatastoreSetupForm)

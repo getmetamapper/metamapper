@@ -57,7 +57,7 @@ describe("workspace.spec.js", () => {
 
   describe("list user workspaces", () => {
     beforeEach(() => {
-      cy.login(owner.email).then(() => cy.visit('/workspaces'))
+      cy.login(owner.email, owner.password, primaryWorkspace.id).then(() => cy.visit('/workspaces'))
     })
 
     it("has the correct meta title", () => {
@@ -77,7 +77,7 @@ describe("workspace.spec.js", () => {
 
       cy.location("pathname").should("equal", `/${secondaryWorkspace.slug}`)
 
-      cy.wait(250)
+      cy.wait(1000)
         .then(() => {
           expect(
             window.localStorage.getItem(WORKSPACE_TOKEN)
@@ -95,7 +95,7 @@ describe("workspace.spec.js", () => {
 
   describe("create a workspace", () => {
     beforeEach(() => {
-      cy.login(member.email).then(() => cy.visit("/workspaces"))
+      cy.login(member.email, member.password, primaryWorkspace.id).then(() => cy.visit('/workspaces'))
     })
 
     it("fails with an incorrectly formatted slug", () => {

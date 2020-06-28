@@ -31,10 +31,19 @@ const withGetTableColumns = graphql(GetTableColumns, {
       return res
     }
 
-    data.stopPolling()
-
     const { tableDefinition } = data
+
+    if (!tableDefinition) {
+      return res
+    }
+
     const { columns } = tableDefinition
+
+    if (!columns || !columns.hasOwnProperty("edges")) {
+      return res
+    }
+
+    data.stopPolling()
 
     return {
       tableDefinition,

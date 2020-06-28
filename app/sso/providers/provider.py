@@ -21,6 +21,13 @@ class Attributes(object):
         ]
 
 
+def verified_domain_exists(workspace, domain):
+    return workspace.sso_domains.filter(
+        domain__iexact=domain,
+        verified_at__isnull=False,
+    ).exists()
+
+
 class SSOProvider(object):
     """docstring for SSOProvider
     """
@@ -28,6 +35,11 @@ class SSOProvider(object):
         self.connection = connection
         self.workspace = self.connection.workspace
         self.client = client
+
+    def is_domain_verified(self, email):
+        """Parses an email and checks if the domain is verified.
+        """
+        return verified_domain_exists(self.workspace, email.split("@")[-1])
 
     def authenticate(self, state):
         """Just-in-time provisioning for the requested user.
@@ -40,13 +52,17 @@ class SSOProvider(object):
             sso_identities__provider=self.connection,
         ).first()
 
+        if not self.is_domain_verified(identity["email"]):
+            raise IdentityNotValid("Domain is not authorized for the provided workspace.")
+
         # Otherwise, we find the user by email and create the identity for future use.
         if not user:
+            # We check Github and Google for email verification.
+            if not identity["email_verified"]:
+                raise IdentityNotValid("Could not link the provided account: %s" % identity["email"])
+
             try:
                 user = User.objects.get(email__iexact=identity["email"])
-
-                if not identity["email_verified"]:
-                    raise IdentityNotValid("Could not link the provided account: %s" % identity["email"])
             except User.DoesNotExist:
                 user = User.objects.create_user(
                     email=identity["email"].lower(),

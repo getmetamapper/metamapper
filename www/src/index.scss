@@ -1,8 +1,9 @@
 
 $color-layout: #F7F8FA;
 $color-navbar: #003945;
-$color-primary: #1890ff;
-$color-links: #1890ff;
+$color-primary: #f7777b;
+$color-primary-light: #fff2f0;
+$color-links: #f7777b;
 $color-links-hover: #11A4CD;
 $color-border: #e8e8e8;
 
@@ -16,7 +17,7 @@ $color-border: #e8e8e8;
 @import './pages/Omnisearch/_omnisearch.scss';
 
 .ant-alert-info {
-  background-color: #f0f3ff !important;
+  background-color: $color-primary-light !important;
   border: 1px solid $color-primary !important;
 }
 

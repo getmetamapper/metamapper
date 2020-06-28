@@ -67,7 +67,7 @@ cypress: cypress-resetdb
 
 test-cypress: cypress-resetdb
 	@echo "--> Running Cypress (integration) tests"
-	@npx cypress run --spec "www/cypress/integration/*.spec.js" --headless --browser chrome
+	@npx cypress run --spec "www/cypress/integration/*.spec.js" --browser chrome --headless
 
 test-py:
 	@echo "--> Running Python (webserver) tests"

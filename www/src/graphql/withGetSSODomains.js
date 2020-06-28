@@ -21,6 +21,10 @@ const withGetSSODomains = graphql(GetSSODomains, {
 
     const { ssoDomains } = data
 
+    if (!ssoDomains || !ssoDomains.hasOwnProperty("edges")) {
+      return res
+    }
+
     return {
       ssoDomains: map(ssoDomains.edges, ({ node }) => node),
     }

@@ -152,10 +152,11 @@ textarea.ant-input {
   margin-right: -10px;
   border: 1px solid $color-navbar;
 }
-.avatar-select {
-  .avatar-select-text {
-    margin-left: 12px;
-  }
+.avatar-select-text {
+  margin-left: 8px;
+}
+.ant-select-selection-selected-value {
+  line-height: 38px;
 }
 .tags-input .ant-select-selection--multiple > ul > li,
 .tags-input .ant-select-selection--multiple .ant-select-selection__rendered > ul > li {

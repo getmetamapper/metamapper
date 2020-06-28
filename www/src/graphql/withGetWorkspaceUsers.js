@@ -24,6 +24,10 @@ const withGetWorkspaceUsers = graphql(GetWorkspaceUsers, {
 
     const { workspaceUsers } = data
 
+    if (!workspaceUsers || !workspaceUsers.hasOwnProperty("edges")) {
+      return res
+    }
+
     return {
       workspaceUsers: map(workspaceUsers.edges, ({ node }) => node),
     }

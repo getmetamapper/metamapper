@@ -21,6 +21,10 @@ const withGetCustomTableFields = graphql(GetCustomFields, {
 
     const { customFields } = data
 
+    if (!customFields || !customFields.hasOwnProperty("edges")) {
+      return res
+    }
+
     return {
       customTableFields: map(customFields.edges, ({ node }) => node),
     }

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from unittest import mock
+
 from django.test import TestCase
 from django.test.client import RequestFactory
 
@@ -35,7 +37,8 @@ class GenericSaml2ProviderTests(TestCase):
         self.connection = SSOConnectionFactory(**connection_kwargs)
         self.provider = provider.SAML2Provider(self.connection)
 
-    def test_authenticate(self):
+    @mock.patch.object(provider.SAML2Provider, 'is_domain_verified', return_value=True)
+    def test_authenticate(self, is_domain_verified):
         """It should implement the authenticate method.
         """
         attributes = {

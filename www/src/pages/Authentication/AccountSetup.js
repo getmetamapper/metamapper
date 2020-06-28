@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { Helmet } from "react-helmet"
 import { graphql } from "react-apollo"
-import { Col, Divider, Row, message } from "antd"
+import { Col, Divider, Row } from "antd"
 import { getErrorDefinition, setToken } from "lib/utilities"
 import yaml from "js-yaml"
 import AuthForm from "app/Authentication/AuthForm"
@@ -24,17 +24,17 @@ class AccountSetup extends Component {
   }
 
   handleSuccess = ({ data }) => {
-    const { jwt, errors } = data.accountSetup
+    const { jwt, workspaceSlug, errors } = data.accountSetup
 
     if (errors && errors.length > 0) {
       return this.handleError({ data })
     }
 
-    if (jwt) {
+    if (jwt && workspaceSlug) {
       setToken(jwt)
 
       this.props.refreshUser()
-      this.props.history.push(`/`)
+      window.location.href = `/${workspaceSlug}/datastores/new`
     }
   }
 

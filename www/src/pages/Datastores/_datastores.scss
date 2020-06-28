@@ -57,8 +57,8 @@
 .datastores .datastore-columns {
   background-color: #FFFFFF;
   .column-name {
-    color: #096dd9;
-    font-weight: 700;
+    color: $color-navbar;
+    font-weight: 500;
   }
 }
 .datastores .datastore-indexes {
@@ -174,8 +174,15 @@
 .table-schema-selector {
    background-color: #FFFFFF;
    border-left: 1px solid #e8e8e8;
-   padding-top: 8px;
    height: 100vh;
+
+  .ant-collapse > .ant-collapse-item {
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .ant-collapse > .ant-collapse-item:last-child,
+  .ant-collapse > .ant-collapse-item:last-child > .ant-collapse-header {
+    border-radius: 0;
+  }
   .ant-collapse {
     border-radius: 0;
     border-top: 0;
@@ -287,12 +294,13 @@
     width: 620px;
   }
 }
-.table-definition-details {
+.table-definition-details.ant-card-bordered {
   border: 0;
   border-bottom: 1px solid #e8e8e8;
-  h3 {
-    margin-bottom: 0;
-  }
+  border-radius: 0;
+}
+.table-definition-details.ant-card-bordered h3 {
+  margin-bottom: 0;
 }
 .data-asset-tags {
   .tags-input {

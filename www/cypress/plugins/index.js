@@ -11,7 +11,39 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+let shouldSkip = false;
+
 module.exports = (on, config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
+  // https://stackoverflow.com/questions/58657895/is-there-a-reliable-way-to-have-cypress-exit-as-soon-as-a-test-fails
+  on('task', {
+    resetShouldSkipFlag () {
+      shouldSkip = false;
+      return null;
+    },
+    shouldSkip ( value ) {
+      if ( value != null ) shouldSkip = value;
+      return shouldSkip;
+    }
+  });
+
+  on('before:browser:launch', (browser = {}, args) => {
+    if (browser.name === 'chrome') {
+      args.push('--disable-dev-shm-usage')
+      return args
+    }
+
+    return args
+  })
+
+  require('cypress-log-to-output').install(on, (type, event) => {
+    if (event.level === 'error' || event.type === 'error') {
+      return true
+    }
+
+    if (event.level === 'log' || event.type === 'log') {
+      return true
+    }
+
+    return false
+  })
 }

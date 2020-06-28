@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.utils import OperationalError
 
@@ -52,7 +51,7 @@ def do_worker_check(timeout):
             expires=timeout,
         )
         is_healthy = result.get(timeout=timeout) == 8
-    except Exception as e:
+    except Exception:
         is_healthy = False
 
     return {"status": HEALTHY if is_healthy else UNHEALTHY}

@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 from celery import Celery
 from celery.schedules import crontab
-from os import environ, getenv
+from os import environ
 
 from django.apps import apps
 
@@ -26,6 +26,10 @@ app.conf.beat_schedule = {
     },
     'queue-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.queue_runs',
+        'schedule': crontab(minute='5,10,20'),
+    },
+    'zombie-revisioner-runs': {
+        'task': 'app.revisioner.tasks.scheduler.detect_run_timeout',
         'schedule': crontab(minute='*/20'),
     },
     'queue-domain-verification': {

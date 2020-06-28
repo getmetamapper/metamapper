@@ -1,6 +1,5 @@
 import React from "react"
-import qs from "query-string"
-import { Form, Icon, Input, Button, Row, Divider, Col } from "antd"
+import { Form, Icon, Input, Button, Row, Col } from "antd"
 import PasswordInput from "app/Common/PasswordInput"
 import { passwordStrengthValidator } from "lib/validators"
 

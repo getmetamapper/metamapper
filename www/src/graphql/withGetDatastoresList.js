@@ -23,9 +23,15 @@ const withGetDatastoresList = graphql(GetDatastores, {
       return res
     }
 
+    const { datastores } = data
+
+    if (!datastores || !datastores.hasOwnProperty("edges")) {
+      return res
+    }
+
     return {
       loading: false,
-      datastores: map(data.datastores.edges, ({ node }) => node),
+      datastores: map(datastores.edges, ({ node }) => node),
     }
   },
 })
