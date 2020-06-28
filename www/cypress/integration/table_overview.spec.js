@@ -69,9 +69,9 @@ describe("table_overview.spec.js", () => {
 
       cy.getByTestId("TableSchemaSearch.Input")
         .should("be.visible")
-        .type("definitions")
+        .type("sso")
 
-      cy.get(".table-schema-selector").find(".tablename").should("have.length", 6)
+      cy.get(".table-schema-selector").find(".tablename").should("have.length", 3)
     })
   })
 

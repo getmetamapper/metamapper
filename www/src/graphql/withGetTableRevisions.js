@@ -22,10 +22,16 @@ const withGetTableRevisions = graphql(GetTableRevisions, {
       return res
     }
 
+    const { tableRevisions } = data
+
+    if (!tableRevisions || !tableRevisions.hasOwnProperty("edges")) {
+      return res
+    }
+
     data.stopPolling()
 
     return {
-      tableRevisions: map(data.tableRevisions.edges, ({ node }) => node),
+      tableRevisions: map(tableRevisions.edges, ({ node }) => node),
     }
   },
 })

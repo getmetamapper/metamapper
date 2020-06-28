@@ -68,6 +68,7 @@ class Query(graphene.ObjectType):
         return (
             resource.revisions
                     .filter(applied_on__isnull=False)
+                    .exclude(metadata__field__isnull=False, metadata__field='object_id')
                     .order_by('created_at')
         )
 

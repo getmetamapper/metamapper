@@ -77,7 +77,6 @@ class AllowedCustomPropertySettings extends Component {
       datastore,
       form,
       hasPermission,
-      loading,
       submitting,
       customDatastoreFields,
       customTableFields,

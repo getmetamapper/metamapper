@@ -21,22 +21,20 @@ services:
       POSTGRES_DB: metamapper
     restart: unless-stopped
   webserver:
+    ipc: host
     build: ../
     command: ["./wait-for-it.sh", "database:5432", "--", "./bin/docker-entrypoint", "ci-webserver"]
     ports:
       - "5050:5050"
     << : *metamapper_service
-  scheduler:
-    command: ["./wait-for-it.sh", "webserver:5050", "--", "./bin/docker-entrypoint", "scheduler"]
-    depends_on:
-      - webserver
-    << : *metamapper_service
   worker:
+    ipc: host
     command: ["./wait-for-it.sh", "webserver:5050", "--", "./bin/docker-entrypoint", "worker"]
     depends_on:
       - webserver
     << : *metamapper_service
   cypress:
+    ipc: host
     build:
       context: ../
       dockerfile: .circleci/Dockerfile.cypress

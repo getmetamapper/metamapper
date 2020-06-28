@@ -19,7 +19,7 @@ const Navbar = ({ config, currentUser }) => {
             to={currentWorkspace ? `/${currentWorkspace.slug}` : "/"}
             className="logo"
           >
-            <img src="/assets/static/img/brand/logo.png" />
+          <img src="/assets/static/img/brand/logo.png" alt="Metamapper" />
           </Link>
           <Menu
             mode="horizontal"

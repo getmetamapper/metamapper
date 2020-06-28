@@ -55,7 +55,7 @@ describe("datastores.spec.js", () => {
         .then(() =>
           cy.visit(inventoryUri))
 
-      cy.contains("New Datastore").click()
+      cy.contains("Connect a Datastore").click()
       cy.getByTestId("DatastoreSetupForm.ValidateEngine").should("be.disabled")
     })
 
@@ -64,7 +64,7 @@ describe("datastores.spec.js", () => {
         .then(() =>
           cy.visit(inventoryUri))
 
-      cy.contains("New Datastore").click()
+      cy.contains("Connect a Datastore").click()
       cy.contains("PostgreSQL").click()
 
       cy.getByTestId("DatastoreSetupForm.ValidateEngine").click()
@@ -93,7 +93,7 @@ describe("datastores.spec.js", () => {
         .then(() =>
           cy.visit(inventoryUri))
 
-      cy.contains("New Datastore").click()
+      cy.contains("Connect a Datastore").click()
       cy.contains("PostgreSQL").click()
 
       cy.getByTestId("DatastoreSetupForm.ValidateEngine").click()
@@ -128,7 +128,7 @@ describe("datastores.spec.js", () => {
         .then(() =>
           cy.visit(inventoryUri))
 
-      cy.contains("New Datastore").click()
+      cy.contains("Connect a Datastore").click()
 
       // It navigates to the correct page.
       cy.location("pathname").should("equal", `/${workspace.slug}/datastores/new`)
@@ -167,7 +167,7 @@ describe("datastores.spec.js", () => {
 
       cy.getByTestId("DatastoreSetupForm.Submit").click()
 
-      // Confirm that the application redirected to the new datastore.
+      // Confirm that the application redirected to the Connect a Datastore.
       cy.title().should("eq", `Datastore Overview - ${newDatastore.slug} - Metamapper`)
 
       cy.location("pathname").should("equal", datastoreUri)
@@ -192,7 +192,7 @@ describe("datastores.spec.js", () => {
 
       cy.getByTestId("RunHistoryTable").should("exist")
 
-      cy.wait(7500).then(() => cy.reload())
+      cy.wait(12500).then(() => cy.reload())
 
       cy.getByTestId("RunHistoryTable").get("tr").within(() => {
         cy.get("td").eq(0).contains("SUCCESS").should("be.visible")
@@ -445,12 +445,12 @@ describe("datastores.spec.js", () => {
 
       cy.getByTestId("DeleteDatastore.Submit").click()
 
-      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
-
       cy.get(".ant-message-notice").should("be.visible")
       cy.contains(".ant-message-success", "Datastore has been removed.").should(
         "be.visible"
       )
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
 
       cy.getByTestId("DatastoreList").should("exist").and("not.contain", newDatastore.name)
     })

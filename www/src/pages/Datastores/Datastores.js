@@ -48,7 +48,7 @@ class Datastores extends Component {
             </Col>
             <Col span={8}>
               <Link to="/datastores/new" data-test="NewDatastoreButton">
-                <Button type="primary">New Datastore</Button>
+                <Button type="primary">Connect a Datastore</Button>
               </Link>
             </Col>
           </Row>

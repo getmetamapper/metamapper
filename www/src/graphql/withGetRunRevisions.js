@@ -21,10 +21,16 @@ const withGetRunRevisions = graphql(GetRunRevisions, {
       return res
     }
 
+    const { runRevisions } = data
+
+    if (!runRevisions || !runRevisions.hasOwnProperty("edges")) {
+      return res
+    }
+
     data.stopPolling()
 
     return {
-      runRevisions: map(data.runRevisions.edges, ({ node }) => node),
+      runRevisions: map(runRevisions.edges, ({ node }) => node),
     }
   },
 })

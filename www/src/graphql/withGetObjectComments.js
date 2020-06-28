@@ -23,9 +23,13 @@ const withGetObjectComments = graphql(GetComments, {
       return res
     }
 
-    data.stopPolling()
-
     const { comments } = data
+
+    if (!comments || !comments.hasOwnProperty("edges")) {
+      return res
+    }
+
+    data.stopPolling()
 
     return {
       comments: map(comments.edges, ({ node }) => node),

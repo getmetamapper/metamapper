@@ -32,23 +32,18 @@ def get_content_types():
     return ContentType.objects.all()
 
 
-def sanitize_variables(variables):
+def sanitize_variables(variables, fields_to_redact):
     """Prevents sensitive values from being exposed in the logs.
     """
     variables = variables or {}
     output = {}
     for k, v in variables.items():
         value = v
-        if k in ENCRYPTED_FIELDS:
+        if k in fields_to_redact:
             value = '***********'
         output[k] = value
     return output
 
-
-JWT_RELATED_ERRORS = (
-    'Signature has expired',
-    'Error decoding signature',
-)
 
 ENCRYPTED_FIELDS = list({
     f.name
@@ -102,13 +97,13 @@ class MetamapperGraphQLView(GraphQLView):
             )
         return super().parse_body(request)
 
-    def log_operation(self, request, status_code, operation_name, variables):
+    def log_operation(self, request, response, operation_name, variables):
         """Log the HTTP request.
         """
         log_kwargs = {
             'operation': operation_name,
             'user': request.user.pk if request.user else None,
-            'vars': sanitize_variables(variables),
+            'vars': sanitize_variables(variables, ENCRYPTED_FIELDS),
         }
 
         orderby = ['operation', 'user', 'vars']
@@ -121,7 +116,7 @@ class MetamapperGraphQLView(GraphQLView):
                 '({key}: {value})'.format(key=key, value=log_kwargs[key])
             )
 
-        logger.info(' '.join(message))
+        logger.info('%s %s' % (' '.join(message), ''))
 
     def get_response(self, request, data, show_graphiql=False):
         """Handler for GraphQL response.
@@ -156,7 +151,7 @@ class MetamapperGraphQLView(GraphQLView):
             response['code'] = status_code
             result = self.json_encode(request, response, pretty=show_graphiql)
 
-        self.log_operation(request, status_code, operation_name, variables)
+        self.log_operation(request, response, operation_name, variables)
 
         return result, status_code
 

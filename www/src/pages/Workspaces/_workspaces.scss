@@ -1,25 +1,25 @@
 .workspaces {
   margin-top: 20px;
 }
-.workspace-list {
+.workspace-list.ant-list {
   margin-top: 20px;
 }
-.workspace-list .ant-list-item {
+.workspace-list.ant-list .ant-list-item {
   background-color: #FFFFFF;
   border: 1px solid #e8e8e8;
   border-radius: 4px;
   margin-bottom: 15px;
   padding: 16px;
 }
-.workspace-list .ant-list-item:last-child {
+.workspace-list.ant-list .ant-list-item:last-child {
   border-bottom: 1px solid #e8e8e8;
 }
-.workspace-list .ant-list-item:hover {
+.workspace-list.ant-list .ant-list-item:hover {
   background-color: transparent;
   cursor: pointer;
 }
-.workspace-list .workspace-arrow {
-  color: #1890ff;
+.workspace-list.ant-list .workspace-arrow {
+  color: $color-primary;
   position: absolute;
   right: 20px;
 }

@@ -21,6 +21,10 @@ const withGetSSOConnections = graphql(GetSSOConnections, {
 
     const { ssoConnections } = data
 
+    if (!ssoConnections || !ssoConnections.hasOwnProperty("edges")) {
+      return res
+    }
+
     return {
       ssoConnections: map(ssoConnections.edges, ({ node }) => node),
     }

@@ -124,9 +124,49 @@ class GoogleOAuth2ViewLoginTests(TestCase):
 
     @mock.patch('app.sso.providers.oauth2.google.views.GoogleClient')
     def test_when_valid(self, google_client):
+        """It authenticate the user.
+        """
+        domain = self.user.email.split("@")[-1]
+
+        google_client.return_value.get_user_domain.return_value = domain
+        google_client.return_value.get_user.return_value = {
+            "sub": "1234",
+            "email": self.user.email,
+            "given_name": self.user.fname,
+            "family_name": self.user.lname,
+            "email_verified": True,
+        }
+
+        connection = factories.SSOConnectionFactory(
+            workspace=self.workspace,
+            is_enabled=True,
+            extras={'domain': domain},
+        )
+
+        sso_domain = factories.SSODomainFactory(
+            workspace=self.workspace,
+            domain=domain,
+        )
+        sso_domain.mark_as_verified()
+
+        response = self.client.get(reverse('sso-oauth2-google'), {
+            'code': 'meowmeowmeow',
+            'state': b64encode(('connection=%s' % connection.pk).encode('utf-8')),
+        })
+
+        self.user.refresh_from_db()
+
+        self.assertTrue(isinstance(response, (HttpResponseRedirect,)))
+        self.assertEqual(
+            response.url,
+            f'{settings.WEBSERVER_ORIGIN}/{self.workspace.slug}/sso/{self.user.pk}/{self.user.sso_access_token}',
+        )
+
+    @mock.patch('app.sso.providers.oauth2.google.views.GoogleClient')
+    def test_when_domain_is_not_verified(self, google_client):
         """It should redirect with an error.
         """
-        domain = 'metamapper.io'
+        domain = self.user.email.split("@")[-1]
 
         google_client.return_value.get_user_domain.return_value = domain
         google_client.return_value.get_user.return_value = {
@@ -148,10 +188,10 @@ class GoogleOAuth2ViewLoginTests(TestCase):
             'state': b64encode(('connection=%s' % connection.pk).encode('utf-8')),
         })
 
-        self.user.refresh_from_db()
+        urlparams = parse_qs(urlparse(response.url).query)
 
         self.assertTrue(isinstance(response, (HttpResponseRedirect,)))
         self.assertEqual(
-            response.url,
-            f'{settings.WEBSERVER_ORIGIN}/{self.workspace.slug}/sso/{self.user.pk}/{self.user.sso_access_token}',
+            b64decode(urlparams['error'][0]).decode('utf-8'),
+            'Domain is not authorized for the provided workspace.',
         )

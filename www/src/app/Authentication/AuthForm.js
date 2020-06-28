@@ -77,7 +77,7 @@ class AuthForm extends React.Component {
     return (
       <div className="auth-form">
         <div className="logo">
-          <img src="/assets/static/img/brand/icon.png" />
+          <img src="/assets/static/img/brand/icon.png" alt="Metamapper" />
         </div>
         <h2>{title}</h2>
         {description}

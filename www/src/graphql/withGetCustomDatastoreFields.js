@@ -21,6 +21,10 @@ const withGetCustomDatastoreFields = graphql(GetCustomFields, {
 
     const { customFields } = data
 
+    if (!customFields || !customFields.hasOwnProperty("edges")) {
+      return res
+    }
+
     return {
       customDatastoreFields: map(customFields.edges, ({ node }) => node),
     }

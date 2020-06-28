@@ -46,16 +46,19 @@ def verify_domain(self, domain, *arg, **kwargs):
         instance = SSODomain.objects.get(domain__iexact=domain)
     except SSODomain.DoesNotExist:
         self.log.info(
-            'Domain ({0}) could not be found.'.format(domain)
+            'Domain ({0}) could not be found'.format(domain)
         )
         return None
-
-    txt_records = dns.query(instance.domain, 'TXT')
+    try:
+        txt_records = dns.query(instance.domain, 'TXT')
+    except dns.NXDOMAIN:
+        txt_records = []
 
     self.log.info(
         'Found {0} TXT records for {1}'.format(len(txt_records), domain)
     )
 
+    is_verified = False
     for txt in txt_records:
         is_verified = instance.verify_TXT_record(txt.to_text())
 
@@ -70,7 +73,7 @@ def verify_domain(self, domain, *arg, **kwargs):
     else:
         instance.mark_as_failed()
         self.log.info(
-            '{0} could not be verified (attempt: {1}).'.format(instance, instance.attempts)
+            '(attempt: {0}) {1} could not be verified'.format(instance.attempts, instance)
         )
 
 

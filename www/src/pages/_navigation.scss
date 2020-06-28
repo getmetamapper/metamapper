@@ -11,7 +11,7 @@
   float: left;
 }
 .top-navbar .logo > img {
-  width: 200px;
+  width: 160px;
   padding: 0 10px;
 }
 .top-navbar.ant-layout-header,
@@ -23,10 +23,10 @@
   line-height: 40px;
   width: 40px;
 }
-.top-navbar .ant-menu.ant-menu-dark .ant-menu-item-selected, 
+.top-navbar .ant-menu.ant-menu-dark .ant-menu-item-selected,
 .top-navbar .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
   background-color: transparent;
-} 
+}
 .top-navbar .ant-menu .anticon {
   margin: 0;
 }
@@ -112,7 +112,7 @@
 .permission-denied {
   margin-bottom: 20px;
 }
-@media only screen and (max-width: 812px) { 
+@media only screen and (max-width: 812px) {
   .top-navbar {
     padding: 0 10px;
   }
@@ -139,7 +139,7 @@
     .ant-input-search.focused .ant-input, .ant-input:focus {
       border-color: #fff;
       -webkit-box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);  
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
       width: 100%;
     }
   }

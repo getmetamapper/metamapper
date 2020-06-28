@@ -26,7 +26,12 @@ else
         exit 1
     fi
 
-    docker build --build-arg env=production -t metamapper/metamapper:latest .
+    docker build --build-arg env=production -t metamapper/metamapper:$VERSION .
+
+    docker push metamapper/metamapper:$VERSION
+    echo "Pushed: metamapper/metamapper:$VERSION"
+
+    docker tag metamapper/metamapper:$VERSION metamapper/metamapper:latest
 
     docker push metamapper/metamapper:latest
     echo "Pushed: metamapper/metamapper:latest"

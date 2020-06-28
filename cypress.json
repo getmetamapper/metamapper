@@ -12,6 +12,7 @@
   "viewportWidth": 1600,
   "viewportHeight": 1024,
   "testFiles": [
+    "datastores.spec.js",
     "datastore_overview.spec.js",
     "datastore_properties.spec.js",
     "table_overview.spec.js",

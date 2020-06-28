@@ -119,6 +119,39 @@ class GithubOAuth2ViewLoginTests(TestCase):
 
     @mock.patch('app.sso.providers.oauth2.github.views.GithubClient')
     def test_when_valid(self, github_client):
+        """It authenticate the user.
+        """
+        github_client.return_value.is_org_member.return_value = True
+        github_client.return_value.get_user.return_value = {
+            "uid": self.user.pk,
+            "id": "1234",
+            "email": self.user.email,
+            "verified": True,
+        }
+
+        connection = factories.SSOConnectionFactory(workspace=self.workspace, is_enabled=True)
+
+        sso_domain = factories.SSODomainFactory(
+            workspace=self.workspace,
+            domain=self.user.email.split("@")[-1],
+        )
+        sso_domain.mark_as_verified()
+
+        response = self.client.get(reverse('sso-oauth2-github'), {
+            'code': 'meowmeowmeow',
+            'state': b64encode(('connection=%s' % connection.pk).encode('utf-8')),
+        })
+
+        self.user.refresh_from_db()
+
+        self.assertTrue(isinstance(response, (HttpResponseRedirect,)))
+        self.assertEqual(
+            response.url,
+            f'{settings.WEBSERVER_ORIGIN}/{self.workspace.slug}/sso/{self.user.pk}/{self.user.sso_access_token}',
+        )
+
+    @mock.patch('app.sso.providers.oauth2.github.views.GithubClient')
+    def test_when_domain_is_not_verified(self, github_client):
         """It should redirect with an error.
         """
         github_client.return_value.is_org_member.return_value = True
@@ -136,10 +169,10 @@ class GithubOAuth2ViewLoginTests(TestCase):
             'state': b64encode(('connection=%s' % connection.pk).encode('utf-8')),
         })
 
-        self.user.refresh_from_db()
+        urlparams = parse_qs(urlparse(response.url).query)
 
         self.assertTrue(isinstance(response, (HttpResponseRedirect,)))
         self.assertEqual(
-            response.url,
-            f'{settings.WEBSERVER_ORIGIN}/{self.workspace.slug}/sso/{self.user.pk}/{self.user.sso_access_token}',
+            b64decode(urlparams['error'][0]).decode('utf-8'),
+            'Domain is not authorized for the provided workspace.',
         )

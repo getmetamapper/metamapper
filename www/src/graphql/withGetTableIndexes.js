@@ -31,10 +31,19 @@ const withGetTableIndexes = graphql(GetTableIndexes, {
       return res
     }
 
-    data.stopPolling()
-
     const { tableDefinition } = data
+
+    if (!tableDefinition) {
+      return res
+    }
+
     const { indexes } = tableDefinition
+
+    if (!indexes || !indexes.hasOwnProperty("edges")) {
+      return res
+    }
+
+    data.stopPolling()
 
     return {
       tableDefinition,

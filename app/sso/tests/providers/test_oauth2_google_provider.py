@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import unittest.mock as mock
+from unittest import mock
 
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -28,7 +28,8 @@ class GoogleOAuth2ProviderTests(TestCase):
         self.connection = SSOConnectionFactory(**connection_kwargs)
         self.provider = provider.GoogleOAuth2Provider(self.connection, self.client)
 
-    def test_authenticate(self):
+    @mock.patch.object(provider.GoogleOAuth2Provider, 'is_domain_verified', return_value=True)
+    def test_authenticate(self, is_domain_verified):
         """It should implement the authenticate method.
         """
         attributes = {

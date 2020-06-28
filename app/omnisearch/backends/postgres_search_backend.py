@@ -57,7 +57,15 @@ class PostgresSearchBackend(base.BaseSearchBackend):
                 qs = adapter.to_queryset(**extra_filters)
             else:
                 qs = qs.union(adapter.to_queryset(**extra_filters))
-        return qs.order_by('-score')
+        deduplicate_items = []
+        deduplicate_ukeys = []
+        for item in qs.order_by('-score'):
+            ukey = '{model_name}-{pk}'.format(**item)
+            if ukey in deduplicate_ukeys:
+                continue
+            deduplicate_items.append(item)
+            deduplicate_ukeys.append(ukey)
+        return deduplicate_items
 
 
 class ModelSearchAdapter(object):
@@ -97,7 +105,7 @@ class ModelSearchAdapter(object):
             self.annotate_queryset(self.base_queryset)
         ).filter(
             **extra_filters
-        ).values('pk', 'model_name', 'score', 'datastore_id')
+        ).distinct().values('pk', 'model_name', 'score', 'datastore_id')
 
 
 class TrigramSimilarityMixin(object):
