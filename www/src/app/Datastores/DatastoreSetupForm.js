@@ -91,7 +91,7 @@ class DatastoreSetupForm extends Component {
           setTimeout(() => that.handleTestConnection(variables, response), 1000)
         })
         .catch((err) => {
-          that.setState({ connectionIsTesting: false })
+          setTimeout(() => that.handleTestConnectionFailure(err.graphQLErrors), 1000)
         })
     }
   }
@@ -111,6 +111,14 @@ class DatastoreSetupForm extends Component {
       connectionProperties,
       connectionIsTesting: false,
     })
+  }
+
+  handleTestConnectionFailure = (errors) => {
+    if (errors && errors.length > 0) {
+      message.error(errors[0].message)
+    }
+
+    this.setState({ connectionIsTesting: false })
   }
 
   renderButton = (currentStep) => {
@@ -224,7 +232,7 @@ class DatastoreSetupForm extends Component {
                   )(
                     <Radio.Group size="large" className="radio-icon">
                       {map(datastoreEngines || [], ({ label, dialect }) => (
-                        <Radio.Button value={dialect}>
+                        <Radio.Button value={dialect} key={dialect}>
                           <Avatar
                             shape="square"
                             src={`/assets/static/img/datastores/dialects/${dialect}.png`}

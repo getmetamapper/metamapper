@@ -105,6 +105,8 @@ class MySQLInspector(interface.EngineInterface):
 
     indexes_sql = MYSQL_INDEXES_QUERY
 
+    connect_timeout_attr = 'connect_timeout'
+
     @classmethod
     def has_indexes(self):
         return True
