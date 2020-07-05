@@ -46,7 +46,18 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 })
 
-const retryLink = new RetryLink();
+const doNotRetry = ['testJdbcConnection']
+
+const retryLink = new RetryLink({
+  attempts: (count, operation, error) => {
+    return !!error && doNotRetry.indexOf(operation.operationName) > -1;
+  },
+  delay: {
+    initial: 300,
+    max: Infinity,
+    jitter: true
+  },
+});
 
 const link = ApolloLink.from([
   retryLink,

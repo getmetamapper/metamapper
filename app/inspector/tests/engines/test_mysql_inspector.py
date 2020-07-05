@@ -91,3 +91,15 @@ class MySQLInspectorTests(unittest.TestCase):
         """It should implement MySQL.version
         """
         self.assertEqual(self.engine.version, '10.1.2')
+
+    def test_connect_kwargs(self):
+        """It should have the connect timeout parameter.
+        """
+        assert self.engine.connect_kwargs == {
+            'host': 'localhost',
+            'user': 'admin',
+            'password': '1234567890',
+            'port': 3306,
+            'database': 'acme',
+            'connect_timeout': 5,
+        }

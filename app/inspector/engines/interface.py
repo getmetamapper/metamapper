@@ -14,6 +14,10 @@ class EngineInterface(object):
 
     indexes_sql = None
 
+    connect_timeout_attr = None
+
+    connect_timeout_value = 5
+
     def __init__(self, host, username, password, port, database):
         self.host = host
         self.username = username
@@ -32,13 +36,16 @@ class EngineInterface(object):
 
     @property
     def connect_kwargs(self):
-        return {
+        _kwargs = {
             'host': self.host,
             'user': self.username,
             'password': self.password,
             'port': self.port,
             'database': self.database,
         }
+        if self.connect_timeout_attr is not None:
+            _kwargs[self.connect_timeout_attr] = self.connect_timeout_value
+        return _kwargs
 
     @property
     def version(self):

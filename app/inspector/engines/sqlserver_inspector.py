@@ -105,6 +105,8 @@ class SQLServerInspector(interface.EngineInterface):
 
     indexes_sql = SQLSERVER_INDEXES_QUERY
 
+    connect_timeout_attr = 'login_timeout'
+
     @classmethod
     def has_indexes(self):
         return True

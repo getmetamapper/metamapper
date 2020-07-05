@@ -60,6 +60,7 @@ class SnowflakeInspectorTests(unittest.TestCase):
             'user': 'admin',
             'password': '1234567890',
             'database': 'acme',
+            'login_timeout': 5,
         }
 
     def test_sys_schemas(self):

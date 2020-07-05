@@ -63,6 +63,8 @@ class RedshiftInspector(interface.EngineInterface):
 
     definitions_sql = REDSHIFT_DEFINITIONS_SQL
 
+    connect_timeout_attr = 'connect_timeout'
+
     @classmethod
     def has_indexes(self):
         return False

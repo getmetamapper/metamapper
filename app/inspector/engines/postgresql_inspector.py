@@ -98,6 +98,8 @@ class PostgresInspector(interface.EngineInterface):
 
     indexes_sql = POSTGRESQL_INDEXES_QUERY
 
+    connect_timeout_attr = 'connect_timeout'
+
     @classmethod
     def has_indexes(self):
         return True

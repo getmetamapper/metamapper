@@ -88,7 +88,7 @@ describe("datastores.spec.js", () => {
       )
     })
 
-    it("fails when cannot connect", () => {
+    it("fails when Postgres cannot connect", () => {
       cy.login(member.email, member.password, workspace.id)
         .then(() =>
           cy.visit(inventoryUri))
@@ -118,6 +118,73 @@ describe("datastores.spec.js", () => {
       )
 
       // Test Connection button should still be visible.
+      cy.getByTestId("DatastoreSetupForm.TestConnection")
+        .should("be.visible")
+        .should("contain", "Test Connection")
+    })
+
+    it("fails when MySQL cannot connect", () => {
+      cy.login(member.email, member.password, workspace.id)
+        .then(() =>
+          cy.visit(inventoryUri))
+
+      cy.contains("Connect a Datastore").click()
+      cy.contains("MySQL").click()
+
+      cy.getByTestId("DatastoreSetupForm.ValidateEngine").click()
+
+      cy.fillInputs({
+        "ConnectionSettingsFieldset.Host": "mysqldb",
+        "ConnectionSettingsFieldset.Port": "3306",
+        "ConnectionSettingsFieldset.Username": "employees",
+        "ConnectionSettingsFieldset.Password": "notreal",
+        "ConnectionSettingsFieldset.Database": "employees",
+      })
+
+      cy.getByTestId("DatastoreSetupForm.TestConnection")
+        .should("be.visible")
+        .should("contain", "Test Connection")
+        .click()
+
+      cy.contains(
+        ".ant-message-error", "2003: Can't connect to MySQL server on 'mysqldb:3306' (-2 Name or service not known)"
+      ).should(
+        "be.visible"
+      )
+
+      cy.getByTestId("DatastoreSetupForm.TestConnection")
+        .should("be.visible")
+        .should("contain", "Test Connection")
+    })
+
+    it("fails when Snowflake cannot connect", () => {
+      cy.login(member.email, member.password, workspace.id)
+        .then(() =>
+          cy.visit(inventoryUri))
+
+      cy.contains("Connect a Datastore").click()
+      cy.contains("Snowflake").click()
+
+      cy.getByTestId("DatastoreSetupForm.ValidateEngine").click()
+
+      cy.fillInputs({
+        "ConnectionSettingsFieldset.Host": "mm-testing",
+        "ConnectionSettingsFieldset.Username": "cypress",
+        "ConnectionSettingsFieldset.Password": "automated-cypress-test",
+        "ConnectionSettingsFieldset.Database": "test_db",
+      })
+
+      cy.getByTestId("DatastoreSetupForm.TestConnection")
+        .should("be.visible")
+        .should("contain", "Test Connection")
+        .click()
+
+      cy.contains(
+        ".ant-message-error", "250001 (08001): Failed to connect to DB. Verify the account name is correct: mm-testing.snowflakecomputing.com:443. HTTP 403: Forbidden"
+      ).should(
+        "be.visible"
+      )
+
       cy.getByTestId("DatastoreSetupForm.TestConnection")
         .should("be.visible")
         .should("contain", "Test Connection")

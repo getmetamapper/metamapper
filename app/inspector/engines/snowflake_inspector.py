@@ -56,6 +56,8 @@ class SnowflakeInspector(interface.EngineInterface):
 
     definitions_sql = SNOWFLAKE_DEFINITIONS_QUERY
 
+    connect_timeout_attr = 'login_timeout'
+
     @classmethod
     def has_indexes(self):
         return False
@@ -64,9 +66,10 @@ class SnowflakeInspector(interface.EngineInterface):
     def connect_kwargs(self):
         return {
             'account': self.host,
-            'user': self.username,
-            'password': self.password,
             'database': self.database,
+            'password': self.password,
+            'user': self.username,
+            'login_timeout': self.connect_timeout_value,
         }
 
     @property
