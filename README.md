@@ -29,7 +29,9 @@ Here are a few features of Metamapper:
 
 ## Getting started
 
-Recommended deployment method is through [Docker](https://www.docker.com/). Setup instructions can be found in [this Github repo](https://github.com/metamapper-io/metamapper-setup).
+Recommended deployment method is through [Docker](https://www.docker.com/). Setup instructions can be found in [this Github repo](https://github.com/getmetamapper/metamapper-setup).
+
+Reading the [documentation](http://www.metamapper.io/) is also a good starting point.
 
 ## Supported datastores
 
