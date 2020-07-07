@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
+from functools import wraps
+
 from graphql_jwt.decorators import user_passes_test
 
 from app.authentication.models import Membership
-
 from utils.errors import PermissionDenied
-
-from functools import wraps
 
 
 login_required = user_passes_test(lambda u: u.is_authenticated, PermissionDenied)

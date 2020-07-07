@@ -2,13 +2,15 @@
 import datetime as dt
 import uuid
 
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permission
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.utils import timezone
 
-from app.authorization.models import Membership
+from guardian.core import ObjectPermissionChecker
+
+from app.authorization.models import Group, Membership
 from app.sso.mixins import SSOTenantModel
 
 from app.sso.providers.oauth2.google.client import GoogleClient
@@ -75,6 +77,10 @@ class User(AbstractBaseUser, TimestampedModel):
     github_oauth2_token = EncryptedCharField(max_length=50, null=True, blank=False, default=None)
     github_oauth2_token_issued_at = models.DateTimeField(null=True, default=None)
 
+    groups = models.ManyToManyField(Group)
+
+    user_permissions = models.ManyToManyField(Permission)
+
     USERNAME_FIELD = 'email'
 
     REQUIRED_FIELDS = ['fname', 'lname', 'password']
@@ -91,6 +97,16 @@ class User(AbstractBaseUser, TimestampedModel):
     @property
     def name(self):
         return '{0} {1}'.format(self.fname, self.lname)
+
+    @property
+    def is_superuser(self):
+        return False
+
+    def has_perm(self, perm, obj):
+        """Check if the user has a permission scoped to an object.
+        """
+        checker = ObjectPermissionChecker(self)
+        return checker.has_perm(perm, obj)
 
     def _google_client(self):
         if not self.google_oauth2_token:

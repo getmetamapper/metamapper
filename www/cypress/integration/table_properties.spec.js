@@ -1,4 +1,3 @@
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("table_properties.spec.js", () => {
   const workspace = {
@@ -36,7 +35,7 @@ describe("table_properties.spec.js", () => {
     name: "definitions_table",
   }
 
-  const databaseUri = `/${DEFAULT_WORKSPACE_SLUG}/datastores/${datastore.slug}`
+  const databaseUri = `/${workspace.slug}/datastores/${datastore.slug}`
   const overviewUri = `${databaseUri}/definition/${table.schema}/${table.name}/overview`
 
   const hasPermission = [

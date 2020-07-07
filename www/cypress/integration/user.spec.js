@@ -263,7 +263,7 @@ describe("user.spec.js", () => {
       // It should keep the user logged in.
       cy.reload()
 
-      cy.contains("The search engine for your data.").should("be.visible")
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
 
       // It should allow the user to log in with the new password.
       cy.logout()

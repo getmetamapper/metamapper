@@ -6,7 +6,7 @@ $color-primary-light: #fff2f0;
 $color-links: #f7777b;
 $color-links-hover: #11A4CD;
 $color-border: #e8e8e8;
-
+$color-light-grey: #e8e8e8;
 
 @import './pages/_overrides.scss';
 @import './pages/_navigation.scss';
@@ -44,7 +44,7 @@ $color-border: #e8e8e8;
   background-color: #FFFFFF;
   padding: 12px;
   .comment {
-    border-left: 1px solid #e8e8e8;
+    border-left: 1px solid $color-light-grey;
     margin-top: 12px;
     padding-bottom: 0;
   }

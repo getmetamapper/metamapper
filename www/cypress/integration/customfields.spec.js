@@ -1,5 +1,4 @@
 
-
 describe("customfields.spec.js", () => {
 
   // Fixtures...
@@ -288,7 +287,7 @@ describe("customfields.spec.js", () => {
               "be.visible"
             )
 
-            cy.getByTestId("CustomFieldsTable").should("exist").and("contain", "Cost Center")
+            cy.getByTestId("CustomFieldsTable").should("exist").and("not.contain", "Cost Center")
           })
         })
       })

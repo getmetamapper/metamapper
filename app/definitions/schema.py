@@ -3,7 +3,9 @@ import graphene
 import graphene.relay as relay
 
 import app.definitions.models as models
+
 import utils.connections as connections
+import utils.shortcuts as shortcuts
 
 from django.forms.models import model_to_dict
 
@@ -200,6 +202,7 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'short_desc',
             'tags',
             'jdbc_connection',
+            'object_permissions_enabled',
             'disabled_datastore_properties',
             'disabled_table_properties',
             'created_at',
@@ -246,3 +249,51 @@ class DatastoreType(AuthNode, DjangoObjectType):
         """Check if the datastore has a completed run.
         """
         return not instance.has_completed_run and not instance.schemas.count()
+
+
+class DatastoreUserGranteeType(graphene.ObjectType):
+    """Represents a group that has limited access to a Datastore.
+    """
+    id = graphene.ID()
+
+    name = graphene.String()
+    type = graphene.String()
+
+    privileges = graphene.List(graphene.String)
+
+    def resolve_id(instance, info):
+        """Resolve the GraphQL relay ID
+        """
+        return shortcuts.to_global_id('UserType', instance['pk'])
+
+    def resolve_type(instance, info):
+        """The class type of the object.
+        """
+        return "user"
+
+    def resolve_privileges(instance, info):
+        return sorted(instance['privileges'])
+
+
+class DatastoreGroupGranteeType(graphene.ObjectType):
+    """Represents a group that has limited access to a Datastore.
+    """
+    id = graphene.ID()
+
+    name = graphene.String()
+    type = graphene.String()
+
+    privileges = graphene.List(graphene.String)
+
+    def resolve_id(instance, info):
+        """Resolve the GraphQL relay ID
+        """
+        return shortcuts.to_global_id('GroupType', instance['pk'])
+
+    def resolve_type(instance, info):
+        """The class type of the object.
+        """
+        return "group"
+
+    def resolve_privileges(instance, info):
+        return sorted(instance['privileges'])

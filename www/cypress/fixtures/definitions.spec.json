@@ -88,9 +88,7 @@
       "name": "NBC",
       "creator": [
         "other.owner.definitions@metamapper.test"
-      ],
-      "ssh_private_key": "",
-      "ssh_public_key": ""
+      ]
     }
   },
   {
@@ -104,10 +102,28 @@
       "name": "Greendale Community College",
       "creator": [
         "owner.definitions@metamapper.test"
-      ],
-      "ssh_private_key": "",
-      "ssh_public_key": ""
+      ]
     }
+  },
+  {
+    "fields": {
+      "workspace_id": "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+      "name": "Analytics",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "auth.group",
+    "pk": 3984523
+  },
+  {
+    "fields": {
+      "workspace_id": "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+      "name": "Everyone",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "auth.group",
+    "pk": 37464642
   },
   {
     "model": "authorization.membership",
@@ -268,7 +284,8 @@
       "ssh_user": null,
       "short_desc": "",
       "disabled_datastore_properties": [],
-      "disabled_table_properties": []
+      "disabled_table_properties": [],
+      "object_permissions_enabled": false
     }
   },
   {

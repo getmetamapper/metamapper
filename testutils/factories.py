@@ -8,13 +8,14 @@ from django.utils.text import slugify
 from django.contrib.auth.hashers import make_password
 from django.contrib.contenttypes.models import ContentType
 
-import app.authentication.models as authmodels
-import app.comments.models as commentfields
-import app.sso.models as ssomodels
-import app.customfields.models as customfields
-import app.definitions.models as definemodels
-import app.revisioner.models as revisionmodels
-import app.votes.models as votefields
+import app.authentication.models as authentication_models
+import app.authorization.models as authorization_models
+import app.comments.models as comment_models
+import app.sso.models as sso_models
+import app.customfields.models as customfields_models
+import app.definitions.models as definition_models
+import app.revisioner.models as revisioner_models
+import app.votes.models as vote_models
 
 
 def x509cert(instance=None):
@@ -112,8 +113,8 @@ def randomContentType(instance):
     """Get a random content type object.
     """
     return ContentType.objects.get_for_model(random.choice([
-        definemodels.Datastore,
-        definemodels.Table,
+        definition_models.Datastore,
+        definition_models.Table,
     ]))
 
 
@@ -124,7 +125,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = make_password('password1234')
 
     class Meta:
-        model = authmodels.User
+        model = authentication_models.User
 
 
 class WorkspaceFactory(factory.django.DjangoModelFactory):
@@ -133,7 +134,17 @@ class WorkspaceFactory(factory.django.DjangoModelFactory):
     creator = factory.LazyAttribute(lambda i: UserFactory())
 
     class Meta:
-        model = authmodels.Workspace
+        model = authentication_models.Workspace
+
+
+class GroupFactory(factory.django.DjangoModelFactory):
+    workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
+
+    name = factory.Faker('company')
+    description = factory.Faker('text', max_nb_chars=25)
+
+    class Meta:
+        model = authorization_models.Group
 
 
 class DatastoreFactory(factory.django.DjangoModelFactory):
@@ -144,15 +155,17 @@ class DatastoreFactory(factory.django.DjangoModelFactory):
 
     version = '9.6.11'
 
-    engine = factory.LazyAttribute(lambda i: random.choice(definemodels.Datastore.ENGINE_CHOICES)[0])
+    engine = factory.LazyAttribute(lambda i: random.choice(definition_models.Datastore.ENGINE_CHOICES)[0])
     host = factory.Faker('hostname')
     username = factory.Faker('user_name')
     password = factory.Faker('sha1')
     port = factory.LazyAttribute(lambda i: random.randint(1, 65535))
     database = factory.Faker('domain_word')
 
+    object_permissions_enabled = False
+
     class Meta:
-        model = definemodels.Datastore
+        model = definition_models.Datastore
 
 
 class SchemaFactory(factory.django.DjangoModelFactory):
@@ -163,7 +176,7 @@ class SchemaFactory(factory.django.DjangoModelFactory):
     tags = factory.LazyAttribute(allTags)
 
     class Meta:
-        model = definemodels.Schema
+        model = definition_models.Schema
 
 
 class TableFactory(factory.django.DjangoModelFactory):
@@ -176,7 +189,7 @@ class TableFactory(factory.django.DjangoModelFactory):
     tags = factory.LazyAttribute(allTags)
 
     class Meta:
-        model = definemodels.Table
+        model = definition_models.Table
 
 
 class ColumnFactory(factory.django.DjangoModelFactory):
@@ -194,7 +207,7 @@ class ColumnFactory(factory.django.DjangoModelFactory):
     comment = factory.Faker('sentence')
 
     class Meta:
-        model = definemodels.Column
+        model = definition_models.Column
 
 
 class IndexFactory(factory.django.DjangoModelFactory):
@@ -207,7 +220,7 @@ class IndexFactory(factory.django.DjangoModelFactory):
     is_unique = False
 
     class Meta:
-        model = definemodels.Index
+        model = definition_models.Index
 
 
 class RevisionerRunFactory(factory.django.DjangoModelFactory):
@@ -224,7 +237,7 @@ class RevisionerRunFactory(factory.django.DjangoModelFactory):
     )
 
     class Meta:
-        model = revisionmodels.Run
+        model = revisioner_models.Run
 
 
 class CustomFieldFactory(factory.django.DjangoModelFactory):
@@ -232,11 +245,11 @@ class CustomFieldFactory(factory.django.DjangoModelFactory):
     content_type = factory.LazyAttribute(randomContentType)
 
     field_name = factory.LazyAttribute(domainWord)
-    field_type = factory.LazyAttribute(lambda i: random.choice(customfields.CustomField.FIELD_TYPE_CHOICES)[0])
+    field_type = factory.LazyAttribute(lambda i: random.choice(customfields_models.CustomField.FIELD_TYPE_CHOICES)[0])
     short_desc = factory.Faker('sentence', nb_words=3)
 
     class Meta:
-        model = customfields.CustomField
+        model = customfields_models.CustomField
 
 
 class CommentFactory(factory.django.DjangoModelFactory):
@@ -248,21 +261,21 @@ class CommentFactory(factory.django.DjangoModelFactory):
     author = factory.LazyAttribute(lambda i: UserFactory())
 
     class Meta:
-        model = commentfields.Comment
+        model = comment_models.Comment
 
 
 class VoteFactory(factory.django.DjangoModelFactory):
     content_object = factory.LazyAttribute(lambda i: CommentFactory())
     workspace_id = factory.LazyAttribute(lambda i: i.content_object.workspace_id)
-    action = votefields.Vote.UP
+    action = vote_models.Vote.UP
     user = factory.LazyAttribute(lambda i: UserFactory())
 
     class Meta:
-        model = votefields.Vote
+        model = vote_models.Vote
 
 
 class SSOConnectionFactory(factory.django.DjangoModelFactory):
-    provider = ssomodels.SSOConnection.GENERIC
+    provider = sso_models.SSOConnection.GENERIC
     workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
     entity_id = 'urn:auth0:metamapper'
     sso_url = factory.Faker('uri')
@@ -277,7 +290,7 @@ class SSOConnectionFactory(factory.django.DjangoModelFactory):
     }
 
     class Meta:
-        model = ssomodels.SSOConnection
+        model = sso_models.SSOConnection
 
 
 class SSODomainFactory(factory.django.DjangoModelFactory):
@@ -285,4 +298,4 @@ class SSODomainFactory(factory.django.DjangoModelFactory):
     domain = factory.LazyAttribute(domain)
 
     class Meta:
-        model = ssomodels.SSODomain
+        model = sso_models.SSODomain

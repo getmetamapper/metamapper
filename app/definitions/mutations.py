@@ -3,6 +3,7 @@ import graphene
 import graphene.relay as relay
 
 import app.authorization.permissions as permissions
+import app.definitions.permissions as definition_permissions
 
 import app.definitions.schema as schema
 import app.definitions.serializers as serializers
@@ -38,7 +39,10 @@ class CreateDatastore(mixins.CreateMutationMixin, relay.ClientIDMutation):
 
     @classmethod
     def perform_save(cls, serializer, info):
-        return serializer.save(workspace=info.context.workspace)
+        return serializer.save(
+            creator=info.context.user,
+            workspace=info.context.workspace,
+        )
 
 
 class TestJdbcConnection(mixins.CreateMutationMixin, relay.ClientIDMutation):
@@ -82,7 +86,10 @@ class UpdateDatastoreMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation
     """
     nullable_fields = ['short_desc']
 
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreSettings,
+    )
 
     class Input:
         id = graphene.ID(required=True)
@@ -102,7 +109,10 @@ class UpdateDatastoreMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation
 class DisableDatastoreCustomFields(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update the disabled custom fields on a datastore.
     """
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreSettings,
+    )
 
     class Input:
         id = graphene.ID(required=True)
@@ -121,7 +131,10 @@ class UpdateDatastoreJdbcConnection(mixins.UpdateMutationMixin, relay.ClientIDMu
     """
     nullable_fields = ['ssh_host', 'ssh_user', 'ssh_port']
 
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreConnection,
+    )
 
     class Input:
         id = graphene.ID(required=True)
@@ -143,10 +156,104 @@ class UpdateDatastoreJdbcConnection(mixins.UpdateMutationMixin, relay.ClientIDMu
     datastore = graphene.Field(schema.DatastoreType)
 
 
+class ToggleDatastoreObjectPermissions(mixins.UpdateMutationMixin, relay.ClientIDMutation):
+    """Update an existing datastore.
+    """
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreAccess,
+    )
+
+    class Input:
+        id = graphene.ID(required=True)
+
+    class Meta:
+        serializer_class = serializers.ToggleDatastoreObjectPermissionsSerializer
+
+    is_enabled = graphene.Boolean()
+
+    @classmethod
+    def prepare_response(cls, instance, errors, **data):
+        return_kwargs = {
+            'is_enabled': instance.object_permissions_enabled,
+            'errors': errors,
+        }
+        return cls(**return_kwargs)
+
+    @classmethod
+    def get_serializer_kwargs(cls, root, info, **data):
+        """Retrieve appropriate objects for the transaction.
+        """
+        instance = cls.get_instance(info, data)
+
+        if not instance:
+            raise PermissionDenied()
+
+        return {
+            "instance": instance,
+            "data": {
+                "object_permissions_enabled": not instance.object_permissions_enabled,
+            },
+            "context": {
+                "request": info.context,
+            },
+        }
+
+
+class UpdateDatastoreAccessPrivileges(mixins.UpdateMutationMixin, relay.ClientIDMutation):
+    """Update the permissions for a datastore and users/groups.
+    """
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreAccess,
+    )
+
+    class Input:
+        id = graphene.ID(required=True)
+        object_id = graphene.ID(required=True)
+        privileges = graphene.List(graphene.String, required=True)
+
+    class Meta:
+        serializer_class = serializers.DatastoreAccessPrivilegesSerializer
+
+    ok = graphene.Boolean()
+
+    @classmethod
+    def prepare_response(cls, instance, errors, **data):
+        return_kwargs = {
+            'ok': (errors is None),
+            'errors': errors,
+        }
+        return cls(**return_kwargs)
+
+    @classmethod
+    def get_serializer_kwargs(cls, root, info, **data):
+        """Retrieve appropriate objects for the transaction.
+        """
+        instance = cls.get_instance(info, data)
+
+        if not instance or not instance.object_permissions_enabled:
+            raise PermissionDenied()
+
+        return {
+            "instance": instance,
+            "data": {
+                "content_object": cls.get_content_object(info, data["object_id"]),
+                "privileges": data["privileges"],
+            },
+            "context": {
+                "request": info.context,
+            },
+        }
+
+
 class DeleteDatastore(mixins.DeleteMutationMixin, relay.ClientIDMutation):
     """Permanently remove an existing datastore.
     """
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanDeleteDatastore,
+    )
 
     class Meta:
         serializer_class = serializers.DatastoreSerializer
@@ -157,7 +264,10 @@ class UpdateTableMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """
     nullable_fields = ['short_desc']
 
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreMetadata,
+    )
 
     class Input:
         id = graphene.ID(required=True)
@@ -175,7 +285,10 @@ class UpdateColumnMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """
     nullable_fields = ['short_desc']
 
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreMetadata,
+    )
 
     class Input:
         id = graphene.ID(required=True)
@@ -195,6 +308,9 @@ class Mutation(graphene.ObjectType):
 
     update_datastore_metadata = UpdateDatastoreMetadata.Field()
     update_datastore_jdbc_connection = UpdateDatastoreJdbcConnection.Field()
+    update_datastore_access_privileges = UpdateDatastoreAccessPrivileges.Field()
+
+    toggle_datastore_object_permissions = ToggleDatastoreObjectPermissions.Field()
 
     disable_datastore_custom_fields = DisableDatastoreCustomFields.Field()
 

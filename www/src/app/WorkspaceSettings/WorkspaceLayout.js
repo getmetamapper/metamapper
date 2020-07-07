@@ -32,6 +32,11 @@ class WorkspaceLayout extends Component {
         to: `/${slug}/settings/authentication`,
       },
       {
+        icon: "block",
+        label: "Groups",
+        to: `/${slug}/settings/groups`,
+      },
+      {
         icon: "tool",
         label: "Custom Fields",
         to: `/${slug}/settings/customfields`,

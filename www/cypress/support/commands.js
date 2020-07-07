@@ -5,7 +5,8 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-import { queryAsString } from "../../src/graphql/mutations/AuthenticateUser"
+import { queryAsString as authQuery } from "../../src/graphql/mutations/AuthenticateUser"
+import { queryAsString as privilegeQuery } from "../../src/graphql/mutations/UpdateDatastoreAccessPrivileges"
 import { AUTH_TOKEN, WORKSPACE_TOKEN, DEFAULT_WORKSPACE_ID } from "../../src/lib/constants"
 
 Cypress.Commands.add("login", (email, password = "password1234", workspaceId = null) => {
@@ -13,8 +14,8 @@ Cypress.Commands.add("login", (email, password = "password1234", workspaceId = n
     url: "/graphql",
     method: "POST",
     body: {
-      query: queryAsString,
-      variables: { email, password }
+      query: authQuery,
+      variables: { email, password },
     }
   }).then((resp) => {
     if (workspaceId) {

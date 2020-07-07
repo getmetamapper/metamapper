@@ -6,6 +6,7 @@ import app.authorization.serializers as serializers
 
 import testutils.cases as cases
 import testutils.factories as factories
+import testutils.helpers as helpers
 
 
 class GrantMembershipSerializerTest(cases.SerializerTestCase):
@@ -146,3 +147,230 @@ class RevokeMembershipSerializerTest(cases.SerializerTestCase):
             partial=True,
             context={'request': self.request},
         ),
+
+
+class GroupSerializerCreateTest(cases.SerializerTestCase):
+    """Test cases for the creating Group instances via GroupSerializer class.
+    """
+    factory = factories.GroupFactory
+
+    serializer_class = serializers.GroupSerializer
+
+    serializer_resource_name = 'Group'
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.workspace = factories.WorkspaceFactory()
+
+    def _get_attributes(self, **overrides):
+        """Generate testing data.
+        """
+        attributes = {
+            'name': helpers.faker.text(max_nb_chars=20),
+            'description': helpers.faker.text(max_nb_chars=50),
+        }
+        attributes.update(**overrides)
+        return attributes
+
+    def test_when_valid(self):
+        """It should be able to create the resource.
+        """
+        attributes = self._get_attributes()
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save(workspace=self.workspace))
+
+    def test_drf_validation_rules(self):
+        """It should return error messages when DRF validation fails.
+        """
+        test_case_dict = {
+            'name': [
+                {'code': 'nulled', 'value': None},
+                {'code': 'blank', 'value': ''},
+                {'code': 'max_length', 'value': helpers.faker.pystr(26, 35)},
+            ],
+            'description': [
+                {'code': 'max_length', 'value': helpers.faker.pystr(65, 80)},
+            ],
+        }
+
+        self.assertDjangoRestFrameworkRules(test_case_dict)
+
+
+class GroupSerializerUpdateTest(cases.SerializerTestCase):
+    """Test cases for the updating Group instances via GroupSerializer class.
+    """
+    factory = factories.GroupFactory
+
+    serializer_class = serializers.GroupSerializer
+
+    serializer_resource_name = 'Group'
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.instance = cls.factory(name='Everyone')
+
+    def _get_attributes(self, **overrides):
+        """Generate testing data.
+        """
+        attributes = {
+            'name': helpers.faker.text(max_nb_chars=20),
+            'description': helpers.faker.text(max_nb_chars=50),
+        }
+        attributes.update(**overrides)
+        return attributes
+
+    def test_valid_update(self):
+        """It should update the provided attributes.
+        """
+        attributes = {
+            'name': 'Nobody',
+            'description': '',
+        }
+
+        serializer = self.serializer_class(
+            instance=self.instance,
+            data=attributes,
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+        self.assertInstanceUpdated(self.instance, **attributes)
+
+    def test_drf_validation_rules(self):
+        """It should return error messages when DRF validation fails.
+        """
+        test_case_dict = {
+            'name': [
+                {'code': 'nulled', 'value': None},
+                {'code': 'blank', 'value': ''},
+                {'code': 'max_length', 'value': helpers.faker.pystr(26, 35)},
+            ],
+            'description': [
+                {'code': 'max_length', 'value': helpers.faker.pystr(65, 80)},
+            ],
+        }
+
+        self.assertDjangoRestFrameworkRules(test_case_dict)
+
+
+class AddUserToGroupSerializerTest(cases.SerializerTestCase):
+    """Test cases for adding a User to a Group via the AddUserToGroupSerializer class.
+    """
+    factory = factories.GroupFactory
+
+    serializer_class = serializers.AddUserToGroupSerializer
+
+    serializer_resource_name = 'Group'
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.workspace = factories.WorkspaceFactory()
+        cls.instance = cls.factory(name='Everyone', workspace=cls.workspace)
+
+    def test_valid_update(self):
+        """It should create the group membership.
+        """
+        user = factories.UserFactory()
+        self.workspace.grant_membership(user, models.Membership.MEMBER)
+
+        serializer = self.serializer_class(
+            instance=self.instance,
+            data={'user': user.pk},
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+        self.assertTrue(user.groups.filter(name=self.instance.name).exists())
+
+    def test_when_not_team_member(self):
+        """It should return an error.
+        """
+        user = factories.UserFactory()
+
+        serializer = self.serializer_class(
+            instance=self.instance,
+            data={'user': user.pk},
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(serializer.errors, [
+            {
+                'code': 'no_membership',
+                'field': 'user',
+                'resource': 'User',
+            }
+        ])
+
+    def test_when_not_existing_user(self):
+        """It should return an error.
+        """
+        serializer = self.serializer_class(
+            instance=self.instance,
+            data={'user': 123456789},
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(serializer.errors, [
+            {
+                'code': 'does_not_exist',
+                'field': 'user',
+                'resource': 'User',
+            }
+        ])
+
+
+class RemoveUserFromGroupSerializerTest(cases.SerializerTestCase):
+    """Test cases for removing a User from a Group via the RemoveUserFromGroupSerializer class.
+    """
+    factory = factories.GroupFactory
+
+    serializer_class = serializers.RemoveUserFromGroupSerializer
+
+    serializer_resource_name = 'Group'
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.workspace = factories.WorkspaceFactory()
+        cls.instance = cls.factory(name='Everyone', workspace=cls.workspace)
+
+    def test_valid_update(self):
+        """It should create the group membership.
+        """
+        user = factories.UserFactory()
+
+        self.workspace.grant_membership(user, models.Membership.MEMBER)
+        self.instance.user_set.add(user)
+
+        serializer = self.serializer_class(
+            instance=self.instance,
+            data={'user': user.pk},
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+        self.assertFalse(user.groups.filter(name=self.instance.name).exists())
+
+    def test_when_not_existing_user(self):
+        """It should return an error.
+        """
+        serializer = self.serializer_class(
+            instance=self.instance,
+            data={'user': 123456789},
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(serializer.errors, [
+            {
+                'code': 'does_not_exist',
+                'field': 'user',
+                'resource': 'User',
+            }
+        ])

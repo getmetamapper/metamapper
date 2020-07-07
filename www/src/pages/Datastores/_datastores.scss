@@ -511,3 +511,55 @@
     margin-top: 12px;
   }
 }
+
+.datastore-access {
+  .toggling {
+    text-align: center;
+    margin: 40px 0;
+  }
+  .datastore-access-privileges-table {
+    .ant-table {
+      border: 1px solid $color-light-grey;
+      margin-top: 24px;
+    }
+    .ant-pagination {
+      margin-bottom: 0
+    }
+  }
+}
+.grant-datastore-access-form {
+  .ant-checkbox-wrapper {
+    border: 1px solid #eee;
+    padding: 24px 12px;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+  .ant-checkbox-checked::after {
+    border: none;
+  }
+  .ant-checkbox {
+    vertical-align: top;
+    margin-right: 8px;
+    margin-top: 4px;
+    width: 24px;
+  }
+  .checkbox-content {
+    display: inline-block;
+    width: calc(100% - 64px);
+  }
+  .ant-select-selection--single {
+    height: 42px;
+  }
+  .datastore-permission-lvl {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .datastore-permission-desc {
+    margin-bottom: 0
+  }
+}
+.reset-privileges {
+  color: $color-links;
+  margin-left: 6px;
+}

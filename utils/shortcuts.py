@@ -7,7 +7,7 @@ from django.http import Http404
 from django.utils.text import slugify
 
 from django.contrib.auth import get_user_model
-from graphql_relay import to_global_id, from_global_id  # noqa: F401
+from graphql_relay import to_global_id, from_global_id as _from_global_id  # noqa: F401
 
 
 def get_object_or_404(klass, message=None, *args, **kwargs):
@@ -100,3 +100,12 @@ def dict_list_eq(l1, l2):
 def camel_case(st):
     output = ''.join(x for x in st.title() if x.isalnum())
     return output[0].lower() + output[1:]
+
+
+def from_global_id(global_id, id_only=False):
+    type_, id_ = _from_global_id(global_id)
+
+    if id_only:
+        return id_
+
+    return type_, id_

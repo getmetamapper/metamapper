@@ -15,6 +15,7 @@
     "datastores.spec.js",
     "datastore_overview.spec.js",
     "datastore_properties.spec.js",
+    "datastore_access.spec.js",
     "table_overview.spec.js",
     "table_properties.spec.js",
     "table_indexes.spec.js",
@@ -22,6 +23,7 @@
     "authentication.spec.js",
     "customfields.spec.js",
     "sso.spec.js",
+    "groups.spec.js",
     "workspace.spec.js",
     "team.spec.js",
     "user.spec.js"

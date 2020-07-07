@@ -4,12 +4,16 @@ import rest_framework.serializers as serializers
 import app.authorization.models as models
 import app.authorization.emails as emails
 
+from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
 
+from app.authentication.models import User
 from utils.mixins.serializers import MetamapperSerializer
 
 
 class GrantMembershipSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """Adds or updates a User membership to a Workspace.
+    """
     email = serializers.EmailField(required=True)
     permissions = serializers.ChoiceField(
         choices=models.Membership.PERMISSION_GROUP_CHOICES,
@@ -45,6 +49,8 @@ class GrantMembershipSerializer(MetamapperSerializer, serializers.ModelSerialize
 
 
 class RevokeMembershipSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """Removes a User from a Workspace.
+    """
     email = serializers.EmailField(required=True)
 
     class Meta:
@@ -68,3 +74,84 @@ class RevokeMembershipSerializer(MetamapperSerializer, serializers.ModelSerializ
         """
         if self.instance.delete():
             emails.membership_revoked(self.instance.user_id, workspace)
+
+
+class GroupSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """Used to perform CRUD actions on the native Django Group model.
+    """
+    name = serializers.CharField(
+        required=True,
+        max_length=25,
+        trim_whitespace=True,
+        allow_null=False,
+        allow_blank=False,
+    )
+
+    description = serializers.CharField(
+        required=False,
+        max_length=60,
+        trim_whitespace=True,
+        allow_null=True,
+        allow_blank=True,
+    )
+
+    class Meta:
+        model = models.Group
+        fields = ('name', 'description',)
+
+    def create(self, validated_data):
+        """Create a brand new Datastore instance.
+        """
+        with transaction.atomic():
+            group = models.Group.objects.create(**validated_data)
+        return group
+
+    def update(self, instance, validated_data):
+        """Update the provided CustomField instance.
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.save()
+        return instance
+
+
+class AddUserToGroupSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """Used to add a team member to the group.
+    """
+    user = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects)
+
+    class Meta:
+        model = User
+        fields = ('user',)
+
+    def validate_user(self, user):
+        """The user must be part of the provided workspace.
+        """
+        if not user.is_on_team(self.instance.workspace_id):
+            raise serializers.ValidationError(
+                'The provided user is not part of this workspace.',
+                'no_membership',
+            )
+        return user
+
+    def save(self, *args, **kwargs):
+        """Grant the membership to the Group.
+        """
+        self.instance.user_set.add(self.validated_data['user'])
+        return self.validated_data['user']
+
+
+class RemoveUserFromGroupSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """Used to remove a team member from the group.
+    """
+    user = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects)
+
+    class Meta:
+        model = User
+        fields = ('user',)
+
+    def save(self, *args, **kwargs):
+        """Revoke the membership from the Group.
+        """
+        self.instance.user_set.remove(self.validated_data['user'])
+        return self.validated_data['user']

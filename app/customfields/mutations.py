@@ -3,6 +3,8 @@ import graphene
 import graphene.relay as relay
 
 import app.authorization.permissions as permissions
+import app.definitions.permissions as definition_permissions
+
 import app.customfields.models as models
 import app.customfields.scalars as scalars
 import app.customfields.schema as schema
@@ -102,7 +104,10 @@ class DeleteCustomField(mixins.DeleteMutationMixin, relay.ClientIDMutation):
 class UpdateCustomProperties(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update multiple custom fields for a model instance.
     """
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateCustomProperties,
+    )
 
     class Input:
         object_id = graphene.ID(required=True)

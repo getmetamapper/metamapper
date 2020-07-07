@@ -113,6 +113,9 @@ class CreateDatastoreTests(cases.GraphQLTestCase):
 
         self.assertInstanceCreated(models.Datastore, name=variables['name'])
 
+        datastore = models.Datastore.objects.get(name=variables['name'])
+        self.assertTrue(self.user.has_perm('view_datastore', datastore))
+
     @mock.patch('app.definitions.serializers.JdbcConnectionSerializer.validate_connection')
     @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @decorators.as_someone(['MEMBER', 'OWNER'])
@@ -146,6 +149,9 @@ class CreateDatastoreTests(cases.GraphQLTestCase):
         })
 
         self.assertInstanceCreated(models.Datastore, name=variables['name'])
+
+        datastore = models.Datastore.objects.get(name=variables['name'])
+        self.assertTrue(self.user.has_perm('view_datastore', datastore))
 
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
     def test_query_when_not_authorized(self):
@@ -201,8 +207,7 @@ class UpdateDatastoreMetadataTests(cases.GraphQLTestCase):
         self.resource = self.factory(**self.resource_kwargs)
         self.global_id = helpers.to_global_id('DatastoreType', self.resource.pk)
 
-    @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_valid(self):
+    def execute_success_test_case(self):
         """It should permanently delete the datastore.
         """
         variables = {
@@ -228,6 +233,67 @@ class UpdateDatastoreMetadataTests(cases.GraphQLTestCase):
             verb='updated',
             **serializers.get_audit_kwargs(self.resource),
         )
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should permanently delete the datastore.
+        """
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['OWNER'])
+    def test_valid_with_object_permission_as_owner(self):
+        """It should update the datastore.
+        """
+        self.resource.object_permissions_enabled = True
+        self.resource.save()
+
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission_as_member(self):
+        """It should update the column when the user has the proper permissions.
+        """
+        self.resource.object_permissions_enabled = True
+        self.resource.save()
+
+        self.resource.assign_perm(self.user, 'definitions.change_datastore_settings')
+
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['READONLY'])
+    def test_invalid_with_object_permission_as_readonly(self):
+        """It should return a "Permission Denied" error.
+        """
+        self.resource.object_permissions_enabled = True
+        self.resource.save()
+        self.resource.assign_perm(self.user, 'definitions.change_datastore_settings')
+
+        variables = {
+            'id': self.global_id,
+            'name': 'Data Warehouse',
+        }
+
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
+        self.assertInstanceNotUpdated(self.resource, name=variables['name'])
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a Permission Denied error.
+        """
+        self.resource.object_permissions_enabled = True
+        self.resource.save()
+
+        variables = {
+            'id': self.global_id,
+            'name': 'Data Warehouse',
+        }
+
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
+        self.assertInstanceNotUpdated(self.resource, name=variables['name'])
 
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
     def test_unauthorized(self):
@@ -276,11 +342,9 @@ class DisableDatastoreCustomFieldsTests(cases.GraphQLTestCase):
     }
     '''
 
-    @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_valid(self):
+    def execute_success_test_case(self, resource):
         """It should update the datastore.
         """
-        resource = resource = self.factory(workspace=self.workspace)
         globalid = helpers.to_global_id('DatastoreType', resource.pk)
 
         d_customfield = self.workspace.custom_fields.filter(
@@ -326,6 +390,23 @@ class DisableDatastoreCustomFieldsTests(cases.GraphQLTestCase):
         )
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should update the datastore.
+        """
+        resource = self.factory(workspace=self.workspace)
+
+        self.execute_success_test_case(resource)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission(self):
+        """It should update the datastore.
+        """
+        resource = self.factory(workspace=self.workspace, object_permissions_enabled=True)
+        resource.assign_perm(self.user, 'definitions.change_datastore_settings')
+
+        self.execute_success_test_case(resource)
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_with_fake_custom_field(self):
         """It should save without the fake field.
         """
@@ -360,6 +441,23 @@ class DisableDatastoreCustomFieldsTests(cases.GraphQLTestCase):
             resource,
             disable_table_properties=[t_customfield.pk],
         )
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a "Permission Denied" error.
+        """
+        resource = resource = self.factory(workspace=self.workspace, object_permissions_enabled=True)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        variables = {
+            'id': globalid,
+            'disabledDatastoreProperties': [],
+            'disabledTableProperties': [],
+        }
+
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
 
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
     def test_unauthorized(self):
@@ -452,9 +550,7 @@ class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
         self.resource = self.factory(**self.resource_kwargs)
         self.global_id = helpers.to_global_id('DatastoreType', self.resource.pk)
 
-    @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_valid(self, mock_verify_connection):
+    def execute_success_test_case(self):
         """It should permanently delete the datastore.
         """
         variables = {
@@ -497,6 +593,43 @@ class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
             verb='updated',
             **serializers.get_audit_kwargs(self.resource),
         )
+
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self, mock_verify_connection):
+        """It should permanently delete the datastore.
+        """
+        self.execute_success_test_case()
+
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission(self, mock_verify_connection):
+        """It should update the datastore connection.
+        """
+        self.resource.object_permissions_enabled = True
+        self.resource.save()
+
+        self.resource.assign_perm(self.user, 'definitions.change_datastore_connection')
+
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a Permission Denied error.
+        """
+        self.resource.object_permissions_enabled = True
+        self.resource.save()
+
+        variables = {
+            'id': self.global_id,
+            'port': 5432,
+            'username': 'Allison'
+        }
+
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
+        self.assertInstanceNotUpdated(self.resource, username=variables['username'])
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_invalid(self):
@@ -564,6 +697,248 @@ class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
         self.assertPermissionDenied(self.execute(variables=variables))
 
 
+class UpdateDatastoreAccessPrivilegesTests(cases.GraphQLTestCase):
+    """Tests for removing a datastore.
+    """
+    factory = factories.DatastoreFactory
+
+    operation = 'updateDatastoreAccessPrivileges'
+    statement = '''
+    mutation UpdateDatastoreAccessPrivileges($id: ID!, $objectId: ID!, $privileges: [String]!) {
+      updateDatastoreAccessPrivileges(input: {
+        id: $id,
+        objectId: $objectId,
+        privileges: $privileges,
+      }) {
+        ok
+        errors {
+          resource
+          field
+          code
+        }
+      }
+    }
+    '''
+
+    @decorators.as_someone(['OWNER'])
+    def test_valid_as_owner(self):
+        """It should update permissions on an object.
+        """
+        resource = self.factory(workspace=self.workspace, object_permissions_enabled=True)
+
+        did = helpers.to_global_id('DatastoreType', resource.pk)
+        oid = helpers.to_global_id('UserType', self.user.pk)
+
+        privileges = [
+            'view_datastore',
+            'change_datastore_metadata',
+            'change_datastore_settings',
+            'change_datastore_connection',
+            'delete_datastore',
+        ]
+
+        response = self.execute(variables={'id': did, 'objectId': oid, 'privileges': privileges})
+        response = response['data'][self.operation]
+
+        self.assertOk(response)
+        for privilege in privileges:
+            self.assertTrue(self.user.has_perm(privilege, resource))
+
+        self.assertInstanceCreated(
+            audit.Activity,
+            verb='updated access privileges to',
+            **serializers.get_audit_kwargs(resource),
+        )
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_user_object_permission(self):
+        """It should update permissions on an object.
+        """
+        resource = self.factory(workspace=self.workspace, object_permissions_enabled=True)
+        resource.assign_perm(self.user, 'change_datastore_access')
+
+        did = helpers.to_global_id('DatastoreType', resource.pk)
+        oid = helpers.to_global_id('UserType', self.users['OWNER'].pk)
+
+        privileges = [
+            'view_datastore',
+            'change_datastore_metadata',
+            'change_datastore_settings',
+            'change_datastore_connection',
+            'delete_datastore',
+        ]
+
+        response = self.execute(variables={'id': did, 'objectId': oid, 'privileges': privileges})
+        response = response['data'][self.operation]
+
+        self.assertOk(response)
+        for privilege in privileges:
+            self.assertTrue(self.users['OWNER'].has_perm(privilege, resource))
+
+        self.assertInstanceCreated(
+            audit.Activity,
+            verb='updated access privileges to',
+            **serializers.get_audit_kwargs(resource),
+        )
+
+    @decorators.as_someone(['OWNER'])
+    def test_valid_with_group_object_permission(self):
+        """It should update permissions on an object.
+        """
+        group = factories.GroupFactory(workspace_id=self.workspace.id)
+        group.user_set.add(self.users['MEMBER'])
+
+        resource = self.factory(workspace=self.workspace, object_permissions_enabled=True)
+        resource.assign_perm(group, 'change_datastore_access')
+
+        did = helpers.to_global_id('DatastoreType', resource.pk)
+        oid = helpers.to_global_id('GroupType', group.pk)
+
+        privileges = [
+            'view_datastore',
+            'change_datastore',
+            'change_datastore_access',
+        ]
+
+        response = self.execute(variables={'id': did, 'objectId': oid, 'privileges': privileges})
+        response = response['data'][self.operation]
+
+        self.assertOk(response)
+        for privilege in privileges:
+            self.assertTrue(self.users['MEMBER'].has_perm(privilege, resource))
+
+        self.assertInstanceCreated(
+            audit.Activity,
+            verb='updated access privileges to',
+            **serializers.get_audit_kwargs(resource),
+        )
+
+    @decorators.as_someone(['MEMBER', 'READONLY', 'OUTSIDER'])
+    def test_unauthorized(self):
+        """It should return a "Permission Denied" error.
+        """
+        resource = self.factory(workspace=self.workspace, object_permissions_enabled=True)
+
+        did = helpers.to_global_id('DatastoreType', resource.pk)
+        oid = helpers.to_global_id('UserType', self.users['MEMBER'].pk)
+
+        privileges = [
+            'view_datastore',
+            'change_datastore_metadata',
+            'change_datastore_settings',
+            'change_datastore_connection',
+            'delete_datastore',
+        ]
+
+        response = self.execute(variables={
+            'id': did,
+            'objectId': oid,
+            'privileges': privileges,
+        })
+
+        self.assertPermissionDenied(response)
+        self.assertInstanceDoesNotExist(
+            audit.Activity,
+            verb='updated access privileges to',
+            **serializers.get_audit_kwargs(resource),
+        )
+
+
+class ToggleDatastoreObjectPermissionsTests(cases.GraphQLTestCase):
+    """Tests for removing a datastore.
+    """
+    factory = factories.DatastoreFactory
+
+    operation = 'toggleDatastoreObjectPermissions'
+    statement = '''
+    mutation ToggleDatastoreObjectPermissions(
+      $id: ID!
+    ) {
+      toggleDatastoreObjectPermissions(
+        input: {
+          id: $id
+        }
+      ) {
+        isEnabled
+        errors {
+          resource
+          field
+          code
+        }
+      }
+    }
+    '''
+
+    @decorators.as_someone(['OWNER'])
+    def test_enabled(self):
+        """It should permanently delete the datastore.
+        """
+        resource = self.factory(workspace=self.workspace, object_permissions_enabled=False)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        response = self.execute(variables={'id': globalid})
+        response = response['data'][self.operation]
+
+        self.assertEqual(response, {
+            'isEnabled': True,
+            'errors': None,
+        })
+
+        self.assertInstanceUpdated(
+            instance=resource,
+            object_permissions_enabled=True,
+        )
+
+        self.assertInstanceCreated(
+            audit.Activity,
+            verb='enabled limited access to',
+            **serializers.get_audit_kwargs(resource),
+        )
+
+    @decorators.as_someone(['MEMBER'])
+    def test_disabled_with_object_permissions(self):
+        """It should permanently delete the datastore.
+        """
+        resource = self.factory(workspace=self.workspace, object_permissions_enabled=True)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        resource.assign_perm(self.user, 'change_datastore_access')
+
+        response = self.execute(variables={'id': globalid})
+        response = response['data'][self.operation]
+
+        self.assertEqual(response, {
+            'isEnabled': False,
+            'errors': None,
+        })
+
+        self.assertInstanceUpdated(
+            instance=resource,
+            object_permissions_enabled=False,
+        )
+
+        self.assertInstanceCreated(
+            audit.Activity,
+            verb='disabled limited access to',
+            **serializers.get_audit_kwargs(resource),
+        )
+
+    @decorators.as_someone(['MEMBER', 'READONLY', 'OUTSIDER'])
+    def test_unauthorized(self):
+        """It should return a "Permission Denied" error.
+        """
+        resource = self.factory(workspace=self.workspace, object_permissions_enabled=False)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+        response = self.execute(variables={'id': globalid})
+
+        self.assertPermissionDenied(response)
+        self.assertInstanceDoesNotExist(
+            audit.Activity,
+            verb='enabled limited access to',
+            **serializers.get_audit_kwargs(resource),
+        )
+
+
 class DeleteDatastoreTests(cases.GraphQLTestCase):
     """Tests for removing a datastore.
     """
@@ -618,7 +993,7 @@ class DeleteDatastoreTests(cases.GraphQLTestCase):
 
         response = self.execute(variables={'id': global_id})
 
-        self.assertNotFound(response)
+        self.assertPermissionDenied(response)
 
 
 class UpdateTableMetadataTests(cases.GraphQLTestCase):
@@ -665,9 +1040,9 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
 
         self.resource = self.factory(**self.resource_kwargs)
         self.global_id = helpers.to_global_id('TableType', self.resource.pk)
+        self.datastore = self.resource.datastore
 
-    @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_valid(self):
+    def execute_success_test_case(self):
         """It should update the table.
         """
         variables = {
@@ -702,6 +1077,23 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
         )
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should update the table.
+        """
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission(self):
+        """It should update the table when the user has the proper permissions.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        self.datastore.assign_perm(self.user, 'definitions.change_datastore_metadata')
+
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_blank(self):
         """It should update the table.
         """
@@ -729,6 +1121,26 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
             tags=variables['tags'],
             short_desc=variables['shortDesc'],
         )
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a Permission Denied error.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        # It still doesn't work of the user has similar permissions.
+        self.datastore.assign_perm(self.user, 'definitions.change_datastore_settings')
+
+        variables = {
+            'id': self.global_id,
+            'shortDesc': 'Hello, is it me you are looking for?'
+        }
+
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
+        self.assertInstanceNotUpdated(self.resource, short_desc=variables['shortDesc'])
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_invalid(self):
@@ -818,9 +1230,9 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
 
         self.resource = self.factory(**self.resource_kwargs)
         self.global_id = helpers.to_global_id('ColumnType', self.resource.pk)
+        self.datastore = self.resource.datastore
 
-    @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_valid(self):
+    def execute_success_test_case(self):
         """It should update the column.
         """
         variables = {
@@ -850,6 +1262,40 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
             verb='updated',
             **serializers.get_audit_kwargs(self.resource),
         )
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should update the column.
+        """
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission(self):
+        """It should update the column when the user has the proper permissions.
+        """
+        self.datastore.datobject_permissions_enabled = True
+        self.datastore.save()
+
+        self.datastore.assign_perm(self.user, 'definitions.change_datastore_metadata')
+
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a Permission Denied error.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        variables = {
+            'id': self.global_id,
+            'shortDesc': 'Hello, is it me you are looking for?'
+        }
+
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
+        self.assertInstanceNotUpdated(self.resource, short_desc=variables['shortDesc'])
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_invalid(self):

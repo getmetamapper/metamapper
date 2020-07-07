@@ -27,7 +27,7 @@ def sanitize_variables(variables, fields_to_redact):
     output = {}
     for k, v in variables.items():
         value = v
-        if k in fields_to_redact:
+        if k in fields_to_redact or 'password' in k.lower():
             value = '***********'
         output[k] = value
     return output

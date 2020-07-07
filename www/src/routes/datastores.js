@@ -4,6 +4,7 @@ import Overview from "pages/DatastoreSettings/DatastoreOverview"
 import Assets from "pages/DatastoreSettings/DatastoreAssets"
 import RunHistory from "pages/DatastoreSettings/RunHistory"
 import ConnectionSettings from "pages/DatastoreSettings/ConnectionSettings"
+import Access from "pages/DatastoreSettings/DatastoreAccess"
 import DatastoreSettings from "pages/DatastoreSettings/DatastoreSettings"
 
 export default [
@@ -22,6 +23,11 @@ export default [
   {
     component: DatastoreSettings,
     path: "/:workspaceSlug/datastores/:datastoreSlug/settings",
+    namespace: "datastores",
+  },
+  {
+    component: Access,
+    path: "/:workspaceSlug/datastores/:datastoreSlug/access",
     namespace: "datastores",
   },
   {

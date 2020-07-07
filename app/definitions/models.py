@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.contrib.contenttypes.fields import ContentType
+from django.contrib.contenttypes.fields import ContentType, GenericRelation
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.db import models
+from django.db import models, transaction
 
-from django.contrib.contenttypes.fields import GenericRelation
+from guardian.shortcuts import assign_perm
+from guardian.models import UserObjectPermission, GroupObjectPermission
 
 from app.authentication.models import Workspace
 from app.comments.models import Comment
@@ -113,11 +114,25 @@ class Datastore(StringPrimaryKeyModel,
     # List of custom fields that should be disabled for all tables within this datastore.
     disabled_table_properties = ArrayField(models.CharField(max_length=20), default=list)
 
+    # If set to false, anyone within your workspace can access the datastore
+    # and its objects. Permissions default to the workspace level.
+    object_permissions_enabled = models.BooleanField(default=True)
+
     objects = models.Manager()
     search_objects = SearchManager(fields=['name', 'engine', 'tags'])
 
     class Meta:
         unique_together = ('workspace', 'name',)
+
+        # Permissions for datastores and its children objects. This is ignored
+        # for any users with OWNER status.
+        permissions = (
+            ('change_datastore_metadata', 'Change datastore metadata'),
+            ('change_datastore_settings', 'Change datastore settings'),
+            ('change_datastore_connection', 'Change datastore connection'),
+            ('change_datastore_access', 'Change datastore access'),
+            ('comment_on_datastore', 'Comment on datastore'),
+        )
 
     def __init__(self, *args, **kwargs):
         super(Datastore, self).__init__(*args, **kwargs)
@@ -135,6 +150,14 @@ class Datastore(StringPrimaryKeyModel,
                 self.name,
             )
         return super().save(*args, **kwargs)
+
+    @classmethod
+    def allowed_permissions(cls):
+        """All of the available permission grants in the database.
+        """
+        return [
+            '%s_datastore' % p for p in cls._meta.default_permissions
+        ] + [p[0] for p in cls._meta.permissions]
 
     @property
     def datastore_id(self):
@@ -198,6 +221,18 @@ class Datastore(StringPrimaryKeyModel,
             'database',
         ]
         return self.is_dirty(*jdbc_fields)
+
+    def assign_perm(self, user_or_group, perm):
+        """Assign a set of permissions to a User or Group.
+        """
+        return assign_perm(perm, user_or_group, self)
+
+    def assign_all_perms(self, user_or_group):
+        """Assign every permission to a User or Group.
+        """
+        with transaction.atomic():
+            for perm in Datastore.allowed_permissions():
+                self.assign_perm(user_or_group, perm)
 
 
 class Schema(StringPrimaryKeyModel,
@@ -301,6 +336,10 @@ class Table(StringPrimaryKeyModel,
         return self.schema.datastore.disabled_table_properties
 
     @property
+    def datastore(self):
+        return self.schema.datastore
+
+    @property
     def datastore_id(self):
         return self.schema.datastore_id
 
@@ -394,6 +433,10 @@ class Column(StringPrimaryKeyModel,
     @property
     def datastore_id(self):
         return self.table.datastore_id
+
+    @property
+    def datastore(self):
+        return self.table.datastore
 
     @property
     def datastore_slug(self):

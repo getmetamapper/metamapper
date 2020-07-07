@@ -14,7 +14,7 @@ class WorkspaceRedirect extends Component {
   }
 
   redirect() {
-    const { config } = this.props
+    const { config, currentUser } = this.props
 
     if (config) {
       const workspace = config.getCurrentWorkspace()
@@ -25,7 +25,9 @@ class WorkspaceRedirect extends Component {
       }
     }
 
-    this.props.history.push("/")
+    if (currentUser) {
+      this.props.history.push("/")
+    }
   }
 
   render() {
