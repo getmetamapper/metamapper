@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Table, Tag } from "antd"
+import { Table, Tag, Popover } from "antd"
 import moment from "moment"
 import prettyMs from "pretty-ms"
 
@@ -16,9 +16,16 @@ class RunHistoryTable extends Component {
     this.columns = [
       {
         title: "Status",
-        dataIndex: "status",
-        render: (status) => (
-          <Tag color={this.statusColors[status]}>{status}</Tag>
+        render: ({ status, error }) => (
+          <>
+            {status === "FAILURE" ? (
+              <Popover content={<code>{error.excMessage}</code>} title="The following error was encountered:">
+                <Tag color={this.statusColors[status]}>{status}</Tag>
+              </Popover>
+            ) : (
+              <Tag color={this.statusColors[status]}>{status}</Tag>
+            )}
+          </>
         ),
       },
       {
@@ -40,7 +47,7 @@ class RunHistoryTable extends Component {
         title: "Changes Recorded",
         render: (record) => (
           <>
-            {record.finishedAt && (
+            {record.finishedAt && record.status !== "FAILURE" && (
               // eslint-disable-next-line
               <a role="button" onClick={() => this.props.onSelect(record)}>
                 {record.revisionCount > 0 ? record.revisionCount : "no"}{" "}

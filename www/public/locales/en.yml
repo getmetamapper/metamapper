@@ -88,6 +88,8 @@ errors:
       item_max_length: Tags are limited to 30 characters.
     short_desc:
       max_length: The datastore description is limited to 140 characters.
+    none:
+      unique: Datastore nickname must be unique to this workspace.
   Table:
     tags:
       max_length: This resource can only have up to 10 tags.

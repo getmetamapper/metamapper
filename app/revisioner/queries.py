@@ -51,7 +51,7 @@ class Query(graphene.ObjectType):
             'datastore_id': pk,
             'started_at__isnull': False,
         }
-        return models.Run.objects.filter(**filter_kwargs).order_by('-finished_at')
+        return models.Run.objects.filter(**filter_kwargs).order_by('-finished_at').prefetch_related('errors')
 
     def resolve_run_revisions(self, info, run_id, *args, **kwargs):
         """Retrieve revisions for the provided object.
