@@ -28,6 +28,7 @@ def on_start_revisioner_run_failure(self, exc, task_id, args, kwargs, einfo):
         task_id=None,
         task_fcn='start_revisioner_run',
         exc_type=type(exc).__name__,
+        exc_message=str(exc),
         exc_stacktrace=einfo,
     )
 
@@ -117,6 +118,7 @@ def on_revise_schema_definition_failure(self, exc, task_id, args, kwargs, einfo)
         task_id=self._run_task.id,
         task_fcn='revise_schema_definition',
         exc_type=type(exc).__name__,
+        exc_message=str(exc),
         exc_stacktrace=einfo,
     )
 
@@ -168,6 +170,7 @@ def on_commit_revisions_failure(self, exc, task_id, args, kwargs, einfo):
         task_id=None,
         task_fcn='commit_revisions',
         exc_type=type(exc).__name__,
+        exc_message=str(exc),
         exc_stacktrace=einfo,
     )
 

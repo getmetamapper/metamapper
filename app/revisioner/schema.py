@@ -12,6 +12,20 @@ from app.authorization.mixins import AuthNode
 from app.authorization.permissions import WorkspaceTeamMembersOnly
 
 
+class RevisionerErrorType(AuthNode, DjangoObjectType):
+    """GraphQL representation of an error in a Revisioner run.
+    """
+    permission_classes = (WorkspaceTeamMembersOnly,)
+    scope_to_workspace = True
+
+    class Meta:
+        model = models.RevisionerError
+        filter_fields = []
+        interfaces = (relay.Node,)
+        connection_class = connections.DefaultConnection
+        only_fields = ['exc_message']
+
+
 class RunType(AuthNode, DjangoObjectType):
     """GraphQL representation of a Revisioner run.
     """
@@ -19,6 +33,8 @@ class RunType(AuthNode, DjangoObjectType):
     scope_to_workspace = True
 
     status = graphene.String()
+
+    error = graphene.Field(RevisionerErrorType)
 
     class Meta:
         model = models.Run
@@ -32,19 +48,10 @@ class RunType(AuthNode, DjangoObjectType):
         """
         return instance.status
 
-
-class RevisionerErrorType(AuthNode, DjangoObjectType):
-    """GraphQL representation of an error in a Revisioner run.
-    """
-    permission_classes = (WorkspaceTeamMembersOnly,)
-    scope_to_workspace = True
-
-    class Meta:
-        model = models.RevisionerError
-        filter_fields = []
-        interfaces = (relay.Node,)
-        connection_class = connections.DefaultConnection
-        exclude_fields = []
+    def resolve_error(instance, info):
+        """
+        """
+        return instance.errors.order_by('created_at').first()
 
 
 class RelatedResourceType(graphene.ObjectType):

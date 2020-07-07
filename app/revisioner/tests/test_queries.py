@@ -276,3 +276,52 @@ class TestGetTableRevisions(cases.GraphQLTestCase):
         results = self.execute(self.statement, variables={'tableId': node_id})
 
         self.assertNotFound(results)
+
+
+class TestGetRunHistoryWithError(cases.GraphQLTestCase):
+    """Test cases for listing revisions related to a datastore.
+    """
+    factory = factories.RevisionerRunFactory
+    operation = 'runHistory'
+    statement = '''
+    query getRunHistory($datastoreId: ID!) {
+      runHistory(
+        datastoreId: $datastoreId
+      ) {
+        edges {
+          node {
+            pk
+            error {
+              excMessage
+            }
+          }
+        }
+      }
+    }
+    '''
+
+    def setUp(self):
+        super(TestGetRunHistoryWithError, self).setUp()
+
+        self.datastore = factories.DatastoreFactory(workspace=self.workspace)
+        self.global_id = helpers.to_global_id('DatastoreType', self.datastore.pk)
+        self.run1 = self.factory(datastore=self.datastore)
+        self.run2 = self.factory(datastore=self.datastore)
+        self.error = self.run1.errors.create(
+            task_id=None,
+            task_fcn='test_function',
+            exc_type='FakeExceptionClass',
+            exc_message='This is an error message.',
+            exc_stacktrace='This is a error message, but with the whole trace.'
+        )
+
+    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
+    def test_query_when_authorized(self):
+        results = self.execute(self.statement, variables={'datastoreId': self.global_id})
+        results = results['data'][self.operation]
+
+        run1 = next(filter(lambda r: r['node']['pk'] == str(self.run1.pk), results['edges']))
+        run2 = next(filter(lambda r: r['node']['pk'] == str(self.run2.pk), results['edges']))
+
+        self.assertEqual(run1['node']['error']['excMessage'], self.error.exc_message)
+        self.assertEqual(run2['node']['error'], None)

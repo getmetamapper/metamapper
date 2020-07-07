@@ -12,6 +12,9 @@ export default gql`
           startedAt
           finishedAt
           revisionCount
+          error {
+            excMessage
+          }
         }
       }
     }

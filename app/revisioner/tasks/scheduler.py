@@ -93,7 +93,8 @@ def detect_run_timeout(self, minutes=60, *args, **kwargs):
             task=None,
             run_id=run.id,
             task_fcn='detect_run_timeout',
-            exc_type='RevisionerRunTimedOut',
+            exc_type='RevisionerRunTimeout',
+            exc_message='The run timed out.',
             exc_stacktrace=None,
         )
 

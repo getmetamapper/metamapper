@@ -218,6 +218,8 @@ class RevisionerError(TimestampedModel, models.Model):
 
     exc_type = models.CharField(max_length=40, null=True, default=None)
 
+    exc_message = models.TextField(null=True, default=None)
+
     exc_stacktrace = models.TextField(null=True, default=None)
 
     class Meta:
