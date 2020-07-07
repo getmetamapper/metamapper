@@ -58,8 +58,7 @@ class CreateCommentTests(cases.GraphQLTestCase):
         attributes.update(**overrides)
         return attributes
 
-    @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_when_valid(self):
+    def execute_success_test_case(self):
         """It should create the comment.
         """
         variables = self._get_attributes()
@@ -81,6 +80,79 @@ class CreateCommentTests(cases.GraphQLTestCase):
             verb='commented on',
             **serializers.get_audit_kwargs(models.Comment.objects.last()),
         )
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should create the comment successfully.
+        """
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['OWNER'])
+    def test_valid_with_object_permission_as_owner(self):
+        """It should create the comment successfully.
+        """
+        self.resource.datastore.object_permissions_enabled = True
+        self.resource.datastore.save()
+
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission_as_member(self):
+        """It should create the comment successfully.
+        """
+        self.resource.datastore.object_permissions_enabled = True
+        self.resource.datastore.save()
+
+        permissions = [
+            'definitions.change_datastore_settings',
+            'definitions.comment_on_datastore',
+            'definitions.change_datastore_metadata',
+        ]
+
+        for permission in permissions:
+            self.resource.datastore.assign_perm(self.user, permission)
+
+        self.execute_success_test_case()
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a "Permission Denied" error.
+        """
+        self.resource.datastore.object_permissions_enabled = True
+        self.resource.datastore.save()
+
+        permissions = [
+            'definitions.change_datastore_settings',
+            'definitions.change_datastore_metadata',
+        ]
+
+        for permission in permissions:
+            self.resource.datastore.assign_perm(self.user, permission)
+
+        variables = self._get_attributes()
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
+
+    @decorators.as_someone(['READONLY'])
+    def test_invalid_with_object_permission_as_readonly(self):
+        """It should return a "Permission Denied" error.
+        """
+        self.resource.datastore.object_permissions_enabled = True
+        self.resource.datastore.save()
+
+        permissions = [
+            'definitions.comment_on_datastore',
+            'definitions.change_datastore_metadata',
+        ]
+
+        for permission in permissions:
+            self.resource.datastore.assign_perm(self.user, permission)
+
+        variables = self._get_attributes()
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_when_invalid_html(self):
@@ -299,10 +371,9 @@ class TogglePinnedCommentTests(cases.GraphQLTestCase):
     }
     '''
 
-    def test_when_not_pinned(self):
+    def execute_success_test_case(self, resource):
         """It should pin the comment.
         """
-        resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
         globalid = helpers.to_global_id('CommentType', resource.pk)
         response = self.execute(variables={'id': globalid})
         response = response['data'][self.operation]
@@ -317,6 +388,12 @@ class TogglePinnedCommentTests(cases.GraphQLTestCase):
             },
             'errors': None,
         })
+
+    def test_when_not_pinned(self):
+        """It should pin the comment.
+        """
+        resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
+        self.execute_success_test_case(resource)
 
     def test_when_pinned(self):
         """It should unpin the comment.
@@ -343,6 +420,90 @@ class TogglePinnedCommentTests(cases.GraphQLTestCase):
         """
         resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
         globalid = helpers.to_global_id('CommentType', resource.pk)
+        response = self.execute(variables={'id': globalid})
+        self.assertPermissionDenied(response)
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should create the comment successfully.
+        """
+        resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
+        self.execute_success_test_case(resource)
+
+    @decorators.as_someone(['OWNER'])
+    def test_valid_with_object_permission_as_owner(self):
+        """It should create the comment successfully.
+        """
+        resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
+
+        datastore = resource.content_object.datastore
+        datastore.object_permissions_enabled = True
+        datastore.save()
+
+        self.execute_success_test_case(resource)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission_as_member(self):
+        """It should create the comment successfully.
+        """
+        resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
+
+        datastore = resource.content_object.datastore
+        datastore.object_permissions_enabled = True
+        datastore.save()
+
+        permissions = [
+            'definitions.change_datastore_settings',
+            'definitions.comment_on_datastore',
+            'definitions.change_datastore_metadata',
+        ]
+
+        for permission in permissions:
+            datastore.assign_perm(self.user, permission)
+
+        self.execute_success_test_case(resource)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a "Permission Denied" error.
+        """
+        resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
+        globalid = helpers.to_global_id('CommentType', resource.pk)
+
+        datastore = resource.content_object.datastore
+        datastore.object_permissions_enabled = True
+        datastore.save()
+
+        permissions = [
+            'definitions.change_datastore_settings',
+            'definitions.change_datastore_metadata',
+        ]
+
+        for permission in permissions:
+            datastore.assign_perm(self.user, permission)
+
+        response = self.execute(variables={'id': globalid})
+        self.assertPermissionDenied(response)
+
+    @decorators.as_someone(['READONLY'])
+    def test_invalid_with_object_permission_as_readonly(self):
+        """It should return a "Permission Denied" error.
+        """
+        resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
+        globalid = helpers.to_global_id('CommentType', resource.pk)
+
+        datastore = resource.content_object.datastore
+        datastore.object_permissions_enabled = True
+        datastore.save()
+
+        permissions = [
+            'definitions.comment_on_datastore',
+            'definitions.change_datastore_metadata',
+        ]
+
+        for permission in permissions:
+            datastore.assign_perm(self.user, permission)
+
         response = self.execute(variables={'id': globalid})
         self.assertPermissionDenied(response)
 

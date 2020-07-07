@@ -1,7 +1,7 @@
 import React from "react"
 import yaml from "js-yaml"
 import { message } from "antd"
-import { findKey } from "lodash"
+import { findKey, find } from "lodash"
 import { getErrorDefinition } from "lib/utilities"
 
 const withGraphQLMutation = (WrappedComponent) => {
@@ -76,11 +76,17 @@ const withGraphQLMutation = (WrappedComponent) => {
       this.setState({ submitting: false })
     }
 
-    handleFailure = ({ networkError }) => {
+    handleFailure = ({ graphQLErrors, networkError }) => {
       let errorMessage = "We could not process your request."
 
       if (networkError && networkError.statusCode === 403) {
         errorMessage = "You do not have permission to perform this action."
+      }
+
+      if (graphQLErrors && graphQLErrors.length > 0) {
+        if (find(graphQLErrors, { status: 403 })) {
+          errorMessage = "You do not have permission to perform this action."
+        }
       }
 
       message.error(errorMessage)

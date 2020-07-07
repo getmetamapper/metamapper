@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import uuid
 
 from django.db import models
 
@@ -12,4 +13,11 @@ class DjangoPartialModelJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Model):
             return {'pk': str(obj.pk), 'type': obj.__class__.__name__}
+        return json.JSONEncoder.default(self, obj)
+
+
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (uuid.UUID,)):
+            return str(obj)
         return json.JSONEncoder.default(self, obj)

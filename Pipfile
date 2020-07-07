@@ -26,6 +26,7 @@ mysql-connector-python = "*"
 psycopg2-binary = "*"
 pymssql = "<3.0"
 snowflake-connector-python = "*"
+django-guardian = "*"
 
 [dev-packages]
 factory-boy = "*"

@@ -1,5 +1,8 @@
 """metamapper URL Configuration
 """
+from os import environ
+
+from django.conf import settings
 from django.conf.urls import url
 from django.urls import include, re_path
 
@@ -16,8 +19,13 @@ from app.sso.providers.oauth2.google.views import OAuth2GoogleView
 
 from app.sso.providers.saml2.views import SAML2AcceptACSView
 
+try:
+    from metamapper.contrib.urls import urls as cloud_urls
+except ImportError:
+    cloud_urls = []
 
-urlpatterns = [
+
+urls = [
     re_path(
         r'^assets/(?P<filepath>.*)$',
         StaticAssetView.as_view(),
@@ -53,5 +61,10 @@ urlpatterns = [
         ),
     ),
     url(r'^health/?$', healthcheck, name="healthcheck"),
+]
+
+react_urls = [
     url(r'^', ReactAppView.as_view()),
 ]
+
+urlpatterns = urls + cloud_urls + react_urls

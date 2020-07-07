@@ -190,7 +190,7 @@ class UpdateCustomFieldTests(cases.GraphQLTestCase):
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_valid_for_datastore(self):
-        """It should create a CustomField scoped to Table models.
+        """It should update a CustomField scoped to Table models.
         """
         resource = self.factory(workspace=self.workspace, field_type=models.CustomField.TEXT)
         globalid = helpers.to_global_id('CustomFieldType', resource.pk)
@@ -221,7 +221,7 @@ class UpdateCustomFieldTests(cases.GraphQLTestCase):
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_valid_for_table(self):
-        """It should create a CustomField scoped to Table models.
+        """It should update a CustomField scoped to Table models.
         """
         resource = self.factory(workspace=self.workspace, field_type=models.CustomField.ENUM)
         globalid = helpers.to_global_id('CustomFieldType', resource.pk)
@@ -380,7 +380,7 @@ class UpdateCustomPropertiesTests(cases.GraphQLTestCase):
     }
     '''
 
-    def _test_valid_for_content_type(self, resource, globalid):
+    def execute_success_test_case(self, resource, globalid):
         """Helper function for testing different content types.
         """
         attributes = {
@@ -462,7 +462,7 @@ class UpdateCustomPropertiesTests(cases.GraphQLTestCase):
         resource = factories.DatastoreFactory(workspace=self.workspace)
         globalid = helpers.to_global_id('DatastoreType', resource.pk)
 
-        self._test_valid_for_content_type(resource, globalid)
+        self.execute_success_test_case(resource, globalid)
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_valid_for_table(self):
@@ -471,7 +471,7 @@ class UpdateCustomPropertiesTests(cases.GraphQLTestCase):
         resource = factories.TableFactory(workspace=self.workspace)
         globalid = helpers.to_global_id('TableType', resource.pk)
 
-        self._test_valid_for_content_type(resource, globalid)
+        self.execute_success_test_case(resource, globalid)
 
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
     def test_query_when_not_authorized(self):
@@ -484,5 +484,76 @@ class UpdateCustomPropertiesTests(cases.GraphQLTestCase):
             'objectId': globalid,
             'properties': [],
         }
+
+        self.assertPermissionDenied(self.execute(variables=variables))
+
+    @decorators.as_someone(['OWNER'])
+    def test_valid_with_object_permission_as_owner(self):
+        """It should update the datastore.
+        """
+        resource = factories.DatastoreFactory(workspace=self.workspace, object_permissions_enabled=True)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        self.execute_success_test_case(resource, globalid)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission_as_member(self):
+        """It should update the datastore.
+        """
+        resource = factories.DatastoreFactory(workspace=self.workspace, object_permissions_enabled=True)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        permissions = [
+            'definitions.change_datastore_settings',
+            'definitions.comment_on_datastore',
+            'definitions.change_datastore_metadata',
+        ]
+
+        for permission in permissions:
+            resource.assign_perm(self.user, permission)
+
+        self.execute_success_test_case(resource, globalid)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a "Permission Denied" error.
+        """
+        resource = factories.DatastoreFactory(workspace=self.workspace, object_permissions_enabled=True)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        variables = {
+            'objectId': globalid,
+            'properties': [],
+        }
+
+        permissions = [
+            'definitions.change_datastore_settings',
+            'definitions.comment_on_datastore',
+        ]
+
+        for permission in permissions:
+            resource.assign_perm(self.user, permission)
+
+        self.assertPermissionDenied(self.execute(variables=variables))
+
+    @decorators.as_someone(['READONLY'])
+    def test_invalid_with_object_permission_as_readonly(self):
+        """It should return a "Permission Denied" error.
+        """
+        resource = factories.DatastoreFactory(workspace=self.workspace, object_permissions_enabled=True)
+        globalid = helpers.to_global_id('DatastoreType', resource.pk)
+
+        variables = {
+            'objectId': globalid,
+            'properties': [],
+        }
+
+        permissions = [
+            'definitions.comment_on_datastore',
+            'definitions.change_datastore_metadata',
+        ]
+
+        for permission in permissions:
+            resource.assign_perm(self.user, permission)
 
         self.assertPermissionDenied(self.execute(variables=variables))

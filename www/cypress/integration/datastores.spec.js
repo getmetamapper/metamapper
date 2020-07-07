@@ -11,12 +11,20 @@ describe("datastores.spec.js", () => {
   }
 
   const owner = {
+    name: "Jeff Winger",
     email: "owner.definitions@metamapper.test",
     password: "password1234",
   }
 
   const member = {
+    name: "Abed Nadir",
     email: "member.definitions@metamapper.test",
+    password: "password1234",
+  }
+
+  const otherMember = {
+    name: "Troy Barnes",
+    email: "other.member.definitions@metamapper.test",
     password: "password1234",
   }
 
@@ -45,7 +53,7 @@ describe("datastores.spec.js", () => {
     })
 
     it("displays the list of datastores", () => {
-      cy.getByTestId("DatastoreList").should("exist")
+      cy.getByTestId("DatastoreList").should("exist").should("contain", "Metamapper")
     })
   })
 
@@ -60,7 +68,7 @@ describe("datastores.spec.js", () => {
     })
 
     it("fails when missing fields", () => {
-      cy.login(owner.email, owner.password, workspace.id)
+      cy.login(member.email, member.password, workspace.id)
         .then(() =>
           cy.visit(inventoryUri))
 
@@ -191,7 +199,7 @@ describe("datastores.spec.js", () => {
     })
 
     it("using UI", () => {
-      cy.login(owner.email, owner.password, workspace.id)
+      cy.login(member.email, member.password, workspace.id)
         .then(() =>
           cy.visit(inventoryUri))
 
@@ -241,6 +249,91 @@ describe("datastores.spec.js", () => {
     })
   })
 
+  describe("datastore access", () => {
+    describe("as non-permitted member", () => {
+      beforeEach(() => {
+        cy.login(readonly.email, readonly.password, workspace.id)
+          .then(() =>
+            cy.visit(inventoryUri))
+      })
+
+      it("removes the datastore from the viewable list", () =>{
+        cy.getByTestId("DatastoreList").should("exist").should("not.contain", newDatastore.name)
+      })
+    })
+
+    describe("as owner", () => {
+      beforeEach(() => {
+        cy.login(owner.email, owner.password, workspace.id)
+          .then(() =>
+            cy.visit(datastoreUri))
+
+        cy.contains("Access").click()
+      })
+
+      it("displays the correct meta title", () => {
+        cy.title().should("eq", `Access - ${newDatastore.slug} - Metamapper`)
+      })
+
+      it("contain the user that created the datastore", () => {
+        cy.getByTestId("DatastoreAccessUserPrivilegesTable").should("be.visible").should("contain", member.name)
+        cy.getByTestId("DatastoreAccessUserPrivilegesTable").should("be.visible")
+
+        cy.getByTestId("DatastoreAccessUserPrivilegesTable").contains(member.name).parent().parent("tr").within(() => {
+          for (var i = 1; i <= 6; i++) {
+            cy.get("td").eq(i).find("i").should("be.visible").should("have.class", "anticon-check-circle")
+          }
+        })
+      })
+
+      it("can disable limited access", () => {
+        cy.getByTestId("ToggleDatastoreObjectPermissions").click().then(() => cy.wait(1000))
+        cy.getByTestId("ToggleDatastoreObjectPermissions").should("not.have.class", "ant-switch-checked")
+
+        cy.getByTestId("DatastoreAccessUserPrivilegesTable")
+          .should("not.be.visible")
+
+        cy.getByTestId("DatastoreAccessGroupPrivilegesTable")
+          .should("not.be.visible")
+
+        cy.reload()
+
+        cy.location("pathname").should("equal", `${datastoreUri}/access`)
+
+        cy.getByTestId("ToggleDatastoreObjectPermissions").should("not.have.class", "ant-switch-checked")
+
+        cy.getByTestId("DatastoreAccessUserPrivilegesTable")
+          .should("not.be.visible")
+
+        cy.getByTestId("DatastoreAccessGroupPrivilegesTable")
+          .should("not.be.visible")
+      })
+    })
+
+    describe("as non-permitted member", () => {
+      beforeEach(() => {
+        cy.login(otherMember.email, otherMember.password, workspace.id)
+          .then(() =>
+            cy.visit(datastoreUri))
+
+        cy.contains("Access").click()
+      })
+
+      it("cannot toggle limited access", () => {
+        cy.getByTestId("ToggleDatastoreObjectPermissions").should("not.have.class", "ant-switch-checked")
+        cy.getByTestId("ToggleDatastoreObjectPermissions").click()
+
+        cy.getByTestId("ToggleDatastoreObjectPermissions").should("have.class", "ant-switch-checked")
+
+        cy.contains(
+          ".ant-message-error", "You do not have permission to perform this action."
+        ).should(
+          "be.visible"
+        )
+      })
+    })
+  })
+
   describe("run history", () => {
     beforeEach(() => {
       cy.login(owner.email, owner.password, workspace.id)
@@ -259,7 +352,7 @@ describe("datastores.spec.js", () => {
 
       cy.getByTestId("RunHistoryTable").should("exist")
 
-      cy.wait(12500).then(() => cy.reload())
+      cy.wait(2500).then(() => cy.reload())
 
       cy.getByTestId("RunHistoryTable").get("tr").within(() => {
         cy.get("td").eq(0).contains("SUCCESS").should("be.visible")

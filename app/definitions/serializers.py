@@ -10,8 +10,13 @@ import app.revisioner.tasks.core as coretasks
 import utils.fields as fields
 
 from django.db import transaction
+from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.fields import ContentType
 from django.utils import timezone
+from guardian.models import UserObjectPermission, GroupObjectPermission
+
+from app.authentication.models import User
+from app.authorization.models import Group
 
 from app.customfields.models import CustomField
 
@@ -173,9 +178,11 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
     def create(self, validated_data):
         """Create a brand new Datastore instance.
         """
+        creator = validated_data.pop('creator')
         with transaction.atomic():
             datastore = models.Datastore.objects.create(**validated_data)
             if datastore.pk:
+                datastore.assign_all_perms(creator)
                 run = datastore.run_history.create(
                     workspace_id=datastore.workspace_id,
                     started_at=timezone.now(),
@@ -212,6 +219,141 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
             self.validate_connection(instance)
 
         return instance
+
+
+class ToggleDatastoreObjectPermissionsSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """Toggles whether or not a serializer
+    """
+    object_permissions_enabled = serializers.BooleanField(default=False)
+
+    class Meta:
+        model = models.Datastore
+        fields = ('object_permissions_enabled',)
+
+    @audit.capture_activity(
+        verb=lambda i: f"{'enabled' if i.object_permissions_enabled else 'disabled'} limited access to",
+        hydrater=get_audit_kwargs,
+        capture_changes=True,
+    )
+    def update(self, instance, validated_data):
+        """Update the provided Table instance.
+        """
+        instance.object_permissions_enabled = validated_data.get(
+            'object_permissions_enabled',
+            instance.object_permissions_enabled,
+        )
+
+        return instance
+
+
+class DatastoreAccessPrivilegesSerializer(MetamapperSerializer, serializers.ModelSerializer):
+    """Update user permissions on a datastore
+    """
+    content_object = fields.RelatedObjectField(
+        allowed_models=(User, Group),
+        allow_null=False,
+    )
+
+    privileges = serializers.ListField(
+        child=serializers.CharField(max_length=50, trim_whitespace=True),
+        allow_empty=True,
+        allow_null=False,
+        required=True,
+    )
+
+    class Meta:
+        model = models.Datastore
+        fields = ('content_object', 'privileges',)
+
+    def validate_content_object(self, content_object):
+        """The content object must be part of the provided workspace.
+        """
+        if isinstance(content_object, (User,)) and not content_object.is_on_team(self.instance.workspace_id):
+            raise serializers.ValidationError(
+                'The provided user is not part of this workspace.',
+                'invalid_user',
+            )
+        if isinstance(content_object, (Group,)) and content_object.workspace_id != self.instance.workspace_id:
+            raise serializers.ValidationError(
+                'The provided group is not part of this workspace.',
+                'invalid_group',
+            )
+        return content_object
+
+    def validate_privileges(self, privileges):
+        """Ensure that the provided grant is valid.
+        """
+        allowed_permissions = models.Datastore.allowed_permissions()
+        for privilege in privileges:
+            if privilege not in allowed_permissions:
+                raise serializers.ValidationError(
+                    'Please provide valid privilege types.',
+                    'invalid_grant',
+                )
+        return privileges
+
+    def get_content_object_metadata(self):
+        """Retrieve the correct content object meta items.
+        """
+        object_class = UserObjectPermission
+        object_name = 'user'
+
+        if isinstance(self.validated_data['content_object'], (Group,)):
+            object_class = GroupObjectPermission
+            object_name = 'group'
+
+        return object_class, object_name
+
+    def make_object_permission(self, permission, content_type):
+        """Create unpersisted instances of the object permissions.
+        """
+        object_class, object_name = self.get_content_object_metadata()
+
+        object_permission_kwargs = {
+            object_name: self.validated_data['content_object'],
+            'content_type': content_type,
+            'object_pk': self.instance.pk,
+            'permission': permission,
+        }
+
+        return object_class(**object_permission_kwargs)
+
+    def commit_object_permissions(self, permissions, content_type):
+        """Commit the object permissions for the User or Group to the metastore.
+        """
+        object_class, object_name = self.get_content_object_metadata()
+
+        with transaction.atomic():
+            filter_kwargs = {
+                object_name: self.validated_data['content_object'],
+                'content_type': content_type,
+                'object_pk': self.instance.pk,
+            }
+            object_class.objects.filter(**filter_kwargs).delete()
+
+            if permissions:
+                object_class.objects.bulk_create(permissions)
+
+        return self.instance
+
+    @audit.capture_activity(
+        verb='updated access privileges to',
+        hydrater=get_audit_kwargs,
+        capture_changes=False,
+    )
+    def save(self, *args, **kwargs):
+        """Create the datastore access grants for the User or Group.
+        """
+        content_type = ContentType.objects.get_for_model(self.instance)
+
+        object_permissions = []
+
+        for permission in Permission.objects.filter(codename__in=self.validated_data.get('privileges', [])):
+            object_permissions.append(
+                self.make_object_permission(permission, content_type)
+            )
+
+        return self.commit_object_permissions(object_permissions, content_type)
 
 
 class DisableCustomFieldsSerializer(MetamapperSerializer, serializers.ModelSerializer):

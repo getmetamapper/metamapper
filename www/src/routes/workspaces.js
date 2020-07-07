@@ -7,6 +7,7 @@ import AuthenticationSetupOAuth2Github from "pages/WorkspaceSettings/Authenticat
 import AuthenticationSetupOAuth2Google from "pages/WorkspaceSettings/AuthenticationSetupOAuth2Google"
 import AuthenticationSetupSaml from "pages/WorkspaceSettings/AuthenticationSetupSaml"
 import AuthenticationSetupRouting from "pages/WorkspaceSettings/AuthenticationSetupRouting"
+import Groups from "pages/WorkspaceSettings/Groups"
 import CustomFields from "pages/WorkspaceSettings/CustomFields"
 
 export default [
@@ -48,6 +49,11 @@ export default [
   {
     component: CustomFields,
     path: "/:workspaceSlug/settings/customfields",
+    namespace: "workspace",
+  },
+  {
+    component: Groups,
+    path: "/:workspaceSlug/settings/groups",
     namespace: "workspace",
   },
   {

@@ -3,6 +3,7 @@ import graphene
 import graphene.relay as relay
 
 import app.authorization.permissions as permissions
+import app.definitions.permissions as definition_permissions
 
 import app.comments.schema as schema
 import app.comments.serializers as serializers
@@ -14,7 +15,10 @@ import utils.errors as errors
 class CreateComment(mixins.CreateMutationMixin, relay.ClientIDMutation):
     """Create a parent comment or a nested comment.
     """
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanCreateCommentOnDatastore,
+    )
 
     class Input:
         object_id = graphene.ID(required=True)
@@ -36,13 +40,7 @@ class CreateComment(mixins.CreateMutationMixin, relay.ClientIDMutation):
         """
         if not parent_id:
             return None
-        return relay.Node.get_node_from_global_id(info, parent_id)
-
-    @classmethod
-    def get_content_object(cls, info, object_id):
-        """Get the content object from a base64 identifier.
-        """
-        return relay.Node.get_node_from_global_id(info, object_id)
+        return cls.get_content_object(info, parent_id)
 
     @classmethod
     def get_serializer_kwargs(cls, root, info, **data):
@@ -64,7 +62,10 @@ class CreateComment(mixins.CreateMutationMixin, relay.ClientIDMutation):
 class UpdateComment(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update an existing comment that you created.
     """
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanModifyCommentOnDatastore,
+    )
 
     class Input:
         id = graphene.ID(required=True)
@@ -88,7 +89,10 @@ class UpdateComment(mixins.UpdateMutationMixin, relay.ClientIDMutation):
 class DeleteComment(mixins.DeleteMutationMixin, relay.ClientIDMutation):
     """Delete an existing comment that you created.
     """
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanModifyCommentOnDatastore,
+    )
 
     class Input:
         id = graphene.ID(required=True)
@@ -109,7 +113,10 @@ class DeleteComment(mixins.DeleteMutationMixin, relay.ClientIDMutation):
 class TogglePinnedComment(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Pin a parent comment to the top of a thread.
     """
-    permission_classes = (permissions.WorkspaceWriteAccessOnly,)
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanModifyCommentOnDatastore,
+    )
 
     class Input:
         id = graphene.ID(required=True)

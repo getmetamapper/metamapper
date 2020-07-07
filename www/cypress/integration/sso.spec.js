@@ -1,4 +1,3 @@
-import { DEFAULT_WORKSPACE_SLUG } from "../support/constants"
 
 describe("sso.spec.js", () => {
 

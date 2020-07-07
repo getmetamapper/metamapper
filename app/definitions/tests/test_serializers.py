@@ -11,6 +11,8 @@ import testutils.cases as cases
 import testutils.factories as factories
 import testutils.helpers as helpers
 
+from guardian.core import ObjectPermissionChecker
+
 
 class DatastoreSerializerCreateTests(cases.SerializerTestCase):
     """Test cases for the Datastore serializer class.
@@ -24,6 +26,8 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
     @classmethod
     def setUpTestData(cls):
         cls.workspace = factories.WorkspaceFactory()
+        cls.user = factories.UserFactory()
+        cls.workspace.grant_membership(cls.user, 'MEMBER')
 
     def _get_attributes(self, **overrides):
         """Generate testing data.
@@ -49,7 +53,8 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         serializer = self.serializer_class(data=attributes)
 
         self.assertTrue(serializer.is_valid())
-        self.assertTrue(serializer.save(workspace=self.workspace))
+        instance = serializer.save(workspace=self.workspace, creator=self.user)
+        self.assertTrue(self.user.has_perm('view_datastore', instance))
 
     @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
@@ -60,7 +65,8 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         serializer = self.serializer_class(data=attributes)
 
         self.assertTrue(serializer.is_valid())
-        self.assertTrue(serializer.save(workspace=self.workspace))
+        instance = serializer.save(workspace=self.workspace, creator=self.user)
+        self.assertTrue(self.user.has_perm('view_datastore', instance))
 
     @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
@@ -140,7 +146,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
 
         self.assertTrue(serializer.is_valid())
 
-        instance = serializer.save(workspace=self.workspace)
+        instance = serializer.save(workspace=self.workspace, creator=self.user)
 
         self.assertEqual(set(instance.tags), {'red', 'blue'})
 
@@ -208,7 +214,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
 
         self.assertTrue(serializer.is_valid())
 
-        instance = serializer.save(workspace=self.workspace)
+        instance = serializer.save(workspace=self.workspace, creator=self.user)
 
         self.assertEqual(instance.ssh_host, extras['ssh_host'])
         self.assertEqual(instance.ssh_user, extras['ssh_user'])
@@ -470,6 +476,227 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             instance=self.instance,
             partial=True,
         )
+
+
+class DatastoreAccessPrivilegesSerializerTests(cases.UserFixtureMixin, cases.SerializerTestCase):
+    """Test cases for the Datastore serializer class.
+    """
+    factory = factories.DatastoreFactory
+
+    serializer_class = serializers.DatastoreAccessPrivilegesSerializer
+
+    serializer_resource_name = 'Datastore'
+
+    def test_when_granting_privileges_for_user(self):
+        """It should grant privileges to a User that is in the workspace.
+        """
+        instance = self.factory(engine=models.Datastore.MYSQL, workspace=self.workspace)
+        content_object = self.users['MEMBER']
+
+        instance.assign_perm(content_object, 'change_datastore_metadata')
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'content_object': content_object,
+                'privileges': [
+                    'view_datastore',
+                    'change_datastore_settings',
+                ],
+            },
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+
+        self.assertTrue(content_object.has_perm('view_datastore', instance))
+        self.assertTrue(content_object.has_perm('change_datastore_settings', instance))
+        self.assertFalse(content_object.has_perm('change_datastore_metadata', instance))
+
+    def test_when_revoking_privileges_from_user(self):
+        """It should be able to remove all user privileges.
+        """
+        instance = self.factory(engine=models.Datastore.MYSQL, workspace=self.workspace)
+        content_object = self.users['MEMBER']
+
+        instance.assign_perm(content_object, 'change_datastore_metadata')
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'content_object': content_object,
+                'privileges': [],
+            },
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+
+        self.assertFalse(content_object.has_perm('change_datastore_metadata', instance))
+
+    def test_when_user_is_not_on_team(self):
+        """It should return an error message.
+        """
+        instance = self.factory(engine=models.Datastore.MYSQL, workspace=self.workspace)
+        content_object = self.users['OUTSIDER']
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'content_object': content_object,
+                'privileges': ['view_datastore', 'change_datastore'],
+            },
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {
+                'code': 'invalid_user',
+                'field': 'content_object',
+                'resource': 'Datastore',
+            }
+        ])
+
+    def test_when_granting_privileges_for_user(self):
+        """It should grant privileges to a Group that is in the workspace.
+        """
+        instance = self.factory(engine=models.Datastore.MYSQL, workspace=self.workspace)
+        content_object = factories.GroupFactory(workspace=self.workspace)
+
+        instance.assign_perm(content_object, 'change_datastore_metadata')
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'content_object': content_object,
+                'privileges': [
+                    'view_datastore',
+                    'change_datastore_settings',
+                ],
+            },
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+
+        checker = ObjectPermissionChecker(content_object)
+
+        self.assertTrue(checker.has_perm('view_datastore', instance))
+        self.assertTrue(checker.has_perm('change_datastore_settings', instance))
+        self.assertFalse(checker.has_perm('change_datastore_metadata', instance))
+
+    def test_when_revoking_grants_for_group(self):
+        """It should be able to remove all group privileges.
+        """
+        instance = self.factory(engine=models.Datastore.MYSQL, workspace=self.workspace)
+        content_object = factories.GroupFactory(workspace=self.workspace)
+
+        instance.assign_perm(content_object, 'change_datastore_metadata')
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'content_object': content_object,
+                'privileges': [],
+            },
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+
+        checker = ObjectPermissionChecker(content_object)
+        self.assertFalse(checker.has_perm('change_datastore_metadata', instance))
+
+    def test_when_group_is_not_in_workspace(self):
+        """It should return an error message.
+        """
+        instance = self.factory(engine=models.Datastore.MYSQL, workspace=self.workspace)
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'content_object': factories.GroupFactory(),
+                'privileges': ['view_datastore', 'change_datastore'],
+            },
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {
+                'code': 'invalid_group',
+                'field': 'content_object',
+                'resource': 'Datastore',
+            }
+        ])
+
+    def test_when_privilege_is_invalid(self):
+        """It should return an error message if the privilege is not accepted.
+        """
+        instance = self.factory(engine=models.Datastore.MYSQL, workspace=self.workspace)
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'content_object': factories.GroupFactory(workspace=self.workspace),
+                'privileges': ['view_datastore', 'upsert_datastore'],
+            },
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {
+                'code': 'invalid_grant',
+                'field': 'privileges',
+                'resource': 'Datastore',
+            }
+        ])
+
+
+class ToggleDatastoreObjectPermissionsSerializerTest(cases.SerializerTestCase):
+    """Test cases for toggling object permissions on and off.
+    """
+    factory = factories.DatastoreFactory
+
+    serializer_class = serializers.ToggleDatastoreObjectPermissionsSerializer
+
+    serializer_resource_name = 'Datastore'
+
+    def test_from_on_to_off(self):
+        """It should successfully disable object-level permissions.
+        """
+        instance = self.factory(object_permissions_enabled=True)
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={'object_permissions_enabled': False},
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+        self.assertInstanceUpdated(instance, object_permissions_enabled=False)
+
+    def test_from_off_to_on(self):
+        """It should successfully disable object-level permissions.
+        """
+        instance = self.factory(object_permissions_enabled=False)
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={'object_permissions_enabled': True},
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+        self.assertInstanceUpdated(instance, object_permissions_enabled=True)
 
 
 class TableSerializerUpdateTests(cases.SerializerTestCase):

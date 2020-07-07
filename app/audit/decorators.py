@@ -16,7 +16,7 @@ def capture_activity(verb, hydrater, capture_changes=False, logger=None):
 
             if instance:
                 audit_kwargs = {
-                    'verb': verb,
+                    'verb': verb(instance) if callable(verb) else verb,
                     'old_values': {},
                     'new_values': {},
                 }

@@ -5,6 +5,7 @@ export default gql`
     workspaceUsers(workspaceId: $workspaceId, activeOnly: $activeOnly) {
       edges {
         node {
+          userId
           pk
           name
           email

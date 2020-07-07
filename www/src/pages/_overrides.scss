@@ -153,6 +153,10 @@ trix-toolbar .trix-button-group {
   padding-bottom: 20px;
   padding-top: 20px;
 }
+.ant-input.ant-input-sm {
+  padding: 4px 11px;
+  height: 32px;
+}
 textarea.ant-input {
   padding-bottom: 12px;
   padding-top: 12px;
@@ -162,7 +166,10 @@ textarea.ant-input {
 }
 .ant-stacked-avatars .ant-avatar {
   margin-right: -10px;
-  border: 1px solid $color-navbar;
+}
+.ant-stacked-avatar {
+  background-color: #ccc;
+  font-size: 12px;
 }
 .avatar-select-text {
   margin-left: 8px;
@@ -255,7 +262,6 @@ textarea.ant-input {
   -o-object-fit: contain;
   object-fit: contain;
 }
-
 
 .editable-cell {
   position: relative;

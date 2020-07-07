@@ -46,6 +46,11 @@ class DatastoreLayout extends Component {
         to: `${baseUri}/connection`,
       },
       {
+        icon: "user",
+        label: "Access",
+        to: `${baseUri}/access`,
+      },
+      {
         icon: "setting",
         label: "Settings",
         to: `${baseUri}/settings`,

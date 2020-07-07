@@ -64,6 +64,7 @@ VENDOR_APPS = [
     'rest_framework',
     'corsheaders',
     'graphene_django',
+    'guardian',
 ]
 
 METAMAPPER_APPS = [
@@ -106,6 +107,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'contrib', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -161,6 +163,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     'graphql_jwt.backends.JSONWebTokenBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
 ]
 #
 # Internationalization
@@ -249,7 +252,7 @@ LOGGING = {
             'style': '{',
         },
         'graphql': {
-            'format': '[{asctime}] [{process:d}] {levelname}] [{name}] {message}',
+            'format': '[{asctime}] [{process:d}] [{levelname}] [{name}] {message}',
             'style': '{',
         },
     },

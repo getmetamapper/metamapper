@@ -15,7 +15,8 @@ const authLink = setContext((_, { headers }) => {
     const currentTime = parseInt(Date.now().valueOf() / 1000)
 
     if (currentTime > decoded.exp) {
-      console.log("Token has expired...")
+      localStorage.removeItem(AUTH_TOKEN)
+      localStorage.removeItem(WORKSPACE_TOKEN)
     }
   }
 

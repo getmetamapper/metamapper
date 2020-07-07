@@ -1,8 +1,22 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.contrib.auth.models import Group
 
 from app.authorization import constants
 from utils.mixins.models import TimestampedModel, AuditableModel
+
+
+Group.add_to_class('description', models.CharField(max_length=180, null=True, blank=True))
+Group.add_to_class('created_at', models.DateTimeField(auto_now_add=True))
+Group.add_to_class('updated_at', models.DateTimeField(auto_now=True))
+Group.add_to_class(
+    'workspace',
+    models.ForeignKey(
+        on_delete=models.CASCADE,
+        related_name='groups',
+        to='authentication.Workspace',
+    )
+)
 
 
 class Membership(TimestampedModel, AuditableModel):

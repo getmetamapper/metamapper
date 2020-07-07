@@ -10,6 +10,7 @@ export default gql`
       tags
       version
       isEnabled
+      objectPermissionsEnabled
       shortDesc
       hasIndexes
       disabledDatastoreProperties

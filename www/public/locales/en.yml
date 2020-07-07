@@ -42,6 +42,15 @@ errors:
       self_update: You cannot alter your own membership.
     permissions:
       invalid_choice: The provided permission group is not valid.
+  Group:
+    name:
+      blank: Group name is required.
+      nulled: Group name is required.
+      max_length: Group name must be less than 25 characters.
+    description:
+      max_length: Group description must be less than 60 characters.
+    none:
+      unique: Group with that name already exists.
   Datastore:
     engine:
       nulled: Please select a valid engine type.

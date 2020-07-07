@@ -1,0 +1,261 @@
+[
+  {
+    "fields": {
+      "name": "Acme Corporation",
+      "slug": "AcmeCorporation",
+      "creator_id": 246452345,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "9cd5359c-b062-405c-bb4c-29b074f4d72c"
+  },
+  {
+    "fields": {
+      "name": "Ajax",
+      "slug": "ajax",
+      "creator_id": 246452345,
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authentication.workspace",
+    "pk": "8c9591fc-c3bb-4d76-b3ad-30b5d5b68385"
+  },
+  {
+    "fields": {
+      "fname": "Wile",
+      "lname": "Coyote",
+      "email": "outsider.groups@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234"
+    },
+    "model": "authentication.user",
+    "pk": 246452312
+  },
+  {
+    "fields": {
+      "workspace_id": "8c9591fc-c3bb-4d76-b3ad-30b5d5b68385",
+      "user_id": "outsider.groups@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 7654445
+  },
+  {
+    "fields": {
+      "fname": "Bugs",
+      "lname": "Bunny",
+      "email": "owner.groups@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234",
+      "groups": [
+        37464640,
+        37464642
+      ]
+    },
+    "model": "authentication.user",
+    "pk": 246452345
+  },
+  {
+    "fields": {
+      "fname": "Daffy",
+      "lname": "Duck",
+      "email": "member.groups@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234",
+      "groups": [
+        37464640
+      ]
+    },
+    "model": "authentication.user",
+    "pk": 246452346
+  },
+  {
+    "fields": {
+      "fname": "Porky",
+      "lname": "Pig",
+      "email": "readonly.groups@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234",
+      "groups": [
+        37464640
+      ]
+    },
+    "model": "authentication.user",
+    "pk": 246452347
+  },
+  {
+    "fields": {
+      "fname": "Elmer",
+      "lname": "Fudd",
+      "email": "member.a.groups@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234",
+      "groups": [
+        37464640
+      ]
+    },
+    "model": "authentication.user",
+    "pk": 246452348
+  },
+  {
+    "fields": {
+      "fname": "Yosemite",
+      "lname": "Sam",
+      "email": "member.b.groups@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234",
+      "groups": [
+        37464640
+      ]
+    },
+    "model": "authentication.user",
+    "pk": 246452349
+  },
+  {
+    "fields": {
+      "fname": "Pepe",
+      "lname": "Le Pew",
+      "email": "member.c.groups@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234",
+      "groups": [
+        37464640
+      ]
+    },
+    "model": "authentication.user",
+    "pk": 246452350
+  },
+  {
+    "fields": {
+      "fname": "Tweety",
+      "lname": "Bird",
+      "email": "member.d.groups@metamapper.test",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z",
+      "password": "password1234",
+      "groups": [
+        37464640
+      ]
+    },
+    "model": "authentication.user",
+    "pk": 246452351
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "user_id": "owner.groups@metamapper.test",
+      "permissions": "OWNER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 7654430
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "user_id": "member.groups@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 7654431
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "user_id": "readonly.groups@metamapper.test",
+      "permissions": "READONLY",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 7654432
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "user_id": "member.a.groups@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 7654433
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "user_id": "member.b.groups@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 7654434
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "user_id": "member.c.groups@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 7654435
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "user_id": "member.d.groups@metamapper.test",
+      "permissions": "MEMBER",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "authorization.membership",
+    "pk": 7654436
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "name": "Everybody",
+      "description": "Includes every member of Acme Corporation",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "auth.group",
+    "pk": 37464640
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "name": "Nobody",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "auth.group",
+    "pk": 37464641
+  },
+  {
+    "fields": {
+      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "name": "Executives",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "auth.group",
+    "pk": 37464642
+  }
+]
