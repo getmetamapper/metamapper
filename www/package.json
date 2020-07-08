@@ -12,6 +12,7 @@
     "apollo-link-retry": "^2.2.16",
     "apollo-upload-client": "^11.0.0",
     "craco-antd": "^1.18.1",
+    "elliptic": "^6.5.3",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "interweave": "^12.2.0",
