@@ -49,7 +49,7 @@ class RunType(AuthNode, DjangoObjectType):
         return instance.status
 
     def resolve_error(instance, info):
-        """
+        """Return the first error associated with this run, if any exist.
         """
         return instance.errors.order_by('created_at').first()
 
