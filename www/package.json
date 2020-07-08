@@ -21,7 +21,6 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "node-sass": "^4.14.1",
     "pretty-ms": "^5.0.0",
     "query-string": "^6.12.1",
     "react": "^16.11.0",
@@ -31,6 +30,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1",
     "react-trix": "^0.6.0",
+    "sass": "^1.26.10",
     "store2": "^2.10.0"
   },
   "scripts": {
