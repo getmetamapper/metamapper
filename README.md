@@ -1,12 +1,16 @@
 # Metamapper
 
+[![CircleCI](https://circleci.com/gh/getmetamapper/metamapper.svg?style=shield)](https://circleci.com/gh/getmetamapper/metamapper) [![Vulnerabilities](https://snyk.io/test/github/getmetamapper/metamapper/badge.svg)](https://snyk.io/test/github/getmetamapper/metamapper) [![latest version](https://img.shields.io/docker/v/metamapper/metamapper?sort=semver)](https://hub.docker.com/r/metamapper/metamapper) [![python](https://img.shields.io/github/pipenv/locked/python-version/getmetamapper/metamapper)](https://github.com/getmetamapper/metamapper/blob/master/Pipfile) [![discord](https://img.shields.io/discord/713821768237973535)](http://discuss.metamapper.io)
+
 Metamapper is an open-source metadata management platform that aims to make it easier to share data and its context across your organization. It's a self-updating data catalog complete with full-text search, an integrated commenting system, and much more.
 
 <p align="center">
-  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-1.png" width="290">
-  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-2.png" width="290">
-  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-3.png" width="290">
+  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-1.png" width="270">
+  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-2.png" width="270">
+  <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-3.png" width="270">
 </p>
+
+**Note: Metamapper is a new project. Each release should be stable, but the project is still in it's fledgling stage. So proceed with that in mind.**
 
 ## What we're trying to accomplish
 
@@ -27,11 +31,13 @@ Here are a few features of Metamapper:
 - *Custom Properties:* Easily attach custom metadata to databases and tables, such as data steward or ETL process references.
 - *Search:* Everything is indexed and [searchable](https://www.postgresql.org/docs/9.5/textsearch.html). Self-service data analytics, here we come.
 
+Check out the [Introducing Metamapper](https://www.metamapper.io/blog/2020/07/12/introducting-metamapper) blog post.
+
 ## Getting started
 
 Recommended deployment method is through [Docker](https://www.docker.com/). Setup instructions can be found in [this Github repo](https://github.com/getmetamapper/metamapper-setup).
 
-Reading the [documentation](http://www.metamapper.io/) is also a good starting point.
+Reading the [documentation](https://www.metamapper.io/) is also a good starting point.
 
 ## Supported datastores
 
@@ -46,8 +52,8 @@ Metamapper currently supports automatic crawling and indexing of six SQL-based r
 
 ## Resources
 
-- [User Documentation](.github/user-guide.pdf) (coming soon)
+- [User Documentation](https://www.metamapper.io)
 - [Contributing](CONTRIBUTING.md)
-- [Issue Tracker](https://github.com/metamapper-io/metamapper/issues)
+- [Issue Tracker](https://github.com/getmetamapper/metamapper/issues)
 - [Roadmap](https://trello.com/b/QT28sJAz/metamapper-io)
-- [Code](https://github.com/metamapper-io/metamapper)
+- [Code](https://github.com/getmetamapper/metamapper)
