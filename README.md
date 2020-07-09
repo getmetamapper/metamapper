@@ -10,7 +10,7 @@ Metamapper is an open-source metadata management platform that aims to make it e
   <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-3.png" width="270">
 </p>
 
-**Note: Metamapper is a new project. Each release should be stable, but the project is still in it's fledgling stage. So proceed with that in mind.**
+*Note: Metamapper is a new project. Each release should be stable, but the project is still in it's fledgling stage. So proceed with that in mind.*
 
 ## What we're trying to accomplish
 
