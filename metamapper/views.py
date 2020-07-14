@@ -39,18 +39,6 @@ logger = Logger('metamapper.graphql')
 class MetamapperGraphQLView(GraphQLView):
     """Modified GraphQLView to inject workspace object into context.
     """
-    def dispatch(self, request, *args, **kwargs):
-        """Attach workspace to request object if available.
-        """
-        request.workspace = None
-        pk = request.META.get('HTTP_X_WORKSPACE_ID')
-        if pk:
-            try:
-                request.workspace = Workspace.objects.get(pk=pk)
-            except (Workspace.DoesNotExist, ValidationError):
-                pass
-        return super(MetamapperGraphQLView, self).dispatch(request, *args, **kwargs)
-
     def get_context(self, request):
         """Attach the global DataLoader class to the request.
         """
