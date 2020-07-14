@@ -84,12 +84,17 @@ METAMAPPER_APPS = [
 
 INSTALLED_APPS = VENDOR_APPS + METAMAPPER_APPS
 
+AUTHENTICATION_MIDDLEWARE = os.getenv(
+    'METAMAPPER_AUTHENTICATION_MIDDLEWARE',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+)
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    AUTHENTICATION_MIDDLEWARE,
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -178,6 +183,7 @@ GRAPHENE = {
     'SCHEMA': 'metamapper.graphql.schema',
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
+        'app.authentication.middleware.CurrentWorkspaceMiddleware',
     ],
 }
 
