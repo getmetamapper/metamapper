@@ -35,6 +35,7 @@
     }
   }
 }
+
 .datastore-header-name {
   margin-left: 12px;
   display: inline-block;
@@ -193,6 +194,9 @@
     .tablename {
       display: block;
       padding-bottom: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       .anticon-table {
         margin-right: 5px;
       }
