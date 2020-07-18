@@ -31,6 +31,7 @@ const TableSchemaSelector = ({
                 currentTable.name === table.name ? "active" : ""
               }`}
               key={idx}
+              title={table.name}
               to={`/datastores/${datastore.slug}/definition/${schema}/${table.name}/overview`}
             >
               <Icon type="table" /> {table.name}
