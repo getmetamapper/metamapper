@@ -56,7 +56,7 @@ describe("table_columns.spec.js", () => {
         })
 
         it("renders the columns table", () => {
-          cy.getByTestId("ColumnDefinitionTable").should("exist").find("tbody").find("tr").should("have.length", 8)
+          cy.getByTestId("ColumnDefinitionTable").should("exist").find("tbody").find("tr").should("have.length", 9)
         })
 
         it("renders the correct data types", () => {

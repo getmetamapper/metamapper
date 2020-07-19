@@ -1,7 +1,19 @@
 import React, { Component } from "react"
+import { Helmet } from "react-helmet"
+import { Spin } from "antd"
 
 class WorkspaceRedirect extends Component {
+  constructor(props) {
+    super(props)
+
+    this.redirect = this.redirect.bind(this)
+  }
+
   componentWillMount() {
+    setTimeout(this.redirect, 750)
+  }
+
+  redirect() {
     const { config } = this.props
 
     if (config) {
@@ -17,7 +29,12 @@ class WorkspaceRedirect extends Component {
   }
 
   render() {
-    return <div>Redirecting...</div>
+    return (
+      <div className="redirection-component">
+        <Helmet>Redirecting...</Helmet>
+        <Spin size="large" />
+      </div>
+    )
   }
 }
 

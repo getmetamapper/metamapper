@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet"
 import { Link, withRouter } from "react-router-dom"
 import { map } from "lodash"
 import { withUserContext } from "context/UserContext"
-import { Avatar, Col, Row, Icon, Layout, Menu } from "antd"
+import { Avatar, Col, Row, Icon, Layout, Menu, Tooltip } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import Breadcrumbs from "app/Navigation/Breadcrumbs"
 import DatastoreEngineIcon from "app/Datastores/DatastoreEngineIcon"
@@ -74,14 +74,7 @@ class DatastoreLayout extends Component {
           <div className="datastores-inner">
             <Row>
               <Col span={4} className="fixed">
-                <div
-                  style={{
-                    border: "1px solid #e8e8e8",
-                    padding: "10px 24px",
-                    backgroundColor: "#FFFFFF",
-                    height: 54,
-                  }}
-                >
+                <div className="datastore-sidebar-header-wrapper">
                   {loading ? (
                     <>
                       <Avatar shape="square" />
@@ -98,9 +91,9 @@ class DatastoreLayout extends Component {
                     </>
                   ) : (
                     <>
-                      <DatastoreEngineIcon datastore={datastore} />
-                      <div className="datastore-header-name">
-                        {datastore.name}
+                      <DatastoreEngineIcon datastore={datastore} noTooltip />
+                      <div className="datastore-sidebar-header-name">
+                        <Tooltip title={datastore.name}>{datastore.name}</Tooltip>
                       </div>
                     </>
                   )}

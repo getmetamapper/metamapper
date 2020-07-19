@@ -1,9 +1,16 @@
 import { graphql } from "react-apollo"
 import { map } from "lodash"
+import qs from "query-string"
 import GetDatastores from "graphql/queries/GetDatastores"
 
 const withGetDatastoresList = graphql(GetDatastores, {
-  options: () => ({ fetchPolicy: "network-only "}),
+  options: ({ location: { search: sqs } }) => {
+    const { search } = qs.parse(sqs)
+    return {
+      fetchPolicy: "network-only",
+      variables: { search },
+    }
+  },
   props: ({ data }) => {
     const res = {
       loading: data && data.loading,

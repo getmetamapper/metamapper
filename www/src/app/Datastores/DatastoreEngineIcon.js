@@ -7,9 +7,10 @@ const DatastoreEngineIcon = ({
   },
   customStyles,
   tooltip,
+  noTooltip,
 }) => (
   <span className="datastore-engine-icon">
-    <Tooltip title={tooltip || engine}>
+    <Tooltip title={noTooltip ? null : (tooltip || engine)}>
       <Avatar
         shape="square"
         src={`/assets/static/img/datastores/dialects/${engine.toLowerCase()}.png`}
@@ -22,6 +23,7 @@ const DatastoreEngineIcon = ({
 DatastoreEngineIcon.defaultProps = {
   customStyles: {},
   tooltip: null,
+  noTooltip: false
 }
 
 export default DatastoreEngineIcon
