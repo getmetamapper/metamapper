@@ -10,7 +10,7 @@ import qs from "query-string"
 import Link from "app/Navigation/Link"
 import DatastoreList from "app/Datastores/DatastoreList"
 import DatastoreListSearch from "app/Datastores/DatastoreListSearch"
-import withGetDatastoresList from "graphql/withGetDatastoresList"
+import withGetDatastoresWithSearch from "graphql/withGetDatastoresWithSearch"
 
 class Datastores extends Component {
   handleSearchSubmit = (evt) => {
@@ -76,7 +76,7 @@ const enhance = compose(
   withForm,
   withRouter,
   withUserContext,
-  withGetDatastoresList,
+  withGetDatastoresWithSearch,
   withLargeLoader,
   withNotFound,
 )

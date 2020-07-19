@@ -35,9 +35,24 @@
     }
   }
 }
-.datastore-header-name {
+.datastore-sidebar-header-wrapper {
+  background-color: #FFFFFF;
+  border: 1px solid #e8e8e8;
+  display: flex;
+  height: 54px;
+  overflow: hidden;
+  padding: 10px 24px;
+  white-space: nowrap;
+}
+.datastore-sidebar-header-name {
   display: inline-block;
-  margin-left: 12px;
+  flex: 1;
+  margin-left: 14px;
+  line-height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 .datastore-description {
   margin: 10px 0;

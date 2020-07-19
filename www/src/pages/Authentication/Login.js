@@ -29,7 +29,6 @@ class Login extends Component {
   handleSuccess = ({ data }) => {
     const { token } = data.tokenAuth
     if (token) {
-      this.props.refreshUser()
       this.props.history.push(setTokenAndGetRedirectUri(token))
     }
   }

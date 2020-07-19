@@ -1,7 +1,5 @@
 import React, { Component } from "react"
-import { withRouter } from "react-router"
 import { Helmet } from "react-helmet"
-import { withUserContext } from "context/UserContext"
 import { Spin } from "antd"
 import { AUTH_TOKEN, WORKSPACE_TOKEN } from "lib/constants"
 
@@ -16,21 +14,21 @@ class Logout extends Component {
   }
 
   componentDidMount() {
-    setTimeout(this.redirect, 1000);
+    setTimeout(this.redirect, 750);
   }
 
   redirect() {
-    window.location.href = '/login'
+    this.props.history.push('/login')
   }
 
   render() {
     return (
-      <div className="logout">
+      <div className="redirection-component">
         <Helmet>Logging you out...</Helmet>
-        <Spin />
+        <Spin size="large" />
       </div>
     )
   }
 }
 
-export default withRouter(withUserContext(Logout))
+export default Logout

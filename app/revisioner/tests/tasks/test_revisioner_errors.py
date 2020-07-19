@@ -7,7 +7,6 @@ from billiard.einfo import ExceptionInfo
 import testutils.cases as cases
 import testutils.factories as factories
 
-import app.revisioner.models as models
 import app.revisioner.tasks.core as tasks
 
 

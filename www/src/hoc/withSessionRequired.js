@@ -3,6 +3,7 @@ import { compose } from "react-apollo"
 import { find } from "lodash"
 import { withRouter } from "react-router-dom"
 import { withUserContext } from "context/UserContext"
+import { AUTH_TOKEN } from "lib/constants"
 
 export default (
   ChildComponent,
@@ -58,6 +59,10 @@ export default (
       }
 
       this.props.refreshUser()
+
+      if (localStorage.getItem(AUTH_TOKEN) && !currentUser) {
+        return null;
+      }
 
       // If login screen, redirect to the dashboard.
       if (!isProtected && currentUser) {
