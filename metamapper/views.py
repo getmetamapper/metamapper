@@ -4,7 +4,6 @@ import os
 import six
 
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.views.generic import View
@@ -15,21 +14,10 @@ from graphene_django.views import GraphQLView
 from app.authentication.models import Workspace
 
 from utils.errors import format_error as format_graphql_error
-from utils.encrypt.fields import EncryptedField
 from utils.logging import Logger
 from utils.uploads import place_files_in_operations
 
 from metamapper.loaders import GlobalDataLoader
-
-
-def get_content_types():
-    """If we reset the database, `django_content_types` does not
-    exist. So we have to prevent Django from loading the ContentType
-    model and throwing an error.
-    """
-    if settings.DB_RESET:
-        return []
-    return ContentType.objects.all()
 
 
 def sanitize_variables(variables, fields_to_redact):
@@ -43,13 +31,6 @@ def sanitize_variables(variables, fields_to_redact):
             value = '***********'
         output[k] = value
     return output
-
-
-ENCRYPTED_FIELDS = list({
-    f.name
-    for c in get_content_types()
-    for f in c.model_class()._meta.fields if isinstance(f, EncryptedField)
-})
 
 
 logger = Logger('metamapper.graphql')
@@ -103,7 +84,7 @@ class MetamapperGraphQLView(GraphQLView):
         log_kwargs = {
             'operation': operation_name,
             'user': request.user.pk if request.user else None,
-            'vars': sanitize_variables(variables, ENCRYPTED_FIELDS),
+            'vars': sanitize_variables(variables, ['password', 'currentPassword', 'confirmPassword']),
         }
 
         orderby = ['operation', 'user', 'vars']
