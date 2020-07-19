@@ -235,11 +235,15 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'default': {
-            'format': '[{asctime}] [{lineno}] [{levelname}] [{name}] (pid: {process:d}) {message}',
+            'format': '[{asctime}] [{process:d}] [{lineno}] [{levelname}] [{name}] {message}',
             'style': '{',
         },
         'metamapper': {
-            'format': '[{asctime}] [{basename}:{linenum}] [{levelname}] [{name}] (pid: {process:d}) {message}',
+            'format': '[{asctime}] [{process:d}] [{basename}:{linenum}] [{levelname}] [{name}] {message}',
+            'style': '{',
+        },
+        'graphql': {
+            'format': '[{asctime}] [{process:d}] {levelname}] [{name}] {message}',
             'style': '{',
         },
     },
@@ -255,12 +259,17 @@ LOGGING = {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'default'
+            'formatter': 'default',
         },
         'metamapper': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'metamapper'
+            'formatter': 'metamapper',
+        },
+        'graphql': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'graphql',
         },
     },
     'loggers': {
@@ -271,6 +280,11 @@ LOGGING = {
         },
         'metamapper': {
             'handlers': ['metamapper'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'metamapper.graphql': {
+            'handlers': ['graphql'],
             'level': 'INFO',
             'propagate': False,
         },
