@@ -39,6 +39,9 @@
     .ant-select-selection__rendered {
       line-height: 34px;
     }
+    .ant-select-selection-selected-value {
+      line-height: 34px;
+    }
   }
 }
 .team-member-list {
@@ -69,6 +72,9 @@
     .ant-select-selection__rendered {
       line-height: 34px;
     }
+    .ant-select-selection-selected-value {
+      line-height: 34px;
+    }
   }
   .ant-btn {
     padding: 0 10px;
@@ -76,16 +82,6 @@
   }
 }
 
-.custom-fields-table {
-  .ant-table {
-    border-top: 1px solid #e8e8e8;
-    margin-top: 16px;
-  }
-  .ant-table-content {
-    border-left: 1px solid #e8e8e8;
-    border-right: 1px solid #e8e8e8;
-  }
-}
 .sso-connections-table {
   .ant-table {
     border: 1px solid #e8e8e8;
@@ -127,3 +123,15 @@
 .workspace-saml-setup, .workspace-saml-editing {
   margin-top: 40px;
 }
+
+.custom-fields-table {
+  .ant-table {
+    border-top: 1px solid #e8e8e8;
+    margin-top: 16px;
+  }
+  .ant-table-content {
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+  }
+}
+

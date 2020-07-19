@@ -87,6 +87,15 @@ trix-toolbar .trix-button-group {
 .ml-20 {
   margin-left: 20px;
 }
+.clearfix {
+  zoom: 1;
+}
+.clearfix:before {
+  content: " ";
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
 .logo {
   color: #FFFFFF;
   padding-left: 24px;
@@ -113,10 +122,13 @@ trix-toolbar .trix-button-group {
 .ant-layout {
   background: $color-layout;
 }
-.ant-select-selection--single {
+.ant-select .ant-select-selection--single {
   height: 42px;
 }
-.ant-select-selection__rendered {
+.ant-select .ant-select-selection__rendered {
+  line-height: 42px;
+}
+.ant-select .ant-select-selection-selected-value {
   line-height: 42px;
 }
 .ant-select-selection--multiple .ant-select-selection__rendered {
@@ -154,9 +166,6 @@ textarea.ant-input {
 }
 .avatar-select-text {
   margin-left: 8px;
-}
-.ant-select-selection-selected-value {
-  line-height: 38px;
 }
 .tags-input .ant-select-selection--multiple > ul > li,
 .tags-input .ant-select-selection--multiple .ant-select-selection__rendered > ul > li {

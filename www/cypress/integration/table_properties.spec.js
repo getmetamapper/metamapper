@@ -79,14 +79,20 @@ describe("table_properties.spec.js", () => {
 
       it("displays the custom properties", () => {
         existingProperties.forEach(({ pk, label, value }) => {
-          cy.getByTestId(`CustomProperties.Label(${pk})`)
-            .should("be.visible")
-            .contains(label)
-
           if (value) {
+            cy.getByTestId(`CustomProperties.Label(${pk})`)
+              .should("be.visible")
+              .contains(label)
+
             cy.getByTestId(`CustomProperties.Display(${pk})`)
               .should("be.visible")
               .contains(value)
+          } else {
+            cy.getByTestId(`CustomProperties.Label(${pk})`)
+              .should("not.be.visible")
+
+            cy.getByTestId(`CustomProperties.Display(${pk})`)
+              .should("not.be.visible")
           }
         })
       })
@@ -109,14 +115,20 @@ describe("table_properties.spec.js", () => {
 
       it("displays the custom properties", () => {
         existingProperties.forEach(({ pk, label, value }) => {
-          cy.getByTestId(`CustomProperties.Label(${pk})`)
-            .should("be.visible")
-            .contains(label)
-
           if (value) {
+            cy.getByTestId(`CustomProperties.Label(${pk})`)
+              .should("be.visible")
+              .contains(label)
+
             cy.getByTestId(`CustomProperties.Display(${pk})`)
               .should("be.visible")
               .contains(value)
+          } else {
+            cy.getByTestId(`CustomProperties.Label(${pk})`)
+              .should("not.be.visible")
+
+            cy.getByTestId(`CustomProperties.Display(${pk})`)
+              .should("not.be.visible")
           }
         })
       })

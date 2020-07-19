@@ -16,7 +16,11 @@ const AllowedCustomPropertySettingsFieldset = ({
     <Form.Item>
       <FormLabel label="Datastore Properties" />
       <small>
-        Check the box next to the property name to enable.
+        {customDatastoreFields.length > 0 ? (
+          <span>Check the box next to the property name to enable.</span>
+        ) : (
+          <span>No datastore custom fields exist in this workspace.</span>
+        )}
       </small>
       {getFieldDecorator("enabledDatastoreProperties", {
         initialValue: enabledDatastoreProperties,
@@ -36,7 +40,11 @@ const AllowedCustomPropertySettingsFieldset = ({
     <Form.Item>
       <FormLabel label="Table Properties" />
       <small>
-        Check the box next to the property name to enable.
+        {customTableFields.length > 0 ? (
+          <span>Check the box next to the property name to enable.</span>
+        ) : (
+          <span>No table custom fields exist in this workspace.</span>
+        )}
       </small>
       {getFieldDecorator("enabledTableProperties", {
         initialValue: enabledTableProperties,
