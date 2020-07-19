@@ -35,10 +35,9 @@
     }
   }
 }
-
 .datastore-header-name {
-  margin-left: 12px;
   display: inline-block;
+  margin-left: 12px;
 }
 .datastore-description {
   margin: 10px 0;
@@ -320,6 +319,35 @@
     line-height: 36px;
   }
 }
+
+.ant-select-dropdown-menu-item {
+  .avatar {
+    display: inline-block;
+    margin-right: 5px;
+        vertical-align: top;
+        line-height: 22px;
+  }
+}
+
+.datastore-activity {
+  .ant-card-body {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+.datastore-activity-item {
+  .ant-list-item-meta-title {
+    font-weight: 400;
+  }
+  a {
+    color: $color-links;
+  }
+}
+
+/*
+ * Custom Properties
+ */
+
 .ant-card.custom-properties-settings {
   margin-top: 24px;
 }
@@ -391,6 +419,9 @@
   .ant-select-selection--single {
     height: 32px;
   }
+  .ant-select-selection-selected-value {
+    line-height: 32px;
+  }
   .ant-select-selection__rendered {
     line-height: 32px;
   }
@@ -401,14 +432,6 @@
     }
   }
 }
-.ant-select-dropdown-menu-item {
-  .avatar {
-    display: inline-block;
-    margin-right: 5px;
-        vertical-align: top;
-        line-height: 22px;
-  }
-}
 .custom-fields-toolbar {
   .custom-fields-toolbar-item {
     margin-left: 10px;
@@ -417,17 +440,59 @@
     cursor: pointer;
   }
 }
-.datastore-activity {
-  .ant-card-body {
-    padding-top: 12px;
-    padding-bottom: 12px;
+.custom-property {
+  position: relative;
+  padding: 8px 0;
+}
+.custom-property:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.custom-property {
+  .labelWrap {
+    text-align: right;
+    word-wrap: break-word;
+    display: inline-block;
+    width: 128px;
+  }
+  .labelWrap > .label {
+    font-weight: 700;
+    text-align: right;
+    word-wrap: break-word;
+    margin: 2px 0;
+  }
+  .valueWrap {
+    display: inline-block;
+    align-items: center;
+    float: right;
+    position: relative;
+    width: calc(100% - 144px);
+    word-wrap: break-word;
+  }
+  .valueWrap > .value {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: pre-line;
+    word-wrap: break-word;
+    display: inline;
   }
 }
-.datastore-activity-item {
-  .ant-list-item-meta-title {
-    font-weight: 400;
+
+@media only screen and (min-width: 360px) and (max-width: 1280px) {
+  .custom-property .labelWrap {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 6px;
   }
-  a {
-    color: $color-links;
+  .custom-property .valueWrap {
+    width: 100%;
+  }
+  .custom-fields-form .ant-input,
+  .custom-fields-form .ant-select {
+    margin-bottom: 0 !important;
+  }
+  .custom-fields-edit-actions {
+    margin-top: 12px;
   }
 }

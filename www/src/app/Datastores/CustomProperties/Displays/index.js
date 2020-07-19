@@ -4,7 +4,7 @@ import TextDisplay from "./TextDisplay"
 import UserDisplay from "./UserDisplay"
 
 export const renderDisplay = (customField, fieldValue) => {
-  if (!customField) return null
+  if (!customField || !fieldValue) return null
 
   const switchBoard = {
     TEXT: TextDisplay,

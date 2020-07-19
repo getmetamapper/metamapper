@@ -77,7 +77,7 @@ class UpdateCustomProperties extends Component {
     if (!field) return null
     return (
       <Tooltip title={field.shortDesc}>
-        <span data-test={`CustomProperties.Label(${field.pk})`}>
+        <span className="label" data-test={`CustomProperties.Label(${field.pk})`}>
           {field.fieldName}
         </span>
       </Tooltip>
@@ -118,6 +118,7 @@ class UpdateCustomProperties extends Component {
               {map(customProperties, ({ fieldId, fieldLabel, fieldValue }) => {
                 const field = fields[fieldId]
                 if (!field) return null
+                if (!isEditing && !fieldValue) return null
                 const InputComponent = getInputComponent(field)
                 const inputProps = {
                   form,
@@ -130,15 +131,18 @@ class UpdateCustomProperties extends Component {
                   inputProps.choices = field.validators.choices
                 }
                 return (
-                  <Form.Item label={this.renderLabel(fields[fieldId])}>
-                    {isEditing ? (
+                  <div className="custom-property">
+                    <div className="labelWrap clearfix">
+                      {this.renderLabel(fields[fieldId])}
+                    </div>
+                    <div className="valueWrap clearfix">
+                      {isEditing ? (
                         <InputComponent {...inputProps} />
-                    ) : (
-                      <span style={{ lineHeight: "32px" }}>
-                        {renderDisplay(fields[fieldId], fieldValue)}
-                      </span>
-                    )}
-                  </Form.Item>
+                      ) : (
+                        renderDisplay(fields[fieldId], fieldValue)
+                      )}
+                    </div>
+                  </div>
                 )
               })}
               {isEditing && hasPermission && (

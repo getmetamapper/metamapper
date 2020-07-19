@@ -33,11 +33,13 @@ const AllowedCustomPropertySettingsForm = ({
       enabledTableProperties={enabledTableProperties}
       hasPermission={hasPermission}
     />
+    {/* We disable the form button if no custom fields exist */}
     <Form.Item>
       <RestrictedButton
         type="primary"
         htmlType="submit"
         hasPermission={hasPermission}
+        disabled={customDatastoreFields.length === 0 && customTableFields.length === 0}
         isSubmitting={isSubmitting}
         data-test="AllowedCustomPropertySettingsForm.Submit"
       >

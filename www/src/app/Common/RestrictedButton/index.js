@@ -5,6 +5,7 @@ const RestrictedButton = ({
   isSubmitting,
   hasPermission,
   children,
+  disabled,
   ...restProps
 }) => (
   <Tooltip
@@ -14,7 +15,7 @@ const RestrictedButton = ({
         : null
     }
   >
-    <Button {...restProps} disabled={!hasPermission || isSubmitting}>
+    <Button {...restProps} disabled={!hasPermission || isSubmitting || disabled}>
       {children}
     </Button>
   </Tooltip>
