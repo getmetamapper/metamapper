@@ -52,7 +52,6 @@ class ManageGroupUsersTable extends Component {
       />
     ),
     onFilter: (value, record) => {
-      console.log(value, record)
       return record[dataIndex]
         .toString()
         .toLowerCase()

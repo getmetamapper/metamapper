@@ -80,5 +80,6 @@ export default [
     namespace: "authentication",
     isProtected: true,
     isPublic: true,
+    ignoreRedirects: true,
   },
 ]

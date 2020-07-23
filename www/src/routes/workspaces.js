@@ -67,5 +67,6 @@ export default [
     path: "/workspaces",
     exact: true,
     namespace: "workspaces",
+    shouldRefreshUser: true,
   },
 ]

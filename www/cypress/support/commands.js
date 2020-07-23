@@ -36,7 +36,7 @@ Cypress.Commands.add("fillInputs", (elements, { wait = 0, force = true } = {}) =
       cy.getByTestId(testId).clear()
     } else {
       cy.getByTestId(testId).then(($el) => {
-        if ($el.hasClass('ant-select-selection')) {
+        if ($el.hasClass("ant-select-selection")) {
           cy.get($el)
             .click()
             .then(() => cy.get("li").contains(value).click());

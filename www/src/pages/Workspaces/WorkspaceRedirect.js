@@ -10,7 +10,8 @@ class WorkspaceRedirect extends Component {
   }
 
   componentWillMount() {
-    setTimeout(this.redirect, 750)
+    this.props.refreshUser()
+    setTimeout(this.redirect, 1000)
   }
 
   redirect() {

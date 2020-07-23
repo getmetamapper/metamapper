@@ -89,6 +89,10 @@ class DeleteDatastore extends Component {
               backed up any data that you might need.
             </p>
             <p>
+              This action will only delete the datastore in Metamapper. No data
+              will be deleted from your database.
+            </p>
+            <p>
               To continue with deleting this datastore, please type{" "}
               <b>delete me</b> in the box below.
             </p>

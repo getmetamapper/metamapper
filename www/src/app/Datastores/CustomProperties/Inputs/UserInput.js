@@ -1,6 +1,6 @@
 import React from "react"
 import { Select } from "antd"
-import { map } from "lodash"
+import { map, orderBy } from "lodash"
 
 const UserInput = ({ form, initialValue, field: { pk }, choices }) => (
   <>
@@ -11,7 +11,7 @@ const UserInput = ({ form, initialValue, field: { pk }, choices }) => (
           : null,
     })(
       <Select data-test={`CustomProperties.Input(${pk})`}>
-        {map(choices, ({ pk, name }) => (
+        {map(orderBy(choices, 'name'), ({ pk, name }) => (
           <Select.Option key={pk} value={pk}>
             {name}
           </Select.Option>

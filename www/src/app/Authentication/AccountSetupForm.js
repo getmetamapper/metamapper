@@ -1,5 +1,6 @@
 import React from "react"
 import { Form, Icon, Input, Button, Row, Col } from "antd"
+import { kebabCase } from "lodash"
 import PasswordInput from "app/Common/PasswordInput"
 import { passwordStrengthValidator } from "lib/validators"
 
@@ -119,8 +120,9 @@ const AccountSetupForm = ({
     </Row>
     <Row>
       <Col span={24}>
-        <Form.Item label="URL Identifier">
+        <Form.Item label="Slug">
           {form.getFieldDecorator("workspaceSlug", {
+            initialValue: kebabCase(form.getFieldValue("workspaceName")),
             rules: [
               {
                 required: true,
