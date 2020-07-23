@@ -15,6 +15,11 @@ class PermissionDenied(MetamapperGraphQLError):
     status_code = 403
 
 
+class NotFound(MetamapperGraphQLError):
+    default_message = 'Resource not found'
+    status_code = 404
+
+
 class SubscriptionExpired(MetamapperGraphQLError):
     default_message = 'Subscription expired'
     status_code = 402

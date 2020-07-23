@@ -2,6 +2,7 @@
 import json
 import os
 import six
+import time
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -14,26 +15,13 @@ from graphene_django.views import GraphQLView
 from app.authentication.models import Workspace
 
 from utils.errors import format_error as format_graphql_error
-from utils.logging import Logger
+from utils.logging.graphql import get_request_logger
 from utils.uploads import place_files_in_operations
 
 from metamapper.loaders import GlobalDataLoader
 
 
-def sanitize_variables(variables, fields_to_redact):
-    """Prevents sensitive values from being exposed in the logs.
-    """
-    variables = variables or {}
-    output = {}
-    for k, v in variables.items():
-        value = v
-        if k in fields_to_redact or 'password' in k.lower():
-            value = '***********'
-        output[k] = value
-    return output
-
-
-logger = Logger('metamapper.graphql')
+logger = get_request_logger()
 
 
 class MetamapperGraphQLView(GraphQLView):
@@ -66,30 +54,11 @@ class MetamapperGraphQLView(GraphQLView):
             )
         return super().parse_body(request)
 
-    def log_operation(self, request, response, operation_name, variables):
-        """Log the HTTP request.
-        """
-        log_kwargs = {
-            'operation': operation_name,
-            'user': request.user.pk if request.user else None,
-            'vars': sanitize_variables(variables, ['password', 'currentPassword', 'confirmPassword']),
-        }
-
-        orderby = ['operation', 'user', 'vars']
-        message = []
-
-        for key in orderby:
-            if not log_kwargs[key]:
-                continue
-            message.append(
-                '({key}: {value})'.format(key=key, value=log_kwargs[key])
-            )
-
-        logger.info('%s %s' % (' '.join(message), ''))
-
     def get_response(self, request, data, show_graphiql=False):
         """Handler for GraphQL response.
         """
+        start_time = time.time()
+
         query, variables, operation_name, id = self.get_graphql_params(request, data)
 
         execution_result = self.execute_graphql_request(
@@ -120,7 +89,7 @@ class MetamapperGraphQLView(GraphQLView):
             response['code'] = status_code
             result = self.json_encode(request, response, pretty=show_graphiql)
 
-        self.log_operation(request, response, operation_name, variables)
+        logger.log(request, response, operation_name, round((time.time() - start_time) * 1000, 2), **(variables or {}))
 
         return result, status_code
 

@@ -239,6 +239,11 @@ FERNET_KEYS = os.getenv('METAMAPPER_FERNET_KEY', '').split(',')
 #
 # Logging (https://docs.python.org/3/library/logging.html)
 
+GRAPHQL_REQUEST_LOGGER = os.getenv(
+    'METAMAPPER_GRAPHQL_REQUEST_LOGGER',
+    'utils.logging.graphql.GraphqlRequestLogger',
+)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
