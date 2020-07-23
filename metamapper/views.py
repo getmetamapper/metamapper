@@ -5,14 +5,11 @@ import six
 import time
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.views.generic import View
 
 from graphql import GraphQLError
 from graphene_django.views import GraphQLView
-
-from app.authentication.models import Workspace
 
 from utils.errors import format_error as format_graphql_error
 from utils.logging.graphql import get_request_logger

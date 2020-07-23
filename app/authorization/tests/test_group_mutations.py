@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import unittest.mock as mock
-
 import testutils.cases as cases
 import testutils.decorators as decorators
 import testutils.factories as factories

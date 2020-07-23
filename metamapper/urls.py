@@ -1,8 +1,5 @@
 """metamapper URL Configuration
 """
-from os import environ
-
-from django.conf import settings
 from django.conf.urls import url
 from django.urls import include, re_path
 

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import functools
 
-import app.authorization.permissions as permissions
-import app.definitions.models as models
 import app.comments.models as comments
+import app.definitions.models as models
 
 import utils.errors as errors
 import utils.shortcuts as shortcuts

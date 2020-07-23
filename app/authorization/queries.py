@@ -2,8 +2,6 @@
 import graphene
 import graphql_relay
 
-from django.db.models import F
-
 import utils.errors as errors
 import utils.shortcuts as shortcuts
 

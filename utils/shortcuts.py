@@ -4,7 +4,6 @@ from itertools import chain
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.shortcuts import _get_queryset
-from django.http import Http404
 from django.utils.text import slugify
 
 from graphql_relay import to_global_id, from_global_id as _from_global_id  # noqa: F401

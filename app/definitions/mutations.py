@@ -8,6 +8,7 @@ import app.definitions.permissions as definition_permissions
 import app.definitions.schema as schema
 import app.definitions.serializers as serializers
 
+import utils.errors as errors
 import utils.mixins.mutations as mixins
 
 
@@ -187,7 +188,7 @@ class ToggleDatastoreObjectPermissions(mixins.UpdateMutationMixin, relay.ClientI
         instance = cls.get_instance(info, data)
 
         if not instance:
-            raise PermissionDenied()
+            raise errors.PermissionDenied()
 
         return {
             "instance": instance,
@@ -233,7 +234,7 @@ class UpdateDatastoreAccessPrivileges(mixins.UpdateMutationMixin, relay.ClientID
         instance = cls.get_instance(info, data)
 
         if not instance or not instance.object_permissions_enabled:
-            raise PermissionDenied()
+            raise errors.PermissionDenied()
 
         return {
             "instance": instance,

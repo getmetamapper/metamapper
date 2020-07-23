@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import graphene
-import graphene.relay as relay
 
 import app.definitions.models as models
 import app.definitions.schema as schema
