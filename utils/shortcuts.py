@@ -2,15 +2,17 @@
 from itertools import chain
 
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.shortcuts import _get_queryset
 from django.http import Http404
 from django.utils.text import slugify
 
-from django.contrib.auth import get_user_model
 from graphql_relay import to_global_id, from_global_id as _from_global_id  # noqa: F401
 
+from utils.errors import NotFound
 
-def get_object_or_404(klass, message=None, *args, **kwargs):
+
+def get_object_or_404(klass, message=None, exception_class=NotFound, *args, **kwargs):
     """
     Use get() to return an object, or raise a Http404 exception if the object
     does not exist.
@@ -33,7 +35,7 @@ def get_object_or_404(klass, message=None, *args, **kwargs):
     except queryset.model.DoesNotExist:
         if not message:
             message = 'Resource was not found.'
-        raise Http404(message)
+        raise exception_class(message)
 
 
 def generate_unique_slug(klass, field):

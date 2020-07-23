@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.utils.deprecation import MiddlewareMixin
 from django.core.exceptions import ValidationError
 
 from app.authentication.models import Workspace
