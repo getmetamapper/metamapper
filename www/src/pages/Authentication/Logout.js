@@ -9,16 +9,10 @@ class Logout extends Component {
 
     window.localStorage.removeItem(AUTH_TOKEN)
     window.localStorage.removeItem(WORKSPACE_TOKEN)
-
-    this.redirect = this.redirect.bind(this)
   }
 
   componentDidMount() {
-    setTimeout(this.redirect, 750);
-  }
-
-  redirect() {
-    this.props.history.push('/login')
+    window.location.href = "/login"
   }
 
   render() {

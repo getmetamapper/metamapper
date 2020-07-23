@@ -9,8 +9,16 @@ import UserSettings from "app/UserSettings/UserSettings"
 
 const Navbar = ({ config, currentUser }) => {
   const [settingsVisible, toggleSettings] = useState(false)
-  const { email, fname, lname } = currentUser
-  const currentWorkspace = config.getCurrentWorkspace()
+
+  if (!currentUser) {
+    return null
+  }
+
+  let currentWorkspace = {}
+  if (config) {
+    currentWorkspace = config.getCurrentWorkspace()
+  }
+
   return (
     <Layout.Header className="top-navbar">
       <Row>
@@ -49,9 +57,9 @@ const Navbar = ({ config, currentUser }) => {
                       </div>
                       <div className="user-details">
                         <div className="name">
-                          {fname ? `${fname} ${lname}` : email}
+                          {currentUser.fname ? `${currentUser.fname} ${currentUser.lname}` : currentUser.email}
                         </div>
-                        <div className="email">{email}</div>
+                        <div className="email">{currentUser.email}</div>
                       </div>
                     </div>
                     <Menu.Divider />
@@ -63,7 +71,7 @@ const Navbar = ({ config, currentUser }) => {
                       </Menu.Item>
                     )}
                     <Menu.Item key="2">
-                      <Link to="https://github.com/metamapper-io/metamapper/">Help</Link>
+                      <a href="https://www.metamapper.io/docs/" target="_blank" rel="noopener noreferrer">Help</a>
                     </Menu.Item>
                     <Menu.Item key="3" onClick={() => toggleSettings(true)}>
                       User Settings

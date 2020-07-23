@@ -152,7 +152,7 @@ describe("table_properties.spec.js", () => {
         })
 
         it("change user field to something else", () => {
-          let input = "Shirley Bennett"
+          let input = "Jeff Winger"
 
           cy.fillInputs({
             "CustomProperties.Input(Ygh8k2mhVFvY)": input

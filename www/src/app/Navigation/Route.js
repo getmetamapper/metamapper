@@ -13,12 +13,14 @@ export default ({
   isPublic = false,
   isProtected = true,
   ignoreRedirects = false,
+  shouldRefreshUser = false,
   ...restProps
 }) => {
   let WrappedComponent = withSessionRequired(
     Component,
     isProtected,
     ignoreRedirects,
+    shouldRefreshUser,
   )
 
   if (isPublic) {

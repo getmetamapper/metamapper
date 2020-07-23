@@ -41,7 +41,7 @@ describe("user.spec.js", () => {
 
   describe("edit user profile", () => {
     beforeEach(() => {
-      cy.login(currentUser.email).then(() => cy.visit(`/${workspace.slug}/datastores`))
+      cy.login(currentUser.email).then(() => cy.visit(`/${workspace.slug}/datastores`)).then(() => cy.wait(500))
 
       openUserSettingsPanel("Profile")
     })
@@ -195,7 +195,7 @@ describe("user.spec.js", () => {
 
   describe("edit user password", () => {
     beforeEach(() => {
-      cy.login(newProperties.email).then(() => cy.visit(`/${workspace.slug}`))
+      cy.login(newProperties.email).then(() => cy.visit(`/${workspace.slug}`)).then(() => cy.wait(500))
 
       openUserSettingsPanel("Security")
     })
@@ -276,7 +276,7 @@ describe("user.spec.js", () => {
       cy.getByTestId("LoginForm.Password").type(passwords.newSafe)
       cy.contains("button", "Sign In").click()
 
-      cy.contains("The search engine for your data.").should("be.visible")
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
     })
   })
 })

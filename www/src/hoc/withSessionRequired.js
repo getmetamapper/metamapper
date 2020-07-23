@@ -8,7 +8,8 @@ import { AUTH_TOKEN } from "lib/constants"
 export default (
   ChildComponent,
   isProtected = true,
-  ignoreRedirects = false
+  ignoreRedirects = false,
+  shouldRefreshUser = false,
 ) => {
   class ComposedComponent extends Component {
     // Our component just got rendered
@@ -26,11 +27,17 @@ export default (
     }
 
     shouldNavigateAway() {
-      const { href } = window.location
+      const { href, pathname } = window.location
       const { config, currentUser, myWorkspaces } = this.props
       const {
         match: { params },
       } = this.props
+
+      const authToken = localStorage.getItem(AUTH_TOKEN)
+      if (isProtected && !authToken) {
+        this.props.history.push("/login")
+        return null;
+      }
 
       let { currentWorkspace } = this.props
       if (config) {
@@ -58,9 +65,8 @@ export default (
         }
       }
 
-      this.props.refreshUser()
-
-      if (localStorage.getItem(AUTH_TOKEN) && !currentUser) {
+      if (shouldRefreshUser || (authToken && !currentUser) || (!authToken && currentUser)) {
+        this.props.refreshUser()
         return null;
       }
 
@@ -71,7 +77,7 @@ export default (
 
       // If it is a restricted route and currentUser is
       // not authenticated, redirect to Login page.
-      if (isProtected && !currentUser) {
+      if (isProtected && !currentUser && pathname !== "/login") {
         this.props.history.push("/login")
       } else if (
         isProtected &&
