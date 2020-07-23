@@ -560,7 +560,7 @@ class DatastoreAccessPrivilegesSerializerTests(cases.UserFixtureMixin, cases.Ser
             }
         ])
 
-    def test_when_granting_privileges_for_user(self):
+    def test_when_granting_privileges_for_group(self):
         """It should grant privileges to a Group that is in the workspace.
         """
         instance = self.factory(engine=models.Datastore.MYSQL, workspace=self.workspace)

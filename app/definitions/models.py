@@ -5,7 +5,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 
 from guardian.shortcuts import assign_perm
-from guardian.models import UserObjectPermission, GroupObjectPermission
 
 from app.authentication.models import Workspace
 from app.comments.models import Comment
