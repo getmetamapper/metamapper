@@ -61,6 +61,10 @@ class EngineInterface(object):
     def assertion_query(self):
         return "SELECT 1 as assertion"
 
+    @property
+    def operational_error(self):
+        return self.connector.OperationalError
+
     @classmethod
     def has_indexes(self):
         raise NotImplementedError()
@@ -173,7 +177,7 @@ class EngineInterface(object):
         """
         try:
             result = self.get_first(self.assertion_query)
-        except self.connector.OperationalError:
+        except self.operational_error:
             return False
         if len(result):
             try:

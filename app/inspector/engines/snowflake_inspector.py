@@ -37,10 +37,6 @@ SELECT
 WHERE UPPER(t.table_catalog) = '{database}'
   AND LOWER(c.table_schema) NOT IN ({excluded})
   AND (c.deleted IS NULL AND t.deleted IS NULL)
-ORDER BY
-    c.table_schema,
-    c.table_name,
-    c.ordinal_position
 """
 
 

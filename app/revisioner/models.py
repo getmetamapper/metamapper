@@ -374,6 +374,8 @@ class Revision(TimestampedModel):
             'action': self.action,
             'metadata': self.metadata,
         }
+        if self.parent_resource_revision_id:
+            checksum_dict['parent_resource_revision_id'] = self.parent_resource_revision_id.hex
         self.checksum = hashlib.md5(
             json.dumps(checksum_dict, sort_keys=True).encode('utf-8'),
         ).hexdigest()
