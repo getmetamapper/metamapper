@@ -1,0 +1,39 @@
+version: "3.4"
+x-mysql-defaults: &mysql_defaults
+  environment:
+    MYSQL_ROOT_PASSWORD: example
+services:
+  database:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: metamapper
+    restart: unless-stopped
+  metamapper:
+    build: ../../../
+    image: metamapper:inspector
+    environment:
+      METAMAPPER_DB_HOST: database
+      METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
+      METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
+    depends_on:
+      - database
+  mysql-5.6:
+    build:
+      context: ./
+      args:
+        MYSQL_VERSION: "5.6"
+    << : *mysql_defaults
+  mysql-5.7:
+    build:
+      context: ./
+      args:
+        MYSQL_VERSION: "5.7"
+    << : *mysql_defaults
+  mysql-8.0:
+    build:
+      context: ./
+      args:
+        MYSQL_VERSION: "8.0"
+    << : *mysql_defaults

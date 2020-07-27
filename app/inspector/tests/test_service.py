@@ -39,7 +39,7 @@ class InspectorServiceTests(unittest.TestCase):
 
         self.datastore = Datastore(**self.connection)
 
-    @mock.patch.object(interface.PostgresInspector, 'get_db_version', return_value='10.0.0')
+    @mock.patch.object(interface.PostgresqlInspector, 'get_db_version', return_value='10.0.0')
     def test_version(self, get_db_version):
         """It should return the current version of the datastore.
         """
@@ -48,7 +48,7 @@ class InspectorServiceTests(unittest.TestCase):
             '10.0.0',
         )
 
-    @mock.patch.object(interface.PostgresInspector, 'get_first', return_value={})
+    @mock.patch.object(interface.PostgresqlInspector, 'get_first', return_value={})
     def test_version_when_returns_none(self, get_db_version):
         """It should return NoneType if empty.
         """
@@ -57,7 +57,7 @@ class InspectorServiceTests(unittest.TestCase):
             None
         )
 
-    @mock.patch.object(interface.PostgresInspector, 'get_first', return_value={'assertion': 1})
+    @mock.patch.object(interface.PostgresqlInspector, 'get_first', return_value={'assertion': 1})
     def test_verify_connection_when_true_lowercase(self, get_db_version):
         """It should return TRUE if the assertion is lowercase.
         """
@@ -66,7 +66,7 @@ class InspectorServiceTests(unittest.TestCase):
             True,
         )
 
-    @mock.patch.object(interface.PostgresInspector, 'get_first', return_value={'ASSERTION': 1})
+    @mock.patch.object(interface.PostgresqlInspector, 'get_first', return_value={'ASSERTION': 1})
     def test_verify_connection_when_true_uppercase(self, get_first):
         """It should return TRUE if the assertion is uppercase.
         """
@@ -75,7 +75,7 @@ class InspectorServiceTests(unittest.TestCase):
             True,
         )
 
-    @mock.patch.object(interface.PostgresInspector, 'get_first', return_value={})
+    @mock.patch.object(interface.PostgresqlInspector, 'get_first', return_value={})
     def test_verify_connection_when_false(self, get_first):
         """It should return FALSE if nothing is returned.
         """
@@ -84,7 +84,7 @@ class InspectorServiceTests(unittest.TestCase):
             False,
         )
 
-    @mock.patch.object(interface.PostgresInspector, 'get_records', return_value=indexes.RAW)
+    @mock.patch.object(interface.PostgresqlInspector, 'get_records', return_value=indexes.RAW)
     def test_indexes(self, get_records):
         """It should parse the index query output properly.
         """
@@ -93,7 +93,7 @@ class InspectorServiceTests(unittest.TestCase):
             indexes.PROCESSED,
         )
 
-    @mock.patch.object(interface.PostgresInspector, 'get_records', return_value=tables_and_views.RAW)
+    @mock.patch.object(interface.PostgresqlInspector, 'get_records', return_value=tables_and_views.RAW)
     def test_tables_and_views(self, get_records):
         """It should parse the index query output properly.
         """

@@ -1,0 +1,36 @@
+version: "3.4"
+services:
+  database:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: metamapper
+    restart: unless-stopped
+  metamapper:
+    build: ../../../
+    image: metamapper:inspector
+    environment:
+      METAMAPPER_DB_HOST: database
+      METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
+      METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
+    depends_on:
+      - database
+  oracle-12c:
+    build: ./
+    ports:
+      - 1521:1521
+      - 8080:8080
+      - 5500:5500
+    environment:
+      - DB_SID=testing
+      - DB_PASSWD=bbk4k77JKH88g54
+      - USERNAME=testing
+      - PASSWORD=bbk4k77JKH88g54
+      - ORACLE_SID=testing
+      - ORACLE_PWD=bbk4k77JKH88g54
+
+# docker exec -it oracle_oracle-12c_1 bash -c "source /home/oracle/.bashrc; sqlplus /nolog"
+# docker exec -it oracle_oracle-12c_1 bash -c "source /home/oracle/.bashrc; sqlplus sys/bbk4k77JKH88g54 as sysdba @init.sql"
+# https://www.petefreitag.com/item/886.cfm
+# docker exec -it oracle_oracle-12c_1 bash -c "source /home/oracle/.bashrc; sqlplus sys/testing as sysdba init.sql"

@@ -125,7 +125,9 @@ class IndexCreateAction(GenericCreateAction):
         )
         for instance in instances:
             for c in column_cache.get(instance.pk, []):
-                column = collector.find_by(lambda i: i.name == c['column_name'] and i.table_id == instance.table_id)
+                column = collector.find_by(
+                    lambda i: i.name.lower() == c['column_name'].lower() and i.table_id == instance.table_id
+                )
                 instance.index_columns.create(
                     column=column,
                     ordinal_position=c['ordinal_position'],

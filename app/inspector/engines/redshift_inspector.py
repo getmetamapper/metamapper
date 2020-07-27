@@ -46,7 +46,6 @@ LEFT JOIN pg_attrdef d
       AND ns.nspname NOT LIKE 'pg_am%%'
       AND a.attnum > 0
       AND c.relkind in ('r', 'v', 'm')
- ORDER BY ns.nspname, c.relname, a.attnum
 """
 
 

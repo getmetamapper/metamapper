@@ -1,0 +1,46 @@
+version: "3.4"
+x-postgresql-defaults: &postgresql_defaults
+  environment:
+    POSTGRES_USER: metamapper
+    POSTGRES_PASSWORD: example
+services:
+  database:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: metamapper
+    restart: unless-stopped
+  metamapper:
+    build: ../../../
+    image: metamapper:inspector
+    environment:
+      METAMAPPER_DB_HOST: database
+      METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
+      METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
+    depends_on:
+      - database
+  postgresql-9.6:
+    build:
+      context: ./
+      args:
+        POSTGRES_VERSION: "9.6"
+    << : *postgresql_defaults
+  postgresql-10.13:
+    build:
+      context: ./
+      args:
+        POSTGRES_VERSION: "10.13"
+    << : *postgresql_defaults
+  postgresql-11.8:
+    build:
+      context: ./
+      args:
+        POSTGRES_VERSION: "11.8"
+    << : *postgresql_defaults
+  postgresql-12.3:
+    build:
+      context: ./
+      args:
+        POSTGRES_VERSION: "12.3"
+    << : *postgresql_defaults
