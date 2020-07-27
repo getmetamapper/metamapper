@@ -2,9 +2,10 @@ import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
 import { withRouter } from "react-router-dom"
 import { Form } from "antd"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 import { withOwnersOnly } from "hoc/withPermissionsRequired"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
+import withGetBeaconActivatedStatus from "graphql/withGetBeaconActivatedStatus"
 import UpdateWorkspaceMutation from "graphql/mutations/UpdateWorkspace"
 import UpdateWorkspaceForm from "./UpdateWorkspaceForm"
 
@@ -44,13 +45,14 @@ class UpdateWorkspace extends Component {
   }
 
   render() {
-    const { form, hasPermission, workspace, submitting } = this.props
+    const { beaconActivated, form, hasPermission, workspace, submitting } = this.props
     return (
       <>
         <UpdateWorkspaceForm
           workspace={workspace}
           form={form}
           hasPermission={hasPermission}
+          hasBeaconActivated={beaconActivated}
           isSubmitting={submitting}
           onSubmit={this.handleSubmit}
         />
@@ -59,24 +61,16 @@ class UpdateWorkspace extends Component {
   }
 }
 
-const withSpinLoader = withLoader({
-  size: "small",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
-
 const withForm = Form.create()
 
 const enhance = compose(
-  withSpinLoader,
   withRouter,
   withOwnersOnly,
   withForm,
+  withGetBeaconActivatedStatus,
+  withLargeLoader,
   graphql(UpdateWorkspaceMutation),
-  withGraphQLMutation
+  withGraphQLMutation,
 )
 
 export default enhance(UpdateWorkspace)

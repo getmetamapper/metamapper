@@ -7,6 +7,7 @@ export default gql`
       pk
       name
       slug
+      beaconConsent
       sshPublicKey
     }
   }

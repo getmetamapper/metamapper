@@ -144,6 +144,7 @@ describe("workspace.spec.js", () => {
         "WorkspaceSetupForm.Slug": newWorkspace.slug,
       })
 
+      cy.getByTestId("WorkspaceSetupForm.BeaconConsent").should("be.visible").should("not.have.class", "ant-switch-checked")
       cy.getByTestId("WorkspaceSetupForm.Submit").click()
 
       // It should re-direct to the datastores page since no datastores exist.
@@ -200,6 +201,9 @@ describe("workspace.spec.js", () => {
         "UpdateWorkspaceForm.Slug": "Tachi",
       })
 
+      cy.getByTestId("UpdateWorkspaceForm.BeaconConsent").should("be.visible").click()
+      cy.getByTestId("UpdateWorkspaceForm.BeaconConsent").should("have.class", "ant-switch-checked")
+
       cy.getByTestId("UpdateWorkspaceForm.Submit").click()
 
       cy.get(".ant-message-notice").should("be.visible")
@@ -209,6 +213,11 @@ describe("workspace.spec.js", () => {
       ).should(
         "be.visible"
       )
+
+      cy.reload()
+
+      cy.getByTestId("UpdateWorkspaceForm.BeaconConsent").should("be.visible").should("have.class", "ant-switch-checked")
+
     })
   })
 

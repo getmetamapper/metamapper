@@ -5,14 +5,16 @@ export default gql`
     $id: ID!
     $name: String
     $slug: String
+    $beaconConsent: Boolean
   ) {
     updateWorkspace(
-      input: { id: $id, name: $name, slug: $slug }
+      input: { id: $id, name: $name, slug: $slug, beaconConsent: $beaconConsent }
     ) {
       workspace {
         id
         name
         slug
+        beaconConsent
       }
       errors {
         resource
