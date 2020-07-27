@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import app.authorization.models as models
+
 import testutils.cases as cases
 import testutils.factories as factories
 import testutils.helpers as helpers
@@ -109,6 +111,8 @@ class TestGetGroups(cases.GraphQLTestCase):
 
     def setUp(self):
         super(TestGetGroups, self).setUp()
+
+        models.Group.objects.all().delete()
 
         self.count = 5
         self.groups = self.factory.create_batch(self.count, workspace=self.workspace)
