@@ -1,18 +1,26 @@
 # -*- coding: utf-8 -*-
+import re
+
 import app.inspector.engines.interface as interface
 
 import mysql.connector
 import mysql.connector.cursor as cursors
 
 
+MYSQL_V5_REGEXP = re.compile(r'5\.[0-9]{1,3}\.[0-9]{1,3}')
+
 MYSQL_DEFINITIONS_QUERY = """
     SELECT
         c.table_schema,
         CAST(MD5(c.table_schema) AS CHAR) AS schema_object_id,
         c.table_name,
-        it.table_id AS table_object_id,
+        IFNULL(it.table_id, CAST(MD5(CONCAT(c.table_schema, '/', c.table_name)) AS CHAR)) AS table_object_id,
         LOWER(t.table_type) AS table_type,
-        CAST(MD5(CONCAT(it.table_id, '/', c.column_name)) AS CHAR) as column_object_id,
+        CAST(MD5(CONCAT(
+          IFNULL(it.table_id, CAST(MD5(CONCAT(c.table_schema, '/', c.table_name)) AS CHAR)),
+          '/',
+          c.column_name
+        )) AS CHAR) as column_object_id,
         c.column_name,
         c.ordinal_position,
         c.data_type,
@@ -31,7 +39,7 @@ MYSQL_DEFINITIONS_QUERY = """
      JOIN information_schema.tables t
        ON c.table_schema = t.table_schema
       AND c.table_name = t.table_name
-     JOIN information_schema.innodb_tables it
+LEFT JOIN information_schema.{innodb_prefix}_tables it
        ON CONCAT(c.table_schema, '/', c.table_name) = it.name
 LEFT JOIN (
    SELECT t.table_schema, t.table_name, k.column_name
@@ -40,15 +48,10 @@ LEFT JOIN (
     USING (constraint_name,table_schema,table_name)
     WHERE t.constraint_type = 'PRIMARY KEY'
   ) pk
-       ON c.table_schema = pk.table_schema
-      AND c.table_name = pk.table_name
-      AND c.column_name = pk.column_name
-    WHERE t.engine = 'InnoDB'
-      AND t.table_schema NOT IN ({excluded})
- ORDER BY
-      c.table_schema,
-      c.table_name,
-      c.ordinal_position
+     ON c.table_schema = pk.table_schema
+    AND c.table_name = pk.table_name
+    AND c.column_name = pk.column_name
+  WHERE t.table_schema NOT IN ({excluded})
 """
 
 MYSQL_INDEXES_QUERY = """
@@ -56,7 +59,7 @@ MYSQL_INDEXES_QUERY = """
           t.table_schema as schema_name,
           CAST(MD5(t.table_schema) AS CHAR) AS schema_object_id,
           t.table_name as table_name,
-          it.table_id as table_object_id,
+          IFNULL(it.table_id, CAST(MD5(CONCAT(t.table_schema, '/', t.table_name)) AS CHAR)) AS table_object_id,
           CASE WHEN UPPER(ix.name) = 'PRIMARY'
                THEN CONCAT('idx_pk_', t.table_name)
                ELSE ix.name END AS index_name,
@@ -70,22 +73,16 @@ MYSQL_INDEXES_QUERY = """
           f.name as column_name,
           f.pos + 1 as ordinal_position,
           NULL as definition
-      FROM information_schema.innodb_indexes ix
+      FROM information_schema.{innodb_prefix}_indexes ix
  LEFT JOIN information_schema.table_constraints tc
         ON ix.name = tc.constraint_name
-      JOIN information_schema.innodb_tables it
+      JOIN information_schema.{innodb_prefix}_tables it
         ON ix.table_id = it.table_id
       JOIN information_schema.tables t
         ON CONCAT(t.table_schema, '/', t.table_name) = it.name
-      JOIN information_schema.innodb_fields f
-       ON ix.index_id = f.index_id
-    WHERE t.engine = 'InnoDB'
-      AND t.table_schema NOT IN ({excluded})
-    ORDER BY
-      t.table_schema,
-      t.table_name,
-      ix.index_id,
-      f.pos + 1
+      JOIN information_schema.{innodb_prefix}_fields f
+        ON ix.index_id = f.index_id
+     WHERE t.table_schema NOT IN ({excluded})
 """
 
 
@@ -124,7 +121,23 @@ class MySQLInspector(interface.EngineInterface):
         return {'cursor_class': self.dictcursor}
 
     def get_db_version(self):
-        result = self.get_first("SELECT VERSION() as version;")
+        result = self.get_first('SELECT VERSION() as version;')
         if len(result):
             return result['version']
         return None
+
+    def get_tables_and_views_sql(self, excluded_schemas):
+        """Generate SQL statement for getting tables and views.
+        """
+        return self.definitions_sql.format(
+            excluded=', '.join(['%s'] * len(excluded_schemas)),
+            innodb_prefix='innodb_sys' if MYSQL_V5_REGEXP.match(self.version or '') else 'innodb',
+        )
+
+    def get_indexes_sql(self, excluded_schemas):
+        """Generate SQL statement for getting indexes and constraints.
+        """
+        return self.indexes_sql.format(
+            excluded=', '.join(['%s'] * len(excluded_schemas)),
+            innodb_prefix='innodb_sys' if MYSQL_V5_REGEXP.match(self.version or '') else 'innodb',
+        )

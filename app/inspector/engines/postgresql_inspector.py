@@ -47,7 +47,6 @@ LEFT JOIN primary_key pk
       AND c.table_name = pk.table_name
       AND c.column_name = pk.column_name
     WHERE c.table_schema NOT IN ({excluded})
- ORDER BY c.table_schema, c.table_name, c.ordinal_position
 """
 
 POSTGRESQL_INDEXES_QUERY = """
@@ -75,15 +74,10 @@ LEFT JOIN pg_attribute a
       AND a.attnum = ANY(i.indkey)
       AND a.attnum > 0
     WHERE ui.schemaname NOT IN ({excluded})
- ORDER BY
-      ui.schemaname,
-      t.relname,
-      ix.relname,
-      array_position(string_to_array(i.indkey::text, ' '), a.attnum::text)
 """
 
 
-class PostgresInspector(interface.EngineInterface):
+class PostgresqlInspector(interface.EngineInterface):
     """Access Postgres database metadata.
     """
     sys_schemas = [

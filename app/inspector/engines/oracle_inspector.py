@@ -5,16 +5,31 @@ import cx_Oracle
 
 
 ORACLE_DEFINITIONS_QUERY = """
-SELECT
-    LOWER(T.OWNER) AS table_schema,
+WITH METAMAPPER_USERS AS (
+  SELECT u.USER_ID, u.USERNAME
+    FROM DBA_USERS u
+   WHERE EXISTS (SELECT 1 FROM dba_objects o WHERE o.owner = u.username)
+     AND DEFAULT_TABLESPACE NOT IN ({excluded})
+     AND ACCOUNT_STATUS = 'OPEN'
+),
+PRIMARY_KEYS AS (
+  SELECT DISTINCT COLS.COLUMN_NAME, COLS.TABLE_NAME, COLS.OWNER
+    FROM ALL_CONS_COLUMNS COLS
+    JOIN ALL_CONSTRAINTS CONS
+     ON CONS.CONSTRAINT_NAME = COLS.CONSTRAINT_NAME
+    AND CONS.OWNER = COLS.OWNER
+    AND UPPER(CONS.CONSTRAINT_TYPE) = 'P'
+)
+SELECT DISTINCT
+    T.OWNER AS table_schema,
     U.USER_ID AS schema_object_id,
-    LOWER(T.OBJECT_NAME) AS table_name,
+    T.OBJECT_NAME AS table_name,
     LOWER(T.OBJECT_TYPE) AS table_type,
     T.OBJECT_ID AS table_object_id,
     CONCAT(CONCAT(T.OBJECT_ID, '/'), C.COLUMN_ID) AS column_object_id,
-    LOWER(C.COLUMN_NAME) AS column_name,
+    C.COLUMN_NAME AS column_name,
     C.COLUMN_ID AS ordinal_position,
-    LOWER(C.DATA_TYPE) AS data_type,
+    C.DATA_TYPE AS data_type,
     CASE WHEN C.DATA_LENGTH IS NOT NULL
          THEN C.DATA_LENGTH
          ELSE C.DATA_PRECISION END AS max_length,
@@ -22,54 +37,49 @@ SELECT
     CASE WHEN C.NULLABLE = 'Y'
          THEN 1
          ELSE 0 END AS is_nullable,
-    CASE WHEN CONS.CONSTRAINT_TYPE = 'P'
+    CASE WHEN PKS.COLUMN_NAME IS NOT NULL
          THEN 1
          ELSE 0 END AS is_primary,
-    CASE WHEN default_length is not null
-         THEN LOWER(data_default)
-         ELSE NULL END AS default_value
+    ' ' AS default_value
   FROM DBA_OBJECTS T
   JOIN ALL_TAB_COLS C
-    ON T.OBJECT_NAME = C.TABLE_NAME
-   AND T.OWNER = C.OWNER
-  JOIN DBA_USERS U
+    ON C.TABLE_NAME = T.OBJECT_NAME
+   AND C.OWNER = T.OWNER
+  LEFT JOIN METAMAPPER_USERS U
     ON U.USERNAME = T.OWNER
-  LEFT JOIN ALL_CONS_COLUMNS COLS
-    ON COLS.COLUMN_NAME = C.COLUMN_NAME
-   AND COLS.TABLE_NAME = C.TABLE_NAME
-   AND COLS.OWNER = C.OWNER
-  LEFT JOIN ALL_CONSTRAINTS CONS
-    ON CONS.CONSTRAINT_NAME = COLS.CONSTRAINT_NAME
-   AND CONS.CONSTRAINT_TYPE = 'P'
-   AND CONS.OWNER = COLS.OWNER
+  LEFT JOIN PRIMARY_KEYS PKS
+    ON PKS.COLUMN_NAME = C.COLUMN_NAME
+   AND PKS.TABLE_NAME = C.TABLE_NAME
+   AND PKS.OWNER = C.OWNER
  WHERE LOWER(T.OBJECT_TYPE) IN ('table', 'view')
    AND LOWER(T.OWNER) NOT IN ({excluded})
-   AND U.ORACLE_MAINTAINED = 'N'
- ORDER BY
-    T.OWNER,
-    T.OBJECT_NAME,
-    C.COLUMN_ID
 """
 
-
 ORACLE_INDEXES_QUERY = """
+WITH METAMAPPER_USERS AS (
+  SELECT u.USER_ID, u.USERNAME
+    FROM DBA_USERS u
+   WHERE EXISTS (SELECT 1 FROM dba_objects o WHERE o.owner = u.username)
+     AND DEFAULT_TABLESPACE NOT IN ({excluded})
+     AND ACCOUNT_STATUS = 'OPEN'
+)
 SELECT
-        LOWER(I.OWNER) AS schema_name,
-        U.USER_ID AS schema_object_id,
-        LOWER(T.OBJECT_NAME) AS table_name,
-        T.OBJECT_ID AS table_object_id,
-        LOWER(I.OBJECT_NAME) as index_name,
-        I.OBJECT_ID as index_object_id,
-        CASE WHEN UPPER(CONS.CONSTRAINT_TYPE) = 'P'
-             THEN 1
-             ELSE 0 END AS is_primary,
-        CASE WHEN UPPER(IDX.UNIQUENESS) = 'UNIQUE'
-             THEN 1
-             ELSE 0 END AS is_unique,
-        LOWER(IC.COLUMN_NAME) AS column_name,
-        IC.COLUMN_POSITION AS ordinal_position
+      I.OWNER AS schema_name,
+      U.USER_ID AS schema_object_id,
+      T.OBJECT_NAME AS table_name,
+      T.OBJECT_ID AS table_object_id,
+      I.OBJECT_NAME AS index_name,
+      I.OBJECT_ID AS index_object_id,
+      CASE WHEN UPPER(CONS.CONSTRAINT_TYPE) = 'P'
+           THEN 1
+           ELSE 0 END AS is_primary,
+      CASE WHEN UPPER(IDX.UNIQUENESS) = 'UNIQUE'
+           THEN 1
+           ELSE 0 END AS is_unique,
+      IC.COLUMN_NAME AS column_name,
+      IC.COLUMN_POSITION AS ordinal_position
      FROM DBA_OBJECTS I
-     JOIN DBA_USERS U
+     JOIN METAMAPPER_USERS U
        ON U.USERNAME = I.OWNER
 LEFT JOIN ALL_INDEXES IDX
        ON IDX.INDEX_NAME = I.OBJECT_NAME
@@ -83,14 +93,9 @@ LEFT JOIN ALL_IND_COLUMNS IC
 LEFT JOIN ALL_CONSTRAINTS CONS
        ON CONS.CONSTRAINT_NAME = I.OBJECT_NAME
       AND CONS.OWNER = I.OWNER
- WHERE I.OBJECT_TYPE IN ('INDEX')
-   AND LOWER(I.OWNER) NOT IN ({excluded})
-   AND U.ORACLE_MAINTAINED = 'N'
- ORDER BY
-    I.OWNER,
-    T.OBJECT_NAME,
-    I.OBJECT_NAME,
-    IC.COLUMN_POSITION
+      AND UPPER(CONS.CONSTRAINT_TYPE) = 'P'
+    WHERE LOWER(I.OBJECT_TYPE) IN ('index')
+      AND LOWER(I.OWNER) NOT IN ({excluded})
 """
 
 
@@ -139,7 +144,34 @@ class ConnectionFactory(object):
 class OracleInspector(interface.EngineInterface):
     """Access Oracle database metadata.
     """
-    sys_schemas = ['rdsadmin']
+    sys_schemas = [
+        'apex_030200',
+        'apex_050000',
+        'appqossys',
+        'audsys',
+        'ctxsys',
+        'dbsfwuser',
+        'dbsnmp',
+        'dvsys',
+        'exfsys',
+        'flows_files',
+        'gsmadmin_internal',
+        'lbacsys',
+        'mdsys',
+        'ojvmsys',
+        'olapsys',
+        'orddata',
+        'ordsys',
+        'outln',
+        'rdsadmin',
+        'sys',
+        'sysaux',
+        'sysman',
+        'system',
+        'tsmsys',
+        'wmsys',
+        'xdb',
+    ]
 
     table_properties = []
 
@@ -166,6 +198,10 @@ class OracleInspector(interface.EngineInterface):
     @property
     def assertion_query(self):
         return "SELECT 1 as assertion FROM DBA_OBJECTS WHERE ROWNUM = 1"
+
+    @property
+    def operational_error(self):
+        return cx_Oracle.DatabaseError
 
     def get_db_version(self):
         result = self.get_first(

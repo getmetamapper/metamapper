@@ -17,17 +17,17 @@ WITH primary_key AS (
      AND ccu.column_name = c.column_name
    WHERE constraint_type = 'PRIMARY KEY'
 )
-  SELECT
-      LOWER(SCHEMA_NAME(t.schema_id)) AS table_schema,
+  SELECT DISTINCT
+      SCHEMA_NAME(t.schema_id) AS table_schema,
       t.schema_id AS schema_object_id,
-      LOWER(t.name) AS table_name,
+      t.name AS table_name,
       t.object_id AS table_object_id,
       CASE WHEN UPPER(t.type) = 'U'
            THEN 'base table'
            WHEN UPPER(t.type) = 'V'
            THEN 'view' END AS table_type,
       CONCAT(t.object_id, '/', c.column_id) AS column_object_id,
-      LOWER(c.name) as column_name,
+      c.name as column_name,
       ic.ordinal_position,
       LOWER(ic.data_type) as data_type,
       CASE WHEN c.max_length IS NOT NULL
@@ -40,7 +40,7 @@ WITH primary_key AS (
            ELSE 0 END AS is_primary,
       COALESCE(ic.column_default, '') AS default_value
      FROM sys.columns c
-     JOIN sys.tables t
+     JOIN sys.objects t
        ON c.object_id = t.object_id
      JOIN information_schema.columns ic
        ON LOWER(ic.table_schema) = LOWER(SCHEMA_NAME(t.schema_id))
@@ -52,21 +52,17 @@ LEFT JOIN primary_key pk
       AND LOWER(c.name) = LOWER(pk.column_name)
     WHERE LOWER(SCHEMA_NAME(t.schema_id)) NOT IN ({excluded})
       AND UPPER(t.type) IN ('U', 'V')
-    ORDER BY
-      t.schema_id,
-      t.object_id,
-      ic.ordinal_position
 """
 
 
 SQLSERVER_INDEXES_QUERY = """
-SELECT
+  SELECT DISTINCT
     SCHEMA_NAME(t.schema_id) as schema_name,
     t.schema_id as schema_object_id,
     t.name as table_name,
     t.object_id as table_object_id,
     i.name as index_name,
-    i.index_id as index_object_id,
+    CONCAT(t.object_id, '/', i.index_id) as index_object_id,
     i.is_unique,
     i.is_primary_key as is_primary,
     col.name as column_name,
@@ -83,11 +79,6 @@ SELECT
   AND ic.column_id = col.column_id
 WHERE LOWER(SCHEMA_NAME(t.schema_id)) NOT IN ({excluded})
   AND UPPER(t.type) IN ('U', 'V')
-ORDER BY
-      t.schema_id,
-      t.object_id,
-      i.index_id,
-      ic.key_ordinal
 """
 
 
@@ -128,5 +119,8 @@ class SQLServerInspector(interface.EngineInterface):
             "SELECT SERVERPROPERTY('BuildClrVersion') as version"
         )
         if len(result):
-            return result['version']
+            version = result['version']
+            if isinstance(version, (bytes,)):
+                version = version.decode()
+            return version
         return None

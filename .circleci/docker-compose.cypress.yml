@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 x-metamapper-defaults: &metamapper_service
   image: metamapper:cypress
   depends_on:
@@ -39,7 +39,7 @@ services:
       context: ../
       dockerfile: .circleci/Dockerfile.cypress
     environment:
-      METAMAPPER_DB_HOST: database
       CYPRESS_baseUrl: "http://webserver:5050"
+      METAMAPPER_DB_HOST: database
     volumes:
       - ./screenshots:/usr/src/app/www/cypress/screenshots/

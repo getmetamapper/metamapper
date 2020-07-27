@@ -39,13 +39,30 @@ jobs:
             - "/usr/local/lib/python3.7/site-packages"
       - run:
           name: Wait for database
-          command: dockerize -wait tcp://database:5432 -timeout 2m
+          command: dockerize -wait tcp://database:5432 -timeout 1m
       - run:
           name: Run database migrations
-          command: DB_SETUP=1 python manage.py migrate
+          command: python manage.py migrate
       - run:
           name: Run test suite
-          command: python manage.py test --parallel=4
+          command: python manage.py test --parallel=4 --exclude-tag=inspector
+  backend-inspector-tests:
+    environment:
+      COMPOSE_PROJECT_NAME: metamapper
+    docker:
+      - image: circleci/node:12
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Run MySQL inspector tests
+          command: COMPOSE_FILE="dev/datastores/mysql/docker-compose.yml" bash .circleci/test-inspector.sh mysql
+      - run:
+          name: Run PostgreSQL inspector tests
+          command: COMPOSE_FILE="dev/datastores/postgresql/docker-compose.yml" bash .circleci/test-inspector.sh postgresql
+      - run:
+          name: Run SQL Server inspector tests
+          command: COMPOSE_FILE="dev/datastores/sqlserver/docker-compose.yml" bash .circleci/test-inspector.sh sqlserver
   frontend-tests:
     docker:
       - image: circleci/node:12
@@ -94,6 +111,11 @@ workflows:
       - backend-tests:
           requires:
             - backend-lint
+      - backend-inspector-tests:
+          context: dockerhub
+          requires:
+            - backend-tests
+            - frontend-tests
       - frontend-tests:
           requires:
             - backend-lint
@@ -105,6 +127,7 @@ workflows:
           context: dockerhub
           requires:
             - backend-tests
+            - backend-inspector-tests
             - frontend-tests
             - frontend-e2e-tests
           filters:

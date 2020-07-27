@@ -72,7 +72,7 @@ test-cypress: cypress-resetdb
 test-py:
 	@echo "--> Running Python (webserver) tests"
 	@find . -name \*.pyc -delete
-	@docker-compose --log-level ERROR run --rm webserver python manage.py test
+	@docker-compose --log-level ERROR run --rm webserver python manage.py test --exclude-tag=inspector
 
 test-js:
 	@echo "--> Running JavaScript (client) tests"

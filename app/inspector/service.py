@@ -17,7 +17,7 @@ from app.inspector.engines import oracle_inspector
 
 engines = {
     Datastore.MYSQL: mysql_inspector.MySQLInspector,
-    Datastore.POSTGRESQL: postgresql_inspector.PostgresInspector,
+    Datastore.POSTGRESQL: postgresql_inspector.PostgresqlInspector,
     Datastore.REDSHIFT: redshift_inspector.RedshiftInspector,
     Datastore.SNOWFLAKE: snowflake_inspector.SnowflakeInspector,
     Datastore.SQLSERVER: sqlserver_inspector.SQLServerInspector,

@@ -35,6 +35,8 @@ RUN mkdir -p /opt/oracle && \
     sh -c "echo /opt/oracle/instantclient_19_6 > /etc/ld.so.conf.d/oracle-instantclient.conf" \
     ldconfig
 
+ENV LD_LIBRARY_PATH /opt/oracle/instantclient_19_6:$LD_LIBRARY_PATH
+
 RUN mkdir $BASE_DIR
 WORKDIR $BASE_DIR
 
