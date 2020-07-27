@@ -2,10 +2,12 @@ import React, { Component } from "react"
 import { graphql, compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
 import { Form, Modal } from "antd"
+import { withLargeLoader } from "hoc/withLoader"
 import { withUserContext } from "context/UserContext"
+import withGraphQLMutation from "hoc/withGraphQLMutation"
+import withGetBeaconActivatedStatus from "graphql/withGetBeaconActivatedStatus"
 import WorkspaceSetupForm from "app/Workspaces/WorkspaceSetupForm"
 import CreateWorkspaceMutation from "graphql/mutations/CreateWorkspace"
-import withGraphQLMutation from "hoc/withGraphQLMutation"
 
 class WorkspaceSetup extends Component {
   handleSubmit = (evt) => {
@@ -35,7 +37,7 @@ class WorkspaceSetup extends Component {
   }
 
   render() {
-    const { form, submitting, visible, onCancel } = this.props
+    const { beaconActivated, form, submitting, visible, onCancel } = this.props
     return (
       <Modal
         title="Create New Workspace"
@@ -47,6 +49,7 @@ class WorkspaceSetup extends Component {
           form={form}
           onSubmit={this.handleSubmit}
           isSubmitting={submitting}
+          hasBeaconActivated={beaconActivated}
         />
       </Modal>
     )
@@ -59,6 +62,8 @@ const enhance = compose(
   withForm,
   withRouter,
   withUserContext,
+  withGetBeaconActivatedStatus,
+  withLargeLoader,
   graphql(CreateWorkspaceMutation),
   withGraphQLMutation
 )

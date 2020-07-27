@@ -39,6 +39,13 @@ class Query(authentication.Query,
     if settings.DEBUG:
         debug = graphene.Field(debug.DjangoDebug, name='__debug')
 
+    beacon_activated = graphene.Boolean()
+
+    def resolve_beacon_activated(self, *args, **kwargs):
+        """bool: Indicates if the beacon is active or not for this installation.
+        """
+        return settings.METAMAPPER_BEACON_ACTIVATED
+
 
 class Mutation(authentication.Mutation,
                authorization.Mutation,

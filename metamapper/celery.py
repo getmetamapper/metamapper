@@ -13,12 +13,16 @@ environ.setdefault('METAMAPPER_CELERY_CONFIG_MODULE', 'metamapper.conf.celery')
 
 app = Celery('metamapper')
 app.config_from_envvar('METAMAPPER_CELERY_CONFIG_MODULE')
-app.autodiscover_tasks(lambda: [n.name for n in apps.get_app_configs()])
+app.autodiscover_tasks(lambda: [n.name for n in apps.get_app_configs()] + ['metamapper'])
 
 app.conf.beat_schedule = {
     'beat-scheduler-healthcheck': {
         'task': 'app.healthchecks.tasks.heartbeat',
         'schedule': crontab(),
+    },
+    'send-beacon': {
+        'task': 'metamapper.tasks.send_beacon',
+        'schedule': crontab(hour='1'),
     },
     'create-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.create_runs',
