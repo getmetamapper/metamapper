@@ -38,7 +38,6 @@ class OracleInspectorTests(test.TestCase):
         exc = '''
         WHERE LOWER(T.OBJECT_TYPE) IN ('table', 'view')
           AND LOWER(T.OWNER) NOT IN (:1, :2, :3)
-          AND U.ORACLE_MAINTAINED = 'N'
         '''
         self.assertIn(
             ''.join(exc.split()).strip(),
@@ -51,9 +50,8 @@ class OracleInspectorTests(test.TestCase):
         sch = ['one', 'two']
         sql = self.engine.get_indexes_sql(sch)
         exc = '''
-        WHERE I.OBJECT_TYPE IN ('INDEX')
+        WHERE LOWER(I.OBJECT_TYPE) IN ('index')
           AND LOWER(I.OWNER) NOT IN (:1, :2)
-          AND U.ORACLE_MAINTAINED = 'N'
         '''
         self.assertIn(
             ''.join(exc.split()).strip(),
@@ -76,7 +74,32 @@ class OracleInspectorTests(test.TestCase):
         """It should have the expected system table schemas.
         """
         assert set(self.engine.sys_schemas) == {
+            'apex_030200',
+            'apex_050000',
+            'appqossys',
+            'audsys',
+            'ctxsys',
+            'dbsfwuser',
+            'dbsnmp',
+            'dvsys',
+            'exfsys',
+            'flows_files',
+            'gsmadmin_internal',
+            'lbacsys',
+            'mdsys',
+            'ojvmsys',
+            'olapsys',
+            'orddata',
+            'ordsys',
+            'outln',
             'rdsadmin',
+            'sys',
+            'sysaux',
+            'sysman',
+            'system',
+            'tsmsys',
+            'wmsys',
+            'xdb',
         }
 
     def test_has_indexes(self):
