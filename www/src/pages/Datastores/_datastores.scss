@@ -464,6 +464,11 @@
   display: table;
   clear: both;
 }
+.custom-fields-form.editing {
+  .custom-property .labelWrap {
+    line-height: 30px;
+  }
+}
 .custom-property {
   .labelWrap {
     text-align: right;

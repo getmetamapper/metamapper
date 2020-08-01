@@ -73,6 +73,11 @@ class CustomFieldSerializer(MetamapperSerializer, serializers.ModelSerializer):
         validator.is_valid(raise_exception=True)
         return validator.data
 
+    def validate_group(self, data):
+        """Validators for GROUP type.
+        """
+        return {}
+
     def validate(self, data):
         """Handle custom validation based on the field_type value.
         """
@@ -81,6 +86,7 @@ class CustomFieldSerializer(MetamapperSerializer, serializers.ModelSerializer):
             models.CustomField.USER: self.validate_user,
             models.CustomField.TEXT: self.validate_text,
             models.CustomField.ENUM: self.validate_enum,
+            models.CustomField.GROUP: self.validate_group,
         }
         data['validators'] = validators[field_type](data.get('validators', {}))
         return data
@@ -127,6 +133,13 @@ class CustomPropertiesSerializer(MetamapperSerializer, serializers.Serializer):
             return 'The provided value is invalid.'
         return None
 
+    def validate_group(self, value, customfield):
+        """Validators for GROUP type.
+        """
+        if value and not self.instance.get_related_group(value):
+            return 'The provided group does not exist.'
+        return None
+
     def validate_properties(self, properties):
         """Perform property-level validation.
         """
@@ -134,6 +147,7 @@ class CustomPropertiesSerializer(MetamapperSerializer, serializers.Serializer):
             models.CustomField.USER: self.validate_user,
             models.CustomField.TEXT: self.validate_text,
             models.CustomField.ENUM: self.validate_enum,
+            models.CustomField.GROUP: self.validate_group,
         }
 
         custom_fields = {
