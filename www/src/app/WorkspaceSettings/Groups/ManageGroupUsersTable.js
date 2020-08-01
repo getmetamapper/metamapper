@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react"
 import { Button, Icon, Input, Table } from "antd"
+import { compose } from "react-apollo"
 import { coalesce } from "lib/utilities"
 import DisplayUsername from "app/WorkspaceSettings/Users/DisplayUsername"
 import withGetWorkspaceGroupUsers from "graphql/withGetWorkspaceGroupUsers"
@@ -116,11 +117,12 @@ class ManageGroupUsersTable extends Component {
           rowKey="id"
           dataSource={workspaceGroupUsers}
           columns={columns}
-          pagination={{ pageSize: 5 }}
+          pagination={{ simple: true, pageSize: 5 }}
+          locale={{ emptyText: "This group has no active members." }}
         />
       </span>
     )
   }
 }
 
-export default withGetWorkspaceGroupUsers(withLargeLoader(ManageGroupUsersTable))
+export default compose(withGetWorkspaceGroupUsers, withLargeLoader)(ManageGroupUsersTable)

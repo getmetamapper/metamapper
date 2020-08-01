@@ -69,6 +69,93 @@
     text-align: left;
   }
 }
+.group-profile-metadata {
+  margin-top: 6px;
+  .group-profile-name {
+    font-weight: 700;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 0;
+    margin-top: 6px;
+  }
+  ul > li {
+    color: #ccc;
+    font-weight: 400;
+    font-size: 14px;
+    padding-right: 12px;
+  }
+  ul > li .anticon {
+    margin-right: 4px;
+  }
+}
+.group-profile {
+  .breadcrumbs-wrapper {
+    border: 0;
+  }
+  .ant-card-body {
+    padding: 0;
+  }
+  .group-profile-header {
+    border-bottom: 1px solid #e8e8e8;
+    padding: 24px;
+    .group-profile-avatar {
+      display: inline-block;
+      float: left;
+      margin-right: 18px;
+    }
+    .group-profile-metadata {
+      ul > li {
+        display: inline-block;
+      }
+    }
+  }
+  .group-profile-description {
+    color: rgba(0, 0, 0, .45);
+    margin-top: 6px;
+  }
+  .groups-table {
+    .ant-table {
+      border: none;
+      margin-top: 0;
+    }
+    .ant-table-content {
+      border: none;
+    }
+    .ant-table-placeholder {
+      border-bottom: none;
+    }
+  }
+}
+.group-profile-popover {
+  display: inline-block;
+
+  a {
+    color: $color-dark;
+  }
+  a:hover {
+    color: $color-primary;
+  }
+  .group-profile-avatar {
+    float: left;
+    display: inline-block;
+    line-height: 40px;
+  }
+  .group-profile-metadata {
+    display: inline-block;
+    margin-left: 12px;
+
+    ul > li {
+      display: block;
+      margin-bottom: 6px;
+     }
+    ul > li:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 
 .add-user-to-group-form {
   .ant-select-selection--single {
