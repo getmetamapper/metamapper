@@ -6,7 +6,7 @@ import { withLargeLoader } from "hoc/withLoader"
 import withNotFoundHandler from "hoc/withNotFoundHandler"
 import WorkspaceLayout from "app/WorkspaceSettings/WorkspaceLayout"
 import GroupSetup from "app/WorkspaceSettings/Groups/GroupSetup"
-import GroupsTable from "app/WorkspaceSettings/Groups/GroupsTable"
+import WorkspaceGroupsTable from "app/WorkspaceSettings/Groups/WorkspaceGroupsTable"
 import UpdateGroup from "app/WorkspaceSettings/Groups/UpdateGroup"
 import DeleteGroup from "app/WorkspaceSettings/Groups/DeleteGroup"
 import ManageGroupUsers from "app/WorkspaceSettings/Groups/ManageGroupUsers"
@@ -110,7 +110,7 @@ class Groups extends Component {
           Add New Group
         </RestrictedButton>
         <>
-          <GroupsTable
+          <WorkspaceGroupsTable
             loading={loading}
             hasPermission={hasPermission}
             onUpdate={this.onOpenUpdateForm}

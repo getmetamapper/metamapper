@@ -31,12 +31,18 @@
   margin: 0;
 }
 .top-navbar .ant-menu-item {
-  padding: 13px 20px 13px 20px;
+  padding: 13px 20px;
   line-height: 32px;
+}
+.top-navbar .ant-menu-dark {
+  line-height: 66px;
 }
 .top-navbar .ant-menu-item:first-child:focus,
 .top-navbar .ant-menu-item:first-child:hover {
   border-bottom: 2px solid transparent;
+}
+.top-navbar [data-test="Navbar.Dropdown"] {
+  line-height: 40px;
 }
 .top-navbar .navbar-dropdown {
   color: #FFFFFF;
@@ -127,6 +133,7 @@
     padding: 0;
     padding-right: 16px;
     min-width: 400px;
+    line-height: 36px;
 
     .anticon-search {
       font-size: 24px;

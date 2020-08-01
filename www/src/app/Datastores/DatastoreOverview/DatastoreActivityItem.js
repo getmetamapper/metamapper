@@ -26,7 +26,7 @@ const ColumnActivity = ({
 
   return (
     <>
-      <b>{actor.name}</b> {verb} the{" "}
+      <Link to={`/settings/users/${actor.id}`}>{actor.name}</Link> {verb} the{" "}
       <em>
         {schemaName}.{tableName}.
       </em>
@@ -49,7 +49,7 @@ const DatastoreActivity = ({
   )
   return (
     <>
-      <b>{actor.name}</b> {verb} the <b>{makeLink(target.displayName)}</b>{" "}
+      <Link to={`/settings/users/${actor.id}`}>{actor.name}</Link> {verb} the <b>{makeLink(target.displayName)}</b>{" "}
       datastore.
     </>
   )
@@ -70,7 +70,7 @@ const TableActivity = ({
   )
   return (
     <>
-      <b>{actor.name}</b> {verb} the <em>{parent.displayName}.</em>
+      <Link to={`/settings/users/${actor.id}`}>{actor.name}</Link> {verb} the <em>{parent.displayName}.</em>
       <b>{makeLink(displayName)}</b> table.
     </>
   )

@@ -11,11 +11,11 @@ const GroupProfileInner = ({
   showLink,
 }) => (
    <Fragment>
-      <div className="group-profile-avatar">
+      <div className="profile-avatar">
         <GroupAvatar size={avatarSize} {...group} />
       </div>
-      <div className="group-profile-metadata">
-        <span className="group-profile-name">
+      <div className="profile-metadata">
+        <span className="profile-name">
           {showLink ? <Link to={`/settings/groups/${group.id}`}>{group.name}</Link> : group.name}
         </span>
         <ul>
