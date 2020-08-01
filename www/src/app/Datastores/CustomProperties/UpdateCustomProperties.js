@@ -1,14 +1,15 @@
 import React, { Component } from "react"
 import { graphql, compose } from "react-apollo"
 import { Card, Form, Empty, Tooltip } from "antd"
-import { map, keyBy } from "lodash"
+import { map, filter, keyBy } from "lodash"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import GetCustomProperties from "graphql/queries/GetCustomProperties"
 import UpdateCustomPropertiesMutation from "graphql/mutations/UpdateCustomProperties"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 import withGetCustomFields from "graphql/withGetCustomFields"
 import withGetCustomPropertyUsers from "graphql/withGetCustomPropertyUsers"
+import withGetWorkspaceGroups from "graphql/withGetWorkspaceGroups"
 import CustomPropertiesFooter from "./CustomPropertiesFooter"
 import CustomPropertiesHeader from "./CustomPropertiesHeader"
 import { renderDisplay } from "./Displays"
@@ -84,12 +85,20 @@ class UpdateCustomProperties extends Component {
     )
   }
 
+  isEmpty() {
+    return filter(
+      this.props.customProperties,
+      ({ fieldValue }) => fieldValue !== null && fieldValue !== ""
+    ).length === 0
+  }
+
   render() {
     const { isEditing } = this.state
     const {
       customFields,
       customProperties,
       form,
+      workspaceGroups: groups,
       hasPermission,
       submitting,
       users,
@@ -106,14 +115,12 @@ class UpdateCustomProperties extends Component {
         }
       >
         <Form
-          className="custom-fields-form"
+          className={`custom-fields-form ${isEditing && 'editing'}`}
           labelCol={{ span: 7 }}
           wrapperCol={{ span: 17 }}
           onSubmit={this.handleSubmit}
         >
-          {customProperties.length === 0 ? (
-            <Empty />
-          ) : (
+          {this.isEmpty() && !isEditing ? ( <Empty description={null} /> ) : (
             <>
               {map(customProperties, ({ fieldId, fieldLabel, fieldValue }) => {
                 const field = fields[fieldId]
@@ -125,8 +132,11 @@ class UpdateCustomProperties extends Component {
                   field,
                   initialValue: fieldValue,
                 }
+                console.log(fieldValue)
                 if (fields[fieldId].fieldType === "USER") {
                   inputProps.choices = users
+                } else if (fields[fieldId].fieldType === "GROUP") {
+                  inputProps.choices = groups
                 } else if (fields[fieldId].fieldType === "ENUM") {
                   inputProps.choices = field.validators.choices
                 }
@@ -159,25 +169,17 @@ class UpdateCustomProperties extends Component {
   }
 }
 
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
-
 const withForm = Form.create()
 
 const enhance = compose(
-  withLargeLoader,
   withForm,
   withWriteAccess,
   withGetCustomFields,
   withGetCustomPropertyUsers,
+  withGetWorkspaceGroups,
   graphql(UpdateCustomPropertiesMutation),
-  withGraphQLMutation
+  withGraphQLMutation,
+  withLargeLoader,
 )
 
 export default enhance(UpdateCustomProperties)

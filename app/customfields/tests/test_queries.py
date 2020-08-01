@@ -86,6 +86,8 @@ class TestGetCustomProperties(cases.GraphQLTestCase):
         cls.datastore = factories.DatastoreFactory(workspace=cls.workspace)
         cls.global_id = helpers.to_global_id('DatastoreType', cls.datastore.pk)
 
+        cls.group = factories.GroupFactory(workspace_id=cls.workspace.id)
+
         cls.attributes = {
             'content_type': cls.datastore.content_type,
             'workspace': cls.workspace,
@@ -105,9 +107,14 @@ class TestGetCustomProperties(cases.GraphQLTestCase):
                 **cls.attributes,
             ),
             factories.CustomFieldFactory(
-                field_name='Team',
+                field_name='Department',
                 field_type=models.CustomField.ENUM,
                 validators={'choices': ['Data Engineering', 'Product', 'Design']},
+                **cls.attributes,
+            ),
+            factories.CustomFieldFactory(
+                field_name='Team',
+                field_type=models.CustomField.GROUP,
                 **cls.attributes,
             ),
         ]
@@ -115,6 +122,7 @@ class TestGetCustomProperties(cases.GraphQLTestCase):
         cls.datastore.custom_properties = {
             cls.customfields[0].pk: cls.user.pk,
             cls.customfields[2].pk: 'Design',
+            cls.customfields[3].pk: cls.group.pk,
         }
         cls.datastore.save()
 
@@ -128,8 +136,9 @@ class TestGetCustomProperties(cases.GraphQLTestCase):
                 'fieldId': self.customfields[0].pk,
                 'fieldLabel': self.customfields[0].field_name,
                 'fieldValue': {
-                    'name': 'Sam Crust',
                     'email': 'owner@metamapper.io',
+                    'id': 'VXNlclR5cGU6MQ==',
+                    'name': 'Sam Crust',
                     'pk': 1,
                     'type': 'User',
                 },
@@ -143,7 +152,16 @@ class TestGetCustomProperties(cases.GraphQLTestCase):
                 'fieldId': self.customfields[2].pk,
                 'fieldLabel': self.customfields[2].field_name,
                 'fieldValue': 'Design',
-
+            },
+            {
+                'fieldId': self.customfields[3].pk,
+                'fieldLabel': self.customfields[3].field_name,
+                'fieldValue': {
+                    'id': helpers.to_global_id('GroupType', self.group.id),
+                    'name': self.group.name,
+                    'pk': self.group.pk,
+                    'type': 'Group',
+                },
             },
         ])
 

@@ -5,6 +5,7 @@ export default gql`
     workspaceGroups {
       edges {
         node {
+          pk
           id
           name
           description

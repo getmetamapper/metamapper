@@ -31,6 +31,7 @@ const fieldsetMapping = {
   ENUM: EnumTypeFieldset,
   TEXT: null,
   USER: null,
+  GROUP: null,
 }
 
 const CustomFieldFieldset = ({

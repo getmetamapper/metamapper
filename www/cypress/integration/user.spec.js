@@ -14,6 +14,7 @@ describe("user.spec.js", () => {
   }
 
   const currentUser = {
+    id: "VXNlclR5cGU6NDkx",
     fname: "Walter",
     lname: "White",
     email: "current.user@metamapper.test",
@@ -34,10 +35,43 @@ describe("user.spec.js", () => {
   }
 
   const anotherUser = {
+    id: "VXNlclR5cGU6NDk1",
     fname: "Gus",
     lname: "Fring",
     email: "another.user@metamapper.test",
+    password: "password1234"
   }
+
+  const outsider = {
+    id: "VXNlclR5cGU6MjQ2NDUyMzQ1",
+    email: "owner.groups@metamapper.test",
+    password: "password1234"
+  }
+
+  describe("view workspace user profile", () => {
+    beforeEach(() => {
+      cy.login(anotherUser.email, anotherUser.password)
+        .then(() =>
+          cy.visit(`/${workspace.slug}/settings/users/${currentUser.id}`))
+    })
+
+    it("should have the correct meta title", () => {
+      cy.title().should("eq", `User - ${currentUser.fname} ${currentUser.lname} - Metamapper`)
+    })
+
+    it("using UI", () => {
+      cy.getByTestId("UserProfile")
+        .should("be.visible")
+        .should("contain", currentUser.fname)
+        .should("contain", currentUser.lname)
+        .should("contain", currentUser.email)
+
+      // Navigation should contain the proper links
+      cy.getByTestId("UserProfile").contains("Groups")
+
+      cy.getByTestId("GroupsTable").should("be.visible")
+    })
+  })
 
   describe("edit user profile", () => {
     beforeEach(() => {
@@ -277,6 +311,31 @@ describe("user.spec.js", () => {
       cy.contains("button", "Sign In").click()
 
       cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+    })
+  })
+
+  describe("404", () => {
+    it("when workspace does not exist", () => {
+      cy.login(anotherUser.email, anotherUser.password)
+        .then(() =>
+          cy.visit(`/does-not-exist/settings/users/${outsider.id}`))
+
+      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+    })
+
+    it("when user is unauthorized", () => {
+      cy.login(outsider.email, outsider.password)
+        .then(() =>
+          cy.visit(`/${workspace.slug}/settings/users/${currentUser.id}`))
+
+      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+    })
+
+    it("when group does not exist", () => {
+      cy.login(anotherUser.email, anotherUser.password)
+        .then(() => cy.visit(`/${workspace.slug}/settings/users/does-not-exist`))
+
+      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })
   })
 })
