@@ -347,7 +347,11 @@ describe("groups.spec.js", () => {
 
     beforeEach(() => {
       cy.login(member.email, member.password, workspace.id)
-        .then(() => cy.visit(`/${workspace.slug}/settings/groups/R3JvdXBUeXBlOjM3NDY0NjQw`))
+        .then(() => cy.visit(`/${workspace.slug}/settings/groups/${group.id}`))
+    })
+
+    it("should have the correct meta title", () => {
+      cy.title().should("eq", `Group - ${group.name} - Metamapper`)
     })
 
     it("using UI", () => {
