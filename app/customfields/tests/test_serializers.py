@@ -208,6 +208,7 @@ class CustomPropertiesSerializerTests(cases.SerializerTestCase):
         cls.current_user = factories.UserFactory()
         cls.workspace = factories.WorkspaceFactory(creator=cls.current_user)
         cls.workspace.grant_membership(cls.current_user, auth.Membership.OWNER)
+        cls.group = factories.GroupFactory(workspace_id=cls.workspace.id)
         cls.datastore = factories.DatastoreFactory(workspace=cls.workspace)
         cls.attributes = {
             'content_type': cls.datastore.content_type,
@@ -228,9 +229,14 @@ class CustomPropertiesSerializerTests(cases.SerializerTestCase):
                 **cls.attributes,
             ),
             factories.CustomFieldFactory(
-                field_name='Team',
+                field_name='Department',
                 field_type=models.CustomField.ENUM,
                 validators={'choices': ['Data Engineering', 'Product', 'Design']},
+                **cls.attributes,
+            ),
+            factories.CustomFieldFactory(
+                field_name='Team',
+                field_type=models.CustomField.GROUP,
                 **cls.attributes,
             ),
         ]
@@ -287,6 +293,27 @@ class CustomPropertiesSerializerTests(cases.SerializerTestCase):
         self.assertTrue(serializer.is_valid())
         self.assertTrue(serializer.save())
 
+    def test_when_valid_group_change(self):
+        """It should be able to update the custom properties.
+        """
+        new_values = {
+            'properties': {
+                self.customfields[1].pk: 'Data',
+                self.customfields[2].pk: 'Product',
+                self.customfields[3].pk: self.group.pk,
+            },
+        }
+
+        serializer = self.serializer_class(
+            instance=self.datastore,
+            data=new_values,
+            partial=True,
+            context={'request': self.request},
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+
     def test_when_invalid_property(self):
         """It should be able to create the resource.
         """
@@ -302,7 +329,7 @@ class CustomPropertiesSerializerTests(cases.SerializerTestCase):
         ])
 
     def test_user_exists(self):
-        """It should be able to create the resource.
+        """It should NOT be able to create the resource.
         """
         serializer = self.serializer_class(
             instance=self.datastore,
@@ -320,8 +347,48 @@ class CustomPropertiesSerializerTests(cases.SerializerTestCase):
             {'resource': 'CustomField', 'field': 'properties', 'code': 'invalid'}
         ])
 
+    def test_group_exists(self):
+        """It should NOT be able to create the resource.
+        """
+        serializer = self.serializer_class(
+            instance=self.datastore,
+            data={
+                'properties': {
+                    self.customfields[2].pk: 'test',
+                    self.customfields[3].pk: '1234',
+                }
+            },
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'resource': 'CustomField', 'field': 'properties', 'code': 'invalid'}
+        ])
+
+    def test_group_is_in_workspace(self):
+        """It should NOT be able to create the resource.
+        """
+        outsider_group = factories.GroupFactory()
+
+        serializer = self.serializer_class(
+            instance=self.datastore,
+            data={
+                'properties': {
+                    self.customfields[2].pk: 'test',
+                    self.customfields[3].pk: outsider_group.pk,
+                }
+            },
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'resource': 'CustomField', 'field': 'properties', 'code': 'invalid'}
+        ])
+
     def test_enum_field(self):
-        """It should be able to create the resource.
+        """It should NOT be able to create the resource.
         """
         serializer = self.serializer_class(
             instance=self.datastore,

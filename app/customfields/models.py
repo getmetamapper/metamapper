@@ -16,11 +16,13 @@ class CustomField(StringPrimaryKeyModel, AuditableModel, TimestampedModel):
     USER = 'USER'
     TEXT = 'TEXT'
     ENUM = 'ENUM'
+    GROUP = 'GROUP'
 
     FIELD_TYPE_CHOICES = (
         (USER, 'User'),
         (TEXT, 'Text'),
         (ENUM, 'Enum'),
+        (GROUP, 'Group'),
     )
 
     SUPPORTED_MODELS = [
@@ -69,6 +71,10 @@ class CustomField(StringPrimaryKeyModel, AuditableModel, TimestampedModel):
         return self.field_type == self.ENUM
 
     @property
+    def is_group_type(self):
+        return self.field_type == self.GROUP
+
+    @property
     def choices(self):
         """list: Retrieve the list of available choices for an ENUM field.
         """
@@ -101,12 +107,23 @@ class CustomPropertiesModel(models.Model):
             **kwargs,
         )
 
-    def get_related_user(self, user_id):
+    def get_related_user(self, user_id, queryset=None):
         """Retrieve the workspace team member.
         """
         if not isinstance(user_id, int):
             return None
-        return self.workspace.team_members.filter(pk=user_id).first()
+        if not queryset:
+            return self.workspace.team_members.filter(id=user_id).first()
+        return next(filter(lambda u: u.id == user_id, queryset), None)
+
+    def get_related_group(self, group_id, queryset=None):
+        """Retrieve the workspace group.
+        """
+        if not isinstance(group_id, int):
+            return None
+        if not queryset:
+            return self.workspace.groups.filter(id=group_id).first()
+        return next(filter(lambda g: g.id == group_id, queryset), None)
 
     def get_custom_properties(self):
         """Retrieve all custom properties associated with a model.
@@ -114,11 +131,20 @@ class CustomPropertiesModel(models.Model):
         custom_fields = self.get_custom_fields().order_by('created_at')
         custom_output = {}
 
+        user_queryset = None
+        group_queryset = None
+
         for f in custom_fields:
             value = self.custom_properties.get(f.pk)
             if f.is_user_type:
-                value = self.get_related_user(value)
-            if f.is_enum_type and value not in f.choices:
+                if not user_queryset:
+                    user_queryset = self.workspace.team_members.all()
+                value = self.get_related_user(value, user_queryset)
+            elif f.is_group_type:
+                if not group_queryset:
+                    group_queryset = self.workspace.groups.all()
+                value = self.get_related_group(value, group_queryset)
+            elif f.is_enum_type and value not in f.choices:
                 value = None
             custom_output[f.pk] = {
                 'label': f.field_name,

@@ -129,6 +129,7 @@ class CustomPropertiesTestsMixin(object):
         })
 
         workspace.revoke_membership(user)
+        resource.refresh_from_db()
 
         self.assertEqual(resource.get_custom_properties()[customfield.pk], {
             'label': 'Steward', 'value': None

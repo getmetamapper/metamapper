@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from graphene.types import Scalar
+from graphql_relay import to_global_id
+
 from app.authentication.models import User
+from app.authorization.models import Group
 
 
 class CustomPropScalar(Scalar):
@@ -14,6 +17,8 @@ class CustomPropScalar(Scalar):
             value = attrs['value']
             if isinstance(value, (User,)):
                 value = CustomPropScalar.serialize_user(value)
+            elif isinstance(value, (Group,)):
+                value = CustomPropScalar.serialize_group(value)
             output.append({
                 'fieldId': k,
                 'fieldLabel': label,
@@ -26,8 +31,20 @@ class CustomPropScalar(Scalar):
         """Builds the response for a User.
         """
         return {
+            'id': to_global_id('UserType', user.pk),
             'pk': user.pk,
             'name': user.name,
             'email': user.email,
             'type': 'User',
+        }
+
+    @staticmethod
+    def serialize_group(group):
+        """Builds the response for a Group.
+        """
+        return {
+            'id': to_global_id('GroupType', group.pk),
+            'pk': group.pk,
+            'name': group.name,
+            'type': 'Group',
         }
