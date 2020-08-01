@@ -19,6 +19,14 @@ const withLoader = (opts = {}) => (ChildComponent) => {
   return withInnerLoader
 }
 
+export const withPopoverLoader = withLoader({
+  size: "small",
+  wrapperstyles: {
+    textAlign: "center",
+    margin: "16px 40px"
+  },
+})
+
 export const withLargeLoader = withLoader({
   size: "large",
   wrapperstyles: {

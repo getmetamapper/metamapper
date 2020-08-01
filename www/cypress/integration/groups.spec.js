@@ -125,7 +125,7 @@ describe("groups.spec.js", () => {
           "be.visible"
         )
 
-        cy.getByTestId("GroupsTable").contains(formInputs.name).parent("tr").within(() => {
+        cy.getByTestId("GroupsTable").contains("tr", formInputs.name).within(() => {
           cy.get("td").eq(0).contains(formInputs.name)
           cy.get("td").eq(1).contains("0")
           cy.get("td").eq(2).contains(formInputs.desc)
@@ -156,7 +156,7 @@ describe("groups.spec.js", () => {
       })
 
       it("using UI", () => {
-        cy.getByTestId("GroupsTable").contains("Everybody").parent("tr").within(() => {
+        cy.getByTestId("GroupsTable").contains("tr", "Everybody").within(() => {
           cy.contains("Edit").click()
         })
 
@@ -176,7 +176,7 @@ describe("groups.spec.js", () => {
           "be.visible"
         )
 
-        cy.getByTestId("GroupsTable").contains(formInputs.name).parent("tr").within(() => {
+        cy.getByTestId("GroupsTable").contains("tr", formInputs.name).within(() => {
           cy.get("td").eq(0).contains(formInputs.name)
           cy.get("td").eq(1).contains("7")
           cy.get("td").eq(2).contains(formInputs.desc)
@@ -207,7 +207,7 @@ describe("groups.spec.js", () => {
       })
 
       it("using UI", () => {
-        cy.getByTestId("GroupsTable").contains("Executives").parent("tr").within(() => {
+        cy.getByTestId("GroupsTable").contains("tr", "Executives").within(() => {
           cy.contains("Delete").click()
         })
 
@@ -242,7 +242,7 @@ describe("groups.spec.js", () => {
     })
 
     it("displays a paginated list of users", () => {
-      cy.getByTestId("GroupsTable").contains("Everyone").parent("tr").within(() => {
+      cy.getByTestId("GroupsTable").contains("tr", "Everyone").within(() => {
         cy.get("td").eq(1).click()
       })
 
@@ -256,7 +256,7 @@ describe("groups.spec.js", () => {
     })
 
     it("filters users via search", () => {
-      cy.getByTestId("GroupsTable").contains("Everyone").parent("tr").within(() => {
+      cy.getByTestId("GroupsTable").contains("tr", "Everyone").within(() => {
         cy.get("td").eq(1).click()
       })
 
@@ -293,7 +293,7 @@ describe("groups.spec.js", () => {
     it("using UI", () => {
       const targetUser = "Bugs Bunny"
 
-      cy.getByTestId("GroupsTable").contains("Everyone").parent("tr").within(() => {
+      cy.getByTestId("GroupsTable").contains("tr", "Everyone").within(() => {
         cy.get("td").eq(1).click()
       })
 
@@ -319,7 +319,7 @@ describe("groups.spec.js", () => {
     it("using UI", () => {
       const targetUser = "Bugs Bunny"
 
-      cy.getByTestId("GroupsTable").contains("Everyone").parent("tr").within(() => {
+      cy.getByTestId("GroupsTable").contains("tr", "Everyone").within(() => {
         cy.get("td").eq(1).click()
       })
 
@@ -338,6 +338,28 @@ describe("groups.spec.js", () => {
     })
   })
 
+  describe("view group profile", () => {
+    const group = {
+      id: "R3JvdXBUeXBlOjM3NDY0NjQw",
+      name: "Everyone",
+      description: "Everyone in the organization is in this group."
+    }
+
+    beforeEach(() => {
+      cy.login(member.email, member.password, workspace.id)
+        .then(() => cy.visit(`/${workspace.slug}/settings/groups/R3JvdXBUeXBlOjM3NDY0NjQw`))
+    })
+
+    it("using UI", () => {
+      cy.getByTestId("GroupProfile")
+        .should("be.visible")
+        .should("contain", group.name)
+        .should("contain", group.description)
+
+      cy.getByTestId("GroupUsersTable").get(".user-display-name").should("have.length", 5)
+    })
+  })
+
   describe("404", () => {
     it("when workspace does not exist", () => {
       cy.login(owner.email, owner.password)
@@ -351,6 +373,13 @@ describe("groups.spec.js", () => {
       cy.login(outsider.email, outsider.password)
         .then(() =>
           cy.visit(`/${workspace.slug}/settings/groups`))
+
+      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+    })
+
+    it("when group does not exist", () => {
+      cy.login(owner.email, owner.password)
+        .then(() => cy.visit(`/${workspace.slug}/settings/groups/does-not-exist`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })

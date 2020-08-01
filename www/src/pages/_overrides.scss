@@ -122,6 +122,9 @@ trix-toolbar .trix-button-group {
 .ant-layout {
   background: $color-layout;
 }
+.ant-result-info .ant-result-icon > .anticon {
+  color: $color-primary;
+}
 .ant-select .ant-select-selection--single {
   height: 42px;
 }

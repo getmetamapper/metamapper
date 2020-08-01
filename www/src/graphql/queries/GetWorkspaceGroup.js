@@ -1,20 +1,14 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query workspaceGroup($id: ID!) {
-    workspaceGroup(id: $id) {
+  query workspaceGroup($groupId: ID!) {
+    workspaceGroup(id: $groupId) {
+      id
+      pk
       name
       description
       createdAt
-      users {
-        edges {
-          node {
-            name
-            userId
-            email
-          }
-        }
-      }
+      usersCount
     }
   }
 `
