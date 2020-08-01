@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react"
 import { Table } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import AvatarStacked from "app/Common/AvatarStacked"
+import Link from "app/Navigation/Link"
 import withGetWorkspaceGroups from "graphql/withGetWorkspaceGroups"
 
 class GroupsTable extends Component {
@@ -11,8 +12,7 @@ class GroupsTable extends Component {
     this.columns = [
       {
         title: "Name",
-        dataIndex: "name",
-        key: "name",
+        render: ({ id, name }) => <Link to={`/settings/groups/${id}`}>{name}</Link>
       },
       {
         title: "Users",

@@ -79,15 +79,19 @@ class Groups extends Component {
 
   render() {
     const {
-      updatingGroup,
-      updateVisible,
-      deletingGroup,
       deleteVisible,
-      managingGroup,
+      deletingGroup,
       manageVisible,
+      managingGroup,
       setupVisible,
+      updateVisible,
+      updatingGroup,
     } = this.state
-    const { loading, hasPermission, workspace } = this.props
+    const {
+      loading,
+      hasPermission,
+      workspace,
+    } = this.props
     return (
       <WorkspaceLayout
         title={`Groups - ${workspace.slug} - Metamapper`}

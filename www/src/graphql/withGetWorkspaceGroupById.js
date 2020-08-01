@@ -1,12 +1,8 @@
 import { graphql } from "react-apollo"
 import GetWorkspaceGroup from "graphql/queries/GetWorkspaceGroup"
 
-const withGetWorkspaceGroup = graphql(GetWorkspaceGroup, {
-  options: ({
-    match: {
-      params: { groupId },
-    },
-  }) => ({
+const withGetWorkspaceGroupById = graphql(GetWorkspaceGroup, {
+  options: ({ groupId }) => ({
     fetchPolicy: "network-only",
     variables: { groupId },
   }),
@@ -28,4 +24,4 @@ const withGetWorkspaceGroup = graphql(GetWorkspaceGroup, {
   },
 })
 
-export default withGetWorkspaceGroup
+export default withGetWorkspaceGroupById

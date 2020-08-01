@@ -54,6 +54,8 @@ class MembershipType(AuthNode, DjangoObjectType):
 class GroupType(AuthNode, DjangoObjectType):
     permission_classes = (WorkspaceTeamMembersOnly,)
 
+    pk = graphene.Int()
+
     users_count = graphene.Int()
 
     class Meta:
@@ -63,7 +65,10 @@ class GroupType(AuthNode, DjangoObjectType):
         interfaces = (relay.Node,)
         connection_class = connections.DefaultConnection
 
+    def resolve_pk(instance, info):
+        return instance.id
+
     def resolve_users_count(instance, info):
-        """Get the number of users that belong to this group.
+        """TODO(scruwys): Move this to a loader.
         """
         return instance.user_set.count()

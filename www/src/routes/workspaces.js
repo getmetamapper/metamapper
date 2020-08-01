@@ -8,6 +8,7 @@ import AuthenticationSetupOAuth2Google from "pages/WorkspaceSettings/Authenticat
 import AuthenticationSetupSaml from "pages/WorkspaceSettings/AuthenticationSetupSaml"
 import AuthenticationSetupRouting from "pages/WorkspaceSettings/AuthenticationSetupRouting"
 import Groups from "pages/WorkspaceSettings/Groups"
+import GroupProfile from "pages/WorkspaceSettings/GroupProfile"
 import CustomFields from "pages/WorkspaceSettings/CustomFields"
 
 export default [
@@ -55,6 +56,12 @@ export default [
     component: Groups,
     path: "/:workspaceSlug/settings/groups",
     namespace: "workspace",
+    exact: true,
+  },
+  {
+    component: GroupProfile,
+    path: "/:workspaceSlug/settings/groups/:groupId",
+    namespace: "groups",
   },
   {
     component: General,

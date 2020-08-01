@@ -45,11 +45,11 @@ class ManageGroupUsers extends Component {
     const {
       form,
       group,
-      workspaceUsers,
       hasPermission,
+      onCancel,
       submitting,
       visible,
-      onCancel,
+      workspaceUsers,
     } = this.props
     return (
       <Modal
@@ -70,6 +70,7 @@ class ManageGroupUsers extends Component {
         )}
         <ManageGroupUsersTable
           group={group}
+          workspaceUsers={workspaceUsers}
           hasPermission={hasPermission}
           onRemove={this.handleRemoveUser}
         />
