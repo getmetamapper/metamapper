@@ -22,10 +22,12 @@ class MembershipType(AuthNode, DjangoObjectType):
     name = graphene.String()
     email = graphene.String()
 
+    workspace_groups = graphene.List('app.authorization.schema.GroupType')
+
     class Meta:
         model = Membership
         filter_fields = []
-        exclude_fields = ('updated_at',)
+        exclude_fields = ('user', 'updated_at',)
         interfaces = (relay.Node,)
         connection_class = connections.DefaultConnection
 
@@ -49,6 +51,9 @@ class MembershipType(AuthNode, DjangoObjectType):
             return instance.user.name
         except (AttributeError, User.DoesNotExist):
             return None
+
+    def resolve_workspace_groups(instance, info):
+        return instance.user.groups.filter(workspace_id=info.context.workspace.id).order_by('name')
 
 
 class GroupType(AuthNode, DjangoObjectType):

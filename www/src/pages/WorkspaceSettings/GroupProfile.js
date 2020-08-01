@@ -1,4 +1,5 @@
-import React from "react"
+import React, { Fragment } from "react"
+import { Helmet } from "react-helmet"
 import { compose } from "react-apollo"
 import { Card, Col, Row } from "antd"
 import withGetWorkspaceGroup from "graphql/withGetWorkspaceGroup"
@@ -29,31 +30,32 @@ const breadcrumbs = (workspaceSlug, group) => {
 }
 
 const GroupProfile = ({ currentWorkspace, workspaceGroup }) => (
-  <Row className="group-profile">
-    <Col span={8} offset={8}>
-      <div className="breadcrumbs-wrapper">
-        <Breadcrumbs breadcrumbs={breadcrumbs(currentWorkspace.slug, workspaceGroup)} />
-      </div>
-      <Card data-test="GroupProfile">
-        <div className="group-profile-header">
-          <GroupProfileInner group={workspaceGroup} avatarSize={64} showDescription />
+  <Fragment>
+    <Helmet>
+      <title>Group - {workspaceGroup.name} - Metamapper</title>
+    </Helmet>
+    <Row className="group-profile">
+      <Col span={8} offset={8}>
+        <div className="breadcrumbs-wrapper">
+          <Breadcrumbs breadcrumbs={breadcrumbs(currentWorkspace.slug, workspaceGroup)} />
         </div>
-        <ManageGroupUsersTable
-          group={workspaceGroup}
-          hasPermission={false}
-          onRemove={null}
-        />
-      </Card>
-    </Col>
-  </Row>
+        <Card data-test="GroupProfile">
+          <div className="group-profile-header">
+            <GroupProfileInner group={workspaceGroup} avatarSize={64} showDescription />
+          </div>
+          <ManageGroupUsersTable
+            group={workspaceGroup}
+            hasPermission={false}
+            onRemove={null}
+          />
+        </Card>
+      </Col>
+    </Row>
+  </Fragment>
 )
 
 const withNotFound = withNotFoundHandler(({ workspaceGroup }) => {
   return !workspaceGroup || !workspaceGroup.hasOwnProperty("id")
 })
 
-export default compose(
-  withGetWorkspaceGroup,
-  withLargeLoader,
-  withNotFound,
-)(GroupProfile)
+export default compose(withGetWorkspaceGroup, withLargeLoader, withNotFound)(GroupProfile)

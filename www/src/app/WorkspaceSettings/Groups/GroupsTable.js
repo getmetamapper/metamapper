@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { Table } from "antd"
-import { withLargeLoader } from "hoc/withLoader"
 import AvatarStacked from "app/Common/AvatarStacked"
 import Link from "app/Navigation/Link"
-import withGetWorkspaceGroups from "graphql/withGetWorkspaceGroups"
 
 class GroupsTable extends Component {
   constructor(props) {
@@ -54,21 +52,30 @@ class GroupsTable extends Component {
         ),
       })
     }
+
+    if (!props.showUsersCount) {
+      this.columns = this.columns.filter(row => row.title !== "Users")
+    }
   }
 
   render() {
-    const { workspaceGroups } = this.props
+    const { groups } = this.props
     return (
       <span className="groups-table" data-test="GroupsTable">
         <Table
           rowKey="id"
-          dataSource={workspaceGroups}
+          dataSource={groups}
           columns={this.columns}
           pagination={false}
+          locale={{ emptyText: "Nothing here." }}
         />
       </span>
     )
   }
 }
 
-export default withGetWorkspaceGroups(withLargeLoader(GroupsTable))
+GroupsTable.defaultProps = {
+  showUsersCount: true,
+}
+
+export default GroupsTable

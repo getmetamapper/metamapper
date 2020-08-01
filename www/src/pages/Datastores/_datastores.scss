@@ -353,10 +353,15 @@
 .datastore-activity-item {
   .ant-list-item-meta-title {
     font-weight: 400;
+    a {
+      color: $color-links;
+      font-weight: 700;
+    }
   }
   a {
     color: $color-links;
   }
+
 }
 
 /*

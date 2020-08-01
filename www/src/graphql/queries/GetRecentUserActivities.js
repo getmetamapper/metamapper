@@ -1,11 +1,8 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query GetRecentDatastoreActivities($datastoreId: ID!) {
-    recentDatastoreActivities(
-      datastoreId: $datastoreId
-      first: 10
-    ) {
+  query GetRecentUserActivities($userId: ID!) {
+    recentUserActivities(userId: $userId, first: 20) {
       edges {
         node {
           verb

@@ -1,6 +1,6 @@
 import React from "react"
 import { Card, List } from "antd"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 import DatastoreActivityItem from "./DatastoreActivityItem"
 
 const DatastoreActivity = ({ datastore, activities, title }) => (
@@ -13,14 +13,5 @@ const DatastoreActivity = ({ datastore, activities, title }) => (
     />
   </Card>
 )
-
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
 
 export default withLargeLoader(DatastoreActivity)
