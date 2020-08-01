@@ -24,6 +24,11 @@ class Query(graphene.ObjectType):
         active_only=graphene.Boolean(required=False),
     )
 
+    workspace_user = graphene.Field(
+        type=MembershipType,
+        id=graphene.ID(required=True),
+    )
+
     workspace_groups = AuthConnectionField(
         type=GroupType,
     )
@@ -56,6 +61,17 @@ class Query(graphene.ObjectType):
             queryset = queryset.filter(user__id__isnull=False)
 
         return queryset.distinct()
+
+    @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
+    def resolve_workspace_user(self, info, id):
+        """Retrieve a team member by the ID. Scoped to the current workspace.
+        """
+        _type, pk = shortcuts.from_global_id(id)
+        get_kwargs = {
+            'workspace_id': info.context.workspace.pk,
+            'user__id': pk,
+        }
+        return shortcuts.get_object_or_404(Membership, **get_kwargs)
 
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
     def resolve_workspace_groups(self, info, *args, **kwargs):

@@ -1,6 +1,7 @@
 import Workspaces from "pages/Workspaces/Workspaces"
 import General from "pages/WorkspaceSettings/General"
 import Users from "pages/WorkspaceSettings/Users"
+import UserProfile from "pages/WorkspaceSettings/UserProfile"
 import Authentication from "pages/WorkspaceSettings/Authentication"
 import AuthenticationEditSaml from "pages/WorkspaceSettings/AuthenticationEditSaml"
 import AuthenticationSetupOAuth2Github from "pages/WorkspaceSettings/AuthenticationSetupOAuth2Github"
@@ -15,7 +16,13 @@ export default [
   {
     component: Users,
     path: "/:workspaceSlug/settings/users",
-    namespace: "workspace",
+    namespace: "workspace-users",
+    exact: true,
+  },
+  {
+    component: UserProfile,
+    path: "/:workspaceSlug/settings/users/:userId",
+    namespace: "workspace-users",
   },
   {
     component: AuthenticationSetupOAuth2Github,

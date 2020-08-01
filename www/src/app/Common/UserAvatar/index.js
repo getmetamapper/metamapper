@@ -13,11 +13,12 @@ const avatarColors = [
   { color: "#6a00f5", backgroundColor: "#e3cffd" }, // purple
 ]
 
-const UserAvatar = ({ pk, name, email, noColor }) => (
+const UserAvatar = ({ pk, name, email, noColor, size }) => (
   <div className="avatar">
     <Avatar
-      src={`https://www.gravatar.com/avatar/${md5(email.toLowerCase())}?d=404`}
+      src={`https://www.gravatar.com/avatar/${md5(email.toLowerCase())}?d=robohash`}
       style={noColor ? { backgroundColor: "#cccccc" } : avatarColors[pk % avatarColors.length]}
+      size={size}
     >
       {coalesce(name, email)[0].toUpperCase()}
     </Avatar>
@@ -28,6 +29,7 @@ UserAvatar.defaultProps = {
   email: null,
   name: null,
   noColor: false,
+  size: 32,
 }
 
 export default UserAvatar
