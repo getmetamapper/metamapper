@@ -16,7 +16,7 @@ const UserProfileInner = ({
       </div>
       <div className="profile-metadata">
         <span className="profile-name">
-          {showLink ? <Link to={`/settings/users/${user.id}`}>{user.name}</Link> : user.name}
+          {showLink ? <Link to={`/settings/users/${user.userId}`}>{user.name}</Link> : user.name}
         </span>
         <ul>
           <li>
