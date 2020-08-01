@@ -428,6 +428,7 @@ class UpdateCustomPropertiesTests(cases.GraphQLTestCase):
         }
 
         current_user = {
+            'id': helpers.to_global_id('UserType', self.user.pk),
             'pk': self.user.pk,
             'name': self.user.name,
             'email': self.user.email,
