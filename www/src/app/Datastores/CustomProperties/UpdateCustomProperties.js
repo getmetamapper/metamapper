@@ -132,7 +132,6 @@ class UpdateCustomProperties extends Component {
                   field,
                   initialValue: fieldValue,
                 }
-                console.log(fieldValue)
                 if (fields[fieldId].fieldType === "USER") {
                   inputProps.choices = users
                 } else if (fields[fieldId].fieldType === "GROUP") {

@@ -61,7 +61,7 @@ class GroupsTable extends Component {
   render() {
     const { groups } = this.props
     return (
-      <span className="groups-table" data-test="GroupsTable">
+      <div className="groups-table" data-test="GroupsTable">
         <Table
           rowKey="id"
           dataSource={groups}
@@ -69,7 +69,7 @@ class GroupsTable extends Component {
           pagination={false}
           locale={{ emptyText: "Nothing here." }}
         />
-      </span>
+      </div>
     )
   }
 }
