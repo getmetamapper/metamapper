@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom"
 import { List, Divider, Row, Col } from "antd"
 import { mapKeys } from "lodash"
 import SearchResultItem from "app/Omnisearch/SearchResultItem"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 import withGetOmnisearchResults from "graphql/withGetOmnisearchResults"
 
 const SearchResults = ({ datastores, searchResults, timeElapsed }) => {
@@ -37,15 +37,6 @@ const SearchResults = ({ datastores, searchResults, timeElapsed }) => {
     </span>
   )
 }
-
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
 
 export default compose(
   withRouter,

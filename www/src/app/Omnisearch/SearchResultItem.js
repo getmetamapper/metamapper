@@ -1,5 +1,5 @@
 import React from "react"
-import { Icon, List, Row, Col, Tooltip, Tag } from "antd"
+import { Icon, List, Tooltip, Tag } from "antd"
 import Link from "app/Navigation/Link"
 import DatastoreEngineIcon from "app/Datastores/DatastoreEngineIcon"
 import Interweave from "interweave"
@@ -10,8 +10,9 @@ const iconMapping = {
   comment: "message",
 }
 
-const relevance = (score) => {
+const maxDescriptionLength = 140;
 
+const relevance = (score) => {
   if (score >= 0.06) {
     return <Tag color="geekblue">High</Tag>
   }
@@ -31,45 +32,51 @@ const SearchResultItem = ({
   searchResult: { label, description, pathname },
 }) => (
   <List.Item className="search-result" data-test="SearchResultItem">
-    <Row>
-      <Col span={2}>
-        <Tooltip title={modelName}>
-          <Icon
-            type={iconMapping[modelName.toLowerCase()]}
-            style={{ fontSize: 32 }}
+    <div className="search-result-icon">
+      <Tooltip title={modelName}>
+        <Icon
+          type={iconMapping[modelName.toLowerCase()]}
+          style={{ fontSize: 32 }}
+        />
+      </Tooltip>
+    </div>
+    <div className="search-result-content">
+      <p className="label">
+        <Link to={pathname}><b>{label}</b></Link>
+      </p>
+      <p className="desc">
+        {description ? (
+          <Interweave
+            content={
+              (description.length < maxDescriptionLength)
+                ? description
+                : `${description.substring(0, maxDescriptionLength + 1)}...`
+            }
           />
+        ) : (
+          <span>No description provided</span>
+        )}
+      </p>
+    </div>
+    <div className="search-result-metadata">
+      <span className="pull-right">
+        <Tooltip title="Revelance Score">
+          {relevance(score)}
         </Tooltip>
-      </Col>
-      <Col span={22}>
-        <p className="label">
-          <Link to={pathname}><b>{label}</b></Link>
-            <span style={{ float: "right" }}>
-              <Tooltip title={`Revelance Score`}>
-                {relevance(score)}
-              </Tooltip>
-              {datastore && (
-                <span className="ml-5">
-                  <DatastoreEngineIcon
-                    datastore={datastore}
-                    tooltip={datastore.name}
-                    customStyles={{
-                      width: 24,
-                      height: 24,
-                    }}
-                  />
-                </span>
-              )}
-            </span>
-        </p>
-        <p className="desc">
-          {description ? (
-            <Interweave content={description} />
-          ) : (
-            <span>No description provided</span>
-          )}
-        </p>
-      </Col>
-    </Row>
+        {datastore && (
+          <span className="ml-5">
+            <DatastoreEngineIcon
+              datastore={datastore}
+              tooltip={datastore.name}
+              customStyles={{
+                width: 24,
+                height: 24,
+              }}
+            />
+          </span>
+        )}
+      </span>
+    </div>
   </List.Item>
 )
 
