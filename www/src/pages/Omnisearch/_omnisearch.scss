@@ -49,6 +49,24 @@
         }
     }
 }
+.omnisearch-results .search-result {
+    display: flex;
+}
+.omnisearch-results .search-result {
+    .search-result-icon {
+        align-self: flex-start;
+        flex: 1;
+        max-width: 52px;
+    }
+    .search-result-content {
+        flex: 1;
+    }
+    .search-result-metadata {
+        align-self: flex-start;
+        flex: 1;
+        max-width: 100px;
+    }
+}
 .omnisearch-datastore {
     div.item {
         color: $color-primary;

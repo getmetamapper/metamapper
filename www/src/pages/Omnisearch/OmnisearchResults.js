@@ -1,16 +1,16 @@
 import React, { Component } from "react"
 import { Helmet } from "react-helmet"
 import { compose } from "react-apollo"
-import { withRouter } from "react-router-dom"
-import { Row, Col } from "antd"
 import { find } from "lodash"
-import qs from "query-string"
-import Link from "app/Navigation/Link"
+import { Row, Col } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
-import withGetDatastoresList from "graphql/withGetDatastoresList"
-import SearchResults from "app/Omnisearch/SearchResults"
+import { withRouter } from "react-router-dom"
 import FilterSearchByDatastore from "app/Omnisearch/FilterSearchByDatastore"
+import Link from "app/Navigation/Link"
+import qs from "query-string"
+import SearchResults from "app/Omnisearch/SearchResults"
+import withGetDatastoresList from "graphql/withGetDatastoresList"
+import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
 class OmnisearchResults extends Component {
   constructor(props) {
