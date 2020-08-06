@@ -29,7 +29,7 @@ SELECT
    ON c.table_schema = t.table_schema
   AND c.table_name = t.table_name
   AND c.table_catalog = t.table_catalog
- JOIN information_schema.columns ic
+ LEFT JOIN information_schema.columns ic
    ON c.table_schema = ic.table_schema
   AND c.table_name = ic.table_name
   AND c.column_name = ic.column_name
