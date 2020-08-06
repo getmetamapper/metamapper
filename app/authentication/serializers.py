@@ -117,6 +117,7 @@ class CurrentUserSerializer(MetamapperSerializer, serializers.ModelSerializer):
 class WorkspaceSerializer(MetamapperSerializer, serializers.ModelSerializer):
     name = serializers.CharField(required=True, min_length=3, max_length=255)
     slug = serializers.CharField(required=True, min_length=3, max_length=50)
+    beacon_consent = serializers.BooleanField(required=False, default=False, allow_null=False)
 
     class Meta:
         model = models.Workspace
@@ -125,6 +126,7 @@ class WorkspaceSerializer(MetamapperSerializer, serializers.ModelSerializer):
             'name',
             'slug',
             'creator_id',
+            'beacon_consent',
             'created_at',
             'updated_at')
 
@@ -161,6 +163,7 @@ class WorkspaceSerializer(MetamapperSerializer, serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.slug = validated_data.get('slug', instance.slug)
+        instance.beacon_consent = validated_data.get('beacon_consent', instance.beacon_consent)
         instance.save()
         return instance
 

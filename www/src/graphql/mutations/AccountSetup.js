@@ -8,6 +8,7 @@ mutation AccountSetup(
   $password: String!
   $workspaceName: String!
   $workspaceSlug: String!
+  $beaconConsent: Boolean
 ) {
   accountSetup(
     input: {
@@ -17,6 +18,7 @@ mutation AccountSetup(
       password: $password
       workspaceName: $workspaceName
       workspaceSlug: $workspaceSlug
+      beaconConsent: $beaconConsent
     }
   ) {
     jwt

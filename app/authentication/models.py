@@ -224,6 +224,8 @@ class Workspace(UUIDModel,
     ssh_private_key = EncryptedTextField()
     ssh_public_key = models.TextField()
 
+    beacon_consent = models.BooleanField(default=False)
+
     team_members = models.ManyToManyField(
         to=User,
         through='authorization.Membership',

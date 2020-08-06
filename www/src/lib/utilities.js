@@ -30,7 +30,7 @@ export const memoize = (method) => {
 }
 
 export let getErrorDefinition = memoize(async function(locale) {
-  const res = await fetch(`/assets/locales/${locale}.yml`)
+  const res = await fetch(`/assets/locales/${locale}/errors.yml`)
   const txt = await res.text()
   return txt
 })

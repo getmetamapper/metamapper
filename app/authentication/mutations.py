@@ -174,6 +174,7 @@ class CreateWorkspace(mixins.CreateMutationMixin, relay.ClientIDMutation):
     class Input:
         name = graphene.String(required=True)
         slug = graphene.String(required=True)
+        beacon_consent = graphene.Boolean(required=False, default_value=False)
 
     workspace = graphene.Field(schema.WorkspaceType)
 
@@ -194,6 +195,7 @@ class UpdateWorkspace(mixins.UpdateMutationMixin, relay.ClientIDMutation):
         id = graphene.ID(required=True)
         name = graphene.String(required=False)
         slug = graphene.String(required=False)
+        beacon_consent = graphene.Boolean(required=False)
 
     workspace = graphene.Field(schema.WorkspaceType)
 
@@ -223,6 +225,7 @@ class AccountSetup(mixins.CreateMutationMixin, relay.ClientIDMutation):
 
         workspace_name = graphene.String(required=True)
         workspace_slug = graphene.String(required=True)
+        beacon_consent = graphene.Boolean(required=False, default_value=False)
 
     jwt = graphene.Field(graphene.String)
     workspace_slug = graphene.Field(graphene.String)

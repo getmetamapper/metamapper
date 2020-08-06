@@ -63,5 +63,25 @@
     },
     "model": "definitions.datastore",
     "pk": "s4N8p5g0wjiS"
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "name": "New York",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "auth.group",
+    "pk": 12412
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "name": "Scranton",
+      "created_at": "2020-01-01 00:00:00Z",
+      "updated_at": "2020-01-01 00:00:00Z"
+    },
+    "model": "auth.group",
+    "pk": 41231
   }
 ]

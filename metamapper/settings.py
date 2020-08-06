@@ -7,7 +7,23 @@ import os
 import sys
 
 from corsheaders.defaults import default_headers
+from distutils.util import strtobool
 from django.core.management.utils import get_random_secret_key
+
+
+def envtobool(name, default):
+    value = os.getenv(name, default)
+    if isinstance(value, (bool,)):
+        return value
+    try:
+        return bool(strtobool(value))
+    except ValueError:
+        try:
+            return bool(int(value))
+        except ValueError:
+            pass
+    return default
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,7 +47,7 @@ ENV = os.getenv('ENVIRONMENT', 'development')
 
 DJANGO_ENV = ENV
 
-CI = bool(os.getenv('CI', False))
+CI = envtobool('CI', False)
 
 SECRET_KEY = os.getenv('METAMAPPER_SECRET_KEY', default=get_random_secret_key())
 
@@ -122,7 +138,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'metamapper.wsgi.application'
+#
+# Beacon
+#
+# Collects aggregated (and anyonymous) usage data so we can improve the project. You can
+# disable this globally or on a per-workspace basis.
 
+METAMAPPER_BEACON_ACTIVATED = envtobool('METAMAPPER_BEACON', True)
+#
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -227,8 +250,8 @@ EMAIL_HOST = os.getenv('METAMAPPER_EMAIL_HOST')
 EMAIL_HOST_USER = os.getenv('METAMAPPER_EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.getenv('METAMAPPER_EMAIL_PASSWORD')
 EMAIL_PORT = os.getenv('METAMAPPER_EMAIL_PORT', 25)
-EMAIL_USE_TLS = bool(os.getenv('METAMAPPER_EMAIL_USE_TLS', False))
-EMAIL_USE_SSL = bool(os.getenv('METAMAPPER_EMAIL_USE_SSL', False))
+EMAIL_USE_TLS = envtobool('METAMAPPER_EMAIL_USE_TLS', False)
+EMAIL_USE_SSL = envtobool('METAMAPPER_EMAIL_USE_SSL', False)
 EMAIL_DEFAULT_FROM = os.getenv('METAMAPPER_EMAIL_FROM_ADDRESS', 'friends@metamapper.io')
 #
 # Encryption
