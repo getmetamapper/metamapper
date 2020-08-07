@@ -14,41 +14,41 @@ migrate() {
 # Starts the Metamapper web server. We recommend running a few
 # of these behind a load balancer.
 webserver() {
-    gunicorn metamapper.wsgi -c ${GUNICORN_CONFIG_PATH}
+    gunicorn metamapper.wsgi -c ${GUNICORN_CONFIG_PATH} "$@"
 }
 
 # Starts the Metamapper scheduler, which queues periodic tasks for
 # workers to process.
 scheduler() {
-    celery beat --app metamapper -l ${METAMAPPER_CELERY_LOG_LEVEL:='info'}
+    celery beat --app metamapper -l ${METAMAPPER_CELERY_LOG_LEVEL:='info'} "$@"
 }
 
 # Starts a Metamapper worker.
 worker() {
-    celery worker --app metamapper -l ${METAMAPPER_CELERY_LOG_LEVEL:='info'}
+    celery worker --app metamapper -l ${METAMAPPER_CELERY_LOG_LEVEL:='info'} "$@"
 }
 
 flower() {
-    flower -A metamapper --port=${METAMAPPER_FLOWER_PORT:='5555'}
+    flower -A metamapper --port=${METAMAPPER_FLOWER_PORT:='5555'} "$@"
 }
 
 case "$1" in
   worker)
     shift
-    worker
+    worker "$@"
     ;;
   webserver)
     shift
-    webserver
+    webserver "$@"
     ;;
   scheduler)
     shift
-    scheduler
+    scheduler "$@"
     ;;
   ci-webserver)
     shift
     migrate
-    webserver
+    webserver "$@"
     ;;
   shell)
     shift
@@ -57,6 +57,10 @@ case "$1" in
   migrate)
     shift
     migrate
+    ;;
+  flower)
+    shift
+    flower "$@"
     ;;
   manage)
     shift
