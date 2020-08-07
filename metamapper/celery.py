@@ -6,14 +6,22 @@ from celery.schedules import crontab
 from os import environ
 
 from django.apps import apps
+from kombu import Exchange, Queue
 
 # set the default Django settings module for the 'celery' program.
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'metamapper.settings')
 environ.setdefault('METAMAPPER_CELERY_CONFIG_MODULE', 'metamapper.conf.celery')
 
-app = Celery('metamapper')
+app = Celery('metamapper', task_default_queue='default')
 app.config_from_envvar('METAMAPPER_CELERY_CONFIG_MODULE')
 app.autodiscover_tasks(lambda: [n.name for n in apps.get_app_configs()] + ['metamapper'])
+
+app.conf.task_default_queue = 'default'
+
+app.conf.task_queues = (
+    Queue('default', Exchange('default'), routing_key='default'),
+    Queue('revisioner', Exchange('revisioner'), routing_key='revisioner'),
+)
 
 app.conf.beat_schedule = {
     'beat-scheduler-healthcheck': {
@@ -44,4 +52,8 @@ app.conf.beat_schedule = {
         'task': 'app.sso.tasks.delete_failed_domains',
         'schedule': crontab(minute=0, hour='*/4'),
     },
+}
+
+app.conf.task_routes = {
+    'app.revisioner.tasks.core.*': {'queue': 'revisioner'},
 }

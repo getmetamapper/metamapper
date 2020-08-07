@@ -16,7 +16,7 @@ class MetamapperCeleryTest(unittest.TestCase):
         self.assertEqual(app.conf.broker_url, os.getenv('METAMAPPER_CELERY_BROKER_URL'))
         self.assertEqual(app.conf.task_serializer, 'json')
         self.assertEqual(app.conf.result_serializer, 'json')
-        self.assertEqual(app.conf.task_default_queue, 'celery')
+        self.assertEqual(app.conf.task_default_queue, 'default')
 
     @mock.patch.dict(os.environ, {'METAMAPPER_CELERY_CONFIG_MODULE': 'testutils.config.override_celery'})
     def test_overrides(self):

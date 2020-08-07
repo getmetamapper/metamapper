@@ -6,5 +6,3 @@ accept_content = ['application/json']
 result_serializer = 'pickle'
 
 task_serializer = 'pickle'
-
-task_default_queue = 'default'

@@ -5,11 +5,15 @@ import logging
 class SuppressGraphqlErrorFilter(logging.Filter):
     """Filter out annoying GraphQLLocatedError stack traces.
     """
+    excluded_error_classes = [
+        'graphql.error.located_error.GraphQLLocatedError',
+        'graphql_jwt.exceptions.JSONWebTokenError',
+        'jwt.exceptions.InvalidAudienceError',
+        'jwt.exceptions.InvalidSignatureError',
+    ]
+
     def filter(self, record):
-        if 'graphql.error.located_error.GraphQLLocatedError' in record.msg:
-            return False
-        if 'graphql_jwt.exceptions.JSONWebTokenError' in record.msg:
-            return False
-        if 'jwt.exceptions.InvalidAudienceError' in record.msg:
-            return False
+        for error_class in self.excluded_error_classes:
+            if error_class in record.msg:
+                return False
         return True
