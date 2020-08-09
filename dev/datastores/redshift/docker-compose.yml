@@ -1,0 +1,23 @@
+version: "3.4"
+services:
+  database:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: metamapper
+    restart: unless-stopped
+  metamapper:
+    build: ../../../
+    image: metamapper:inspector
+    environment:
+      METAMAPPER_DB_HOST: database
+      METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
+      METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
+    depends_on:
+      - database
+  redshift:
+    build:
+      context: ./
+    environment:
+      POSTGRES_PASSWORD: example

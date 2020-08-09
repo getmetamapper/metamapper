@@ -48,10 +48,11 @@ LEFT JOIN (
     USING (constraint_name,table_schema,table_name)
     WHERE t.constraint_type = 'PRIMARY KEY'
   ) pk
-     ON c.table_schema = pk.table_schema
-    AND c.table_name = pk.table_name
-    AND c.column_name = pk.column_name
-  WHERE t.table_schema NOT IN ({excluded})
+      ON c.table_schema = pk.table_schema
+     AND c.table_name = pk.table_name
+     AND c.column_name = pk.column_name
+   WHERE t.table_schema NOT IN ({excluded})
+ORDER BY c.table_schema, c.table_name, c.ordinal_position
 """
 
 MYSQL_INDEXES_QUERY = """

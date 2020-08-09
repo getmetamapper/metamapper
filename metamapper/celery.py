@@ -12,7 +12,7 @@ from kombu import Exchange, Queue
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'metamapper.settings')
 environ.setdefault('METAMAPPER_CELERY_CONFIG_MODULE', 'metamapper.conf.celery')
 
-app = Celery('metamapper', task_default_queue='default')
+app = Celery('metamapper')
 app.config_from_envvar('METAMAPPER_CELERY_CONFIG_MODULE')
 app.autodiscover_tasks(lambda: [n.name for n in apps.get_app_configs()] + ['metamapper'])
 

@@ -49,6 +49,15 @@ class SQLServerInspectorTests(test.TestCase):
             ''.join(sql.split()).strip(),
         )
 
+    def test_get_tables_and_views_sql_ordered(self):
+        """The Revisioner depends on the data coming in a specific order.
+        """
+        sch = ['one', 'two', 'three']
+        sql = self.engine.get_tables_and_views_sql(sch).replace('\n', '')
+        exc = 'ORDER BY SCHEMA_NAME(t.schema_id), t.name, ic.ordinal_position'
+
+        self.assertEqual(exc, sql[-len(exc):])
+
     def test_get_indexes_sql(self):
         """It should create the proper `indexes_sql` where clause.
         """

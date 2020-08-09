@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+import collections
+import types
 import unittest
 import unittest.mock as mock
-import collections
 
 import app.inspector.engines.postgresql_inspector as interface
 import app.inspector.service as service
@@ -88,16 +89,12 @@ class InspectorServiceTests(unittest.TestCase):
     def test_indexes(self, get_records):
         """It should parse the index query output properly.
         """
-        self.assertEqual(
-            service.indexes(self.datastore),
-            indexes.PROCESSED,
-        )
+        self.assertEqual(service.indexes(self.datastore), indexes.PROCESSED)
 
-    @mock.patch.object(interface.PostgresqlInspector, 'get_records', return_value=tables_and_views.RAW)
+    @mock.patch.object(interface.PostgresqlInspector, 'get_records_batched', return_value=tables_and_views.RAW)
     def test_tables_and_views(self, get_records):
         """It should parse the index query output properly.
         """
-        self.assertEqual(
-            service.tables_and_views(self.datastore),
-            tables_and_views.PROCESSED,
-        )
+        records = service.tables_and_views(self.datastore)
+        self.assertIsInstance(records, types.GeneratorType)
+        self.assertEqual(list(records), tables_and_views.PROCESSED)

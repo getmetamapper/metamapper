@@ -9,9 +9,9 @@ import psycopg2.extras
 REDSHIFT_DEFINITIONS_SQL = """
     SELECT
           ns.nspname as table_schema,
-          ns.oid as schema_object_id,
+          ns.oid::varchar as schema_object_id,
           c.relname as table_name,
-          c.oid as table_object_id,
+          c.oid::varchar as table_object_id,
           CASE WHEN c.relkind = 'r'
                THEN 'table'
                WHEN c.relkind IN ('v', 'm')
@@ -46,6 +46,7 @@ LEFT JOIN pg_attrdef d
       AND ns.nspname NOT LIKE 'pg_am%%'
       AND a.attnum > 0
       AND c.relkind in ('r', 'v', 'm')
+ ORDER BY ns.nspname, c.relname, a.attnum
 """
 
 

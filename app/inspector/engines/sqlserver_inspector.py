@@ -52,6 +52,7 @@ LEFT JOIN primary_key pk
       AND LOWER(c.name) = LOWER(pk.column_name)
     WHERE LOWER(SCHEMA_NAME(t.schema_id)) NOT IN ({excluded})
       AND UPPER(t.type) IN ('U', 'V')
+ ORDER BY SCHEMA_NAME(t.schema_id), t.name, ic.ordinal_position
 """
 
 

@@ -47,6 +47,7 @@ LEFT JOIN primary_key pk
       AND c.table_name = pk.table_name
       AND c.column_name = pk.column_name
     WHERE c.table_schema NOT IN ({excluded})
+ ORDER BY c.table_schema, c.table_name, c.ordinal_position
 """
 
 POSTGRESQL_INDEXES_QUERY = """

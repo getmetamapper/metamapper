@@ -61,6 +61,9 @@ jobs:
           name: Run PostgreSQL inspector tests
           command: COMPOSE_FILE="dev/datastores/postgresql/docker-compose.yml" bash .circleci/test-inspector.sh postgresql
       - run:
+          name: Run Redshift inspector tests
+          command: COMPOSE_FILE="dev/datastores/redshift/docker-compose.yml" bash .circleci/test-inspector.sh redshift
+      - run:
           name: Run SQL Server inspector tests
           command: COMPOSE_FILE="dev/datastores/sqlserver/docker-compose.yml" bash .circleci/test-inspector.sh sqlserver
   frontend-tests:

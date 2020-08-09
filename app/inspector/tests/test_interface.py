@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import types
 import unittest
 import unittest.mock as mock
 
@@ -89,6 +90,26 @@ class InspectorInterfaceTests(unittest.TestCase):
                 engine.get_records(statement),
                 expected,
             )
+            query.assert_called_with(statement, None)
+
+    @mock.patch.object(interface.EngineInterface, 'execute_query')
+    def test_get_records_batched(self, query):
+        """EngineInterface.batch_get_records should call db.Cursor.fetchmany
+        """
+        expected = [('foo1', 'bar1',), ('foo2', 'bar2',)]
+        statement = "SELECT foo, bar FROM public.acme"
+
+        for name, engine in self.engines.items():
+            query.return_value.__enter__.return_value.fetchmany.side_effect = [
+                expected,
+                [],
+            ]
+
+            records = engine.get_records_batched(statement)
+
+            self.assertIsInstance(records, types.GeneratorType)
+            self.assertEqual(list(records), expected)
+
             query.assert_called_with(statement, None)
 
     @mock.patch.object(interface.EngineInterface, 'execute_query')
