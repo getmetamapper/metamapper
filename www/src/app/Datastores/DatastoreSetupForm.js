@@ -15,6 +15,7 @@ import {
   Row,
   Steps,
 } from "antd"
+import { withLargeLoader } from "hoc/withLoader"
 import Link from "app/Navigation/Link"
 import RestrictedButton from "app/Common/RestrictedButton"
 import DatastoreSettingsFieldset from "app/Datastores/DatastoreSettings/DatastoreSettingsFieldset"
@@ -303,5 +304,6 @@ export default compose(
   withRouter,
   withGetWorkspaceBySlug,
   withGetDatastoreEngines,
+  withLargeLoader,
   graphql(TestJdbcConnection)
 )(DatastoreSetupForm)

@@ -99,7 +99,7 @@ def create_test(fn, filename):
             code = compile(f.read(), fn, 'exec')
             eval(code, ns, ns)
 
-        mock_tables.return_value = ns['inspected_tables']
+        mock_tables.return_value = sorted(ns['inspected_tables'], key=lambda r: (r['table_schema'], r['table_name']))
         mock_indexes.return_value = ns['inspected_indexes']
         mock_version.return_value = '1.0.0'
 

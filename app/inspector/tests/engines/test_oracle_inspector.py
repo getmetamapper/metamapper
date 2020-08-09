@@ -58,6 +58,15 @@ class OracleInspectorTests(test.TestCase):
             ''.join(sql.split()).strip(),
         )
 
+    def test_get_tables_and_views_sql_ordered(self):
+        """The Revisioner depends on the data coming in a specific order.
+        """
+        sch = ['one', 'two', 'three']
+        sql = self.engine.get_tables_and_views_sql(sch).replace('\n', '')
+        exc = 'ORDER BY T.OWNER, T.OBJECT_NAME, C.COLUMN_ID'
+
+        self.assertEqual(exc, sql[-len(exc):])
+
     def test_has_definitions_sql(self):
         """It should have `definitions_sql` attribute defined.
         """

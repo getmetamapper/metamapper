@@ -7,6 +7,7 @@ import utils.logging as logging
 from metamapper.celery import app
 
 from app.revisioner import actions, definition
+from app.revisioner.collectors import DefinitionCollector
 from app.revisioner.models import Run, RunTask, RevisionerError
 from app.revisioner.tasks.version import check_for_version_update
 
@@ -49,24 +50,21 @@ def start_revisioner_run(self, run_id, *arg, **kwargs):
 
     self.log.with_fields(run=run_id, datastore=self._run.datastore.slug)
 
-    schema_definitions, unassigned_objects = definition.make(self._run.datastore)
-
-    self.log.info(
-        f'Found {len(schema_definitions)} schemas to process.'
-    )
-
+    collector = DefinitionCollector(self._run.datastore)
     run_tasks = []
-    for schema, schema_definition in schema_definitions.items():
+
+    for schema, schema_definition in definition.make(collector):
+        self.log.info(f'Uploading schema: {schema}')
         storage_path = f'revisioner/{self._run.datastore_id}/run_id={self._run.id}/{schema}.json.gz'
         blob.put_object(storage_path, schema_definition)
         run_tasks.append(
             RunTask(run=self._run, storage_path=storage_path, status=RunTask.PENDING),
         )
 
-    run_tasks = RunTask.objects.bulk_create(run_tasks, ignore_conflicts=True)
+    RunTask.objects.bulk_create(run_tasks, ignore_conflicts=True)
 
     revisions = []
-    for content_type, content_objects in unassigned_objects.items():
+    for content_type, content_objects in collector.unassigned.items():
         self.log.info(
             f'Processing {len(content_objects)} dropped {content_type} resources'
         )

@@ -18,6 +18,8 @@ class EngineInterface(object):
 
     connect_timeout_value = 5
 
+    records_per_batch = 1000
+
     def __init__(self, host, username, password, port, database):
         self.host = host
         self.username = username
@@ -93,11 +95,11 @@ class EngineInterface(object):
         """Retrieve the full list of table definitions for the provided datastore.
         """
         querytxt = self.get_tables_and_views_sql(self.sys_schemas)
+        response = {}
 
-        results = {}
-        records = self.get_records(querytxt, parameters=self.sys_schemas)
-
-        for record in records:
+        for number, record in enumerate(
+            self.get_records_batched(querytxt, parameters=self.sys_schemas)
+        ):
             record = self.lower_keys(record)
             source = "{table_schema}.{table_name}".format(**record)
             properties = self.parse_table_properties(record)
@@ -108,8 +110,8 @@ class EngineInterface(object):
             table_name = record.pop('table_name')
             table_type = record.pop('table_type')
 
-            if source not in results:
-                results[source] = {
+            if source not in response:
+                response[source] = {
                     'schema_object_id': schema_object_id,
                     'table_schema': table_schema,
                     'table_object_id': table_object_id,
@@ -118,34 +120,40 @@ class EngineInterface(object):
                     'properties': properties,
                     'columns': [],
                 }
-            results[source]['columns'].append(record)
-        return list(results.values())
+
+            response[source]['columns'].append(record)
+
+            if number > 0 and last_source != source:
+                yield response.pop(last_source)
+
+            last_source = source
+
+        for source in response.keys():
+            yield response[source]
 
     def get_indexes(self, *args, **kwargs):
         """Retrieve indexes from the database.
         """
         querytxt = self.get_indexes_sql(self.sys_schemas)
+        response = {}
 
-        results = {}
-        records = self.get_records(querytxt, parameters=self.sys_schemas)
-
-        for record in records:
+        for record in self.get_records(querytxt, parameters=self.sys_schemas):
             record = self.lower_keys(record)
             source = "{schema_name}.{table_name}.{index_name}".format(**record)
 
             column_name = record.pop('column_name')
             ordinal_position = record.pop('ordinal_position')
 
-            if source not in results:
-                results[source] = record
-                results[source]['columns'] = []
+            if source not in response:
+                response[source] = record
+                response[source]['columns'] = []
 
-            results[source]['columns'].append({
+            response[source]['columns'].append({
                 'column_name': column_name,
                 'ordinal_position': ordinal_position,
             })
 
-        return list(results.values())
+        return list(response.values())
 
     @contextlib.contextmanager
     def execute_query(self, sql, parameters=None):
@@ -159,6 +167,18 @@ class EngineInterface(object):
                 else:
                     cursor.execute(sql)
                 yield cursor
+
+    def get_records_batched(self, sql, parameters=None):
+        """Executes the sql and returns a set of records.
+        """
+        with self.execute_query(sql, parameters) as cursor:
+            while True:
+                done = True
+                for r in cursor.fetchmany(self.records_per_batch):
+                    done = False
+                    yield r
+                if done:
+                    return
 
     def get_records(self, sql, parameters=None):
         """Executes the sql and returns a set of records.

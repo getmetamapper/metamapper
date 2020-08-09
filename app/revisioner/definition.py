@@ -3,23 +3,15 @@ from app.inspector import service as inspector
 from app.revisioner.collectors import DefinitionCollector
 
 
-def make(datastore, *args, **kwargs):
-    """Create the definition from the inspected data.
-    """
-    c = DefinitionCollector(datastore)
-    d = {}
-    d = _make_with_object_ident(d, c)
-    d = _make_with_object_name(d, c)
-    return d
-
-
-def _make_with_object_ident(definition, collector):
+def make(collector, *args, **kwargs):
     """We take an initial pass at making the definition based on the OID, if supported. The collector
     marks the raw database object as "processed" if we are able to match it to a Django model instance.
     """
+    definition = {}
+
     list_of_indexes = inspector.indexes(collector.datastore)
 
-    for row in inspector.tables_and_views(collector.datastore):
+    for number, row in enumerate(inspector.tables_and_views(collector.datastore)):
         schema_name = row.pop('table_schema')
 
         if schema_name not in definition:
@@ -83,15 +75,7 @@ def _make_with_object_ident(definition, collector):
             'indexes': indexes,
         })
 
-    return definition
-
-
-def _make_with_object_name(definition, collector):  # noqa: C901
-    """The second step is to try to match any remaining raw database objects to
-    Django instances, but based on the name.
-    """
-    for schema_name, schema_definition in definition.items():
-        schema = schema_definition['schema']
+        schema = definition[schema_name]['schema']
 
         if not schema['instance']:
             schema['instance'] = collector.schemas.search_unassigned(lambda t: (
@@ -101,8 +85,7 @@ def _make_with_object_name(definition, collector):  # noqa: C901
             if schema['instance']:
                 collector.schemas.mark_as_processed(schema['instance'].pk)
 
-        for table in schema_definition['tables']:
-
+        for table in definition[schema_name]['tables']:
             if not table['instance'] and schema['instance']:
                 table['instance'] = collector.tables.search_unassigned(lambda t: (
                     t.name == table['name'] and t.schema_id == schema['instance'].pk
@@ -135,7 +118,13 @@ def _make_with_object_name(definition, collector):  # noqa: C901
                 if index['instance']:
                     collector.indexes.mark_as_processed(index['instance'].pk)
 
-    return (definition, collector.unassigned)
+        if number > 0 and last_schema_name != schema_name:
+            yield (last_schema_name, definition.pop(last_schema_name))
+
+        last_schema_name = schema_name
+
+    for schema_name in definition.keys():
+        yield (schema_name, definition[schema_name])
 
 
 def hydrate(datastore, definition, *args, **kwargs):

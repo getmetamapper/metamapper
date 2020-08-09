@@ -53,6 +53,7 @@ SELECT DISTINCT
    AND PKS.OWNER = C.OWNER
  WHERE LOWER(T.OBJECT_TYPE) IN ('table', 'view')
    AND LOWER(T.OWNER) NOT IN ({excluded})
+ ORDER BY T.OWNER, T.OBJECT_NAME, C.COLUMN_ID
 """
 
 ORACLE_INDEXES_QUERY = """
@@ -108,6 +109,11 @@ class DictCursor(cx_Oracle.Cursor):
     def fetchall(self):
         return [
             self.as_dict(self.columns, r) for r in super().fetchall()
+        ]
+
+    def fetchmany(self, size=1000):
+        return [
+            self.as_dict(self.columns, r) for r in super().fetchmany(size)
         ]
 
     @property

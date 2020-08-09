@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
-import unittest
 import unittest.mock as mock
 
+from django import test
+from django.utils import timezone
+
 import app.inspector.engines.redshift_inspector as engine
+import app.revisioner.tasks.core as coretasks
+
+import testutils.factories as factories
 
 
 VERSION = (
@@ -12,7 +17,7 @@ VERSION = (
 )
 
 
-class RedshiftInspectorTests(unittest.TestCase):
+class RedshiftInspectorTests(test.TestCase):
     """Tests to ensure that the engine follows the subscribed interface.
     """
     def setUp(self):
@@ -54,6 +59,15 @@ class RedshiftInspectorTests(unittest.TestCase):
             ''.join(sql.split()).strip(),
         )
 
+    def test_get_tables_and_views_sql_ordered(self):
+        """The Revisioner depends on the data coming in a specific order.
+        """
+        sch = ['one', 'two', 'three']
+        sql = self.engine.get_tables_and_views_sql(sch).replace('\n', '')
+        exc = 'ORDER BY ns.nspname, c.relname, a.attnum'
+
+        self.assertEqual(exc, sql[-len(exc):])
+
     def test_cursor_kwargs(self):
         """Snapshot test for cursor kwargs.
         """
@@ -91,3 +105,97 @@ class RedshiftInspectorTests(unittest.TestCase):
         """It should implement Redshift.version
         """
         self.assertEqual(self.engine.version, '1.0.12103')
+
+
+class RedshiftInspectorIntegrationTestMixin(object):
+    """Test cases that hit a live database spun up via Docker.
+    """
+    hostname = None
+
+    schema_count = 3
+
+    def get_connection(self):
+        return {
+            'host': self.hostname,
+            'username': 'metamapper_ro',
+            'password': '340Uuxwp7Mcxo7Khy',
+            'port': 5439,
+            'database': 'postgres',
+        }
+
+    def get_inspector(self):
+        return engine.RedshiftInspector(**self.get_connection())
+
+    def test_verify_connection(self):
+        """It can connect to MySQL using the provided credentials.
+        """
+        self.assertTrue(
+            self.get_inspector().verify_connection(),
+            'Host: %s' % self.hostname,
+        )
+
+    def test_tables_and_views(self):
+        """It should return the correct table and view response.
+        """
+        records = self.get_inspector().get_tables_and_views()
+        schemas = set()
+
+        table_items = []
+        table_types = set()
+
+        column_items = []
+
+        for record in records:
+            schemas.add((record['schema_object_id'], record['table_schema']))
+
+            # It should have unique table identities.
+            self.assertTrue(record['table_object_id'])
+            self.assertTrue(record['table_object_id'] not in table_items)
+            table_items.append(record['table_object_id'])
+            table_types.add(record['table_type'])
+
+            # It should have unique column identities.
+            for column in record['columns']:
+                self.assertTrue(column['column_object_id'])
+                self.assertTrue(column['column_object_id'] not in column_items)
+                column_items.append(column['column_object_id'])
+
+        # Each schema should have a unique identity.
+        self.assertEqual(len(schemas), self.schema_count)
+        self.assertEqual(table_types, {'table', 'view'})
+
+    def test_indexes(self):
+        """It should return the correct index response.
+        """
+        self.assertEqual(self.get_inspector().get_indexes(), [])
+
+    def test_get_db_version(self):
+        """We're testing against Postgres 8.0, so we can't literally confirm
+        the version. But this more-or-less confirms that we can execute the query.
+        """
+        self.get_inspector().get_db_version()
+
+    def test_initial_revisioner_run(self):
+        """It should be able to commit the initial run to the metastore.
+        """
+        datastore = factories.DatastoreFactory(engine='redshift', **self.get_connection())
+
+        run = datastore.run_history.create(
+            workspace_id=datastore.workspace_id,
+            started_at=timezone.now(),
+        )
+
+        coretasks.start_revisioner_run(run.id)
+
+        run.refresh_from_db()
+
+        self.assertTrue(run.finished_at is not None)
+        self.assertEqual(run.errors.count(), 0)
+        self.assertEqual(datastore.schemas.count(), self.schema_count)
+
+
+@test.tag('redshift', 'inspector')
+class RedshiftIntegrationTests(RedshiftInspectorIntegrationTestMixin, test.TestCase):
+    """Integration tests for Oracle 12c
+    """
+    hostname = 'redshift'

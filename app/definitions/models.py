@@ -90,7 +90,7 @@ class Datastore(StringPrimaryKeyModel,
     slug = models.CharField(max_length=300, null=False, blank=False)
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
     is_enabled = models.BooleanField(default=True)
-    version = models.CharField(max_length=255, null=False, blank=False)
+    version = models.CharField(max_length=255, null=True, blank=False)
 
     engine = models.CharField(max_length=16, choices=ENGINE_CHOICES, null=False, blank=False)
     host = models.CharField(max_length=255, null=False, blank=False)

@@ -45,6 +45,15 @@ class SnowflakeInspectorTests(unittest.TestCase):
             ''.join(sql.split()).strip(),
         )
 
+    def test_get_tables_and_views_sql_ordered(self):
+        """The Revisioner depends on the data coming in a specific order.
+        """
+        sch = ['one', 'two', 'three']
+        sql = self.engine.get_tables_and_views_sql(sch).replace('\n', '')
+        exc = 'ORDER BY LOWER(c.table_schema), LOWER(c.table_name), c.ordinal_position'
+
+        self.assertEqual(exc, sql[-len(exc):])
+
     def test_cursor_kwargs(self):
         """Snapshot test for cursor kwargs.
         """
