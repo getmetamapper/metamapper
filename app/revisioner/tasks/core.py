@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import psycopg2
+
 import app.revisioner.revisioners as revisioners
 
 import utils.blob as blob
@@ -132,6 +134,8 @@ def on_revise_schema_definition_failure(self, exc, task_id, args, kwargs, einfo)
 
 @app.task(
     bind=True,
+    autoretry_for=(psycopg2.OperationalError,),
+    retry_kwargs={'max_retries': 3, 'countdown': 10},
     on_success=on_revise_schema_definition_success,
     on_failure=on_revise_schema_definition_failure,
 )

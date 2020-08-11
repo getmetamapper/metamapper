@@ -194,7 +194,7 @@ class DatastoreSetupForm extends Component {
         <h3 className="text-centered mb-0">
           <div>Connect a New Datastore</div>
           <small>
-            <Link to="/">(nevermind)</Link>
+            <Link to="/datastores">(nevermind)</Link>
           </small>
         </h3>
         <Divider />

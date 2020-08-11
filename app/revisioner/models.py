@@ -7,7 +7,7 @@ from django.apps import apps
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import JSONField
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 
 from app.authentication.models import Workspace
@@ -96,14 +96,24 @@ class Run(UUIDModel):
         if save:
             self.save()
 
-    def upsert_staged_revisions(self, revisions):
+    def bulk_insert_revisions(self, revisions):
+        """Bulk insert a list of revisions based on the compositie key.
+        """
+        return (
+            Revision.objects
+                    .on_conflict(['workspace_id', 'checksum'], ConflictAction.UPDATE)
+                    .bulk_insert(revisions, only_fields=['run', 'updated_at'])
+        )
+
+    @transaction.atomic
+    def upsert_staged_revisions(self, revisions, batch_size=1000):
         """This method performs an UPSERT of revisions
         into the metastore. We dedupe based on a checksum
         created in `Revision.set_checksum`.
         """
         rows = []
         if not len(revisions):
-            return rows
+            return False
         for rev in revisions:
             revision = Revision(
                 workspace_id=self.workspace_id,
@@ -113,9 +123,12 @@ class Run(UUIDModel):
             revision.set_checksum()
             revision.set_first_seen_run(self)
             rows.append(model_to_dict(revision))
-        return Revision.objects\
-                       .on_conflict(['workspace_id', 'checksum'], ConflictAction.UPDATE)\
-                       .bulk_insert(rows, only_fields=['run', 'updated_at'])
+            if len(rows) >= batch_size:
+                self.bulk_insert_revisions(rows)
+                rows = []
+        if len(rows):
+            self.bulk_insert_revisions(rows)
+        return True
 
 
 class RunTask(models.Model):

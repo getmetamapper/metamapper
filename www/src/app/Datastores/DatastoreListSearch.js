@@ -15,7 +15,7 @@ const DatastoreListSearch = ({
           <Input
             suffix={<Icon type="search" style={{ color: "rgba(0,0,0,.25)" }} />}
             type="text"
-            placeholder="Search datastores..."
+            placeholder="Filter datastores..."
             data-test="DatastoreListSearch.Submit"
           />
         )}
