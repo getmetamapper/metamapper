@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import sys
 import contextlib
+import sys
 
 
 class EngineInterface(object):
@@ -61,7 +61,7 @@ class EngineInterface(object):
 
     @property
     def assertion_query(self):
-        return "SELECT 1 as assertion"
+        return 'SELECT 1 as assertion'
 
     @property
     def operational_error(self):
@@ -163,7 +163,7 @@ class EngineInterface(object):
             sql = sql.encode('utf-8')
 
         with contextlib.closing(self.get_connection()) as conn:
-            with contextlib.closing(conn.cursor(**self.cursor_kwargs)) as cursor:
+            with contextlib.closing(self.get_cursor(conn)) as cursor:
                 if parameters is not None:
                     cursor.execute(sql, tuple(parameters))
                 else:
@@ -199,7 +199,7 @@ class EngineInterface(object):
         """
         try:
             result = self.get_first(self.assertion_query)
-        except self.operational_error:
+        except self.operational_error as e:
             return False
         if len(result):
             try:
@@ -213,6 +213,11 @@ class EngineInterface(object):
         """Returns a connection object based on the connector property.
         """
         return self.connector.connect(**self.connect_kwargs)
+
+    def get_cursor(self, connection):
+        """Wrapper function around Connection.cursor so we can run pre-SQL if needed.
+        """
+        return connection.cursor(**self.cursor_kwargs)
 
     def lower_keys(self, r_dict):
         return {
