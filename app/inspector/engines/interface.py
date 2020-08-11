@@ -97,6 +97,8 @@ class EngineInterface(object):
         querytxt = self.get_tables_and_views_sql(self.sys_schemas)
         response = {}
 
+        last_source = None
+
         for number, record in enumerate(
             self.get_records_batched(querytxt, parameters=self.sys_schemas)
         ):

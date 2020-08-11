@@ -3,13 +3,14 @@ from app.inspector import service as inspector
 from app.revisioner.collectors import DefinitionCollector
 
 
-def make(collector, *args, **kwargs):
+def make(collector, *args, **kwargs):  # noqa: C901
     """We take an initial pass at making the definition based on the OID, if supported. The collector
     marks the raw database object as "processed" if we are able to match it to a Django model instance.
     """
+    index_list = inspector.indexes(collector.datastore)
     definition = {}
 
-    list_of_indexes = inspector.indexes(collector.datastore)
+    last_schema_name = None
 
     for number, row in enumerate(inspector.tables_and_views(collector.datastore)):
         schema_name = row.pop('table_schema')
@@ -46,7 +47,7 @@ def make(collector, *args, **kwargs):
             column['object_id'] = column.pop('column_object_id')
             columns.append(column)
 
-        get_indexes = list(filter(lambda i: i['table_object_id'] == row['table_object_id'], list_of_indexes))
+        get_indexes = list(filter(lambda i: i['table_object_id'] == row['table_object_id'], index_list))
 
         for i in get_indexes:
             index = i.copy()

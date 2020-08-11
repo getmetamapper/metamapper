@@ -166,7 +166,6 @@ class PostgresqlInspectorIntegrationTestMixin(object):
         schemas = set()
 
         index_items = []
-        column_items = []
 
         for record in records:
             schemas.add((record['schema_object_id'], record['schema_name']))
