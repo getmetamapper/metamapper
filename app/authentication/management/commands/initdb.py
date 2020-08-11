@@ -27,7 +27,7 @@ Type 'yes' to continue, or 'no' to cancel: """
 logger = logging.getLogger('metamapper.commands.initdb')
 
 
-@retry((OperationalError, Database.OperationalError), delay=1.5)
+@retry((OperationalError, Database.OperationalError), delay=1.5)  # noqa: C901
 def create_database(database_name, owner, conn_params, is_verbose, close_sessions=True):  # noqa: C901
     """Create database with the provided parameters. We add a retry mechanism
     in case we need to wait for the database to start.
