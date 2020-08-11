@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import contextlib
+import sys
+
 import app.inspector.engines.interface as interface
 
 import snowflake.connector
@@ -99,3 +102,10 @@ class SnowflakeInspector(interface.EngineInterface):
         """Retrieve indexes from the database.
         """
         return []
+
+    def get_cursor(self, connection):
+        """Wrapper function around Connection.cursor so we can run pre-SQL if needed.
+        """
+        cursor = connection.cursor(**self.cursor_kwargs)
+        cursor.execute("USE DATABASE {}".format(self.database))
+        return cursor
