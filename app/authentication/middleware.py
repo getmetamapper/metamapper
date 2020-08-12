@@ -21,5 +21,6 @@ class CurrentWorkspaceMiddleware(object):
     def resolve(self, next, root, info, **args):
         """Attach the current workspace to the request.
         """
-        info.context.workspace = get_current_workspace(info.context)
+        if not hasattr(info.context, 'workspace') or info.context.workspace is None:
+            info.context.workspace = get_current_workspace(info.context)
         return next(root, info, **args)

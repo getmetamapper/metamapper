@@ -8,7 +8,7 @@ const openUserSettingsPanel = (pageName = "Profile") =>{
 describe("user.spec.js", () => {
   // Fixtures...
   const workspace = {
-    id: "5bd01b7f-9dd0-42e7-b265-3dea81c89a84",
+    id: "5bd01b7f9dd042e7b2653dea81c89a84",
     name: "Los Pollos Hermanos",
     slug: "los-pollos-hermanos",
   }

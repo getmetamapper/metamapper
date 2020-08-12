@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CustomField',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(db_index=True, editable=False, max_length=40, primary_key=True, serialize=False, unique=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('field_name', models.CharField(max_length=30)),

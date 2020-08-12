@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Workspace',
             fields=[
-                ('id', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(db_index=True, default=utils.mixins.models.uuid4_hex, max_length=32, editable=False, primary_key=True, unique=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('slug', models.CharField(db_index=True, max_length=50, unique=True)),

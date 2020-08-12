@@ -2,13 +2,13 @@
 describe("team.spec.js", () => {
 
   const workspace = {
-    id: "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+    id: "9ae42db2d205463fb5a361b77a0b1df7",
     name: "Santa Barbara Police Department",
     slug: "sbpd",
   }
 
   const otherWorkspace = {
-    id: "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+    id: "b934d2a83fc946b89918f97d5dc61fcf",
     name: "Psych",
     slug: "psych",
   }

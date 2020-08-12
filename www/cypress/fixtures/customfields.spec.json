@@ -8,7 +8,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc"
+    "pk": "1a8ec6425ff54f7d94943ff6339de4bc"
   },
   {
     "fields": {
@@ -19,7 +19,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "edef8a81-fab4-4479-b83f-1d886bd0bfa1"
+    "pk": "edef8a81fab44479b83f1d886bd0bfa1"
   },
   {
     "fields": {
@@ -35,7 +35,7 @@
   },
   {
     "fields": {
-      "workspace_id": "edef8a81-fab4-4479-b83f-1d886bd0bfa1",
+      "workspace_id": "edef8a81fab44479b83f1d886bd0bfa1",
       "user_id": "outsider.customfields@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -58,7 +58,7 @@
   },
   {
     "fields": {
-      "workspace_id": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+      "workspace_id": "1a8ec6425ff54f7d94943ff6339de4bc",
       "user_id": "owner.customfields@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -81,7 +81,7 @@
   },
   {
     "fields": {
-      "workspace_id": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+      "workspace_id": "1a8ec6425ff54f7d94943ff6339de4bc",
       "user_id": "member.customfields@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -104,7 +104,7 @@
   },
   {
     "fields": {
-      "workspace_id": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+      "workspace_id": "1a8ec6425ff54f7d94943ff6339de4bc",
       "user_id": "readonly.customfields@metamapper.test",
       "permissions": "READONLY",
       "created_at": "2020-01-01 00:00:00Z",
@@ -119,7 +119,7 @@
       "field_type": "TEXT",
       "validators": {},
       "short_desc": "What this datastore is used for.",
-      "workspace_id": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+      "workspace_id": "1a8ec6425ff54f7d94943ff6339de4bc",
       "content_type": ["definitions", "datastore"],
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"
@@ -133,7 +133,7 @@
       "field_type": "ENUM",
       "validators": {"choices": ["Marketing", "Finance", "Analytics", "Engineering"]},
       "short_desc": "",
-      "workspace_id": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+      "workspace_id": "1a8ec6425ff54f7d94943ff6339de4bc",
       "content_type": ["definitions", "datastore"],
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"
@@ -147,7 +147,7 @@
       "field_type": "USER",
       "validators": {},
       "short_desc": "The person most knowledgeable of the data.",
-      "workspace_id": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+      "workspace_id": "1a8ec6425ff54f7d94943ff6339de4bc",
       "content_type": ["definitions", "table"],
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"
@@ -161,7 +161,7 @@
       "field_type": "ENUM",
       "validators": {"choices": ["Marketing", "Finance", "Analytics", "Engineering"]},
       "short_desc": "Part of the business that table is relevant to.",
-      "workspace_id": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+      "workspace_id": "1a8ec6425ff54f7d94943ff6339de4bc",
       "content_type": ["definitions", "table"],
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"
@@ -175,7 +175,7 @@
       "field_type": "ENUM",
       "validators": {"choices": ["Hourly", "Daily", "Weekly", "Monthly", "Real-time"]},
       "short_desc": "How often this table is updated.",
-      "workspace_id": "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+      "workspace_id": "1a8ec6425ff54f7d94943ff6339de4bc",
       "content_type": ["definitions", "table"],
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"

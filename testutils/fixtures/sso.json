@@ -1,7 +1,7 @@
 [
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "domain": "metamapper.dev",
       "verification_token": "U23KVp5AO7PJ5QVjfk3uuS7PDFalBYxckKwq28CJ",
       "verified_at": "2010-08-31 17:53:31Z",
@@ -13,7 +13,7 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "domain": "metamapper.net",
       "verification_token": "b2GpilEFObpVEC9TphF5iCEr5vadbbvXxz4K34j5",
       "attempts": 20,
@@ -25,7 +25,7 @@
   },
   {
     "fields": {
-      "workspace_id": "bcb8e056-40eb-460f-8326-eebfd9d7a1e2",
+      "workspace_id": "bcb8e05640eb460f8326eebfd9d7a1e2",
       "domain": "flipthenews.com",
       "verification_token": "OmIl5HI6G7mk9ouBIDCiOmIl5HI6G7mk9ouBIDCi",
       "created_at": "2010-08-31 17:53:31Z",
@@ -36,7 +36,7 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "entity_id": "urn:auth0:metamapper-io",
       "sso_url": "https://sso.metamapper.dev/oauth/callback/testing",
       "x509cert": "-----BEGIN CERTIFICATE-----MIIDCzCCAfOgAwIBAgIJZC/zKbXIzEkcMA0GCSqGSIb3DQEBCwUAMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTAeFw0xOTAyMTUwMzUwNDFaFw0zMjEwMjQwMzUwNDFaMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMOUfc2AWAJN7Fv+wZ+R+9CLN3ewimd++0TqV2wIo72Ud/PKM03kfODkWxKwqCHw6j2YZWugbjtmvS7pm/93k3PyyjuOybBawd5IiMw8XAVFvTRmkREl26bwuHFOwWFv7DHpTjbs4cgxm++2Jcx17DgrRIJUpOKjwpFs+kGnlWReTNseF7RAhDTe/7BcArYGdrwVE3nafbGluiZBtjtidD7J1YxnRPep0GaezjRtI6ygxliKDUU3iBwR4k8uCEj3XFjN+UutwgK318SFU2B0rXb1UmIhtpV7ePxYmEKh9A+H8xFclGfiMd1FFQ4eH1PfAOM1ljIzDsKhNJUNnR0PX80CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUtszg6c0bozrLT/cZiqU62gfjwWwwDgYDVR0PAQH/BAQDAgKEMA0GCSqGSIb3DQEBCwUAA4IBAQA0+l+P419AOY88ZFjXhjXM9S0d+4hIKLAg9Yb7tfPs8l4lIEGQnWxvO3XrrPeKfzwfmH1H178gs08xsvZvamQVzMMGjwipOosftxPzpm1xmqVP24tXi7YMbSzIjXzuqCICXuFYaddZm8A+ToZ7tt91uGoXeR6AvSKgYyt0bncgSCYeTkVUuHji3Jq49TfPYvnizRUvCAe7TGKcrEyolRTlYN+fVFSRLbyv8PryAun9mkMAxb/PnmesajqyEG82oaRrbDHfQIPd6BoOTXRyGJD0Ys+SK/GyV4+yykCeAY31kRxnQPZuxVBkgolQxIFa5CSy8XfmMm8dVx3C2RByNCPJ-----END CERTIFICATE-----",
@@ -50,7 +50,7 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "entity_id": "urn:auth0:metamapper-io",
       "sso_url": "https://sso.metamapper.dev/oauth/callback/testing",
       "x509cert": "-----BEGIN CERTIFICATE-----MIIDCzCCAfOgAwIBAgIJZC/zKbXIzEkcMA0GCSqGSIb3DQEBCwUAMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTAeFw0xOTAyMTUwMzUwNDFaFw0zMjEwMjQwMzUwNDFaMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMOUfc2AWAJN7Fv+wZ+R+9CLN3ewimd++0TqV2wIo72Ud/PKM03kfODkWxKwqCHw6j2YZWugbjtmvS7pm/93k3PyyjuOybBawd5IiMw8XAVFvTRmkREl26bwuHFOwWFv7DHpTjbs4cgxm++2Jcx17DgrRIJUpOKjwpFs+kGnlWReTNseF7RAhDTe/7BcArYGdrwVE3nafbGluiZBtjtidD7J1YxnRPep0GaezjRtI6ygxliKDUU3iBwR4k8uCEj3XFjN+UutwgK318SFU2B0rXb1UmIhtpV7ePxYmEKh9A+H8xFclGfiMd1FFQ4eH1PfAOM1ljIzDsKhNJUNnR0PX80CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUtszg6c0bozrLT/cZiqU62gfjwWwwDgYDVR0PAQH/BAQDAgKEMA0GCSqGSIb3DQEBCwUAA4IBAQA0+l+P419AOY88ZFjXhjXM9S0d+4hIKLAg9Yb7tfPs8l4lIEGQnWxvO3XrrPeKfzwfmH1H178gs08xsvZvamQVzMMGjwipOosftxPzpm1xmqVP24tXi7YMbSzIjXzuqCICXuFYaddZm8A+ToZ7tt91uGoXeR6AvSKgYyt0bncgSCYeTkVUuHji3Jq49TfPYvnizRUvCAe7TGKcrEyolRTlYN+fVFSRLbyv8PryAun9mkMAxb/PnmesajqyEG82oaRrbDHfQIPd6BoOTXRyGJD0Ys+SK/GyV4+yykCeAY31kRxnQPZuxVBkgolQxIFa5CSy8XfmMm8dVx3C2RByNCPJ-----END CERTIFICATE-----",

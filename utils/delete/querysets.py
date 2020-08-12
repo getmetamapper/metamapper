@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-from django.db.models.query import QuerySet
 from django.utils import timezone
 
+from utils.postgres.querysets import PostgresQuerySet
 
-class SoftDeletionQuerySet(QuerySet):
+
+class SoftDeletionQuerySet(PostgresQuerySet):
     """Queryset for SoftDeletionManager.
     """
     def delete(self):
-        return super(SoftDeletionQuerySet, self).update(deleted_at=timezone.now())
+        return super().update(deleted_at=timezone.now())
 
     def hard_delete(self):
-        return super(SoftDeletionQuerySet, self).delete()
+        return super().delete()
 
     def alive(self):
         return self.filter(deleted_at=None)

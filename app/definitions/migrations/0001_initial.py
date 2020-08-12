@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Column',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('deleted_at', models.DateTimeField(blank=True, null=True)),
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Datastore',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(db_index=True, editable=False, max_length=40, primary_key=True, serialize=False, unique=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('custom_properties', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Index',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('object_id', models.CharField(default=None, max_length=256, null=True)),
@@ -94,7 +94,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Schema',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('deleted_at', models.DateTimeField(blank=True, null=True)),
@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Table',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('custom_properties', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),

@@ -199,7 +199,7 @@ class EngineInterface(object):
         """
         try:
             result = self.get_first(self.assertion_query)
-        except self.operational_error as e:
+        except self.operational_error:
             return False
         if len(result):
             try:

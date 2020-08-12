@@ -32,8 +32,7 @@ class Comment(StringPrimaryKeyModel,
         related_name='+',
     )
 
-    object_id = models.CharField(max_length=30)
-
+    object_id = models.IntegerField()
     content_type = models.ForeignKey(
         to=ContentType,
         on_delete=models.CASCADE,

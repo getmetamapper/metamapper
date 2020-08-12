@@ -6,7 +6,7 @@ describe("datastore_properties.spec.js", () => {
   }
 
   const workspace = {
-    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    id: "d6acb06747514d17b74f21e7b00c95a4",
     slug: "gcc",
   }
 
@@ -122,6 +122,8 @@ describe("datastore_properties.spec.js", () => {
             "be.visible"
           )
 
+          cy.wait(100)
+
           cy.getByTestId(`CustomProperties.Display(${properties["Purpose"]})`)
             .should("be.visible")
             .contains(input)
@@ -138,7 +140,10 @@ describe("datastore_properties.spec.js", () => {
             "be.visible"
           )
 
-          cy.getByTestId(`CustomProperties.Display(${properties["Purpose"]})`).should("have.value", "")
+          cy.wait(100)
+
+          cy.getByTestId(`CustomProperties.Display(${properties["Purpose"]})`).should("not.be.visible")
+
         })
 
         it("change multiple fields", () => {
@@ -152,6 +157,8 @@ describe("datastore_properties.spec.js", () => {
           cy.contains(".ant-message-success", "Properties have been updated.").should(
             "be.visible"
           )
+
+          cy.wait(100)
 
           cy.getByTestId(`CustomProperties.Display(${properties["Purpose"]})`)
             .should("be.visible")

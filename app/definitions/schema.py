@@ -32,6 +32,8 @@ class IndexType(AuthNode, DjangoObjectType):
     permission_classes = (WorkspaceTeamMembersOnly,)
     scope_to_workspace = True
 
+    pk = graphene.Int()
+
     columns = graphene.List(IndexColumnType)
 
     class Meta:
@@ -52,6 +54,8 @@ class ColumnType(AuthNode, DjangoObjectType):
     """
     permission_classes = (WorkspaceTeamMembersOnly,)
     scope_to_workspace = True
+
+    pk = graphene.Int()
 
     comments_count = graphene.Int()
     full_data_type = graphene.String()
@@ -89,6 +93,8 @@ class TableType(AuthNode, DjangoObjectType):
     permission_classes = (WorkspaceTeamMembersOnly,)
     scope_to_workspace = True
 
+    pk = graphene.Int()
+
     properties = GenericScalar()
 
     class Meta:
@@ -123,6 +129,8 @@ class SchemaType(AuthNode, DjangoObjectType):
     """
     permission_classes = (WorkspaceTeamMembersOnly,)
     scope_to_workspace = True
+
+    pk = graphene.Int()
 
     tables = graphene.List(TableType, first=graphene.Int(required=False))
 
@@ -228,7 +236,10 @@ class DatastoreType(AuthNode, DjangoObjectType):
     def resolve_schemas(instance, info, first=None):
         """Retrieve all of the schemas for a given datastore.
         """
-        return instance.schemas.all().order_by('name')
+        queryset = instance.schemas.all().order_by('name')
+        if first:
+            queryset = queryset[:first]
+        return queryset
 
     def resolve_latest_run(instance, info):
         """Retrieve the most recent run for the Schema.

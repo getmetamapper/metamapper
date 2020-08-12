@@ -5,11 +5,11 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 
 from app.authentication.models import User, Workspace
-from utils.mixins.models import StringPrimaryKeyModel, TimestampedModel
+from utils.mixins.models import TimestampedModel
 from utils.shortcuts import get_user_id
 
 
-class Vote(StringPrimaryKeyModel, TimestampedModel):
+class Vote(TimestampedModel):
     """Comment or annotation on any model in the application.
     """
     UP = 1

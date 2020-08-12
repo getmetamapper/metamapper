@@ -70,12 +70,12 @@ test_cases = [
             {
                 "summarized": "It should have the same Index identity.",
                 "evaluation": lambda datastore, index: index.pk,
-                "pass_value": "HYs6hRJDUkqL",
+                "pass_value": 4,
             },
             {
                 "summarized": "It should have the same Table identity.",
                 "evaluation": lambda datastore, index: index.table_id,
-                "pass_value": "Hh2eS38kpRX0",
+                "pass_value": 3,
             },
             {
                 "summarized": "It should not be found via the `name` values.",

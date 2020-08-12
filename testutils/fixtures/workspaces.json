@@ -8,7 +8,7 @@
       "updated_at": "2010-08-31 17:53:31Z"
     },
     "model": "authentication.workspace",
-    "pk": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c"
+    "pk": "f4bb0aabc51d458a9eab58ed80fa2d6c"
   },
   {
     "fields": {
@@ -19,7 +19,7 @@
       "updated_at": "2010-08-31 17:53:31Z"
     },
     "model": "authentication.workspace",
-    "pk": "bcb8e056-40eb-460f-8326-eebfd9d7a1e2"
+    "pk": "bcb8e05640eb460f8326eebfd9d7a1e2"
   },
   {
     "fields": {
@@ -30,7 +30,7 @@
       "updated_at": "2010-08-31 17:53:31Z"
     },
     "model": "authentication.workspace",
-    "pk": "7f5df57c-741b-48b8-9cfc-daec53c7f6c1"
+    "pk": "7f5df57c741b48b89cfcdaec53c7f6c1"
   },
   {
     "fields": {
@@ -41,13 +41,13 @@
       "updated_at": "2010-08-31 17:53:31Z"
     },
     "model": "authentication.workspace",
-    "pk": "4c393c8a-0ced-4343-9de7-935c3bc68ed4"
+    "pk": "4c393c8a0ced43439de7935c3bc68ed4"
   },
   {
     "fields": {
       "name": "Postgres",
       "slug": "metamapper",
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:43.385781+00:00",
       "updated_at": "2020-02-27 17:25:43.385893+00:00",
       "host": "database.host",
@@ -66,7 +66,7 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "name": "New York",
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"
@@ -76,7 +76,7 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "name": "Scranton",
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"

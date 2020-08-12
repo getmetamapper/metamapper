@@ -4,7 +4,7 @@ const getCommentByText = (commentText) => {
 
 describe("table_column_comments.spec.js", () => {
   const workspace = {
-    id: "d6acb067-4751-4d17-b74f-21e7b00c95a4",
+    id: "d6acb06747514d17b74f21e7b00c95a4",
     slug: "gcc",
   }
 

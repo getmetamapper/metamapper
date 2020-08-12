@@ -2,13 +2,13 @@
 describe("sso.spec.js", () => {
 
   const workspace = {
-    id: "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+    id: "7fdeecda18bb4592a5d1e00f18739d02",
     name: "The Pussycats",
     slug: "josie-and-the-pussycats",
   }
 
   const otherWorkspace = {
-    id: "dc909e3d-e10d-4904-ac4c-cf1c567fe211",
+    id: "dc909e3de10d4904ac4ccf1c567fe211",
     name: "DuJour",
     slug: "DuJour",
   }

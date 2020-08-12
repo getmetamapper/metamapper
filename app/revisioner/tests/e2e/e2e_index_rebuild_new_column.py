@@ -90,7 +90,7 @@ test_cases = [
             {
                 "summarized": "It should have the same Index identity.",
                 "evaluation": lambda datastore, index: index.pk,
-                "pass_value": "HYs6hRJDUkqL",
+                "pass_value": 4,
             },
             {
                 "summarized": "It should have an updated `object_id` value.",

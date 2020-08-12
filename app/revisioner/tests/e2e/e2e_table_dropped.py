@@ -50,7 +50,7 @@ test_cases = [
         "model": "Table",
         "description": "The `employees`.`departments` table should not longer exist.",
         "filters": {
-            "pk": "IFMwWB5gtslY",
+            "pk": 10,
         },
         "assertions": [
             {
@@ -79,7 +79,7 @@ test_cases = [
         "model": "Column",
         "description": "The `employees`.`departments` table should have no columns.",
         "filters": {
-            "table_id": "IFMwWB5gtslY",
+            "table_id": 10,
         },
         "assertions": [
             {
@@ -93,7 +93,7 @@ test_cases = [
         "model": "Index",
         "description": "The `employees`.`departments` table should have no indexes.",
         "filters": {
-            "table_id": "IFMwWB5gtslY",
+            "table_id": 10,
         },
         "assertions": [
             {
@@ -114,7 +114,7 @@ test_cases = [
             {
                 "summarized": "It should have the expected `pk` value.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "got35fs8LymV",
+                "pass_value": 2,
             },
             {
                 "summarized": "It should have the expected `object_id` value.",

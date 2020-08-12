@@ -40,7 +40,7 @@ services:
     env_file:
       - .env
     image: metamapper
-    command: worker
+    command: worker --concurrency=1
     depends_on:
       - database
       - rabbitmq

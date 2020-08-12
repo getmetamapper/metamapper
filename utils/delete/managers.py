@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.db import models
 from utils.delete.querysets import SoftDeletionQuerySet
+from utils.postgres.managers import PostgresManager
 
 
-class SoftDeletionManager(models.Manager):
+class SoftDeletionManager(PostgresManager):
     """Handle soft deletion.
     """
     def __init__(self, *args, **kwargs):

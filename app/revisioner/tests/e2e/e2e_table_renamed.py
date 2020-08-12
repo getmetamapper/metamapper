@@ -81,7 +81,7 @@ test_cases = [
             {
                 "summarized": "It should have the same Table identity.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "Hh2eS38kpRX0",
+                "pass_value": 3,
             },
             {
                 "summarized": "It should not modify metadata about the Table.",
@@ -101,7 +101,7 @@ test_cases = [
             {
                 "summarized": "It should retain the same Table identity.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": "Hh2eS38kpRX0",
+                "pass_value": 3,
             },
             {
                 "summarized": "It should retain the `object_id` value.",
@@ -116,7 +116,7 @@ test_cases = [
             {
                 "summarized": "It should have the same Column identity.",
                 "evaluation": lambda datastore, column: column.pk,
-                "pass_value": "ljbL6sdaSWLN",
+                "pass_value": 19,
             },
             {
                 "summarized": "It should have modified the `numeric_scale` value.",

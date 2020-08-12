@@ -83,7 +83,7 @@ test_cases = [
             {
                 "summarized": "It should have the same Table identity.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "SOi79CDr9xSL",
+                "pass_value": 7,
             },
             {
                 "summarized": "It should not modify metadata about the Table.",
@@ -106,23 +106,24 @@ test_cases = [
         "model": "Column",
         "description": "The `app`.`products`.`productline` column should retain integrity.",
         "filters": {
+            "table__name": "products",
             "name": "productline",
         },
         "assertions": [
             {
                 "summarized": "It should have the same Column identity.",
                 "evaluation": lambda datastore, column: column.pk,
-                "pass_value": "nnJpuRu1FYBm",
+                "pass_value": 38,
             },
             {
-                "summarized": "It should have the same Column identity.",
+                "summarized": "It should have the same Column description.",
                 "evaluation": lambda datastore, column: column.short_desc,
                 "pass_value": "Hello, world.",
             },
             {
                 "summarized": "It should have the same Table identity.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": "SOi79CDr9xSL",
+                "pass_value": 7,
             },
             # MySQL object IDs are calculated as: MD5(CONCAT(it.table_id, '/', c.column_name))
             # which means the object ID will not change in this case.
@@ -155,12 +156,12 @@ test_cases = [
                 # in MySQL, we lose all comments related to it.
                 "summarized": "It should have no description.",
                 "evaluation": lambda datastore, column: column.short_desc,
-                "pass_value": '',
+                "pass_value": None,
             },
             {
                 "summarized": "It should have the same Table identity.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": "SOi79CDr9xSL",
+                "pass_value": 7,
             },
             {
                 "summarized": "It should update the `ordinal_position` field.",

@@ -36,7 +36,6 @@ class Run(UUIDModel):
 
     revision_count = models.PositiveIntegerField(default=0)
 
-    created_on = models.DateField(default=timezone.now)
     created_at = models.DateTimeField(
         auto_now_add=True,
         help_text="Timestamp for when the run was created.",
@@ -65,7 +64,7 @@ class Run(UUIDModel):
 
     @property
     def epoch(self):
-        return int(time.mktime(self.created_on.timetuple()) * 1000)
+        return int(time.mktime(self.created_at.date().timetuple()) * 1000)
 
     @property
     def started(self):
@@ -79,7 +78,7 @@ class Run(UUIDModel):
     def is_datastore_first_run(self):
         """Check is this run is the first run ever for the datastore.
         """
-        return self.datastore.run_history.order_by('created_on').first() == self
+        return self.datastore.run_history.order_by('created_at').first() == self
 
     def mark_as_started(self, save=True):
         """Mark the run as started.
@@ -242,14 +241,14 @@ class RevisionerError(TimestampedModel, models.Model):
 class Revision(TimestampedModel):
     """Represents a single change within a datastore-related object.
     """
-    CREATED = 'created'
-    DROPPED = 'dropped'
-    MODIFIED = 'modified'
+    CREATED = 1
+    MODIFIED = 2
+    DROPPED = 3
 
     ACTION_CHOICES = (
         (CREATED, 'Created'),
-        (DROPPED, 'Dropped'),
         (MODIFIED, 'Modified'),
+        (DROPPED, 'Dropped'),
     )
 
     workspace = models.ForeignKey(
@@ -296,12 +295,7 @@ class Revision(TimestampedModel):
     )
     parent_resource = GenericForeignKey('parent_resource_type', 'parent_resource_id')
 
-    action = models.CharField(
-        max_length=30,
-        choices=ACTION_CHOICES,
-        null=False,
-        blank=False,
-    )
+    action = models.IntegerField(choices=ACTION_CHOICES)
 
     metadata = JSONField(default=dict)
     checksum = models.CharField(max_length=32)
@@ -388,7 +382,7 @@ class Revision(TimestampedModel):
             'metadata': self.metadata,
         }
         if self.parent_resource_revision_id:
-            checksum_dict['parent_resource_revision_id'] = self.parent_resource_revision_id.hex
+            checksum_dict['parent_resource_revision_id'] = self.parent_resource_revision_id
         self.checksum = hashlib.md5(
             json.dumps(checksum_dict, sort_keys=True).encode('utf-8'),
         ).hexdigest()

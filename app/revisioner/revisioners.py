@@ -61,7 +61,7 @@ class RevisionMixin(object):
                  **kwargs):
         self.resource_type = resource_type
         self.resource = resource
-        self.revision_id = uuid.uuid4()
+        self.revision_id = uuid.uuid4().hex
         self.parent_resource = parent_resource
         self.parent_resource_revision = parent_resource_revision
 

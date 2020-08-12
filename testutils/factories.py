@@ -228,8 +228,8 @@ class RevisionerRunFactory(factory.django.DjangoModelFactory):
     workspace = factory.LazyAttribute(lambda i: i.datastore.workspace)
 
     started_at = factory.LazyAttribute(lambda i: timezone.now())
-    created_on = factory.LazyAttribute(lambda i: (
-        i.started_at.date() - dt.timedelta(days=i.datastore.run_history.count())
+    created_at = factory.LazyAttribute(lambda i: (
+        i.started_at - dt.timedelta(days=i.datastore.run_history.count())
     ))
 
     finished_at = factory.LazyAttribute(

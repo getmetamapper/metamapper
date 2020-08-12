@@ -8,7 +8,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "9cd5359c-b062-405c-bb4c-29b074f4d72c"
+    "pk": "9cd5359cb062405cbb4c29b074f4d72c"
   },
   {
     "fields": {
@@ -19,7 +19,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "8c9591fc-c3bb-4d76-b3ad-30b5d5b68385"
+    "pk": "8c9591fcc3bb4d76b3ad30b5d5b68385"
   },
   {
     "fields": {
@@ -35,7 +35,7 @@
   },
   {
     "fields": {
-      "workspace_id": "8c9591fc-c3bb-4d76-b3ad-30b5d5b68385",
+      "workspace_id": "8c9591fcc3bb4d76b3ad30b5d5b68385",
       "user_id": "outsider.groups@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -152,7 +152,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "user_id": "owner.groups@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -163,7 +163,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "user_id": "member.groups@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -174,7 +174,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "user_id": "readonly.groups@metamapper.test",
       "permissions": "READONLY",
       "created_at": "2020-01-01 00:00:00Z",
@@ -185,7 +185,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "user_id": "member.a.groups@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -196,7 +196,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "user_id": "member.b.groups@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -207,7 +207,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "user_id": "member.c.groups@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -218,7 +218,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "user_id": "member.d.groups@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -229,7 +229,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "name": "Everybody",
       "description": "Includes every member of Acme Corporation",
       "created_at": "2020-01-01 00:00:00Z",
@@ -240,7 +240,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "name": "Nobody",
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"
@@ -250,7 +250,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+      "workspace_id": "9cd5359cb062405cbb4c29b074f4d72c",
       "name": "Executives",
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"

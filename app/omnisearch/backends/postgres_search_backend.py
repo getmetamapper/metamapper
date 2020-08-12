@@ -7,7 +7,10 @@ from django.contrib.postgres.search import (
     SearchVector,
     TrigramSimilarity,
 )
-from django.db.models import F, Q, Value, CharField, DateTimeField, Case, When
+from django.db.models import F, Q, Value, Case, When
+from django.db.models import CharField, DateTimeField
+from django.db.models.functions import Cast
+
 from django.utils.functional import cached_property
 
 import app.omnisearch.stopwords as stopwords
@@ -94,6 +97,7 @@ class ModelSearchAdapter(object):
                 .annotate(search=self.search_vector)  # noqa
                 .annotate(model_name=Value(self.model_class.__name__, CharField()))
                 .annotate(score=SearchRank(self.search_vector, self.search_query))
+                .annotate(pk=Cast('pk', CharField()))
         )
         return self.annotate_with_datastore(queryset)
 

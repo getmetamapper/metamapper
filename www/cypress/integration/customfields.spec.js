@@ -3,13 +3,13 @@ describe("customfields.spec.js", () => {
 
   // Fixtures...
   const workspace = {
-    id: "1a8ec642-5ff5-4f7d-9494-3ff6339de4bc",
+    id: "1a8ec6425ff54f7d94943ff6339de4bc",
     name: "Satriales",
     slug: "SatrialesPorkStore",
   }
 
   const privateWorkspace = {
-    id: "edef8a81-fab4-4479-b83f-1d886bd0bfa1",
+    id: "edef8a81fab44479b83f1d886bd0bfa1",
     name: "Federal Bureau of Investigation",
     slug: "fbi",
   }
