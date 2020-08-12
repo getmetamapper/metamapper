@@ -8,7 +8,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "d87978cc-dbae-487e-9028-bda2fae753c0"
+    "pk": "d87978ccdbae487e9028bda2fae753c0"
   },
   {
     "fields": {
@@ -24,7 +24,7 @@
   },
   {
     "fields": {
-      "workspace_id": "d87978cc-dbae-487e-9028-bda2fae753c0",
+      "workspace_id": "d87978ccdbae487e9028bda2fae753c0",
       "user_id": "owner.authentication@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",

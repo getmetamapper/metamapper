@@ -105,7 +105,7 @@ class Datastore(StringPrimaryKeyModel,
     ssh_port = models.PositiveIntegerField(null=True, blank=False, validators=[MaxValueValidator(65535)])
     ssh_user = models.CharField(max_length=128, null=True, blank=False)
 
-    short_desc = models.CharField(max_length=140, null=False, blank=True)
+    short_desc = models.CharField(max_length=140, null=True, blank=True)
 
     # List of custom fields that should be disabled for this datastore.
     disabled_datastore_properties = ArrayField(models.CharField(max_length=20), default=list)
@@ -117,7 +117,7 @@ class Datastore(StringPrimaryKeyModel,
     # and its objects. Permissions default to the workspace level.
     object_permissions_enabled = models.BooleanField(default=True)
 
-    objects = models.Manager()
+    objects = PostgresManager()
     search_objects = SearchManager(fields=['name', 'engine', 'tags'])
 
     class Meta:
@@ -186,7 +186,7 @@ class Datastore(StringPrimaryKeyModel,
     def most_recent_run(self):
         """Get the most recent Revisioner run.
         """
-        return self.run_history.order_by('-created_on', '-created_at').first()
+        return self.run_history.order_by('-created_at').first()
 
     @property
     def last_committed_run(self):
@@ -195,7 +195,7 @@ class Datastore(StringPrimaryKeyModel,
         return (
             self.run_history
                 .filter(finished_at__isnull=False)
-                .order_by('-created_on')
+                .order_by('-created_at')
                 .first()
         )
 
@@ -234,15 +234,13 @@ class Datastore(StringPrimaryKeyModel,
                 self.assign_perm(user_or_group, perm)
 
 
-class Schema(StringPrimaryKeyModel,
-             AuditableModel,
+class Schema(AuditableModel,
              RevisableModel,
              SoftDeletionModel,
              TimestampedModel):
     """Represents a schema within a datastore.
     """
     audited_fields = [
-        'short_desc',
         'tags',
     ]
 
@@ -280,8 +278,7 @@ class Schema(StringPrimaryKeyModel,
         return self.name
 
 
-class Table(StringPrimaryKeyModel,
-            AuditableModel,
+class Table(AuditableModel,
             CustomPropertiesModel,
             RevisableModel,
             SoftDeletionModel,
@@ -314,7 +311,7 @@ class Table(StringPrimaryKeyModel,
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
     kind = models.CharField(max_length=100, null=False, blank=False)
 
-    short_desc = models.CharField(max_length=140, null=False, blank=True)
+    short_desc = models.CharField(max_length=140, null=True, blank=True)
     properties = JSONField(default=dict)
 
     class Meta:
@@ -377,8 +374,7 @@ class TableProperty(models.Model):
         db_table = 'definitions_table_properties'
 
 
-class Column(StringPrimaryKeyModel,
-             AuditableModel,
+class Column(AuditableModel,
              TimestampedModel,
              SoftDeletionModel,
              RevisableModel):
@@ -413,8 +409,8 @@ class Column(StringPrimaryKeyModel,
     is_primary = models.BooleanField(null=False, default=False)
     is_nullable = models.BooleanField(null=False)
     default_value = models.CharField(max_length=255, null=False, blank=True)
-    comment = models.TextField(blank=True)
-    short_desc = models.CharField(max_length=50, null=False, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    short_desc = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         unique_together = ('table', 'name',)
@@ -472,9 +468,7 @@ class Column(StringPrimaryKeyModel,
         return dtype
 
 
-class Index(StringPrimaryKeyModel,
-            RevisableModel,
-            TimestampedModel):
+class Index(RevisableModel, TimestampedModel):
     """Represents a index within a table.
     """
     object_id = models.CharField(max_length=256, null=True, default=None)
@@ -500,6 +494,8 @@ class Index(StringPrimaryKeyModel,
     sql = models.TextField(null=True)
 
     columns = models.ManyToManyField(Column, through=u'IndexColumn')
+
+    objects = PostgresManager()
 
     @property
     def display_name(self):

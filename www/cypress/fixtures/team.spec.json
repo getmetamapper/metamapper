@@ -8,7 +8,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "9ae42db2-d205-463f-b5a3-61b77a0b1df7"
+    "pk": "9ae42db2d205463fb5a361b77a0b1df7"
   },
   {
     "fields": {
@@ -19,7 +19,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf"
+    "pk": "b934d2a83fc946b89918f97d5dc61fcf"
   },
   {
     "fields": {
@@ -95,7 +95,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+      "workspace_id": "9ae42db2d205463fb5a361b77a0b1df7",
       "user_id": "owner.team@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -106,7 +106,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+      "workspace_id": "9ae42db2d205463fb5a361b77a0b1df7",
       "user_id": "member.team@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -117,7 +117,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+      "workspace_id": "9ae42db2d205463fb5a361b77a0b1df7",
       "user_id": "other.member.team@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -128,7 +128,7 @@
   },
   {
     "fields": {
-      "workspace_id": "9ae42db2-d205-463f-b5a3-61b77a0b1df7",
+      "workspace_id": "9ae42db2d205463fb5a361b77a0b1df7",
       "user_id": "readonly.team@metamapper.test",
       "permissions": "READONLY",
       "created_at": "2020-01-01 00:00:00Z",
@@ -139,7 +139,7 @@
   },
   {
     "fields": {
-      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "workspace_id": "b934d2a83fc946b89918f97d5dc61fcf",
       "user_id": "owner.team@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -150,7 +150,7 @@
   },
   {
     "fields": {
-      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "workspace_id": "b934d2a83fc946b89918f97d5dc61fcf",
       "user_id": "member.team@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -161,7 +161,7 @@
   },
   {
     "fields": {
-      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "workspace_id": "b934d2a83fc946b89918f97d5dc61fcf",
       "user_id": "other.member.team@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -172,7 +172,7 @@
   },
   {
     "fields": {
-      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "workspace_id": "b934d2a83fc946b89918f97d5dc61fcf",
       "user_id": "readonly.team@metamapper.test",
       "permissions": "READONLY",
       "created_at": "2020-01-01 00:00:00Z",
@@ -183,7 +183,7 @@
   },
   {
     "fields": {
-      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "workspace_id": "b934d2a83fc946b89918f97d5dc61fcf",
       "user_id": "other.owner.team@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -194,7 +194,7 @@
   },
   {
     "fields": {
-      "workspace_id": "b934d2a8-3fc9-46b8-9918-f97d5dc61fcf",
+      "workspace_id": "b934d2a83fc946b89918f97d5dc61fcf",
       "user_id": "outsider.team@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",

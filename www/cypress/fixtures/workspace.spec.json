@@ -56,7 +56,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "301ccdfe-12d7-49e8-854f-5da614224e7e"
+    "pk": "301ccdfe12d49e8854f5da614224e7e"
   },
   {
     "fields": {
@@ -67,7 +67,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "93803742-df66-4cda-bfd6-9e5d1a4eb35f"
+    "pk": "93803742df664cdabfd69e5d1a4eb35f"
   },
   {
     "fields": {
@@ -78,7 +78,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "0027d5fe-26a6-4929-9c0f-b312f0395a27"
+    "pk": "0027d5fe26a649299c0fb312f0395a27"
   },
   {
     "fields": {
@@ -89,11 +89,11 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "634cb29e-5ff3-4375-8a0b-f9481bf41d0d"
+    "pk": "634cb29e5ff343758a0bf9481bf41d0d"
   },
   {
     "fields": {
-      "workspace_id": "301ccdfe-12d7-49e8-854f-5da614224e7e",
+      "workspace_id": "301ccdfe12d49e8854f5da614224e7e",
       "user_id": "owner.workspace@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -104,7 +104,7 @@
   },
   {
     "fields": {
-      "workspace_id": "301ccdfe-12d7-49e8-854f-5da614224e7e",
+      "workspace_id": "301ccdfe12d49e8854f5da614224e7e",
       "user_id": "member.workspace@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -115,7 +115,7 @@
   },
   {
     "fields": {
-      "workspace_id": "301ccdfe-12d7-49e8-854f-5da614224e7e",
+      "workspace_id": "301ccdfe12d49e8854f5da614224e7e",
       "user_id": "readonly.workspace@metamapper.test",
       "permissions": "READONLY",
       "created_at": "2020-01-01 00:00:00Z",
@@ -126,7 +126,7 @@
   },
   {
     "fields": {
-      "workspace_id": "0027d5fe-26a6-4929-9c0f-b312f0395a27",
+      "workspace_id": "0027d5fe26a649299c0fb312f0395a27",
       "user_id": "owner.workspace@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -137,7 +137,7 @@
   },
   {
     "fields": {
-      "workspace_id": "0027d5fe-26a6-4929-9c0f-b312f0395a27",
+      "workspace_id": "0027d5fe26a649299c0fb312f0395a27",
       "user_id": "member.workspace@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -148,7 +148,7 @@
   },
   {
     "fields": {
-      "workspace_id": "0027d5fe-26a6-4929-9c0f-b312f0395a27",
+      "workspace_id": "0027d5fe26a649299c0fb312f0395a27",
       "user_id": "readonly.workspace@metamapper.test",
       "permissions": "READONLY",
       "created_at": "2020-01-01 00:00:00Z",
@@ -159,7 +159,7 @@
   },
   {
     "fields": {
-      "workspace_id": "93803742-df66-4cda-bfd6-9e5d1a4eb35f",
+      "workspace_id": "93803742df664cdabfd69e5d1a4eb35f",
       "user_id": "owner.workspace@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -170,7 +170,7 @@
   },
   {
     "fields": {
-      "workspace_id": "93803742-df66-4cda-bfd6-9e5d1a4eb35f",
+      "workspace_id": "93803742df664cdabfd69e5d1a4eb35f",
       "user_id": "outsider.workspace@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -181,7 +181,7 @@
   },
   {
     "fields": {
-      "workspace_id": "634cb29e-5ff3-4375-8a0b-f9481bf41d0d",
+      "workspace_id": "634cb29e5ff343758a0bf9481bf41d0d",
       "user_id": "outsider.workspace@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",

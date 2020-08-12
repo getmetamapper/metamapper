@@ -3,21 +3,21 @@ import { WORKSPACE_TOKEN } from "../../src/lib/constants"
 describe("workspace.spec.js", () => {
   // Fixtures...
   const primaryWorkspace = {
-    id: "301ccdfe-12d7-49e8-854f-5da614224e7e",
+    id: "301ccdfe12d749e8854f5da614224e7e",
     name: "Rocinante",
     slug: "roci",
   }
 
   // This workspace is eventually deleted, so don't change the attributes.
   const secondaryWorkspace = {
-    id: "0027d5fe-26a6-4929-9c0f-b312f0395a27",
+    id: "0027d5fe26a649299c0fb312f0395a27",
     name: "Ceres",
     slug: "ceres12345",
   }
 
   // The team does not have access to this workspace.
   const privateWorkspace = {
-    id: "634cb29e-5ff3-4375-8a0b-f9481bf41d0d",
+    id: "634cb29e5ff343758a0bf9481bf41d0d",
     name: "MCRN Donnager",
     slug: "MCRN-Donnager",
   }

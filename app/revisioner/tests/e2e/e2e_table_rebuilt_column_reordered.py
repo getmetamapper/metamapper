@@ -129,7 +129,7 @@ test_cases = [
             {
                 "summarized": "It should have the same Table identity.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "got35fs8LymV",
+                "pass_value": 2,
             },
             {
                 "summarized": "It should have an updated `object_id` value.",
@@ -152,14 +152,14 @@ test_cases = [
         "model": "Column",
         "description": "tbd.",
         "filters": {
-            "table_id": "got35fs8LymV",
+            "table_id": 2,
             "name": "dept_name",
         },
         "assertions": [
             {
                 "summarized": "It should have the same Column identity.",
                 "evaluation": lambda datastore, column: column.pk,
-                "pass_value": "H73kDbFONDtX",
+                "pass_value": 15,
             },
             {
                 "summarized": "It should have the same Column identity.",
@@ -172,7 +172,7 @@ test_cases = [
         "model": "Column",
         "description": "tbd.",
         "filters": {
-            "table_id": "got35fs8LymV",
+            "table_id": 2,
             "object_id": "26522/2",
         },
         "assertions": [

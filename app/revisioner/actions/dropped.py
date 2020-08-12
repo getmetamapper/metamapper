@@ -2,6 +2,9 @@
 from app.definitions.models import Schema, Table, Column, Index
 from app.revisioner.revisioners import get_content_type_for_model
 
+from django.db.models import IntegerField
+from django.db.models.functions import Cast
+
 
 class GenericDropAction(object):
     """Generic mixin for a bulk DROPPED action based on revisions.
@@ -16,7 +19,7 @@ class GenericDropAction(object):
     def get_resource_ids(self):
         """Retrieve the resource IDs for this cache.
         """
-        return self.revisions.values_list('resource_id', flat=True)
+        return self.revisions.annotate(as_int=Cast('resource_id', IntegerField())).values_list('as_int', flat=True)
 
     def apply(self):
         """Apply DELETE action to all dropped models.

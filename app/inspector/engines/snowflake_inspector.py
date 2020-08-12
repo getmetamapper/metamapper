@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import contextlib
-import sys
-
 import app.inspector.engines.interface as interface
 
 import snowflake.connector

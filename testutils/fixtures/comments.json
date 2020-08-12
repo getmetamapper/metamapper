@@ -1,8 +1,8 @@
 [
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
-      "object_id": "UOA8JNoQIhNy",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 18,
       "created_at": "2020-02-27 17:25:55.339009+00:00",
       "updated_at": "2020-02-27 17:25:55.339054+00:00",
       "html": "The number of items ordered by the customer.",
@@ -15,8 +15,8 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
-      "object_id": "UOA8JNoQIhNy",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 18,
       "created_at": "2020-02-27 17:25:55.339009+00:00",
       "updated_at": "2020-02-27 17:25:55.339054+00:00",
       "html": "What is the unit of this field?",
@@ -29,8 +29,8 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
-      "object_id": "UOA8JNoQIhNy",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 18,
       "parent_id": "7iWstUHydyCJ",
       "created_at": "2020-02-27 17:25:55.339009+00:00",
       "updated_at": "2020-02-27 17:25:55.339054+00:00",
@@ -44,8 +44,8 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
-      "object_id": "tThdqoa6Huxs",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 1,
       "created_at": "2020-02-27 17:25:55.339009+00:00",
       "updated_at": "2020-02-27 17:25:55.339054+00:00",
       "html": "An unrelated comment that will not show up in search tests.",
@@ -58,8 +58,8 @@
   },
   {
     "fields": {
-      "workspace_id": "f4bb0aab-c51d-458a-9eab-58ed80fa2d6c",
-      "object_id": "Hh2eS38kpRX0",
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 3,
       "created_at": "2020-02-27 17:25:55.339009+00:00",
       "updated_at": "2020-02-27 17:25:55.339054+00:00",
       "html": "Details about a customer order.",

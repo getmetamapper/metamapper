@@ -298,6 +298,11 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'default',
         },
+        'debug': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+        },
         'metamapper': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
@@ -355,6 +360,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+        # 'django.db.backends': {
+        #     'handlers': ['debug'],
+        #     'level': 'DEBUG',
+        #     'propagate': False,
+        # },
     }
 }
 #

@@ -50,11 +50,11 @@ class TestOmnisearch(cases.GraphQLTestCase):
 
         self.assertTrue(len(results) > 1)
         self.assertTrue(isinstance(results['timeElapsed'], (float,)))
-        self.assertTrue(self.other_table.pk in [d['pk'] for d in results['searchResults']])
+        self.assertTrue(str(self.other_table.pk) in [d['pk'] for d in results['searchResults']])
         self.assertEqual(set([d['modelName'] for d in results['searchResults']]), {'Column', 'Comment', 'Table'})
 
     @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
-    def test_query_returns_results_for_a_single_datastores(self):
+    def test_query_returns_results_for_a_single_datastore(self):
         """It should allow you to scope your query to a specific datastore.
         """
         content = 'customer information'

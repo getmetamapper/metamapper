@@ -38,7 +38,7 @@ test_cases = [
             {
                 "summarized": "It should have the same Index identity.",
                 "evaluation": lambda datastore, index: index.pk,
-                "pass_value": "1Gl5bDQRAk4B",
+                "pass_value": 2,
             },
             {
                 "summarized": "It should have an updated name.",

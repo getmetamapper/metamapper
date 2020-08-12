@@ -50,12 +50,12 @@ test_cases = [
             {
                 "summarized": "It should retain the same primary key.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "nctDse8X6qLb",
+                "pass_value": 1,
             },
             {
                 "summarized": "It should reference the `employees` Schema instance by ID.",
                 "evaluation": lambda datastore, table: table.schema_id,
-                "pass_value": "k95I5dLPLz7t",
+                "pass_value": 2,
             },
             {
                 "summarized": "It should reference the `employees` Schema instance by name.",

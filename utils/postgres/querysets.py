@@ -419,7 +419,9 @@ class PostgresQuerySet(models.QuerySet):
 
             if self._is_magical_field(model_instance, field, is_insert=False):
                 update_fields.append(field)
-        update_fields = [
-            f for f in update_fields if f.name in only_fields
-        ]
+
+        if only_fields:
+            update_fields = [
+                f for f in update_fields if f.name in only_fields
+            ]
         return insert_fields, update_fields

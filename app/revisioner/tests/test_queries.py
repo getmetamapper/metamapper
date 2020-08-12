@@ -80,7 +80,7 @@ class TestGetRunRevisions(cases.GraphQLTestCase):
         'revisioner.json',
     ]
 
-    run_id = '079d08c0-8c14-4c6f-90ee-ebc0b6c9b974'
+    run_id = '079d08c08c144c6f90eeebc0b6c9b974'
 
     operation = 'runRevisions'
     statement = '''
@@ -192,7 +192,7 @@ class TestGetTableRevisions(cases.GraphQLTestCase):
         super().setUpTestData()
 
         cls._run = Run.objects.get(
-            pk='079d08c0-8c14-4c6f-90ee-ebc0b6c9b974'
+            pk='079d08c08c144c6f90eeebc0b6c9b974'
         )
 
     @decorators.as_someone(['OWNER', 'MEMBER', 'READONLY'])

@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SSOConnection',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(db_index=True, editable=False, max_length=40, primary_key=True, serialize=False, unique=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('is_enabled', models.BooleanField(default=False)),
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SSODomain',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(db_index=True, editable=False, max_length=40, primary_key=True, serialize=False, unique=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('domain', models.CharField(db_index=True, max_length=255, unique=True)),
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SSOIdentity',
             fields=[
-                ('id', models.CharField(db_index=True, editable=False, max_length=30, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(db_index=True, editable=False, max_length=40, primary_key=True, serialize=False, unique=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('ident', models.CharField(max_length=128)),

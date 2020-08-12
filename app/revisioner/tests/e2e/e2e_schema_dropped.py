@@ -64,7 +64,7 @@ test_cases = [
         "model": "Schema",
         "description": "The `app` schema should not longer exist.",
         "filters": {
-            "name": "tThdqoa6Huxs",
+            "pk": 1,
         },
         "assertions": [
             {
@@ -78,7 +78,7 @@ test_cases = [
         "model": "Table",
         "description": "The `app` schema should have no tables.",
         "filters": {
-            "schema_id": "tThdqoa6Huxs",
+            "schema_id": 1,
         },
         "assertions": [
             {
@@ -106,7 +106,7 @@ test_cases = [
         "model": "Index",
         "description": "The `app` schema should have no indexes.",
         "filters": {
-            "table__schema_id": "tThdqoa6Huxs",
+            "table__schema_id": 1,
         },
         "assertions": [
             {

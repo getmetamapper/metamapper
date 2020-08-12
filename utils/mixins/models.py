@@ -7,15 +7,20 @@ from django.db import models
 from django.utils.crypto import get_random_string
 
 
+def uuid4_hex(*args, **kwargs):
+    return uuid.uuid4().hex
+
+
 class UUIDModel(models.Model):
     """Mixin to add UUID pk to models.
     """
-    id = models.UUIDField(
+    id = models.CharField(
         db_index=True,
         primary_key=True,
-        default=uuid.uuid4,
         editable=False,
         unique=True,
+        max_length=32,
+        default=uuid4_hex,
     )
 
     class Meta:
@@ -33,7 +38,7 @@ class StringPrimaryKeyModel(models.Model):
         primary_key=True,
         editable=False,
         unique=True,
-        max_length=30,
+        max_length=40,
     )
 
     class Meta:

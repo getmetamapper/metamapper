@@ -1,7 +1,7 @@
 
 describe("groups.spec.js", () => {
   const workspace = {
-    id: "9cd5359c-b062-405c-bb4c-29b074f4d72c",
+    id: "9cd5359cb062405cbb4c29b074f4d72c",
     name: "Acme Corporation",
     slug: "AcmeCorporation",
   }

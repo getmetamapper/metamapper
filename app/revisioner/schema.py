@@ -34,6 +34,8 @@ class RunType(AuthNode, DjangoObjectType):
 
     status = graphene.String()
 
+    created_on = graphene.Date()
+
     error = graphene.Field(RevisionerErrorType)
 
     class Meta:
@@ -52,6 +54,11 @@ class RunType(AuthNode, DjangoObjectType):
         """Return the first error associated with this run, if any exist.
         """
         return instance.errors.order_by('created_at').first()
+
+    def resolve_created_on(instance, info):
+        """Return the `created_at` timestamp as a date.
+        """
+        return instance.created_at.date()
 
 
 class RelatedResourceType(graphene.ObjectType):

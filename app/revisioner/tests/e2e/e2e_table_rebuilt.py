@@ -125,7 +125,7 @@ test_cases = [
             {
                 "summarized": "It should retain the same Table identifier.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "got35fs8LymV",
+                "pass_value": 2,
             },
         ]
     },
@@ -139,12 +139,12 @@ test_cases = [
             {
                 "summarized": "It should retain the same Column identifier.",
                 "evaluation": lambda datastore, column: column.pk,
-                "pass_value": "jeGFqE06Mp06",
+                "pass_value": 14,
             },
             {
                 "summarized": "It should retain the same Table identifier.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": "got35fs8LymV",
+                "pass_value": 2,
             },
         ]
     },
@@ -158,12 +158,12 @@ test_cases = [
             {
                 "summarized": "It should retain the same Column identifier.",
                 "evaluation": lambda datastore, column: column.pk,
-                "pass_value": "H73kDbFONDtX",
+                "pass_value": 15,
             },
             {
                 "summarized": "It should retain the same Table identifier.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": "got35fs8LymV",
+                "pass_value": 2,
             },
         ]
     },
@@ -190,7 +190,7 @@ test_cases = [
             {
                 "summarized": "It should retain the same Index identifier.",
                 "evaluation": lambda datastore, index: index.pk,
-                "pass_value": "1Gl5bDQRAk4B",
+                "pass_value": 2,
             },
         ]
     },
@@ -198,7 +198,7 @@ test_cases = [
         "model": "IndexColumn",
         "description": "The `departments_dept_name_key` index should still exist.",
         "filters": {
-            "index_id": "1Gl5bDQRAk4B",
+            "index_id": 2,
         },
         "assertions": [
             {
@@ -209,7 +209,7 @@ test_cases = [
             {
                 "summarized": "It should retain the same IndexColumn.column_id.",
                 "evaluation": lambda datastore, index_column: index_column.column_id,
-                "pass_value": "H73kDbFONDtX",
+                "pass_value": 15,
             },
         ]
     },

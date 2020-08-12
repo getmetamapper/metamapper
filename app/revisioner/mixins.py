@@ -7,7 +7,7 @@ class RevisableModel(models.Model):
     """
     created_revision = models.ForeignKey(
         to='revisioner.Revision',
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name='+',
         null=True,
         default=None,

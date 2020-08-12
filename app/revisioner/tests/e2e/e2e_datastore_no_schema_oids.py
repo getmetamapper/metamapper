@@ -116,7 +116,7 @@ test_cases = [
             {
                 "summarized": "The table should have the same name.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "nctDse8X6qLb",
+                "pass_value": 1,
             },
         ]
     },
@@ -135,7 +135,7 @@ test_cases = [
             {
                 "summarized": "The table should have the same name.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "z9wctGAOaXyO",
+                "pass_value": 4,
             },
         ]
     },
@@ -154,7 +154,7 @@ test_cases = [
             {
                 "summarized": "The table should have the same name.",
                 "evaluation": lambda datastore, table: table.pk,
-                "pass_value": "IFMwWB5gtslY",
+                "pass_value": 10,
             },
         ]
     },

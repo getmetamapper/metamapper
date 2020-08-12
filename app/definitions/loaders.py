@@ -12,11 +12,14 @@ class SchemaTableLoader(DataLoader):
     def batch_load_fn(self, schema_ids):
         """Function to process the batch load.
         """
-        schemas = Schema.objects.filter(id__in=schema_ids).order_by('name')
-        mapping = {s.pk: [] for s in schemas}
-        results = Table.objects.filter(schema_id__in=schema_ids).order_by('name')
+        schema = Schema.objects.filter(id=schema_ids[0]).only('datastore_id').first()
+
+        mapping = {s: [] for s in schema_ids}
+        results = Table.objects.filter(schema__datastore_id=schema.datastore_id).order_by('name')
 
         for table in results:
+            if table.schema_id not in schema_ids:
+                continue
             mapping[table.schema_id].append(table)
 
         return Promise.resolve([

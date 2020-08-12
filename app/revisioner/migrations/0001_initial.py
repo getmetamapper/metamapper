@@ -5,7 +5,7 @@ import django.contrib.postgres.fields.jsonb
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import uuid
+import utils.mixins.models
 
 
 class Migration(migrations.Migration):
@@ -22,9 +22,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Run',
             fields=[
-                ('id', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(db_index=True, default=utils.mixins.models.uuid4_hex, max_length=32, editable=False, primary_key=True, unique=True)),
                 ('revision_count', models.PositiveIntegerField(default=0)),
-                ('created_on', models.DateField(default=django.utils.timezone.now)),
                 ('created_at', models.DateTimeField(auto_now_add=True, help_text='Timestamp for when the run was created.')),
                 ('started_at', models.DateTimeField(default=None, help_text='Timestamp for when run queued actual processing tasks.', null=True)),
                 ('finished_at', models.DateTimeField(default=None, help_text='Timestamp for when run finished calculating all revisions.', null=True)),
@@ -71,7 +70,7 @@ class Migration(migrations.Migration):
                 ('revision_id', models.CharField(max_length=40, primary_key=True, serialize=False, unique=True)),
                 ('resource_id', models.CharField(max_length=30, null=True)),
                 ('parent_resource_id', models.CharField(max_length=30, null=True)),
-                ('action', models.CharField(choices=[('created', 'Created'), ('dropped', 'Dropped'), ('modified', 'Modified')], max_length=30)),
+                ('action', models.IntegerField(choices=[(1, 'Created'), (2, 'Modified'), (3, 'Dropped')])),
                 ('metadata', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
                 ('checksum', models.CharField(max_length=32)),
                 ('first_seen_on', models.DateTimeField()),

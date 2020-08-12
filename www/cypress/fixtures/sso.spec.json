@@ -8,7 +8,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "7fdeecda-18bb-4592-a5d1-e00f18739d02"
+    "pk": "7fdeecda18bb4592a5d1e00f18739d02"
   },
   {
     "fields": {
@@ -19,7 +19,7 @@
       "updated_at": "2020-01-01 00:00:00Z"
     },
     "model": "authentication.workspace",
-    "pk": "dc909e3d-e10d-4904-ac4c-cf1c567fe211"
+    "pk": "dc909e3de10d4904ac4ccf1c567fe211"
   },
   {
     "fields": {
@@ -71,7 +71,7 @@
   },
   {
     "fields": {
-      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "workspace_id": "7fdeecda18bb4592a5d1e00f18739d02",
       "user_id": "owner.sso@metamapper.test",
       "permissions": "OWNER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -82,7 +82,7 @@
   },
   {
     "fields": {
-      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "workspace_id": "7fdeecda18bb4592a5d1e00f18739d02",
       "user_id": "member.sso@metamapper.test",
       "permissions": "MEMBER",
       "created_at": "2020-01-01 00:00:00Z",
@@ -93,7 +93,7 @@
   },
   {
     "fields": {
-      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "workspace_id": "7fdeecda18bb4592a5d1e00f18739d02",
       "user_id": "readonly.sso@metamapper.test",
       "permissions": "READONLY",
       "created_at": "2020-01-01 00:00:00Z",
@@ -104,7 +104,7 @@
   },
   {
     "fields": {
-      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "workspace_id": "7fdeecda18bb4592a5d1e00f18739d02",
       "domain": "metamapper.dev",
       "verification_token": "kBeRXnSNw7oJF4DlPCz9IDHlLuIOTa3AzoSUl33h",
       "verified_at": "2010-08-31 17:53:31Z",
@@ -116,7 +116,7 @@
   },
   {
     "fields": {
-      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "workspace_id": "7fdeecda18bb4592a5d1e00f18739d02",
       "domain": "metamapper.net",
       "verification_token": "UdZp79mqyk6nfk7B27GVlO6m1IEtajoGXMmNHgX0",
       "attempts": 20,
@@ -128,7 +128,7 @@
   },
   {
     "fields": {
-      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "workspace_id": "7fdeecda18bb4592a5d1e00f18739d02",
       "domain": "testdomain.com",
       "verification_token": "BgmPIpJTFZO9SuVFxMHrXOtxJB5gAX7bpzT9nqRy",
       "created_at": "2020-01-01 00:00:00Z",
@@ -139,7 +139,7 @@
   },
   {
     "fields": {
-      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "workspace_id": "7fdeecda18bb4592a5d1e00f18739d02",
       "entity_id": "urn:auth0:metamapper-io",
       "sso_url": "https://sso.metamapper.dev/oauth/callback/testing",
       "x509cert": "-----BEGIN CERTIFICATE-----MIIDCzCCAfOgAwIBAgIJZC/zKbXIzEkcMA0GCSqGSIb3DQEBCwUAMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTAeFw0xOTAyMTUwMzUwNDFaFw0zMjEwMjQwMzUwNDFaMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMOUfc2AWAJN7Fv+wZ+R+9CLN3ewimd++0TqV2wIo72Ud/PKM03kfODkWxKwqCHw6j2YZWugbjtmvS7pm/93k3PyyjuOybBawd5IiMw8XAVFvTRmkREl26bwuHFOwWFv7DHpTjbs4cgxm++2Jcx17DgrRIJUpOKjwpFs+kGnlWReTNseF7RAhDTe/7BcArYGdrwVE3nafbGluiZBtjtidD7J1YxnRPep0GaezjRtI6ygxliKDUU3iBwR4k8uCEj3XFjN+UutwgK318SFU2B0rXb1UmIhtpV7ePxYmEKh9A+H8xFclGfiMd1FFQ4eH1PfAOM1ljIzDsKhNJUNnR0PX80CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUtszg6c0bozrLT/cZiqU62gfjwWwwDgYDVR0PAQH/BAQDAgKEMA0GCSqGSIb3DQEBCwUAA4IBAQA0+l+P419AOY88ZFjXhjXM9S0d+4hIKLAg9Yb7tfPs8l4lIEGQnWxvO3XrrPeKfzwfmH1H178gs08xsvZvamQVzMMGjwipOosftxPzpm1xmqVP24tXi7YMbSzIjXzuqCICXuFYaddZm8A+ToZ7tt91uGoXeR6AvSKgYyt0bncgSCYeTkVUuHji3Jq49TfPYvnizRUvCAe7TGKcrEyolRTlYN+fVFSRLbyv8PryAun9mkMAxb/PnmesajqyEG82oaRrbDHfQIPd6BoOTXRyGJD0Ys+SK/GyV4+yykCeAY31kRxnQPZuxVBkgolQxIFa5CSy8XfmMm8dVx3C2RByNCPJ-----END CERTIFICATE-----",
@@ -153,7 +153,7 @@
   },
   {
     "fields": {
-      "workspace_id": "7fdeecda-18bb-4592-a5d1-e00f18739d02",
+      "workspace_id": "7fdeecda18bb4592a5d1e00f18739d02",
       "entity_id": "urn:auth0:metamapper-io",
       "sso_url": "https://sso.metamapper.dev/oauth/callback/testing",
       "x509cert": "-----BEGIN CERTIFICATE-----MIIDCzCCAfOgAwIBAgIJZC/zKbXIzEkcMA0GCSqGSIb3DQEBCwUAMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTAeFw0xOTAyMTUwMzUwNDFaFw0zMjEwMjQwMzUwNDFaMCMxITAfBgNVBAMTGG1ldGFtYXBwZXItZGV2LmF1dGgwLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMOUfc2AWAJN7Fv+wZ+R+9CLN3ewimd++0TqV2wIo72Ud/PKM03kfODkWxKwqCHw6j2YZWugbjtmvS7pm/93k3PyyjuOybBawd5IiMw8XAVFvTRmkREl26bwuHFOwWFv7DHpTjbs4cgxm++2Jcx17DgrRIJUpOKjwpFs+kGnlWReTNseF7RAhDTe/7BcArYGdrwVE3nafbGluiZBtjtidD7J1YxnRPep0GaezjRtI6ygxliKDUU3iBwR4k8uCEj3XFjN+UutwgK318SFU2B0rXb1UmIhtpV7ePxYmEKh9A+H8xFclGfiMd1FFQ4eH1PfAOM1ljIzDsKhNJUNnR0PX80CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUtszg6c0bozrLT/cZiqU62gfjwWwwDgYDVR0PAQH/BAQDAgKEMA0GCSqGSIb3DQEBCwUAA4IBAQA0+l+P419AOY88ZFjXhjXM9S0d+4hIKLAg9Yb7tfPs8l4lIEGQnWxvO3XrrPeKfzwfmH1H178gs08xsvZvamQVzMMGjwipOosftxPzpm1xmqVP24tXi7YMbSzIjXzuqCICXuFYaddZm8A+ToZ7tt91uGoXeR6AvSKgYyt0bncgSCYeTkVUuHji3Jq49TfPYvnizRUvCAe7TGKcrEyolRTlYN+fVFSRLbyv8PryAun9mkMAxb/PnmesajqyEG82oaRrbDHfQIPd6BoOTXRyGJD0Ys+SK/GyV4+yykCeAY31kRxnQPZuxVBkgolQxIFa5CSy8XfmMm8dVx3C2RByNCPJ-----END CERTIFICATE-----",

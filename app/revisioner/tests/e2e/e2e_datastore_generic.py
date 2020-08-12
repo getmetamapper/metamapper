@@ -228,7 +228,7 @@ test_cases = [
         "model": "Column",
         "description": "Expect `app.products.msrp` column to be deleted.",
         "filters": {
-            "pk": "nFybW6WH8igQ",
+            "pk": 44,
         },
         "assertions": [
             {
