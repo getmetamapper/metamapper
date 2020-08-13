@@ -40,8 +40,8 @@ def commit_revisions(datastore, run, logger):
 
     # We remove all of the "Column was created" revisions because they aren't super
     # useful from a debugging or UI perspective.
-    # if run.is_datastore_first_run:
-    resource_type = get_content_type_for_model(Column)
-    run.revisions.created(unapplied_only=False).filter(resource_type=resource_type).delete()
+    if run.is_datastore_first_run:
+        resource_type = get_content_type_for_model(Column)
+        run.revisions.created(unapplied_only=False).filter(resource_type=resource_type).delete()
 
     logger.info('Run has been committed.')
