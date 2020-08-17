@@ -1,7 +1,7 @@
 import { graphql } from "react-apollo"
-import GetDatastoreWithTableList from "graphql/queries/GetDatastoreWithTableList"
+import GetDatastoreAssets from "graphql/queries/GetDatastoreAssets"
 
-const withGetDatastoreWithTableList = graphql(GetDatastoreWithTableList, {
+const withGetDatastoreAssets = graphql(GetDatastoreAssets, {
   options: ({
     match: {
       params: { datastoreSlug },
@@ -38,4 +38,4 @@ const withGetDatastoreWithTableList = graphql(GetDatastoreWithTableList, {
   },
 })
 
-export default withGetDatastoreWithTableList
+export default withGetDatastoreAssets

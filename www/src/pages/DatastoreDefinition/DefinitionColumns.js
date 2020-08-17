@@ -8,7 +8,7 @@ import qs from "query-string"
 import ColumnDefinitionTable from "app/Datastores/DatastoreDefinition/ColumnDefinitionTable"
 import ColumnDefinitionDetails from "app/Datastores/DatastoreDefinition/ColumnDefinitionDetails"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
-import withGetDatastoreWithTableList from "graphql/withGetDatastoreWithTableList"
+import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableColumns from "graphql/withGetTableColumns"
 
 class DatastoreColumns extends Component {
@@ -68,7 +68,6 @@ class DatastoreColumns extends Component {
     const {
       datastore,
       loading,
-      schemas,
       tableColumns,
       tableDefinition,
     } = this.props
@@ -78,7 +77,6 @@ class DatastoreColumns extends Component {
         datastore={datastore}
         lastCrumb="Columns"
         loading={loading}
-        schemas={schemas}
         table={tableDefinition}
       >
         <ColumnDefinitionTable
@@ -108,7 +106,7 @@ const withNotFound = withNotFoundHandler(({ tableDefinition }) => {
 
 const enhance = compose(
   withRouter,
-  withGetDatastoreWithTableList,
+  withGetDatastoreDefinition,
   withGetTableColumns,
   withLargeLoader,
   withNotFound,

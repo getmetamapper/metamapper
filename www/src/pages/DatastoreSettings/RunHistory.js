@@ -60,7 +60,6 @@ class RunHistory extends Component {
     ]
   }
 
-
   renderTitle = (selectedRun) => {
     let title = "Revisions"
     if (selectedRun) {

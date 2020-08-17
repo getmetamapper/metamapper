@@ -5,7 +5,7 @@ import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
-import withGetDatastoreWithTableList from "graphql/withGetDatastoreWithTableList"
+import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableDefinition from "graphql/withGetTableDefinition"
 import withGetTableCustomProperties from "graphql/withGetTableCustomProperties"
 import UpdateCustomProperties from "app/Datastores/CustomProperties/UpdateCustomProperties"
@@ -21,7 +21,6 @@ class DefinitionOverview extends Component {
       datastore,
       hasPermission,
       loading,
-      schemas,
       tableDefinition,
     } = this.props
     return (
@@ -29,7 +28,6 @@ class DefinitionOverview extends Component {
         datastore={datastore}
         lastCrumb="Overview"
         loading={loading}
-        schemas={schemas}
         table={tableDefinition}
       >
         <Row gutter={[16, 16]} style={{ padding: 16 }}>
@@ -68,7 +66,7 @@ const withNotFound = withNotFoundHandler(({ tableDefinition }) => {
 
 const enhance = compose(
   withWriteAccess,
-  withGetDatastoreWithTableList,
+  withGetDatastoreDefinition,
   withGetTableDefinition,
   withGetTableCustomProperties,
   withLargeLoader,

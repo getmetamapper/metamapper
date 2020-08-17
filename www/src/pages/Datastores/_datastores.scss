@@ -169,11 +169,16 @@
 .ssh-tunnel-form {
   margin-top: 20px;
 }
-
+.table-schema-selector-wrapper {
+  background: #FFFFFF;
+  height: 100vh;
+  border-left: 1px solid #e8e8e8;
+}
 .table-schema-search {
   input.ant-input {
     border-color: #e8e8e8;
     border-top: 0;
+    border-left: 0;
     border-radius: 0;
     font-size: 12px;
   }
@@ -188,8 +193,17 @@
 }
 .table-schema-selector {
    background-color: #FFFFFF;
-   border-left: 1px solid #e8e8e8;
    height: 100vh;
+
+  .loading {
+    color: #989898;
+    padding: 48px 0;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+  }
 
   .ant-collapse > .ant-collapse-item {
     border-bottom: 1px solid #e8e8e8;

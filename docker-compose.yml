@@ -1,6 +1,19 @@
 version: '3.4'
 x-restart-policy: &restart_policy
   restart: unless-stopped
+x-metamapper-defaults: &metamapper_defaults
+  << : *restart_policy
+  build:
+    context: ./
+  image: metamapper
+  env_file:
+    - .env
+  depends_on:
+    - database
+  networks:
+    - metamapper
+  volumes:
+    - ./:/usr/local/metamapper
 services:
   database:
     << : *restart_policy
@@ -22,45 +35,22 @@ services:
     networks:
      - metamapper
   webserver:
-    << : *restart_policy
-    env_file:
-      - .env
-    image: metamapper
+    << : *metamapper_defaults
     command: webserver
-    volumes:
-      - ./:/usr/local/metamapper
     ports:
       - 5050:5050
-    depends_on:
-      - database
-    networks:
-      - metamapper
   worker:
-    << : *restart_policy
-    env_file:
-      - .env
-    image: metamapper
+    << : *metamapper_defaults
     command: worker --concurrency=1
     depends_on:
       - database
       - rabbitmq
-    volumes:
-      - ./:/usr/local/metamapper
-    networks:
-      - metamapper
   scheduler:
-    << : *restart_policy
-    env_file:
-      - .env
-    image: metamapper
+    << : *metamapper_defaults
     command: scheduler
     depends_on:
       - database
       - rabbitmq
-    volumes:
-      - ./:/usr/local/metamapper
-    networks:
-      - metamapper
   redis:
     << : *restart_policy
     image: redis:alpine

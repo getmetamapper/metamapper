@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from app.definitions.models import Schema, Table, Column, Index, IndexColumn
+from django.core.paginator import Paginator
 
+from app.definitions.models import Schema, Table, Column, Index, IndexColumn
 from app.revisioner.collectors import ObjectCollector
 from app.revisioner.revisioners import get_content_type_for_model
 
@@ -8,31 +9,40 @@ from utils.postgres.types import ConflictAction
 
 
 class GenericModifyAction(object):
-    """Generic mixin for a bulk CREATED action based on revisions.
+    """Generic mixin for a bulk MODIFIED action based on revisions.
     """
     def __init__(self, run, datastore, logger, *args, **kwargs):
         self.run = run
         self.datastore = datastore
         self.logger = logger
         self.content_type = get_content_type_for_model(self.model_class)
-        self.revisions = self.run.revisions.modified().filter(resource_type=self.content_type)
+        self.workspace_id = self.run.workspace_id
         self.collector = self.get_collector()
+        self.revisions = (
+            self.run.revisions
+                    .modified()
+                    .filter(resource_type=self.content_type)
+                    .order_by('created_at')
+        )
 
-    def apply(self):
+    def apply(self, batch_size=500):
         """Apply the MODIFIED action in bulk.
         """
-        resources = []
-        for revision in self.revisions:
-            resource = self.collector.find_by_pk(revision.resource_id)
-            metadata = revision.metadata.copy()
-            set_attr = self.get_modify_function(metadata['field'])
-            if resource:
-                set_attr(resource, revision=revision, **metadata)
-                self.collector.mark_as_processed(resource.pk)
-        for resource in self.collector.processed:
-            resource.save()
-            resources.append(resource)
-        return resources
+        paginator = Paginator(self.revisions, batch_size)
+
+        for page_num in paginator.page_range:
+            page = paginator.get_page(page_num)
+
+            for revision in page.object_list:
+                resource = self.collector.find_by_pk(revision.resource_id)
+                metadata = revision.metadata.copy()
+                set_attr = self.get_modify_function(metadata['field'])
+                if resource:
+                    set_attr(resource, revision=revision, **metadata)
+                    self.collector.mark_as_processed(resource.pk)
+
+            for resource in self.collector.processed:
+                resource.save()
 
     def get_collector(self):
         """Get the object collector.

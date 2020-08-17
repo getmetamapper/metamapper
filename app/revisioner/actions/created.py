@@ -18,8 +18,13 @@ class GenericCreateAction(object):
         self.datastore = datastore
         self.logger = logger
         self.content_type = get_content_type_for_model(self.model_class)
-        self.revisions = self.run.revisions.created().filter(resource_type_id=self.content_type.id).order_by('created_at')
         self.workspace_id = self.run.workspace_id
+        self.revisions = (
+            self.run.revisions
+                    .created()
+                    .filter(resource_type_id=self.content_type.id)
+                    .order_by('created_at')
+        )
 
     def bulk_insert(self, rows):
         """Perform a bulk INSERT and ignore duplicate records.
@@ -41,7 +46,7 @@ class GenericCreateAction(object):
                 self.bulk_insert(data)
 
             self.logger.info(
-                '[{0}] Processed {1} of {2}'.format(self.model_class.__name__, page.end_index(), paginator.count)
+                '[{0}] Created {1} of {2}'.format(self.model_class.__name__, page.end_index(), paginator.count)
             )
 
 
@@ -138,7 +143,7 @@ class IndexCreateAction(GenericCreateAction):
 
         instances = self.model_class.objects.bulk_create(resources, batch_size=500)
         collector = ObjectCollector(
-            collection=Column.objects.filter(table__schema__datastore_id=self.datastore.id),
+            Column.objects.filter(table__schema__datastore_id=self.datastore.id).only('pk', 'object_id', 'name')
         )
         for instance in instances:
             for c in column_cache.get(instance.pk, []):

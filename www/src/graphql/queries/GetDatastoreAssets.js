@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query GetDatastoreTableList($datastoreSlug: String!) {
+  query GetDatastoreAssets($datastoreSlug: String!) {
     datastoreBySlug(slug: $datastoreSlug) {
       id
       pk
@@ -11,7 +11,6 @@ export default gql`
       version
       isEnabled
       hasIndexes
-      hasConstraints
       jdbcConnection {
         engine
       }

@@ -4,7 +4,7 @@ import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"
 import IndexDefinitionTable from "app/Datastores/DatastoreDefinition/IndexDefinitionTable"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
-import withGetDatastoreWithTableList from "graphql/withGetDatastoreWithTableList"
+import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableIndexes from "graphql/withGetTableIndexes"
 
 class DatastoreIndexes extends Component {
@@ -26,7 +26,6 @@ class DatastoreIndexes extends Component {
       datastore,
       tableDefinition,
       tableIndexes,
-      schemas,
       loading,
     } = this.props
     return (
@@ -34,7 +33,6 @@ class DatastoreIndexes extends Component {
         datastore={datastore}
         lastCrumb="Indexes"
         loading={loading}
-        schemas={schemas}
         table={tableDefinition}
       >
         <IndexDefinitionTable dataSource={tableIndexes} loading={loading} />
@@ -48,7 +46,7 @@ const withNotFound = withNotFoundHandler(({ tableDefinition }) => {
 })
 
 export default compose(
-  withGetDatastoreWithTableList,
+  withGetDatastoreDefinition,
   withGetTableIndexes,
   withLargeLoader,
   withNotFound,
