@@ -23,9 +23,9 @@ export const renderRevisionIcon = (action) => {
   if (!action) return null
 
   const switchBoard = {
-    CREATED: CreatedRevision,
-    MODIFIED: ModifiedRevision,
-    DROPPED: DroppedRevision,
+    1: CreatedRevision,
+    2: ModifiedRevision,
+    3: DroppedRevision,
   }
 
   const Component = switchBoard[action]

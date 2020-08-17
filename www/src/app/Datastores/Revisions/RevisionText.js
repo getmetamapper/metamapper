@@ -1,5 +1,6 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { Tag } from "antd"
+import { map } from "lodash"
 import { humanize } from "lib/utilities"
 
 const humanizeFieldName = (fieldName) => {
@@ -20,6 +21,25 @@ const humanizeFieldName = (fieldName) => {
   }
 
   return humanize(fieldName)
+}
+
+const displayChangedValue = (field, value, color) => {
+  if (typeof value === "boolean") {
+    value = value.toString()
+  }
+  else if (value === null || value === undefined) {
+    value = "null"
+  }
+
+  if (field === "columns") {
+    return (
+      <Fragment>
+        {map(value, ({ column_name }) => <Tag color={color}>{column_name}</Tag>)}
+      </Fragment>
+    )
+  }
+
+  return <Tag color={color}>{value}</Tag>
 }
 
 const resourceDecorator = (parentResource, relatedResource, color) => (
@@ -46,14 +66,10 @@ const ModifiedRevision = ({
   <span className="modified-table-revision">
     <span className="mr-10">
       {humanizeFieldName(field)} for {relatedResource && relatedResource.type.toLowerCase()}{" "}
-      {resourceDecorator(parentResource, relatedResource, "#faad14")} changed
+      {resourceDecorator(parentResource, relatedResource, "#faad14")} changed:
     </span>
-    <Tag color="red">
-      {typeof old_value === "boolean" ? old_value.toString() : old_value}
-    </Tag>
-    <Tag color="green">
-      {typeof new_value === "boolean" ? new_value.toString() : new_value}
-    </Tag>
+    {displayChangedValue(field, old_value, "red")}
+    {displayChangedValue(field, new_value, "green")}
   </span>
 )
 
@@ -71,12 +87,13 @@ export const renderRevisionText = (revision) => {
   if (!revision) return null
 
   const switchBoard = {
-    CREATED: CreatedRevision,
-    MODIFIED: ModifiedRevision,
-    DROPPED: DroppedRevision,
+    1: CreatedRevision,
+    2: ModifiedRevision,
+    3: DroppedRevision,
   }
-
   const Component = switchBoard[revision.action]
+
+  console.log(revision)
 
   return <Component {...revision} />
 }

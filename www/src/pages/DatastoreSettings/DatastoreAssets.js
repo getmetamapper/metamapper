@@ -5,7 +5,7 @@ import { Col, Row } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreLayout"
 import DatastoreAssetsTable from "app/Datastores/DatastoreAssets/DatastoreAssetsTable"
-import withGetDatastoreTables from "graphql/withGetDatastoreTables"
+import withGetDatastoreAssets from "graphql/withGetDatastoreAssets"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
 class DatastoreAssets extends Component {
@@ -67,7 +67,7 @@ const withNotFound = withNotFoundHandler(({ datastore }) => {
 
 export default compose(
   withRouter,
-  withGetDatastoreTables,
+  withGetDatastoreAssets,
   withLargeLoader,
   withNotFound,
 )(DatastoreAssets)

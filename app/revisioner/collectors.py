@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from app.definitions.models import Table, Column, Index
+from app.definitions.models import Schema, Table, Column, Index
 from app.revisioner.revisioners import get_content_types
 
 
@@ -12,11 +12,11 @@ class ObjectCollector(object):
 
     @property
     def processed(self):
-        return self.all(self.collection, lambda o: o.pk in self._processed)
+        return self.assigned
 
     @property
     def assigned(self):
-        return self.processed
+        return self.all(self.collection, lambda o: o.pk in self._processed)
 
     @property
     def unassigned(self):
@@ -85,18 +85,29 @@ class DefinitionCollector(object):
         self.datastore = datastore
         self.workspace = self.datastore.workspace
         self.content_types = get_content_types()
-        self.schemas = ObjectCollector(
-            self.datastore.schemas.all()
-        )
-        self.tables = ObjectCollector(
-            Table.objects.filter(schema__datastore_id=self.datastore.id).select_related('schema')
-        )
-        self.columns = ObjectCollector(
-            Column.objects.filter(table__schema__datastore_id=self.datastore.id).select_related('table')
-        )
-        self.indexes = ObjectCollector(
-            Index.objects.filter(table__schema__datastore_id=self.datastore.id).select_related('table')
-        )
+        self.schemas = ObjectCollector((
+            Schema.objects
+                  .filter(datastore_id=self.datastore.id)
+                  .only('pk', 'object_id', 'name')
+        ))
+        self.tables = ObjectCollector((
+            Table.objects
+                 .filter(schema__datastore_id=self.datastore.id)
+                 .select_related('schema')
+                 .only('pk', 'object_id', 'name', 'schema')
+        ))
+        self.columns = ObjectCollector((
+            Column.objects
+                  .filter(table__schema__datastore_id=self.datastore.id)
+                  .select_related('table')
+                  .only('pk', 'object_id', 'name', 'table')
+        ))
+        self.indexes = ObjectCollector((
+            Index.objects
+                 .filter(table__schema__datastore_id=self.datastore.id)
+                 .select_related('table')
+                 .only('pk', 'object_id', 'name', 'table')
+        ))
 
     @property
     def mapper(self):
@@ -114,13 +125,6 @@ class DefinitionCollector(object):
         """Mapping of unassigned database objects. Usually indicates DROPPED objects.
         """
         return {k: v.unassigned for k, v in self.mapper.items()}
-
-    def has_unassigned(self, object_type=None):
-        """Boolean check to see if unassigned objects exist.
-        """
-        if object_type:
-            return len(self.unassigned[object_type]) > 0
-        return any([len(u) > 0 for u in self.unassigned.values()])
 
     def find_by_revision(self, revision_id, content_type=None):
         """Search cache by creation revision.

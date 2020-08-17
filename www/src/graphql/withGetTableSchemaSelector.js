@@ -1,13 +1,13 @@
 import { graphql } from "react-apollo"
-import GetDatastoreTables from "graphql/queries/GetDatastoreTables"
+import GetTableSchemaSelector from "graphql/queries/GetTableSchemaSelector"
 
-const withGetDatastoreTables = graphql(GetDatastoreTables, {
+const withGetTableSchemaSelector = graphql(GetTableSchemaSelector, {
   options: ({
     match: {
       params: { datastoreSlug },
     },
   }) => ({
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
     variables: {
       datastoreSlug,
     },
@@ -17,7 +17,6 @@ const withGetDatastoreTables = graphql(GetDatastoreTables, {
       loading: data && data.loading,
       errored: data && data.error,
       refetch: data && data.refetch,
-      datastore: {},
       schemas: [],
     }
 
@@ -32,10 +31,9 @@ const withGetDatastoreTables = graphql(GetDatastoreTables, {
     }
 
     return {
-      datastore: datastoreBySlug,
       schemas: datastoreBySlug.schemas,
     }
   },
 })
 
-export default withGetDatastoreTables
+export default withGetTableSchemaSelector
