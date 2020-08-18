@@ -211,6 +211,7 @@ GRAPHENE = {
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
         'app.authentication.middleware.CurrentWorkspaceMiddleware',
     ],
+    'RELAY_CONNECTION_MAX_LIMIT': 2000,
 }
 
 if DEBUG:
@@ -360,11 +361,6 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
-        # 'django.db.backends': {
-        #     'handlers': ['debug'],
-        #     'level': 'DEBUG',
-        #     'propagate': False,
-        # },
     }
 }
 #

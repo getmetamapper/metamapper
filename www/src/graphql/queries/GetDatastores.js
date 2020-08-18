@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getDatastores($search: String) {
+  query GetDatastores($search: String) {
     datastores(search: $search) {
       edges {
         node {

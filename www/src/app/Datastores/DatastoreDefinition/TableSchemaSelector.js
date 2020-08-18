@@ -1,100 +1,135 @@
-import React, { Component, Fragment } from "react"
+import React, { Component, Fragment, useState } from "react"
 import { Collapse, Icon, Tooltip, Input, Spin } from "antd"
 import { compose } from "react-apollo"
-import { map, cloneDeep } from "lodash"
+import { map } from "lodash"
 import Link from "app/Navigation/Link"
-import withGetTableSchemaSelector from "graphql/withGetTableSchemaSelector"
 import { withRouter } from "react-router-dom"
 import { withLargeLoader } from "hoc/withLoader"
+import withGetDatastoreSchemaNames from "graphql/withGetDatastoreSchemaNames"
+import withGetSchemaTableNames from "graphql/withGetSchemaTableNames"
+import withGetDatastoreAssets from "graphql/withGetDatastoreAssets"
 
-const TableSchemaSelectorComponent = ({
-  activeSchemas,
+
+const TableSchemaSelectorTables = ({ schemaTableNames, currentTable, datastore, schemaName }) => (
+  <Fragment>
+    {map(schemaTableNames, (tableName) => (
+      <Link
+        className={`tablename ${
+          currentTable.name === tableName ? "active" : ""
+        }`}
+        key={tableName}
+        title={tableName}
+        to={`/datastores/${datastore.slug}/definition/${schemaName}/${tableName}/overview`}
+      >
+        <Icon type="table" /> {tableName}
+      </Link>
+    ))}
+  </Fragment>
+)
+
+const TableSchemaSelectorBasicResults = compose(
+  withGetSchemaTableNames,
+  withLargeLoader,
+)(TableSchemaSelectorTables)
+
+const TableSchemaSelectorBasicComponent = ({
   currentTable,
   datastore,
   onChange,
   schemas,
   loading,
-}) => (
-  <div className="table-schema-selector">
-    {loading ? (
-      <div className="loading">
-        <Spin />
-      </div>
-    ) : (
-      <Collapse
-        defaultActiveKey={[currentTable.name]}
-        activeKey={activeSchemas}
-        onChange={onChange}
-      >
-        {map(schemas, ({ name: schema, tables }) => (
-          <Collapse.Panel
-            key={schema}
-            header={
-              <Tooltip title={schema} placement="left">
-                {schema}
-              </Tooltip>
-            }
-          >
-            {map(tables, (table) => (
+}) => {
+  const [activeSchemas, setActiveSchemas] = useState()
+  return (
+    <div className="table-schema-selector">
+      {loading ? (
+        <div className="loading">
+          <Spin />
+        </div>
+      ) : (
+        <Collapse
+          defaultActiveKey={[currentTable.name]}
+          activeKey={activeSchemas}
+          onChange={setActiveSchemas}
+        >
+          {map(schemas, (schema) => (
+            <Collapse.Panel
+              key={schema}
+              header={
+                <Tooltip title={schema} placement="left">
+                  {schema}
+                </Tooltip>
+              }
+            >
+              <TableSchemaSelectorBasicResults
+                currentTable={currentTable}
+                datastore={datastore}
+                loading={loading}
+                schemaName={schema}
+              />
+            </Collapse.Panel>
+          ))}
+        </Collapse>
+      )}
+      <div className="table-schema-selector-clearfix"></div>
+    </div>
+  )
+}
+
+const TableSchemaSelectorSearchResults = ({
+  currentTable,
+  datastore,
+  assets,
+  loading,
+}) => {
+  return (
+    <div className="table-schema-selector search">
+      {loading ? (
+        <div className="loading">
+          <Spin />
+        </div>
+      ) : (
+        <Fragment>
+          {map(assets, (asset) => (
+            <div className="search-result">
               <Link
                 className={`tablename ${
-                  currentTable.name === table.name ? "active" : ""
+                  currentTable.name === asset.name ? "active" : ""
                 }`}
-                key={table.id}
-                title={table.name}
-                to={`/datastores/${datastore.slug}/definition/${schema}/${table.name}/overview`}
+                key={`${asset.schema.name}.${asset.name}`}
+                title={`${asset.schema.name}.${asset.name}`}
+                to={`/datastores/${datastore.slug}/definition/${asset.schema.name}/${asset.name}/overview`}
               >
-                <Icon type="table" /> {table.name}
+                <Icon type="table" /> {asset.schema.name}.{asset.name}
               </Link>
-            ))}
-          </Collapse.Panel>
-        ))}
-      </Collapse>
-    )}
-  </div>
-)
+            </div>
+          ))}
+        </Fragment>
+      )}
+    </div>
+  )
+}
+
+const TableSchemaSelectorSearchComponent = compose(
+  withRouter,
+  withGetDatastoreAssets,
+  withLargeLoader,
+)(TableSchemaSelectorSearchResults)
+
 
 class TableSchemaSelectorContainer extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      activeSchemas: [],
-      filteredSchemas: cloneDeep(props.schemas),
+      search: "",
     }
   }
 
   handleSearch = (evt) => {
-    const query = evt.target.value.toLowerCase()
-
-    const filteredSchemas = cloneDeep(this.props.schemas)
-      .map((schema) => {
-        if (query) {
-          if (schema.name.toLowerCase().indexOf(query) > -1) {
-            return schema
-          }
-          const tables = schema.tables.filter((table) => {
-            return table.name.toLowerCase().indexOf(query) > -1
-          })
-          schema.tables = tables
-        }
-        return schema
-      })
-      .filter((schema) => {
-        return schema.tables.length > 0
-      })
-
-    let activeSchemas = []
-
-    if (query) {
-      activeSchemas = map(filteredSchemas, ({ name }) => name)
-    }
-
-    this.setState({ filteredSchemas, activeSchemas })
-  }
-
-  handleChange = (activeSchemas) => {
-    this.setState({ activeSchemas })
+    this.setState({
+      search: evt.target.value,
+    })
   }
 
   render() {
@@ -102,8 +137,11 @@ class TableSchemaSelectorContainer extends Component {
       currentTable,
       datastore,
       loading,
+      datastoreSchemaNames,
     } = this.props
-    const { activeSchemas, filteredSchemas } = this.state
+    const { search } = this.state
+
+    const SidebarComponent = (search.length > 0) ? TableSchemaSelectorSearchComponent : TableSchemaSelectorBasicComponent
     return (
       <Fragment>
         <div className="table-schema-search">
@@ -114,17 +152,16 @@ class TableSchemaSelectorContainer extends Component {
             data-test="TableSchemaSearch.Input"
           />
         </div>
-        <TableSchemaSelectorComponent
-          activeSchemas={activeSchemas}
+        <SidebarComponent
           currentTable={currentTable}
           datastore={datastore}
-          schemas={filteredSchemas}
-          onChange={this.handleChange}
+          schemas={datastoreSchemaNames}
           loading={loading}
+          search={search}
         />
       </Fragment>
     )
   }
 }
 
-export default compose(withRouter, withGetTableSchemaSelector, withLargeLoader)(TableSchemaSelectorContainer)
+export default compose(withRouter, withGetDatastoreSchemaNames, withLargeLoader)(TableSchemaSelectorContainer)

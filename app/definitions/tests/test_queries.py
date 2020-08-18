@@ -727,3 +727,254 @@ class TestGetDatastoreGroupAccessPrivileges(cases.GraphQLTestCase):
 
         results = self.execute(self.statement, variables=variables)
         self.assertPermissionDenied(results)
+
+
+class TestGetDatastoreAssets(cases.GraphQLTestCase):
+    """Tests for retrieving a list of tables associated with a datastore.
+    """
+    factory = factories.DatastoreFactory
+    operation = 'datastoreAssets'
+    statement = '''
+    query GetDatastoreAssets($datastoreSlug: String!, $search: String, $first: Int, $after: String) {
+      datastoreAssets(
+        slug: $datastoreSlug
+        search: $search
+        first: $first
+        after: $after
+      ) {
+        edges {
+          node {
+            id
+            name
+            kind
+            shortDesc
+            schema {
+              name
+            }
+          }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+    '''
+
+    def setUp(self):
+        super(TestGetDatastoreAssets, self).setUp()
+
+        self.datastore = self.factory(workspace=self.workspace)
+        self.schema = factories.SchemaFactory(datastore=self.datastore)
+
+        self.assets = []
+
+        for i in range(10):
+            self.assets.append(
+                factories.TableFactory(name='app%s' % str(i).zfill(3), schema=self.schema)
+            )
+
+        for j in range(10):
+            self.assets.append(
+                factories.TableFactory(name='site%s' % str(j).zfill(3), schema=self.schema)
+            )
+
+    @decorators.as_someone(['OWNER', 'MEMBER', 'READONLY'])
+    def test_valid(self):
+        """Outside users should not be able to access this resource.
+        """
+        variables = {
+            'datastoreSlug': self.datastore.slug,
+            'first': 100,
+        }
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertEqual(len(self.assets), len(results['edges']))
+
+        names = []
+        for edge in results['edges']:
+            names.append(edge['node']['name'])
+
+        for asset in self.assets:
+            self.assertIn(asset.name, names)
+
+    def test_pagination(self):
+        """It should implement cursor pagination.
+        """
+        variables = {
+            'datastoreSlug': self.datastore.slug,
+            'first': 10,
+        }
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertTrue(results['pageInfo']['hasNextPage'])
+
+        variables['after'] = results['pageInfo']['endCursor']
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertFalse(results['pageInfo']['hasNextPage'])
+
+    def test_search(self):
+        """It should implement cursor pagination.
+        """
+        variables = {
+            'datastoreSlug': self.datastore.slug,
+            'search': 'app',
+        }
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertEqual(len(results['edges']), 10)
+
+    @decorators.as_someone(['OUTSIDER'])
+    def test_not_authorized(self):
+        """Outside users should not be able to access this resource.
+        """
+        results = self.execute(self.statement, variables={'datastoreSlug': self.datastore.slug})
+        self.assertPermissionDenied(results)
+
+
+class TestGetSchemaNamesByDatastore(cases.GraphQLTestCase):
+    """Tests for getting a list of schema names for a datastore.
+    """
+    factory = factories.DatastoreFactory
+    operation = 'schemaNamesByDatastore'
+    statement = '''
+    query GetDatastoreSchemaNames($datastoreId: ID!) {
+        schemaNamesByDatastore(datastoreId: $datastoreId)
+    }
+    '''
+
+    def setUp(self):
+        super(TestGetSchemaNamesByDatastore, self).setUp()
+
+        self.datastore = self.factory(workspace=self.workspace)
+        self.schemas = factories.SchemaFactory.create_batch(10, datastore=self.datastore)
+
+        self.other_schema = factories.SchemaFactory()
+
+        self.variables = {
+            'datastoreId': helpers.to_global_id('DatastoreType', self.datastore.pk),
+        }
+
+    @decorators.as_someone(['OWNER', 'MEMBER', 'READONLY'])
+    def test_valid(self):
+        """Outside users should not be able to access this resource.
+        """
+        results = self.execute(self.statement, variables=self.variables)
+        results = results['data'][self.operation]
+
+        self.assertTrue(len(results), len(self.schemas))
+        self.assertTrue(self.other_schema.name not in results)
+
+        for schema in self.schemas:
+            self.assertIn(schema.name, results)
+
+    @decorators.as_someone(['MEMBER', 'READONLY'])
+    def test_query_with_object_permissions(self):
+        """It returns the datastore object.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+        self.datastore.assign_perm(self.user, 'definitions.view_datastore')
+
+        results = self.execute(self.statement, variables=self.variables)
+        results = results['data'][self.operation]
+
+        self.assertTrue(len(results), len(self.schemas))
+
+    @decorators.as_someone(['MEMBER', 'READONLY'])
+    def test_query_without_object_permissions(self):
+        """It returns a 403 - Permission Denied error.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        results = self.execute(self.statement, variables=self.variables)
+        self.assertPermissionDenied(results)
+
+    @decorators.as_someone(['OUTSIDER'])
+    def test_not_authorized(self):
+        """Outside users should not be able to access this resource.
+        """
+        results = self.execute(self.statement, variables=self.variables)
+        self.assertPermissionDenied(results)
+
+
+class TestGetTableNamesBySchema(cases.GraphQLTestCase):
+    """Tests for getting datastore privileges scoped to groups.
+    """
+    factory = factories.DatastoreFactory
+    operation = 'tableNamesBySchema'
+    statement = '''
+    query GetSchemaTableNames(
+        $datastoreId: ID!
+        $schemaName: String!
+    ) {
+        tableNamesBySchema(datastoreId: $datastoreId, schemaName: $schemaName)
+    }
+    '''
+    def setUp(self):
+        super(TestGetTableNamesBySchema, self).setUp()
+
+        self.datastore = self.factory(workspace=self.workspace)
+        self.schema = factories.SchemaFactory(datastore=self.datastore)
+        self.tables = factories.TableFactory.create_batch(10, schema=self.schema)
+
+        self.other_schema = factories.SchemaFactory(datastore=self.datastore)
+        self.other_table = factories.TableFactory(schema=self.other_schema)
+
+        self.variables = {
+            'datastoreId': helpers.to_global_id('DatastoreType', self.datastore.pk),
+            'schemaName': self.schema.name,
+        }
+
+    @decorators.as_someone(['OWNER', 'MEMBER', 'READONLY'])
+    def test_valid(self):
+        """Outside users should not be able to access this resource.
+        """
+        results = self.execute(self.statement, variables=self.variables)
+        results = results['data'][self.operation]
+
+        self.assertTrue(len(results), len(self.tables))
+        self.assertTrue(self.other_table.name not in results)
+
+        for table in self.tables:
+            self.assertIn(table.name, results)
+
+    @decorators.as_someone(['MEMBER', 'READONLY'])
+    def test_query_with_object_permissions(self):
+        """It returns the datastore object.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+        self.datastore.assign_perm(self.user, 'definitions.view_datastore')
+
+        results = self.execute(self.statement, variables=self.variables)
+        results = results['data'][self.operation]
+
+        self.assertTrue(len(results), len(self.tables))
+
+    @decorators.as_someone(['MEMBER', 'READONLY'])
+    def test_query_without_object_permissions(self):
+        """It returns a 403 - Permission Denied error.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        results = self.execute(self.statement, variables=self.variables)
+        self.assertPermissionDenied(results)
+
+    @decorators.as_someone(['OUTSIDER'])
+    def test_not_authorized(self):
+        """Outside users should not be able to access this resource.
+        """
+        results = self.execute(self.statement, variables=self.variables)
+        self.assertPermissionDenied(results)

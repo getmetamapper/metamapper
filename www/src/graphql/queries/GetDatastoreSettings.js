@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getDatastoreSettings($datastoreSlug: String!) {
+  query GetDatastoreSettings($datastoreSlug: String!) {
     datastoreBySlug(slug: $datastoreSlug) {
       id
       pk

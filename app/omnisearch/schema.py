@@ -26,7 +26,10 @@ class OmnisearchResultListType(graphene.ObjectType):
     search_result = graphene.Field(OmnisearchResultType)
 
     def resolve_search_result(instance, info):
-        return info.context.loaders.omnisearch_results.load((instance['pk'], instance['model_name']))
+        pk = instance['pk']
+        if instance['model_name'] in ('Table', 'Column'):
+            pk = int(instance['pk'])
+        return info.context.loaders.omnisearch_results.load((pk, instance['model_name']))
 
     def resolve_pk(instance, info):
         return instance['pk']

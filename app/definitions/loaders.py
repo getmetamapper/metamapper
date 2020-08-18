@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
+from django.db.models import F
 from promise import Promise
 from promise.dataloader import DataLoader
-from django.db.models import F
 
 from app.definitions.models import Schema, Table, Column
 
@@ -66,3 +67,18 @@ class IndexColumnLoader(DataLoader):
         return Promise.resolve([
             list(set(mapping.get(s, []))) for s in index_ids
         ])
+
+
+class TableSchemaLoader(DataLoader):
+    """Preload schemas related to a group of tables.
+    """
+    def batch_load_fn(self, schema_ids):
+        """Function to process the batch load.
+        """
+        output = defaultdict(list)
+        queryset = Schema.objects.filter(id__in=schema_ids)
+
+        for schema_id in schema_ids:
+            output[schema_id] = next(filter(lambda q: q.id == schema_id, queryset), None)
+
+        return Promise.resolve([output.get(o) for o in schema_ids])

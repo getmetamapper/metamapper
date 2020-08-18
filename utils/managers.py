@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
+from django.contrib.postgres.search import SearchRank, SearchVector
 from django.db import models
-from django.contrib.postgres.search import (
-    SearchQuery,
-    SearchRank,
-    SearchVector,
-)
+from django.db.models import Q
+
+from utils.postgres.sql import PostgresOrSearchQuery
 
 
 def SearchManager(fields):
@@ -21,10 +20,10 @@ def SearchManager(fields):
             """
             qs = self.get_queryset()
             if search:
-                query = SearchQuery(search)
+                query = PostgresOrSearchQuery(search)
                 vector = SearchVector(*self._fields)
                 qs = qs.annotate(search=vector)\
-                       .filter(search__icontains=search)\
+                       .filter(Q(search=query) | Q(search__icontains=search))\
                        .annotate(rank=SearchRank(vector, query))\
                        .order_by('-rank')
             qs = qs.filter(**kwargs)
