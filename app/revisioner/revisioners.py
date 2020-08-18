@@ -5,6 +5,7 @@ import uuid
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.db.models import F
+from django.utils.functional import cached_property
 
 from utils.shortcuts import dict_list_eq
 from app.revisioner.models import Revision
@@ -251,7 +252,7 @@ class SchemaRevisioner(Revisioner):
         'object_id',
     ]
 
-    @property
+    @cached_property
     def resource_type(self):
         return get_content_type_for_model(Schema)
 
@@ -271,7 +272,7 @@ class TableRevisioner(Revisioner):
         'object_id',
     ]
 
-    @property
+    @cached_property
     def resource_type(self):
         return get_content_type_for_model(Table)
 
@@ -329,7 +330,7 @@ class ColumnRevisioner(Revisioner):
         'default_value',
     ]
 
-    @property
+    @cached_property
     def resource_type(self):
         return get_content_type_for_model(Column)
 
@@ -355,7 +356,7 @@ class IndexRevisioner(Revisioner):
         'is_unique',
     ]
 
-    @property
+    @cached_property
     def resource_type(self):
         return get_content_type_for_model(Index)
 
@@ -443,6 +444,8 @@ def extract_revisions(datastore, definition):
         table_revisions = table_revisioner.make_revisions(**table_metadata)
         complete_revisions += table_revisions
 
+        last_table_revision = last_revision(table_revisions)
+
         column_revisions = []
         for c in columns:
             column_metadata = c.copy()
@@ -450,7 +453,7 @@ def extract_revisions(datastore, definition):
             column_revisioner = ColumnRevisioner(
                 instance=column_instance,
                 parent_resource=table_instance,
-                parent_resource_revision=last_revision(table_revisions),
+                parent_resource_revision=last_table_revision,
             )
 
             column_revisions = column_revisioner.make_revisions(**column_metadata)
@@ -463,7 +466,7 @@ def extract_revisions(datastore, definition):
             index_revisioner = IndexRevisioner(
                 instance=index_instance,
                 parent_resource=table_instance,
-                parent_resource_revision=last_revision(table_revisions),
+                parent_resource_revision=last_table_revision,
             )
 
             index_revisions = index_revisioner.make_revisions(**index_metadata)

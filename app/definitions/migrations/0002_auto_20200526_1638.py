@@ -17,11 +17,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='table',
-            name='created_revision',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='revisioner.Revision'),
-        ),
-        migrations.AddField(
-            model_name='table',
             name='schema',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tables', to='definitions.Schema'),
         ),
@@ -29,11 +24,6 @@ class Migration(migrations.Migration):
             model_name='table',
             name='workspace',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='authentication.Workspace'),
-        ),
-        migrations.AddField(
-            model_name='schema',
-            name='created_revision',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='revisioner.Revision'),
         ),
         migrations.AddField(
             model_name='schema',
@@ -67,11 +57,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='index',
-            name='created_revision',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='revisioner.Revision'),
-        ),
-        migrations.AddField(
-            model_name='index',
             name='table',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='indexes', to='definitions.Table'),
         ),
@@ -84,11 +69,6 @@ class Migration(migrations.Migration):
             model_name='datastore',
             name='workspace',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='datastores', to='authentication.Workspace'),
-        ),
-        migrations.AddField(
-            model_name='column',
-            name='created_revision',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='revisioner.Revision'),
         ),
         migrations.AddField(
             model_name='column',

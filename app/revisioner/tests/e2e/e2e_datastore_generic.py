@@ -321,4 +321,22 @@ test_cases = [
             },
         ]
     },
+    {
+        "model": "Index",
+        "description": "Expect `customers_pkey` index to be created.",
+        "filters": {
+            "table__schema__name": "app",
+            "name": "customers_pkey",
+        },
+        "assertions": [
+            {
+                "evaluation": lambda datastore, index: index.object_id,
+                "pass_value": "16449",
+            },
+            {
+                "evaluation": lambda datastore, index: index.columns.count() > 0,
+                "pass_value": True,
+            }
+        ]
+    },
 ]

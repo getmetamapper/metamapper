@@ -2,47 +2,92 @@
 from django.core.paginator import Paginator
 
 from app.definitions.models import Schema, Table, Column, Index, IndexColumn
+
+from app.revisioner.models import Revision
 from app.revisioner.collectors import ObjectCollector
 from app.revisioner.revisioners import get_content_type_for_model
 
+from utils.postgres.paginators import RawQuerySetPaginator
 from utils.postgres.types import ConflictAction
+from utils.shortcuts import model_to_dict
 
 
 class GenericModifyAction(object):
-    """Generic mixin for a bulk MODIFIED action based on revisions.
+    """Generic mixin for a bulk CREATED action based on revisions.
     """
+    sql = '''
+    WITH revisioner_changes AS (
+          SELECT resource_id, ARRAY_AGG(metadata) AS "changes"
+            FROM revisioner_revision
+           WHERE run_id = %(run)s
+             AND resource_type_id = %(type)s
+             AND action = 2
+        GROUP BY resource_id
+    )
+
+    SELECT r.*, c.changes
+      FROM revisioner_revision r
+      JOIN revisioner_changes c
+        ON r.resource_id = c.resource_id
+     WHERE r.run_id = %(run)s
+       AND r.resource_type_id = %(type)s
+       AND r.action = 2
+       AND r.applied_on IS NULL
+     ORDER BY r.created_at
+    '''
+
     def __init__(self, run, datastore, logger, *args, **kwargs):
         self.run = run
         self.datastore = datastore
         self.logger = logger
         self.content_type = get_content_type_for_model(self.model_class)
-        self.workspace_id = self.run.workspace_id
         self.collector = self.get_collector()
         self.revisions = (
             self.run.revisions
                     .modified()
                     .filter(resource_type=self.content_type)
-                    .order_by('created_at')
         )
 
-    def apply(self, batch_size=500):
+    def bulk_update(self, rows):
+        """Perform a bulk UPSERT based on the provided ident.
+        """
+        self.model_class.objects.on_conflict(['id'], ConflictAction.UPDATE).bulk_insert(rows)
+
+    def get_paginator_class(self):
+        return RawQuerySetPaginator
+
+    def get_revisions(self):
+        return Revision.objects.raw(self.sql, {'run': self.run.pk, 'type': self.content_type.pk})
+
+    def apply(self, batch_size=250):
         """Apply the MODIFIED action in bulk.
         """
-        paginator = Paginator(self.revisions, batch_size)
+        revisions = self.get_revisions()
+        paginator = self.get_paginator_class()(revisions, batch_size)
+        processed = set()
 
         for page_num in paginator.page_range:
             page = paginator.get_page(page_num)
+            data = []
 
             for revision in page.object_list:
+                if revision.resource_id in processed:
+                    continue
                 resource = self.collector.find_by_pk(revision.resource_id)
-                metadata = revision.metadata.copy()
-                set_attr = self.get_modify_function(metadata['field'])
-                if resource:
+                if not resource:
+                    continue
+                for metadata in revision.changes:
+                    set_attr = self.get_modify_function(metadata['field'])
                     set_attr(resource, revision=revision, **metadata)
-                    self.collector.mark_as_processed(resource.pk)
+                data.append(model_to_dict(resource, exclude=['columns']))
+                processed.add(revision.resource_id)
 
-            for resource in self.collector.processed:
-                resource.save()
+            if len(data):
+                self.bulk_update(data)
+
+            self.logger.info(
+                '[{0}] Modified {1} of {2}'.format(self.model_class.__name__, page.end_index(), paginator.count)
+            )
 
     def get_collector(self):
         """Get the object collector.
@@ -125,9 +170,7 @@ class IndexModifyAction(GenericModifyAction):
     def modify_columns(self, index, field, new_value, *args, **kwargs):
         """If columns have been updated, we need to reflect that change.
         """
-        collector = ObjectCollector(
-            collection=Column.objects.filter(table_id=index.table_id),
-        )
+        collector = ObjectCollector(Column.objects.filter(table_id=index.table_id))
 
         index_columns = []
         for column_metadata in new_value:

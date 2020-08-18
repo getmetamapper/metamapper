@@ -80,7 +80,7 @@ def task_logger(name):
     def the_decorator(func):
         @functools.wraps(func)
         def func_wrapper(self, *args, **kwargs):
-            extra = {'c_task': self.request.id}
+            extra = {'ct': self.request.id}
             self.log = Logger('%s.%s' % (name, func.__name__), extra)
             try:
                 return func(self, *args, **kwargs)

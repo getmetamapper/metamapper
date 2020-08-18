@@ -244,7 +244,7 @@ class Schema(AuditableModel,
         'tags',
     ]
 
-    object_id = models.CharField(max_length=256, null=True, default=None, db_index=True)
+    object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
 
     datastore = models.ForeignKey(
         to=Datastore,
@@ -293,7 +293,7 @@ class Table(AuditableModel,
 
     comments = GenericRelation(Comment, related_query_name="table")
 
-    object_id = models.CharField(max_length=256, null=True, default=None, db_index=True)
+    object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
 
     schema = models.ForeignKey(
         to=Schema,
@@ -387,7 +387,7 @@ class Column(AuditableModel,
 
     comments = GenericRelation(Comment, related_query_name="column")
 
-    object_id = models.CharField(max_length=256, null=True, default=None, db_index=True)
+    object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
 
     table = models.ForeignKey(
         to=Table,
@@ -471,7 +471,7 @@ class Column(AuditableModel,
 class Index(RevisableModel, TimestampedModel):
     """Represents a index within a table.
     """
-    object_id = models.CharField(max_length=256, null=True, default=None, db_index=True)
+    object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
 
     table = models.ForeignKey(
         to=Table,
