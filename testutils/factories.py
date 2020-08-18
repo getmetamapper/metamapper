@@ -92,7 +92,7 @@ def allDataTypes(instance):
 def underscoreObject(instance):
     """Create an underscore domain_word version.
     """
-    return "_".join(factory.Faker('domain_word').generate().split("-"))
+    return "_".join(factory.Faker('domain_word').generate().split("-")) + str(random.randint(5, 1500))
 
 
 def domainWord(instance):

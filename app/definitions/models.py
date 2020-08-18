@@ -261,6 +261,8 @@ class Schema(AuditableModel,
     name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
 
+    search_objects = SearchManager(fields=['name'])
+
     @property
     def parent_resource(self):
         return self.datastore
@@ -313,6 +315,8 @@ class Table(AuditableModel,
 
     short_desc = models.CharField(max_length=140, null=True, blank=True)
     properties = JSONField(default=dict)
+
+    search_objects = SearchManager(fields=['name', 'schema__name', 'short_desc'])
 
     class Meta:
         unique_together = ('schema', 'name',)

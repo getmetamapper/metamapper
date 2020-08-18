@@ -1,33 +1,27 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query GetDatastoreAssets($datastoreSlug: String!) {
-    datastoreBySlug(slug: $datastoreSlug) {
-      id
-      pk
-      slug
-      name
-      tags
-      version
-      isEnabled
-      hasIndexes
-      jdbcConnection {
-        engine
-      }
-      schemas {
-        pk
-        name
-        tables {
+  query GetDatastoreAssets($datastoreSlug: String!, $search: String, $after: String) {
+    datastoreAssets(
+      slug: $datastoreSlug
+      search: $search
+      first: 100
+      after: $after
+    ) {
+      edges {
+        node {
           id
           name
           kind
           shortDesc
+          schema {
+            name
+          }
         }
       }
-      firstRunIsPending
-      latestRun {
-        createdOn
-        finishedAt
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }

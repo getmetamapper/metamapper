@@ -1,11 +1,15 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
-import { Col, Row } from "antd"
+import { Col, Form, Row } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
+import qs from "query-string"
 import Layout from "app/Datastores/DatastoreLayout"
+import FirstRunPending from "app/Datastores/RunHistory/FirstRunPending"
+import DatastoreAssetsSearch from "app/Datastores/DatastoreAssets/DatastoreAssetsSearch"
 import DatastoreAssetsTable from "app/Datastores/DatastoreAssets/DatastoreAssetsTable"
 import withGetDatastoreAssets from "graphql/withGetDatastoreAssets"
+import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
 class DatastoreAssets extends Component {
@@ -13,6 +17,7 @@ class DatastoreAssets extends Component {
     super(props)
 
     this.breadcrumbs = this.breadcrumbs.bind(this)
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
   }
 
   breadcrumbs = (datastore) => {
@@ -38,8 +43,39 @@ class DatastoreAssets extends Component {
     ]
   }
 
+  handleSearchSubmit = (evt) => {
+    evt.preventDefault()
+
+    const {
+      currentWorkspace: { slug },
+      match: {
+        params: { datastoreSlug },
+      },
+    } = this.props
+
+    this.props.form.validateFields((err, { search }) => {
+      if (err) return
+
+      const rootUri = `/${slug}/datastores/${datastoreSlug}/assets`
+
+      if (search) {
+        this.props.history.push(`${rootUri}?search=${search}`)
+      } else {
+        this.props.history.push(rootUri)
+      }
+    })
+  }
+
   render() {
-    const { datastore, schemas, loading } = this.props
+    const {
+      assets,
+      datastore,
+      fetchNextPage,
+      form,
+      hasNextPage,
+      loading,
+      search,
+    } = this.props
     return (
       <Layout
         breadcrumbs={this.breadcrumbs}
@@ -49,11 +85,24 @@ class DatastoreAssets extends Component {
       >
         <Row>
           <Col span={20} offset={2}>
-            <DatastoreAssetsTable
-              datastore={datastore}
-              schemas={schemas}
-              loading={loading}
-            />
+            {datastore.firstRunIsPending ? (
+              <FirstRunPending datastore={datastore} />
+            ) : (
+              <Fragment>
+                <DatastoreAssetsSearch
+                  form={form}
+                  search={search}
+                  onSearch={this.handleSearchSubmit}
+                />
+                <DatastoreAssetsTable
+                  dataSource={assets}
+                  hasNextPage={hasNextPage}
+                  datastore={datastore}
+                  loading={loading}
+                  fetchNextPage={fetchNextPage}
+                />
+              </Fragment>
+            )}
           </Col>
         </Row>
       </Layout>
@@ -61,12 +110,27 @@ class DatastoreAssets extends Component {
   }
 }
 
+const withSearchQuery = (ChildComponent) => {
+  const ComposedComponent = (props) => {
+    const {
+      search
+    } = qs.parse(window.location.search)
+    return <ChildComponent search={search} {...props} />
+  }
+  return ComposedComponent
+}
+
 const withNotFound = withNotFoundHandler(({ datastore }) => {
   return !datastore || !datastore.hasOwnProperty("id")
 })
 
+const withForm = Form.create()
+
 export default compose(
   withRouter,
+  withForm,
+  withSearchQuery,
+  withGetDatastoreDefinition,
   withGetDatastoreAssets,
   withLargeLoader,
   withNotFound,

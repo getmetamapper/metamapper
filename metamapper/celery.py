@@ -34,7 +34,7 @@ app.conf.beat_schedule = {
     },
     'create-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.create_runs',
-        'schedule': crontab(hour='*/1'),
+        'schedule': crontab(hour='1'),
     },
     'queue-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.queue_runs',

@@ -4,9 +4,8 @@ import { withUserContext } from "context/UserContext"
 import { withRouter, Link } from "react-router-dom"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { Table } from "antd"
-import { map, uniqBy, flatten } from "lodash"
+import { map, debounce } from "lodash"
 import { components } from "app/Common/EditableCell"
-import FirstRunPending from "app/Datastores/RunHistory/FirstRunPending"
 import UpdateTableMetadata from "graphql/mutations/UpdateTableMetadata"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 
@@ -15,29 +14,24 @@ class DatastoreAssetsTable extends Component {
     super(props)
 
     const {
+      dataSource,
       datastore,
-      schemas,
       currentWorkspace: { slug },
     } = props
-
-    const dataSource = this.flattenDataSource(schemas)
 
     this.columns = [
       {
         title: "Schema Name",
-        dataIndex: "schema",
-        key: "schema",
-        filters: map(uniqBy(dataSource, "schema"), ({ schema }) => ({
-          text: schema,
-          value: schema,
-        })),
-        onFilter: (value, record) => record.schema.indexOf(value) === 0,
+        ellipsis: true,
+        render: ({ schema }) => <span title={schema.name}>{schema.name}</span>,
       },
       {
         title: "Asset Name",
-        render: ({ schema, tablename }) => (
+        ellipsis: true,
+        render: ({ schema, name: tablename }) => (
           <Link
-            to={`/${slug}/datastores/${datastore.slug}/definition/${schema}/${tablename}/overview`}
+            to={`/${slug}/datastores/${datastore.slug}/definition/${schema.name}/${tablename}/overview`}
+            title={tablename}
           >
             {tablename}
           </Link>
@@ -47,11 +41,11 @@ class DatastoreAssetsTable extends Component {
         title: "Asset Type",
         dataIndex: "kind",
         key: "kind",
-        filters: map(uniqBy(dataSource, "kind"), ({ kind }) => ({
-          text: kind,
-          value: kind,
-        })),
-        onFilter: (value, record) => record.kind.indexOf(value) === 0,
+        filters: [
+          { text: 'Base table', value: 'b' },
+          { text: 'External table', value: 'e' },
+          { text: 'View', value: 'v' },
+        ],
       },
       {
         title: "Description",
@@ -61,23 +55,47 @@ class DatastoreAssetsTable extends Component {
       },
     ]
 
+    window.onscroll = debounce(() => {
+      // Bails early if:
+      // * it's already loading
+      // * there's nothing left to load
+      if (this.state.loading || !this.props.hasNextPage) return;
+
+      // Checks that the page has scrolled to the bottom
+      if (
+        document.documentElement.scrollTop + document.documentElement.offsetHeight
+        === document.documentElement.scrollHeight
+      ) {
+        this.fetchNextPage()
+      }
+
+    }, 100);
+
+
     this.state = {
       dataSource,
+      loading: false,
     }
   }
 
-  flattenDataSource = (dataSource) => {
-    return flatten(
-      map(dataSource, ({ name: schema, tables }) => {
-        return map(tables, ({ id, name: tablename, kind, shortDesc }) => ({
-          id,
-          schema,
-          tablename,
-          kind,
-          shortDesc,
-        }))
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.dataSource.length !== this.state.dataSource.length || nextState.loading !== this.state.loading
+  }
+
+  fetchNextPage = () => {
+    this.setState({ loading: true })
+
+    this.props.fetchNextPage().then(({ data }) => {
+      const { datastoreAssets: { edges } } = data
+
+      this.setState({
+        loading: false,
+        dataSource: [
+          ...this.state.dataSource,
+          ...map(edges, ({ node }) => node),
+        ]
       })
-    )
+    })
   }
 
   handleSave = (row) => {
@@ -105,8 +123,8 @@ class DatastoreAssetsTable extends Component {
   }
 
   render() {
-    const { datastore, hasPermission } = this.props
-    const { dataSource } = this.state
+    const { hasPermission } = this.props
+    const { dataSource, loading } = this.state
 
     const columns = this.columns.map((col) => {
       if (!hasPermission || !col.editable) {
@@ -124,29 +142,26 @@ class DatastoreAssetsTable extends Component {
       }
     })
 
-    if (datastore.firstRunIsPending) {
-      return <FirstRunPending datastore={datastore} />
-    }
-
     return (
-      <span data-test="DatastoreAssetsTable">
+      <div data-test="DatastoreAssetsTable" ref="myscroll">
         <Table
           rowKey="id"
           rowClassName={() => "editable-row"}
-          className="datastore-tables"
+          className="datastore-assets"
           dataSource={dataSource}
           components={components}
           columns={columns}
           pagination={false}
+          loading={loading}
         />
-      </span>
+      </div>
     )
   }
 }
 
 DatastoreAssetsTable.defaultProps = {
   datastore: {},
-  schemas: [],
+  dataSource: [],
 }
 
 const enhance = compose(

@@ -13,7 +13,7 @@ REDSHIFT_DEFINITIONS_SQL = """
           c.relname as table_name,
           c.oid::varchar as table_object_id,
           CASE WHEN c.relkind = 'r'
-               THEN 'table'
+               THEN 'base table'
                WHEN c.relkind IN ('v', 'm')
                THEN 'view' END AS table_type,
           a.attname AS column_name,

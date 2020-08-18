@@ -6,7 +6,7 @@ const withGetOmnisearchResults = graphql(GetOmnisearchResults, {
   options: ({ location: { search } }) => {
     const { q: content, d: datastoreId } = qs.parse(search)
     return {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-first",
       variables: {
         content,
         datastoreId,

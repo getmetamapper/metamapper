@@ -97,6 +97,8 @@ class TableType(AuthNode, DjangoObjectType):
 
     properties = GenericScalar()
 
+    schema = graphene.Field('app.definitions.schema.SchemaType')
+
     class Meta:
         model = models.Table
         filter_fields = {}
@@ -122,6 +124,9 @@ class TableType(AuthNode, DjangoObjectType):
         """Should return the associated Columns.
         """
         return info.context.loaders.table_columns.load(instance.pk)
+
+    def resolve_schema(instance, info):
+        return info.context.loaders.table_schemas.load(instance.schema_id)
 
 
 class SchemaType(AuthNode, DjangoObjectType):

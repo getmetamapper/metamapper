@@ -93,7 +93,5 @@ export const renderRevisionText = (revision) => {
   }
   const Component = switchBoard[revision.action]
 
-  console.log(revision)
-
   return <Component {...revision} />
 }

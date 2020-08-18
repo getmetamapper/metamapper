@@ -79,10 +79,13 @@
 .datastores .datastore-indexes {
   background-color: #FFFFFF;
 }
-.datastores .datastore-tables {
+.datastores .datastore-assets {
   background-color: #FFFFFF;
   border: 1px solid #e8e8e8;
   border-bottom: 0;
+}
+.datastores .datastore-asset-search {
+  margin-bottom: 24px;
 }
 .ant-card.datastore-details {
   margin-bottom: 24px;
@@ -171,8 +174,19 @@
 }
 .table-schema-selector-wrapper {
   background: #FFFFFF;
-  height: 100vh;
+  height: 100%;
   border-left: 1px solid #e8e8e8;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
+  right: 0;
+}
+.table-schema-selector-wrapper::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+.table-schema-selector-clearfix{
+  height: 120px;
 }
 .table-schema-search {
   input.ant-input {
@@ -192,8 +206,8 @@
   }
 }
 .table-schema-selector {
-   background-color: #FFFFFF;
-   height: 100vh;
+  background-color: #FFFFFF;
+  height: 100%;
 
   .loading {
     color: #989898;
@@ -204,7 +218,6 @@
     text-align: center;
     text-transform: uppercase;
   }
-
   .ant-collapse > .ant-collapse-item {
     border-bottom: 1px solid #e8e8e8;
   }
@@ -251,6 +264,15 @@
       font-size: 9px;
     }
   }
+}
+.table-schema-selector.search .search-result:first-child {
+  padding-top: 16px;
+}
+.table-schema-selector.search .search-result {
+  padding: 8px 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .datastore-setup {

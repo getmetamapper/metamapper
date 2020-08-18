@@ -2,7 +2,6 @@
 import app.omnisearch.backends.base_search_backend as base
 
 from django.contrib.postgres.search import (
-    SearchQuery,
     SearchRank,
     SearchVector,
     TrigramSimilarity,
@@ -19,22 +18,8 @@ from app.definitions.models import Table, Column
 from app.comments.models import Comment
 from app.revisioner.revisioners import get_content_types
 
+from utils.postgres.sql import PostgresOrSearchQuery
 
-class OrSearchQuery(SearchQuery):
-    """Extension of SearchQuery to perform OR instead of AND operator.
-    """
-    def as_sql(self, compiler, connection):
-        params = [self.value]
-        function = self.SEARCH_TYPES[self.search_type]
-        if self.config:
-            config_sql, config_params = compiler.compile(self.config)
-            template = '{}({}::regconfig, %s)'.format(function, config_sql)
-            params = config_params + [self.value]
-        else:
-            template = "replace({}(%s)::text, '&', '|')::tsquery".format(function)
-        if self.invert:
-            template = '!!({})'.format(template)
-        return template, params
 
 
 class PostgresSearchBackend(base.BaseSearchBackend):
@@ -89,7 +74,7 @@ class ModelSearchAdapter(object):
 
     @cached_property
     def search_query(self):
-        return OrSearchQuery(self.query_string)
+        return PostgresOrSearchQuery(self.query_string)
 
     def annotate_queryset(self, queryset):
         queryset = (

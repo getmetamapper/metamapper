@@ -52,6 +52,23 @@ class Query(graphene.ObjectType):
         datastore_id=graphene.ID(required=True),
     )
 
+    datastore_assets = AuthConnectionField(
+        type=schema.TableType,
+        slug=graphene.String(required=True),
+        search=graphene.String(required=False),
+    )
+
+    schema_names_by_datastore = graphene.List(
+        of_type=graphene.String,
+        datastore_id=graphene.ID(required=True),
+    )
+
+    table_names_by_schema = graphene.List(
+        of_type=graphene.String,
+        datastore_id=graphene.ID(required=True),
+        schema_name=graphene.String(required=True),
+    )
+
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
     def resolve_datastores(self, info, search=None, *args, **kwargs):
         """Retrieve a list of datastores.
@@ -162,3 +179,56 @@ class Query(graphene.ObjectType):
             {'name': group.name, 'privileges': privileges, 'pk': group.pk}
             for group, privileges in groups.items()
         ]
+
+    @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
+    def resolve_datastore_assets(self, info, slug, search=None, *args, **kwargs):
+        """Retrieve the assets for this datastore.
+        """
+        get_kwargs = {
+            'workspace': info.context.workspace,
+            'slug__iexact': slug,
+        }
+
+        datastore = shortcuts.get_object_or_404(models.Datastore, **get_kwargs)
+
+        if not permissions.request_can_view_datastore(info, datastore):
+            raise errors.PermissionDenied()
+
+        queryset = models.Table.search_objects.execute(
+            search=search,
+        )
+
+        return queryset.order_by('schema__name', 'name')
+
+    @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
+    def resolve_schema_names_by_datastore(self, info, datastore_id, *args, **kwargs):
+        """Retrieve a list of schema names for the provided datastore.
+        """
+        get_kwargs = {
+            'workspace': info.context.workspace,
+            'pk': shortcuts.from_global_id(datastore_id, True),
+        }
+
+        datastore = shortcuts.get_object_or_404(models.Datastore, **get_kwargs)
+
+        if not permissions.request_can_view_datastore(info, datastore):
+            raise errors.PermissionDenied()
+
+        return sorted(datastore.schemas.values_list('name', flat=True))
+
+    @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
+    def resolve_table_names_by_schema(self, info, datastore_id, schema_name, **kwargs):
+        """Retrieve a list of table names for the provided schema.
+        """
+        get_kwargs = {
+            'name__iexact': schema_name,
+            'datastore_id': shortcuts.from_global_id(datastore_id, True),
+            'workspace': info.context.workspace,
+        }
+
+        schema = shortcuts.get_object_or_404(models.Schema, **get_kwargs)
+
+        if not permissions.request_can_view_datastore(info, schema.datastore):
+            raise errors.PermissionDenied()
+
+        return sorted(schema.tables.values_list('name', flat=True))
