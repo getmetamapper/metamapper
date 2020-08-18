@@ -329,32 +329,8 @@ class Revision(TimestampedModel):
         """
         return tuple(
             m for m in apps.get_models()
-            if hasattr(m, 'created_revision')
+            if hasattr(m, 'created_revision_id')
         )
-
-    @property
-    def created_resource(self):
-        """TODO(scruwys) – N+1 query issue. Fine for now but should be fixed eventually.
-        """
-        return (
-            self.resource_type
-                .model_class()
-                .objects
-                .filter(created_revision=self)
-                .first()
-        )
-
-    @property
-    def parent_instance(self):
-        """TODO(scruwys) – N+1 query issue. Fine for now but should be fixed eventually.
-        """
-        if self.parent_resource_id:
-            return self.parent_resource
-        if self.parent_resource_revision_id:
-            parent_revision = self.parent_resource_revision
-            if parent_revision.resource_id:
-                return parent_revision.resource
-        return parent_revision.created_resource
 
     def save(self, *args, **kwargs):
         """Override save method to create the checksum.

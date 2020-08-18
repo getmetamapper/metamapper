@@ -47,9 +47,7 @@ def make(collector, *args, **kwargs):  # noqa: C901
             column['object_id'] = column.pop('column_object_id')
             columns.append(column)
 
-        get_indexes = list(filter(lambda i: i['table_object_id'] == row['table_object_id'], index_list))
-
-        for i in get_indexes:
+        for i in filter(lambda i: i['table_object_id'] == row['table_object_id'], index_list):
             index = i.copy()
             index_instance = collector.indexes.find_by_oid(index['index_object_id'])
 
@@ -79,18 +77,20 @@ def make(collector, *args, **kwargs):  # noqa: C901
         schema = definition[schema_name]['schema']
 
         if not schema['instance']:
-            schema['instance'] = collector.schemas.search_unassigned(lambda t: (
-                t.name == schema['name']
-            ))
+            schema['instance'] = collector.schemas.search_unassigned(name=schema['name'])
+            # schema['instance'] = collector.schemas.search_unassigned(lambda t: (
+            #     t.name == schema['name']
+            # ))
 
             if schema['instance']:
                 collector.schemas.mark_as_processed(schema['instance'].pk)
 
         for table in definition[schema_name]['tables']:
             if not table['instance'] and schema['instance']:
-                table['instance'] = collector.tables.search_unassigned(lambda t: (
-                    t.name == table['name'] and t.schema_id == schema['instance'].pk
-                ))
+                table['instance'] = collector.tables.search_unassigned(name=table['name'], schema_id=schema['instance'].pk)
+                # table['instance'] = collector.tables.search_unassigned(lambda t: (
+                #     t.name == table['name'] and t.schema_id == schema['instance'].pk
+                # ))
 
             if not table['instance']:
                 continue
@@ -101,9 +101,10 @@ def make(collector, *args, **kwargs):  # noqa: C901
                 if column['instance']:
                     continue
 
-                column['instance'] = collector.columns.search_unassigned(lambda t: (
-                    t.name == column['name'] and t.table_id == table['instance'].pk
-                ))
+                column['instance'] = collector.columns.search_unassigned(name=column['name'], table_id=table['instance'].pk)
+                # column['instance'] = collector.columns.search_unassigned(lambda t: (
+                #     t.name == column['name'] and t.table_id == table['instance'].pk
+                # ))
 
                 if column['instance']:
                     collector.columns.mark_as_processed(column['instance'].pk)
@@ -112,9 +113,10 @@ def make(collector, *args, **kwargs):  # noqa: C901
                 if index['instance']:
                     continue
 
-                index['instance'] = collector.indexes.search_unassigned(lambda t: (
-                    t.name == index['name'] and t.table_id == table['instance'].pk
-                ))
+                index['instance'] = collector.indexes.search_unassigned(name=index['name'], table_id=table['instance'].pk)
+                # index['instance'] = collector.indexes.search_unassigned(lambda t: (
+                #     t.name == index['name'] and t.table_id == table['instance'].pk
+                # ))
 
                 if index['instance']:
                     collector.indexes.mark_as_processed(index['instance'].pk)

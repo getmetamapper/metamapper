@@ -5,10 +5,8 @@ from django.db import models
 class RevisableModel(models.Model):
     """Mixin to make a model revisable.
     """
-    created_revision = models.ForeignKey(
-        to='revisioner.Revision',
-        on_delete=models.SET_NULL,
-        related_name='+',
+    created_revision_id = models.CharField(
+        max_length=40,
         null=True,
         default=None,
     )

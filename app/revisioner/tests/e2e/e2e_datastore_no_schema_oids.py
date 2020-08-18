@@ -149,7 +149,7 @@ test_cases = [
             {
                 "summarized": "The table should have the same indexes.",
                 "evaluation": lambda datastore, table: set(table.indexes.values_list("name", flat=True)),
-                "pass_value": {"departments_pkey", "departments_dept_name_key"},
+                "pass_value": {"employees_departments_pkey", "departments_dept_name_key"},
             },
             {
                 "summarized": "The table should have the same name.",

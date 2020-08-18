@@ -1,6 +1,7 @@
 CURRENT_DIRECTORY := $(shell pwd)
 
 help:
+	@echo ""
 	@echo "Metamapper"
 	@echo "-----------------------"
 	@echo ""
@@ -14,8 +15,9 @@ help:
 	@echo "    make test-py"
 	@echo ""
 	@echo "See contents of Makefile for more targets."
+	@echo ""
 
-setup: install-npm-pkgs resetdb stop
+setup: install-npm-pkgs build-assets build-docker initdb
 
 install-npm-pkgs:
 	@npm install --prefix www --quiet
@@ -72,7 +74,7 @@ test-cypress: cypress-resetdb
 test-py:
 	@echo "--> Running Python (webserver) tests"
 	@find . -name \*.pyc -delete
-	@docker-compose --log-level ERROR run --rm webserver python manage.py test --exclude-tag=inspector app/revisioner
+	@docker-compose --log-level ERROR run --rm webserver python manage.py test --exclude-tag=inspector
 
 test-js:
 	@echo "--> Running JavaScript (client) tests"

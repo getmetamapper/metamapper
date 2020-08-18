@@ -7,7 +7,7 @@ class ObjectCollector(object):
     """Handles management of one type of DB object.
     """
     def __init__(self, collection):
-        self.collection = list(collection)
+        self.collection = collection
         self._processed = set()
 
     @property
@@ -16,66 +16,54 @@ class ObjectCollector(object):
 
     @property
     def assigned(self):
-        return self.all(self.collection, lambda o: o.pk in self._processed)
+        return self.collection.filter(pk__in=self._processed)
 
     @property
     def unassigned(self):
-        return self.all(self.collection, lambda o: o.pk not in self._processed)
+        return self.collection.exclude(pk__in=self._processed)
 
     def find_by_pk(self, pk):
-        """Search the collection by the provided OID.
+        """Search the collection by the provided ident.
         """
         if not pk:
             return None
-        return self.find_by(lambda o: str(o.pk) == str(pk))
+        return self.collection.filter(id=pk).first()
 
-    def find_by_oid(self, object_id, unassigned_only=False):
+    def find_by_oid(self, object_id):
         """Search the collection by the provided OID.
         """
         if not object_id:
             return None
-        return self.find_by(lambda o: str(o.object_id) == str(object_id), unassigned_only)
+        return self.collection.filter(object_id=object_id).first()
 
-    def find_by_name(self, name, unassigned_only=False):
+    def find_by_name(self, name):
         """Search the collection by the provided asset name.
         """
         if not name:
             return None
-        return self.find_by(lambda o: str(o.name) == str(name), unassigned_only)
+        return self.collection.filter(name=name).first()
 
-    def find_by_revision(self, revision_id, unassigned_only=False):
+    def find_by_revision(self, revision_id):
         """Search the collection by the provided asset revision id.
         """
         if not revision_id:
             return None
-        return self.find_by(lambda o: str(o.created_revision_id) == str(revision_id), unassigned_only)
+        return self.collection.filter(created_revision_id=revision_id).first()
 
-    def search_unassigned(self, func):
+    def find_by(self, **kwargs):
+        return self.collection.filter(**kwargs).first()
+
+    def search_unassigned(self, **kwargs):
         """Search unassigned list.
         """
-        return self.find_by(func, True)
-
-    def find_by(self, func, unassigned_only=False):
-        """Search the collection by a lambda function.
-        """
-        if unassigned_only:
-            collection = self.unassigned
-        else:
-            collection = self.collection
-        result = self.first(collection, func)
-        if result:
-            return result
+        resource = self.collection.filter(**kwargs).first()
+        if resource and resource.pk not in self._processed:
+            return resource
 
     def mark_as_processed(self, pk):
         """Mark a record as processed.
         """
         self._processed.add(pk)
-
-    def first(self, collection, func):
-        return next(filter(func, collection), None)
-
-    def all(self, collection, func):
-        return list(filter(func, collection))
 
 
 class DefinitionCollector(object):

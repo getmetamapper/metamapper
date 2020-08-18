@@ -1009,11 +1009,11 @@ indexes = [
         "schema_object_id": 16441,
         "table_name": "departments",
         "table_object_id": 16522,
-        "index_name": "departments_pkey",
+        "index_name": "app_departments_pkey",
         "index_object_id": 16526,
         "is_unique": True,
         "is_primary": True,
-        "definition": "CREATE UNIQUE INDEX departments_pkey ON app.departments USING btree (id)",
+        "definition": "CREATE UNIQUE INDEX app_departments_pkey ON app.departments USING btree (id)",
         "columns": [
             {
                 "column_name": "id",
@@ -1136,11 +1136,11 @@ indexes = [
         "schema_object_id": 16386,
         "table_name": "departments",
         "table_object_id": 16392,
-        "index_name": "departments_pkey",
+        "index_name": "employees_departments_pkey",
         "index_object_id": 16395,
         "is_unique": True,
         "is_primary": True,
-        "definition": "CREATE UNIQUE INDEX departments_pkey ON employees.departments USING btree (dept_no)",
+        "definition": "CREATE UNIQUE INDEX employees_departments_pkey ON employees.departments USING btree (dept_no)",
         "columns": [
             {
                 "column_name": "dept_no",

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from itertools import chain
 
-from django.db import models
+from django.db import connection, models
 from django.contrib.auth import get_user_model
 from django.shortcuts import _get_queryset
 from django.utils.text import slugify
@@ -35,6 +35,16 @@ def get_object_or_404(klass, message=None, exception_class=NotFound, *args, **kw
         if not message:
             message = 'Resource was not found.'
         raise exception_class(message)
+
+
+def run_raw_sql(sql, params=None):
+    """Execute raw SQL against the Postgres database.
+    """
+    with connection.cursor() as cursor:
+        if params is not None:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
 
 
 def generate_unique_slug(klass, field):
