@@ -301,6 +301,75 @@ class UpdateColumnMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     column = graphene.Field(schema.ColumnType)
 
 
+class CreateAssetOwner(mixins.CreateMutationMixin, relay.ClientIDMutation):
+    """Create an owner for the provided data asset.
+    """
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanCreateAssetOwner,
+    )
+
+    class Input:
+        object_id = graphene.ID(required=True)
+        owner_id = graphene.ID(required=True)
+        order = graphene.Int(required=False)
+
+    class Meta:
+        serializer_class = serializers.AssetOwnerSerializer
+
+    assetowner = graphene.Field(schema.AssetOwnerType, name='assetOwner')
+
+    @classmethod
+    def perform_save(cls, serializer, info):
+        return serializer.save(workspace=info.context.workspace)
+
+    @classmethod
+    def get_serializer_kwargs(cls, root, info, **data):
+        """Retrieve appropriate objects for the transaction.
+        """
+        return {
+            "instance": None,
+            "data": {
+                "content_object": cls.get_content_object(info, data["object_id"]),
+                "order": data["order"],
+                "owner": cls.get_content_object(info, data["owner_id"]),
+            },
+            "context": {
+                "request": info.context,
+            },
+        }
+
+
+class UpdateAssetOwner(mixins.UpdateMutationMixin, relay.ClientIDMutation):
+    """Update an owner for the provided data asset.
+    """
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreMetadata,
+    )
+
+    class Input:
+        id = graphene.ID(required=True)
+        order = graphene.Int(required=True)
+
+    class Meta:
+        serializer_class = serializers.AssetOwnerSerializer
+
+    assetowner = graphene.Field(schema.AssetOwnerType, name='assetOwner')
+
+
+class DeleteAssetOwner(mixins.DeleteMutationMixin, relay.ClientIDMutation):
+    """Remove an owner for the provided data asset.
+    """
+    permission_classes = (
+        permissions.WorkspaceWriteAccessOnly,
+        definition_permissions.CanUpdateDatastoreMetadata,
+    )
+
+    class Meta:
+        serializer_class = serializers.AssetOwnerSerializer
+
+
 class Mutation(graphene.ObjectType):
     """Mutations for managing definitions.
     """
@@ -319,3 +388,7 @@ class Mutation(graphene.ObjectType):
 
     update_table_metadata = UpdateTableMetadata.Field()
     update_column_metadata = UpdateColumnMetadata.Field()
+
+    create_asset_owner = CreateAssetOwner.Field()
+    update_asset_owner = UpdateAssetOwner.Field()
+    delete_asset_owner = DeleteAssetOwner.Field()

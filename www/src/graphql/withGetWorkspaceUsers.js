@@ -4,7 +4,7 @@ import GetWorkspaceUsers from "./queries/GetWorkspaceUsers"
 
 const withGetWorkspaceUsers = graphql(GetWorkspaceUsers, {
   options: ({ currentWorkspace: { id: workspaceId } }) => ({
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-first",
     variables: {
       workspaceId,
       activeOnly: false,

@@ -40,7 +40,7 @@ describe("table_overview.spec.js", () => {
 
   // Tests for the basic UI components of this page.
   describe("overview", () => {
-    before(() => {
+    beforeEach(() => {
       cy.login(member.email, member.password, workspace.id)
         .then(() =>
           cy.visit(overviewUri))

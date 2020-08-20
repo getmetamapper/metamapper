@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.contrib.postgres import fields as pgfields
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models import ProtectedError
 from django.utils import timezone
@@ -47,7 +47,7 @@ class SSOConnection(StringPrimaryKeyModel, DirtyModel, TimestampedModel):
     entity_id = models.CharField(max_length=128)
     sso_url = models.CharField(max_length=512, null=True)
     x509cert = EncryptedTextField(null=True)
-    extras = pgfields.JSONField(default=dict)
+    extras = JSONField(default=dict)
 
     provider = models.CharField(
         max_length=30,
@@ -146,7 +146,7 @@ class SSOIdentity(StringPrimaryKeyModel, TimestampedModel):
     )
 
     ident = models.CharField(max_length=128)
-    metadata = pgfields.JSONField(default=dict)
+    metadata = JSONField(default=dict)
 
     last_verified_at = models.DateTimeField(auto_now_add=True)
     last_synced_at = models.DateTimeField(auto_now_add=True)

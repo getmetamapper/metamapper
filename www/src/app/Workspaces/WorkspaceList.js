@@ -1,7 +1,7 @@
 import React from "react"
 import { map } from "lodash"
 import { Icon, List } from "antd"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 
 const WorkspaceList = ({ workspaces, onClick }) => (
   <List className="workspace-list" data-test="WorkspaceList">
@@ -17,14 +17,5 @@ const WorkspaceList = ({ workspaces, onClick }) => (
     })}
   </List>
 )
-
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
 
 export default withLargeLoader(WorkspaceList)

@@ -132,7 +132,6 @@ class PostgresUpdateQuery(sql.UpdateQuery):
         return PostgresUpdateCompiler(self, connection, using)
 
 
-
 class PostgresOrSearchQuery(SearchQuery):
     """Extension of SearchQuery to perform OR instead of AND operator.
     """

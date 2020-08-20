@@ -81,6 +81,7 @@ VENDOR_APPS = [
     'corsheaders',
     'graphene_django',
     'guardian',
+    'ordered_model',
 ]
 
 METAMAPPER_APPS = [

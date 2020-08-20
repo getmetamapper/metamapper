@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.contrib.contenttypes.fields import ContentType, GenericRelation
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
+from django.db.models import F
 
 from guardian.shortcuts import assign_perm
+from ordered_model.models import OrderedModel
 
 from app.authentication.models import Workspace
 from app.comments.models import Comment
@@ -33,6 +36,37 @@ def make_audit_kwargs(instance):
             'datastore_id': instance.datastore_id,
         }
     }
+
+
+class AssetOwner(OrderedModel, TimestampedModel):
+    """Represents an owner of a data asset.
+    """
+    workspace = models.ForeignKey(
+        to=Workspace,
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    object_id = models.IntegerField()
+    content_type = models.ForeignKey(
+        to=ContentType,
+        on_delete=models.CASCADE,
+    )
+
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    owner_id = models.IntegerField()
+    owner_type = models.ForeignKey(
+        to=ContentType,
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+    owner = GenericForeignKey('owner_type', 'owner_id')
+
+    order_with_respect_to = ('object_id', 'content_type')
+
+    class Meta:
+        unique_together = ('workspace', 'object_id', 'content_type', 'owner_id', 'owner_type')
 
 
 class Datastore(StringPrimaryKeyModel,
@@ -294,6 +328,8 @@ class Table(AuditableModel,
     ]
 
     comments = GenericRelation(Comment, related_query_name="table")
+
+    owners = GenericRelation(AssetOwner, related_query_name="table")
 
     object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
 

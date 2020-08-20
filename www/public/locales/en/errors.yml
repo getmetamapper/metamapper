@@ -108,6 +108,9 @@ errors:
   Column:
     short_desc:
       max_length: Column description cannot be longer than 90 characters.
+  AssetOwner:
+    none:
+      unique: Provided object is already an owner of that asset.
   CustomField:
     field_name:
       blank: Custom field name is required.

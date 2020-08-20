@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query GetTableDefinition(
+  query GetTableDefinitionWithOwners(
     $datastoreId: ID!
     $schemaName: String!
     $tableName: String!
@@ -18,6 +18,16 @@ export default gql`
       tags
       schema {
         name
+      }
+      owners {
+        id
+        type
+        order
+        owner {
+          id
+          pk
+          name
+        }
       }
     }
   }

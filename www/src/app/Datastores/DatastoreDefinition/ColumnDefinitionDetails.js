@@ -2,7 +2,7 @@ import React from "react"
 import { Drawer } from "antd"
 import { compose } from "react-apollo"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 import CreateComment from "app/Comments/CreateComment"
 import CommentThread from "app/Comments/CommentThread"
 
@@ -41,15 +41,6 @@ const ColumnDefinitionDetails = ({
     />
   </Drawer>
 )
-
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
 
 export default compose(
   withWriteAccess,

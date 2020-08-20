@@ -6,7 +6,7 @@ import { find } from "lodash"
 import { withRouter } from "react-router-dom"
 import { withUserContext } from "context/UserContext"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 import withGetSSOProviders from "graphql/withGetSSOProviders"
 import CreateSSOConnectionMutation from "graphql/mutations/CreateSSOConnection"
@@ -91,15 +91,6 @@ class SamlConnectionSetup extends Component {
     )
   }
 }
-
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
 
 const withForm = Form.create()
 
