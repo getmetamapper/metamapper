@@ -42,6 +42,7 @@ const SSODomainVerificationInstructions = ({ verificationToken }) => (
       This procedure can depend on your DNS service provider.
     </p>
     <Table
+      rowKey="host"
       bordered
       size="small"
       pagination={false}

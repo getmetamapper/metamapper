@@ -6,9 +6,12 @@ import app.revisioner.models as models
 import app.revisioner.schema as schema
 
 import app.authorization.fields as fields
+
+import utils.errors as errors
 import utils.shortcuts as shortcuts
 
 from app.definitions.models import Table
+from app.definitions import permissions as definition_permissions
 
 
 class Query(graphene.ObjectType):
@@ -21,6 +24,7 @@ class Query(graphene.ObjectType):
     )
 
     run_revisions = fields.AuthConnectionField(
+
         type=schema.RevisionType,
         run_id=graphene.ID(required=True),
     )
@@ -30,6 +34,7 @@ class Query(graphene.ObjectType):
         table_id=graphene.ID(required=True),
     )
 
+    @definition_permissions.can_view_datastore_objects(lambda instance: instance.datastore)
     def resolve_run(self, info, id, *args, **kwargs):
         """Retrieve a specific run by the global ID.
         """
@@ -44,14 +49,17 @@ class Query(graphene.ObjectType):
     def resolve_run_history(self, info, datastore_id, *args, **kwargs):
         """Retrieve the last 30 active runs.
         """
-        _type, pk = shortcuts.from_global_id(datastore_id)
-
-        filter_kwargs = {
+        get_kwargs = {
             'workspace': info.context.workspace,
-            'datastore_id': pk,
-            'started_at__isnull': False,
+            'pk': shortcuts.from_global_id(datastore_id, True),
         }
-        return models.Run.objects.filter(**filter_kwargs).order_by('-finished_at').prefetch_related('errors')
+
+        datastore = shortcuts.get_object_or_404(models.Datastore, **get_kwargs)
+
+        if not definition_permissions.request_can_view_datastore(info, datastore):
+            raise errors.PermissionDenied()
+
+        return datastore.run_history.filter(started_at__isnull=False).order_by('-started_at').prefetch_related('errors')
 
     def resolve_run_revisions(self, info, run_id, *args, **kwargs):
         """Retrieve revisions for the provided object.
@@ -64,13 +72,11 @@ class Query(graphene.ObjectType):
         }
 
         resource = shortcuts.get_object_or_404(models.Run, **get_kwargs)
-
-        return (
-            resource.revisions
-                    .filter(applied_on__isnull=False)
-                    .exclude(metadata__field__isnull=False, metadata__field='object_id')
-                    .order_by('created_at')
-        )
+        revisions = resource.revisions\
+                            .filter(applied_on__isnull=False)\
+                            .exclude(metadata__field__isnull=False, metadata__field='object_id')\
+                            .order_by('created_at')
+        return revisions
 
     def resolve_table_revisions(self, info, table_id, *args, **kwargs):
         """Retrieve revisions for the provided object.

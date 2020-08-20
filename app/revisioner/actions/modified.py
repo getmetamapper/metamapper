@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.core.paginator import Paginator
-
 from app.definitions.models import Schema, Table, Column, Index, IndexColumn
 
 from app.revisioner.models import Revision

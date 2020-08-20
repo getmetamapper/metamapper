@@ -968,6 +968,7 @@ class TestGetTableNamesBySchema(cases.GraphQLTestCase):
         tableNamesBySchema(datastoreId: $datastoreId, schemaName: $schemaName)
     }
     '''
+
     def setUp(self):
         super(TestGetTableNamesBySchema, self).setUp()
 
