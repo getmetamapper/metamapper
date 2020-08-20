@@ -566,4 +566,3 @@ class AssetOwnerSerializer(MetamapperSerializer, serializers.Serializer):
         if position:
             instance.to(position)
         return instance
-

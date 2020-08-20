@@ -36,8 +36,9 @@ class TableRevisionLog extends Component {
   render() {
     const { revisions } = this.props
     return (
-      <div className="table-revision-log">
+      <div className="table-revision-log" data-test="TableRevisionLog">
         <Table
+          rowKey="id"
           dataSource={revisions}
           columns={this.columns}
           pagination={false}

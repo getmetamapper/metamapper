@@ -7,7 +7,7 @@ import moment from "moment"
 import withGetRunRevisions from "graphql/withGetRunRevisions"
 import { withLargeLoader } from "hoc/withLoader"
 
-class TableRevisionLog extends Component {
+class RunRevisionLog extends Component {
   constructor(props) {
     super(props)
 
@@ -144,8 +144,8 @@ class TableRevisionLog extends Component {
   }
 }
 
-TableRevisionLog.defaultProps = {
+RunRevisionLog.defaultProps = {
   runRevisions: [],
 }
 
-export default compose(withGetRunRevisions, withLargeLoader)(TableRevisionLog)
+export default compose(withGetRunRevisions, withLargeLoader)(RunRevisionLog)

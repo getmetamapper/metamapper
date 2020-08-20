@@ -87,10 +87,11 @@ export const renderRevisionText = (revision) => {
   if (!revision) return null
 
   const switchBoard = {
-    1: CreatedRevision,
-    2: ModifiedRevision,
-    3: DroppedRevision,
+    "A_1": CreatedRevision,
+    "A_2": ModifiedRevision,
+    "A_3": DroppedRevision,
   }
+
   const Component = switchBoard[revision.action]
 
   return <Component {...revision} />

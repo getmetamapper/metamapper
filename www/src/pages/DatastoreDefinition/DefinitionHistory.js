@@ -1,10 +1,12 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
+import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"
 import TableRevisionLog from "app/Datastores/Revisions/TableRevisionLog"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableDefinition from "graphql/withGetTableDefinition"
 import withGetTableRevisions from "graphql/withGetTableRevisions"
+import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
 class DefinitionHistory extends Component {
   state = {}
@@ -29,10 +31,16 @@ class DefinitionHistory extends Component {
   }
 }
 
+const withNotFound = withNotFoundHandler(({ tableDefinition }) => {
+  return !tableDefinition || !tableDefinition.hasOwnProperty("id")
+})
+
 const enhance = compose(
   withGetDatastoreDefinition,
   withGetTableDefinition,
   withGetTableRevisions,
+  withLargeLoader,
+  withNotFound,
 )
 
 export default enhance(DefinitionHistory)

@@ -21,7 +21,6 @@ from app.revisioner.revisioners import get_content_types
 from utils.postgres.sql import PostgresOrSearchQuery
 
 
-
 class PostgresSearchBackend(base.BaseSearchBackend):
     """Postgres full-text search implementation (https://www.postgresql.org/docs/9.5/textsearch.html)
     """
