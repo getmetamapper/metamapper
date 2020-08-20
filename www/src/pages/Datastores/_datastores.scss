@@ -84,6 +84,48 @@
   border: 1px solid #e8e8e8;
   border-bottom: 0;
 }
+.table-owners-toolbar {
+  .table-owners-toolbar-item {
+    margin-left: 10px;
+  }
+  .table-owners-toolbar-item:hover {
+    cursor: pointer;
+  }
+}
+.table-owner-search-wrapper .ant-btn {
+  margin-left: 12px;
+  height: 36px;
+  line-height: 36px;
+}
+
+.table-owner-search-dropdown .ant-select-dropdown-menu-item-group-title {
+  color: #666;
+  font-weight: bold;
+}
+
+.table-owner-search-dropdown .ant-select-dropdown-menu-item-group {
+  border-bottom: 1px solid #f6f6f6;
+}
+
+.table-owner-search-dropdown .ant-select-dropdown-menu-item {
+  padding-left: 16px;
+}
+
+.table-owner-search-dropdown .ant-select-dropdown-menu-item.show-all {
+  text-align: center;
+  cursor: default;
+}
+
+.table-owner-search-dropdown .ant-select-dropdown-menu {
+  max-height: 300px;
+}
+.datastore .datastore-assets .ant-table-row td:first-child,
+.datastore .datastore-assets .ant-table-row td:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+}
 .datastores .datastore-asset-search {
   margin-bottom: 24px;
 }
@@ -147,6 +189,42 @@
     border: none;
   }
 }
+.table-owners {
+  margin-bottom: 20px;
+}
+.table-owners .ant-card-body {
+  padding: 12px;
+}
+.table-owners.empty .ant-card-body {
+  padding: 24px;
+}
+.table-owners .table-owner-display {
+  padding: 12px;
+}
+.table-owners .table-owner-display {
+  .avatar {
+    float: left;
+    display: inline-block;
+  }
+  .metadata {
+    display: inline-block;
+    margin-left: 16px;
+    line-height: 32px;
+  }
+  .icon {
+    display: inline-block;
+    float: right;
+    font-size: 14px;
+    line-height: 32px;
+  }
+}
+.table-owners .table-owner.editing {
+  border: 1px solid #e8e8e8;
+  margin-bottom: 12px;
+}
+.asset-owner-delete:hover {
+  cursor: pointer;
+}
 .table-revision {
   border-bottom: 1px solid #e8e8e8;
   padding: 12px;
@@ -174,12 +252,8 @@
 }
 .table-schema-selector-wrapper {
   background: #FFFFFF;
-  height: 100%;
+  height: 100vh;
   border-left: 1px solid #e8e8e8;
-  position: fixed;
-  overflow: scroll;
-  overflow-x: hidden;
-  right: 0;
 }
 .table-schema-selector-wrapper::-webkit-scrollbar {
   width: 0px;
@@ -207,7 +281,6 @@
 }
 .table-schema-selector {
   background-color: #FFFFFF;
-  height: 100%;
 
   .loading {
     color: #989898;

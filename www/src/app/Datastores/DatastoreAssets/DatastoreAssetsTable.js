@@ -22,12 +22,10 @@ class DatastoreAssetsTable extends Component {
     this.columns = [
       {
         title: "Schema Name",
-        ellipsis: true,
         render: ({ schema }) => <span title={schema.name}>{schema.name}</span>,
       },
       {
         title: "Asset Name",
-        ellipsis: true,
         render: ({ schema, name: tablename }) => (
           <Link
             to={`/${slug}/datastores/${datastore.slug}/definition/${schema.name}/${tablename}/overview`}
@@ -41,11 +39,6 @@ class DatastoreAssetsTable extends Component {
         title: "Asset Type",
         dataIndex: "kind",
         key: "kind",
-        filters: [
-          { text: 'Base table', value: 'b' },
-          { text: 'External table', value: 'e' },
-          { text: 'View', value: 'v' },
-        ],
       },
       {
         title: "Description",

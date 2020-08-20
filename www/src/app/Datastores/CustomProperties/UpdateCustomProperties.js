@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { graphql, compose } from "react-apollo"
-import { Card, Form, Empty, Tooltip } from "antd"
+import { Card, Form, Tooltip } from "antd"
 import { map, filter, keyBy } from "lodash"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import GetCustomProperties from "graphql/queries/GetCustomProperties"
@@ -120,7 +120,7 @@ class UpdateCustomProperties extends Component {
           wrapperCol={{ span: 17 }}
           onSubmit={this.handleSubmit}
         >
-          {this.isEmpty() && !isEditing ? ( <Empty description={null} /> ) : (
+          {this.isEmpty() && !isEditing ? ( <div className="empty-text">No properties assigned.</div> ) : (
             <>
               {map(customProperties, ({ fieldId, fieldLabel, fieldValue }) => {
                 const field = fields[fieldId]
@@ -140,7 +140,7 @@ class UpdateCustomProperties extends Component {
                   inputProps.choices = field.validators.choices
                 }
                 return (
-                  <div className="custom-property">
+                  <div className="custom-property" key={fieldId}>
                     <div className="labelWrap clearfix">
                       {this.renderLabel(fields[fieldId])}
                     </div>

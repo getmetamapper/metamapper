@@ -22,7 +22,7 @@
     "interweave-autolink": "^4.2.1",
     "js-yaml": "^3.14.0",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "moment": "^2.24.0",
     "pretty-ms": "^5.0.0",
     "query-string": "^6.12.1",
@@ -32,7 +32,7 @@
     "react-helmet": "^5.2.1",
     "react-i18next": "^11.7.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^3.4.3",
     "react-trix": "^0.6.0",
     "sass": "^1.26.10",
     "store2": "^2.10.0"

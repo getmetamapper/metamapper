@@ -4,7 +4,7 @@ import { Form } from "antd"
 import { find } from "lodash"
 import { withSuperUserAccess } from "hoc/withPermissionsRequired"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 import SetDefaultSSOConnectionMutation from "graphql/mutations/SetDefaultSSOConnection"
 import GetSSOConnections from "graphql/queries/GetSSOConnections"
 import SetDefaultSSOConnectionForm from "./SetDefaultSSOConnectionForm"
@@ -55,15 +55,6 @@ class SetDefaultSSOConnection extends Component {
 }
 
 const withForm = Form.create()
-
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
 
 const enhance = compose(
   withSuperUserAccess,

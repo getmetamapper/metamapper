@@ -493,3 +493,77 @@ class ColumnSerializer(MetamapperSerializer, serializers.ModelSerializer):
         """
         instance.short_desc = validated_data.get('short_desc', instance.short_desc)
         return instance
+
+
+def get_asset_owner_audit_kwargs(instance):
+    """Make the parameters for logging audit activity.
+    """
+    return {
+        'target_object_id': instance.object_id,
+        'target_content_type_id': instance.content_type_id,
+        'action_object_object_id': instance.owner_id,
+        'action_object_content_type_id': instance.owner_type_id,
+        'extras': {
+            'datastore_id': instance.content_object.datastore_id,
+        }
+    }
+
+
+class AssetOwnerSerializer(MetamapperSerializer, serializers.Serializer):
+    """Create and update an asset owner for a datastore object.
+    """
+    content_object = fields.RelatedObjectField(
+        allowed_models=(models.Table,),
+        allow_null=False,
+    )
+
+    owner = fields.RelatedObjectField(
+        allowed_models=(User, Group,),
+        allow_null=False,
+    )
+
+    order = serializers.IntegerField(min_value=0, required=False, allow_null=True)
+
+    class Meta:
+        model = models.AssetOwner
+        fields = ('content_object', 'owner', 'order',)
+
+    def validate_owner(self, owner):
+        """The owner must be part of the provided workspace.
+        """
+        workspace = self.context['request'].workspace
+        has_error = False
+
+        if isinstance(owner, (User,)) and not owner.is_on_team(workspace.id):
+            has_error = True
+        elif isinstance(owner, (Group,)) and not owner.workspace_id == workspace.id:
+            has_error = True
+
+        if has_error:
+            raise serializers.ValidationError(
+                'The provided owner is not part of this workspace.',
+                'invalid',
+            )
+        return owner
+
+    @audit.capture_activity(
+        verb='created',
+        hydrater=get_asset_owner_audit_kwargs,
+    )
+    def create(self, validated_data):
+        """Create a brand new Datastore instance.
+        """
+        position = validated_data.pop('order', None)
+        instance = models.AssetOwner.objects.create(**validated_data)
+        if position:
+            instance.to(position)
+        return instance
+
+    def update(self, instance, validated_data):
+        """Update the provided Table instance.
+        """
+        position = validated_data.pop('order', None)
+        if position:
+            instance.to(position)
+        return instance
+

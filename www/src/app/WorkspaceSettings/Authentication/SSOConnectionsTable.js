@@ -3,8 +3,8 @@ import { compose } from "react-apollo"
 import { Tooltip, Tag, Table } from "antd"
 import { find } from "lodash"
 import { withSuperUserAccess } from "hoc/withPermissionsRequired"
+import { withLargeLoader } from "hoc/withLoader"
 import { PERMISSION_CHOICES } from "lib/constants"
-import withLoader from "hoc/withLoader"
 import Link from "app/Navigation/Link"
 import DeleteSSOConnection from "./DeleteSSOConnection"
 import EnableSSOConnection from "./EnableSSOConnection"
@@ -78,16 +78,4 @@ class SSOConnectionsTable extends Component {
   }
 }
 
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
-
-export default compose(
-  withSuperUserAccess,
-  withLargeLoader
-)(SSOConnectionsTable)
+export default compose(withSuperUserAccess, withLargeLoader)(SSOConnectionsTable)

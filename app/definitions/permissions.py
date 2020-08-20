@@ -75,6 +75,11 @@ def get_datastore_from_global_id(attributes, attribute_lookup_field):
         lookup_field = 'schemas__tables__pk'
     elif nodetype == 'ColumnType':
         lookup_field = 'schemas__tables__columns__pk'
+    elif nodetype == 'AssetOwnerType':
+        asset_owner = models.AssetOwner.objects.filter(pk=pk).first()
+        if not asset_owner:
+            return None
+        pk = asset_owner.content_object.datastore_id
     elif nodetype == 'CommentType':
         comment = comments.Comment.objects.filter(pk=pk).first()
         if not comment:
@@ -115,3 +120,5 @@ CanUpdateCustomProperties = CanPerformDatastoreMutation('change_datastore_metada
 CanCreateCommentOnDatastore = CanPerformDatastoreMutation('comment_on_datastore', 'object_id')
 
 CanModifyCommentOnDatastore = CanPerformDatastoreMutation('comment_on_datastore', 'id')
+
+CanCreateAssetOwner = CanPerformDatastoreMutation('change_datastore_metadata', 'object_id')

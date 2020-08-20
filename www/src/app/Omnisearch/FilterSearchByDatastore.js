@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { List, Icon } from "antd"
 import { mapKeys } from "lodash"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 
 class FilterSearchByDatastore extends Component {
   constructor(props) {
@@ -59,14 +59,5 @@ class FilterSearchByDatastore extends Component {
     )
   }
 }
-
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
 
 export default withLargeLoader(FilterSearchByDatastore)

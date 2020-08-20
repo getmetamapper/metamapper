@@ -3,8 +3,8 @@ import { compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
 import { Table, Tag } from "antd"
 import { withUserContext } from "context/UserContext"
+import { withLargeLoader } from "hoc/withLoader"
 import moment from "moment"
-import withLoader from "hoc/withLoader"
 import DatastoreEngineIcon from "app/Datastores/DatastoreEngineIcon"
 
 class DatastoreList extends Component {
@@ -77,15 +77,4 @@ class DatastoreList extends Component {
   }
 }
 
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
-
-const enhance = compose(withRouter, withUserContext, withLargeLoader)
-
-export default enhance(DatastoreList)
+export default compose(withRouter, withUserContext, withLargeLoader)(DatastoreList)

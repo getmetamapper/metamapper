@@ -7,8 +7,6 @@ import testutils.factories as factories
 
 
 class TestBeaconActivated(cases.GraphQLTestCase):
-    """
-    """
     factory = factories.WorkspaceFactory
     operation = 'beaconActivated'
     statement = '''

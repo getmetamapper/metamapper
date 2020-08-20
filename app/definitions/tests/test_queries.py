@@ -413,6 +413,13 @@ class TestGetTableDefinition(cases.GraphQLTestCase):
         schema {
           name
         }
+        owners {
+          type
+          owner {
+            id
+            name
+          }
+        }
       }
     }
     '''
@@ -448,6 +455,7 @@ class TestGetTableDefinition(cases.GraphQLTestCase):
             'schema': {
                 'name': variables['schemaName'],
             },
+            'owners': [],
         })
 
     @decorators.as_someone(['MEMBER', 'READONLY'])
@@ -465,6 +473,45 @@ class TestGetTableDefinition(cases.GraphQLTestCase):
             'schema': {
                 'name': variables['schemaName'],
             },
+            'owners': [],
+        })
+
+    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
+    def test_query_with_owners(self):
+        """It returns the table definition object with owners attached.
+        """
+        datastore, variables = self._setup_and_get_variables()
+
+        table = datastore.schemas.first().tables.first()
+        table.owners.create(owner=self.user, workspace=table.workspace)
+
+        group = self.workspace.groups.get(id=12412)
+        table.owners.create(owner=group, workspace=table.workspace)
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertEqual(results, {
+            'name': variables['tableName'],
+            'schema': {
+                'name': variables['schemaName'],
+            },
+            'owners': [
+                {
+                    'owner': {
+                        'id': helpers.to_global_id('UserType', self.user.id),
+                        'name': self.user.name,
+                    },
+                    'type': 'USER',
+                },
+                {
+                    'owner': {
+                        'id': helpers.to_global_id('GroupType', group.id),
+                        'name': group.name,
+                    },
+                    'type': 'GROUP',
+                }
+            ],
         })
 
     @decorators.as_someone(['MEMBER', 'READONLY'])

@@ -5,7 +5,7 @@ import { renderRevisionText } from "app/Datastores/Revisions/RevisionText"
 import { renderRevisionIcon } from "app/Datastores/Revisions/RevisionIcon"
 import moment from "moment"
 import withGetRunRevisions from "graphql/withGetRunRevisions"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 
 class TableRevisionLog extends Component {
   constructor(props) {
@@ -148,13 +148,4 @@ TableRevisionLog.defaultProps = {
   runRevisions: [],
 }
 
-const withSpinLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
-
-export default compose(withGetRunRevisions, withSpinLoader)(TableRevisionLog)
+export default compose(withGetRunRevisions, withLargeLoader)(TableRevisionLog)

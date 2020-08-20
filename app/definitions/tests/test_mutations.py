@@ -1427,3 +1427,317 @@ class TestJdbcConnectionTests(cases.GraphQLTestCase):
         """It should return a "Permission Denied" error.
         """
         self.assertPermissionDenied(self.execute(variables=self.connection))
+
+
+class TestCreateAssetOwner(cases.GraphQLTestCase):
+    """Tests for creating a table owner.
+    """
+    operation = 'createAssetOwner'
+    statement = '''
+    mutation CreateAssetOwner(
+      $objectId: ID!
+      $ownerId: ID!
+      $order: Int
+    ) {
+      createAssetOwner(input: {
+        objectId: $objectId,
+        ownerId: $ownerId,
+        order: $order,
+      }) {
+        assetOwner {
+          type
+          owner {
+            id
+            name
+          }
+        }
+        errors {
+          resource
+          field
+          code
+        }
+      }
+    }
+    '''
+
+    def setUp(self):
+        super().setUp()
+
+        self.resource = factories.TableFactory(name='accounts', workspace=self.workspace)
+        self.datastore = self.resource.datastore
+        self.object_id = helpers.to_global_id('TableType', self.resource.pk)
+
+    def execute_success_test_case(self, owner_type, owner):
+        """It should create the data asset owner.
+        """
+        variables = {
+            'objectId': self.object_id,
+            'ownerId': helpers.to_global_id(owner_type, owner.id),
+        }
+
+        response = self.execute(variables=variables)
+        response = response['data'][self.operation]
+
+        self.assertEqual(response, {
+            'assetOwner': {
+                'type': owner.__class__.__name__.upper(),
+                'owner': {
+                    'id': variables['ownerId'],
+                    'name': owner.name,
+                },
+            },
+            'errors': None
+        })
+
+        resource = models.AssetOwner.objects.get(owner_id=owner.id, object_id=self.resource.id)
+
+        self.assertInstanceCreated(
+            audit.Activity,
+            verb='created',
+            **serializers.get_asset_owner_audit_kwargs(resource),
+        )
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_with_valid_user(self):
+        """It should create the asset owner when the user has the proper permissions.
+        """
+        self.execute_success_test_case('UserType', self.user)
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_with_valid_group(self):
+        """It should create the asset owner when the user has the proper permissions.
+        """
+        self.execute_success_test_case('GroupType', factories.GroupFactory(workspace=self.workspace))
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission(self):
+        """It should create the asset owner when the user has the proper permissions.
+        """
+        self.datastore.datobject_permissions_enabled = True
+        self.datastore.save()
+
+        self.datastore.assign_perm(self.user, 'definitions.change_datastore_metadata')
+
+        self.execute_success_test_case('UserType', self.user)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a Permission Denied error.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        variables = {
+            'objectId': self.object_id,
+            'ownerId': helpers.to_global_id('UserType', self.user.id),
+        }
+
+        response = self.execute(variables=variables)
+
+        self.assertPermissionDenied(response)
+
+    @decorators.as_someone(['READONLY', 'OUTSIDER'])
+    def test_unauthorized(self):
+        """It should return a "Permission Denied" error.
+        """
+        variables = {
+            'objectId': self.object_id,
+            'ownerId': helpers.to_global_id('UserType', self.user.id),
+        }
+
+        self.assertPermissionDenied(self.execute(variables=variables))
+
+
+class TestUpdateAssetOwner(cases.GraphQLTestCase):
+    """Tests for creating a table owner.
+    """
+    operation = 'updateAssetOwner'
+    statement = '''
+    mutation UpdateAssetOwner(
+      $id: ID!
+      $order: Int!
+    ) {
+      updateAssetOwner(input: {
+        id: $id,
+        order: $order,
+      }) {
+        assetOwner {
+          type
+          order
+          owner {
+            name
+          }
+        }
+        errors {
+          resource
+          field
+          code
+        }
+      }
+    }
+    '''
+
+    def setUp(self):
+        super().setUp()
+        self.resource = factories.TableFactory(name='accounts', workspace=self.workspace)
+
+        self.resource.owners.create(workspace=self.workspace, owner=self.users['READONLY'])
+        self.resource.owners.create(workspace=self.workspace, owner=self.users['OWNER'])
+        self.asset_owner = self.resource.owners.create(workspace=self.workspace, owner=self.users['MEMBER'])
+
+        self.global_id = helpers.to_global_id('AssetOwnerType', self.asset_owner.id)
+        self.datastore = self.resource.datastore
+
+    def execute_success_test_case(self, owner_type, owner, order):
+        """It should create the data asset owner.
+        """
+        variables = {
+            'id': helpers.to_global_id(owner_type, owner.id),
+            'order': order,
+        }
+
+        response = self.execute(variables=variables)
+        response = response['data'][self.operation]
+
+        owner_instance = owner.owner
+
+        self.assertEqual(response, {
+            'assetOwner': {
+                'type': owner_instance.__class__.__name__.upper(),
+                'order': order,
+                'owner': {
+                    'name': owner_instance.name,
+                },
+            },
+            'errors': None
+        })
+
+        self.assertInstanceUpdated(self.asset_owner, order=order)
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should create the asset owner when the user has the proper permissions.
+        """
+        self.execute_success_test_case('AssetOwnerType', self.asset_owner, 2)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission(self):
+        """It should create the asset owner when the user has the proper permissions.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        self.datastore.assign_perm(self.user, 'definitions.change_datastore_metadata')
+
+        self.execute_success_test_case('AssetOwnerType', self.asset_owner, 2)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a Permission Denied error.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        variables = {
+            'id': self.global_id,
+            'order': 1,
+        }
+
+        response = self.execute(variables=variables)
+        self.assertPermissionDenied(response)
+
+    @decorators.as_someone(['READONLY', 'OUTSIDER'])
+    def test_unauthorized(self):
+        """It should return a "Permission Denied" error.
+        """
+        variables = {
+            'id': self.global_id,
+            'order': 1,
+        }
+
+        self.assertPermissionDenied(self.execute(variables=variables))
+
+
+class TestDeleteAssetOwner(cases.GraphQLTestCase):
+    """Tests for deleting an asset owner.
+    """
+    operation = 'deleteAssetOwner'
+    statement = '''
+    mutation DeleteAssetOwner($id: ID!) {
+      deleteAssetOwner(input: {
+        id: $id,
+      }) {
+        ok
+        errors {
+          resource
+          field
+          code
+        }
+      }
+    }
+    '''
+
+    def setUp(self):
+        super().setUp()
+
+        self.resource = factories.TableFactory(workspace=self.workspace)
+        self.datastore = self.resource.datastore
+
+    def execute_success_test_case(self, owner):
+        """It should create the data asset owner.
+        """
+        node_id = helpers.to_global_id('AssetOwnerType', owner.pk)
+
+        response = self.execute(variables={'id': node_id})
+        response = response['data'][self.operation]
+
+        self.assertOk(response)
+        self.assertInstanceCreated(models.AssetOwner, id=owner.id, workspace_id=self.workspace.id)
+
+    @decorators.as_someone(['MEMBER', 'OWNER'])
+    def test_valid(self):
+        """It should delete the asset owner when the user has the proper permissions.
+        """
+        owner = self.resource.owners.create(workspace=self.workspace, owner=self.user)
+
+        self.execute_success_test_case(owner)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_valid_with_object_permission(self):
+        """It should delete the asset owner when the user has the proper permissions.
+        """
+        self.datastore.datobject_permissions_enabled = True
+        self.datastore.save()
+
+        self.datastore.assign_perm(self.user, 'definitions.change_datastore_metadata')
+        owner = self.resource.owners.create(workspace=self.workspace, owner=self.user)
+
+        self.execute_success_test_case(owner)
+
+    @decorators.as_someone(['MEMBER'])
+    def test_invalid_without_object_permission(self):
+        """It should return a Permission Denied error.
+        """
+        self.datastore.object_permissions_enabled = True
+        self.datastore.save()
+
+        owner = self.resource.owners.create(workspace=self.workspace, owner=self.user)
+
+        node_id = helpers.to_global_id('AssetOwnerType', owner.pk)
+        response = self.execute(variables={'id': node_id})
+
+        self.assertPermissionDenied(response)
+
+    @decorators.as_someone(['READONLY', 'OUTSIDER'])
+    def test_unauthorized(self):
+        """It should return a "Permission Denied" error.
+        """
+        owner = self.resource.owners.create(workspace=self.workspace, owner=self.user)
+        node_id = helpers.to_global_id('AssetOwnerType', owner.pk)
+
+        self.assertPermissionDenied(self.execute(variables={'id': node_id}))
+
+    def test_does_not_exist(self):
+        """It should return a "Resource Not Found" error.
+        """
+        self.assertPermissionDenied(self.execute(variables={'id': helpers.to_global_id('AssetOwnerType', '12345')}))

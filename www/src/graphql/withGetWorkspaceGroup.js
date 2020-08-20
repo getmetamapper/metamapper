@@ -7,7 +7,7 @@ const withGetWorkspaceGroup = graphql(GetWorkspaceGroup, {
       params: { groupId },
     },
   }) => ({
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-first",
     variables: { groupId },
   }),
   props: ({ data, ownProps }) => {

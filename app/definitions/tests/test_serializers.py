@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import unittest.mock as mock
+import collections
 import random
+import unittest.mock as mock
 
 import app.definitions.models as models
 import app.definitions.serializers as serializers
@@ -702,7 +703,7 @@ class ToggleDatastoreObjectPermissionsSerializerTest(cases.SerializerTestCase):
 class TableSerializerUpdateTests(cases.SerializerTestCase):
     """Test cases for the Table serializer class.
     """
-    factory = factories.DatastoreFactory
+    factory = factories.TableFactory
 
     serializer_class = serializers.TableSerializer
 
@@ -794,7 +795,7 @@ class TableSerializerUpdateTests(cases.SerializerTestCase):
 class ColumnSerializerUpdateTests(cases.SerializerTestCase):
     """Test cases for the Column serializer class.
     """
-    factory = factories.DatastoreFactory
+    factory = factories.ColumnFactory
 
     serializer_class = serializers.ColumnSerializer
 
@@ -870,3 +871,162 @@ class ColumnSerializerUpdateTests(cases.SerializerTestCase):
             instance=self.instance,
             partial=True,
         )
+
+
+class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
+    """Test cases for creating an asset owner.
+    """
+    factory = factories.DatastoreFactory
+
+    serializer_class = serializers.AssetOwnerSerializer
+
+    serializer_resource_name = 'AssetOwner'
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.workspace = factories.WorkspaceFactory()
+        cls.user = factories.UserFactory()
+        cls.workspace.grant_membership(cls.user, 'MEMBER')
+        cls.request = collections.namedtuple('Request', ['user', 'workspace'])(user=cls.user, workspace=cls.workspace)
+        cls.content_object = factories.TableFactory(workspace=cls.workspace)
+
+    def test_valid_group(self):
+        """It should create the asset owner.
+        """
+        group = factories.GroupFactory(workspace=self.workspace)
+
+        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1}
+        serializer = self.serializer_class(data=attributes, context={'request': self.request})
+
+        self.assertTrue(serializer.is_valid())
+        instance = serializer.save(workspace=self.workspace)
+        self.assertTrue(instance)
+        self.assertTrue(instance.order == attributes['order'])
+
+    def test_with_invalid_group(self):
+        """It should throw an error if the group is not a part of the workspace.
+        """
+        group = factories.GroupFactory()
+
+        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1}
+        serializer = self.serializer_class(data=attributes, context={'request': self.request})
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {
+                'code': 'invalid',
+                'field': 'owner',
+                'resource': 'AssetOwner',
+            }
+        ])
+
+    def test_with_valid_user(self):
+        """It should create the asset owner.
+        """
+        user = factories.UserFactory()
+        self.workspace.grant_membership(user, 'MEMBER')
+
+        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1}
+        serializer = self.serializer_class(data=attributes, context={'request': self.request})
+
+        self.assertTrue(serializer.is_valid())
+        instance = serializer.save(workspace=self.workspace)
+        self.assertTrue(instance)
+        self.assertTrue(instance.order == attributes['order'])
+
+    def test_with_invalid_user(self):
+        """It should throw an error if the user is not a part of the workspace.
+        """
+        user = factories.UserFactory()
+
+        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1}
+        serializer = self.serializer_class(data=attributes, context={'request': self.request})
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {
+                'code': 'invalid',
+                'field': 'owner',
+                'resource': 'AssetOwner',
+            }
+        ])
+
+    def test_reposition(self):
+        """It should shift around the positions.
+        """
+        content_object = factories.TableFactory(workspace=self.workspace)
+
+        owners = []
+        for user in factories.UserFactory.create_batch(5):
+            self.workspace.grant_membership(user, 'MEMBER')
+            owners.append(
+                content_object.owners.create(owner=user, workspace=self.workspace)
+            )
+
+        group = factories.GroupFactory(workspace=self.workspace)
+
+        attributes = {'owner': group, 'content_object': content_object, 'order': 3}
+        serializer = self.serializer_class(data=attributes, context={'request': self.request})
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save(workspace=self.workspace))
+
+        for n, owner in enumerate(owners[attributes['order']:], 1):
+            order = owner.order
+            owner.refresh_from_db()
+            self.assertTrue(owner.order != order)
+            self.assertTrue(owner.order == attributes['order'] + n)
+
+
+class AssetOwnerSerializerUpdateTests(cases.SerializerTestCase):
+    """Test cases for updating an asset owner.
+    """
+    factory = factories.DatastoreFactory
+
+    serializer_class = serializers.AssetOwnerSerializer
+
+    serializer_resource_name = 'AssetOwner'
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.workspace = factories.WorkspaceFactory()
+        cls.user = factories.UserFactory()
+        cls.workspace.grant_membership(cls.user, 'MEMBER')
+        cls.request = collections.namedtuple('Request', ['user', 'workspace'])(user=cls.user, workspace=cls.workspace)
+
+    def test_reposition(self):
+        """It should shift around the positions.
+        """
+        content_object = factories.TableFactory(workspace=self.workspace)
+
+        owners = []
+        for user in factories.UserFactory.create_batch(5):
+            self.workspace.grant_membership(user, 'MEMBER')
+            owners.append(
+                content_object.owners.create(owner=user, workspace=self.workspace)
+            )
+
+        group = factories.GroupFactory(workspace=self.workspace)
+        owner = content_object.owners.create(owner=group, workspace=self.workspace)
+        order = owner.order
+
+        attributes = {'owner': group, 'content_object': content_object, 'order': 3}
+        serializer = self.serializer_class(
+            instance=owner,
+            data=attributes,
+            partial=True,
+            context={'request': self.request},
+        )
+
+        owner.refresh_from_db()
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save(workspace=self.workspace))
+        self.assertTrue(owner.order != order)
+        self.assertTrue(owner.order == attributes['order'])
+
+        for n, owner in enumerate(owners[attributes['order']:], 1):
+            order = owner.order
+            owner.refresh_from_db()
+            self.assertTrue(owner.order != order)
+            self.assertTrue(owner.order == attributes['order'] + n)

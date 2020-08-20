@@ -87,6 +87,53 @@ class ColumnType(AuthNode, DjangoObjectType):
         return instance.full_data_type
 
 
+class OwnerType(graphene.ObjectType):
+    """GraphQL representation of a data asset owner.
+    """
+    id = graphene.ID()
+    pk = GenericScalar()
+    name = graphene.String()
+    type = graphene.String()
+
+    def resolve_id(root, info):
+        return shortcuts.to_global_id(f'{root.__class__.__name__}Type', root.pk)
+
+    def resolve_pk(root, info):
+        return root.id
+
+
+class AssetOwnerType(AuthNode, DjangoObjectType):
+    """GraphQL representation of a AssetOwner.
+    """
+    permission_classes = (WorkspaceTeamMembersOnly,)
+    scope_to_workspace = True
+
+    type = graphene.String()
+
+    owner = graphene.Field(OwnerType)
+
+    class Meta:
+        model = models.AssetOwner
+        filter_fields = {}
+        interfaces = (relay.Node,)
+        connection_class = connections.DefaultConnection
+        exclude_fields = []
+
+    @classmethod
+    def get_node(cls, info, id):
+        """We should only return owners related to the current workspace.
+        """
+        return models.AssetOwner.objects.filter(
+            workspace=info.context.workspace,
+            id=id,
+        ).first()
+
+    def resolve_type(root, info):
+        """str: Type of the owner being returned.
+        """
+        return root.owner.__class__.__name__.upper()
+
+
 class TableType(AuthNode, DjangoObjectType):
     """GraphQL representation of a Table.
     """
@@ -98,6 +145,7 @@ class TableType(AuthNode, DjangoObjectType):
     properties = GenericScalar()
 
     schema = graphene.Field('app.definitions.schema.SchemaType')
+    owners = graphene.List(AssetOwnerType)
 
     class Meta:
         model = models.Table
@@ -127,6 +175,9 @@ class TableType(AuthNode, DjangoObjectType):
 
     def resolve_schema(instance, info):
         return info.context.loaders.table_schemas.load(instance.schema_id)
+
+    def resolve_owners(instance, info):
+        return instance.owners.order_by('order').prefetch_related('owner')
 
 
 class SchemaType(AuthNode, DjangoObjectType):

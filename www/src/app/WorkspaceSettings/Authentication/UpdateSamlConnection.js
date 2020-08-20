@@ -4,7 +4,7 @@ import { Form } from "antd"
 import { withRouter } from "react-router-dom"
 import { withUserContext } from "context/UserContext"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
-import withLoader from "hoc/withLoader"
+import { withLargeLoader } from "hoc/withLoader"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 import withGetSSOProviders from "graphql/withGetSSOProviders"
 import UpdateSSOConnectionMutation from "graphql/mutations/UpdateSSOConnection"
@@ -58,15 +58,6 @@ class UpdateSamlConnection extends Component {
     )
   }
 }
-
-const withLargeLoader = withLoader({
-  size: "large",
-  wrapperstyles: {
-    textAlign: "center",
-    marginTop: "40px",
-    marginBottom: "40px",
-  },
-})
 
 const withForm = Form.create()
 
