@@ -50,6 +50,10 @@ Metamapper currently supports automatic crawling and indexing of six SQL-based r
 - PostgreSQL
 - Snowflake
 
+## Community Feedback
+
+Metamapper is an open source project. Feedback from the community greatly influences our roadmap and the direction of the project. If you want to provide some input, the best place to do it is through [this Typeform survey](https://metamapper.typeform.com/to/rQT0lccB).
+
 ## Resources
 
 - [User Documentation](https://www.metamapper.io)
