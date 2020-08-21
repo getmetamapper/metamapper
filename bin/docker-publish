@@ -3,8 +3,7 @@ set -e
 
 docker login -u $DOCKER_USER -p $DOCKER_PASS
 
-CIRCLE_SHA1=e1242e33e19695bf1e680d531bbbbbe1ab2b5393
-if [[ $CIRCLE_BRANCH != master ]]
+if [[ $CIRCLE_BRANCH == master ]]
 then
     VERSION_TAG="${CIRCLE_SHA1:0:6}"
 
