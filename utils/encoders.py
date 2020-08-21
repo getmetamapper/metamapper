@@ -13,6 +13,8 @@ class DjangoPartialModelJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Model):
             return {'pk': str(obj.pk), 'type': obj.__class__.__name__}
+        if isinstance(obj, (bytes,)):
+            return obj.decode()
         return json.JSONEncoder.default(self, obj)
 
 

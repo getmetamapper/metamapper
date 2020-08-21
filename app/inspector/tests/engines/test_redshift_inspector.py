@@ -162,7 +162,7 @@ class RedshiftInspectorIntegrationTestMixin(object):
 
         # Each schema should have a unique identity.
         self.assertEqual(len(schemas), self.schema_count)
-        self.assertEqual(table_types, {'table', 'view'})
+        self.assertEqual(table_types, {'base table', 'view'})
 
     def test_indexes(self):
         """It should return the correct index response.

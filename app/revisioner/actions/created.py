@@ -195,14 +195,13 @@ class IndexCreateAction(GenericCreateAction):
         for instance in instances:
             for c in column_cache.get(instance.name, []):
                 column = collector.find_by(name__iexact=c['column_name'].lower(), table_id=instance.table_id)
-                # column = collector.find_by(lambda t: (
-                #     t.name.lower() == c['column_name'].lower() and t.table_id == instance.table_id
-                # ))
-                instance.index_columns.create(
-                    column=column,
-                    ordinal_position=c['ordinal_position'],
-                    workspace_id=self.workspace_id,
-                )
+
+                if column:
+                    instance.index_columns.create(
+                        column=column,
+                        ordinal_position=c['ordinal_position'],
+                        workspace_id=self.workspace_id,
+                    )
         return instances
 
 
