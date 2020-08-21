@@ -3,14 +3,15 @@ set -e
 
 docker login -u $DOCKER_USER -p $DOCKER_PASS
 
-if [[ $CIRCLE_BRANCH = master ]]
+CIRCLE_SHA1=e1242e33e19695bf1e680d531bbbbbe1ab2b5393
+if [[ $CIRCLE_BRANCH != master ]]
 then
     VERSION_TAG="${CIRCLE_SHA1:0:6}"
 
-    docker build --build-arg env=production -t metamapper/preview:$VERSION_TAG .
+    docker build --build-arg env=production -t getmetamapper/preview:$VERSION_TAG .
 
-    docker push metamapper/preview:$VERSION_TAG
-    echo "Pushed: metamapper/preview:$VERSION_TAG"
+    docker push getmetamapper/preview:$VERSION_TAG
+    echo "Pushed: getmetamapper/preview:$VERSION_TAG"
 else
     VERSION=$(python -c "from metamapper import __version__; print(__version__)")
     VERSION_TAG="v$VERSION"
@@ -26,13 +27,13 @@ else
         exit 1
     fi
 
-    docker build --build-arg env=production -t metamapper/metamapper:$VERSION .
+    docker build --build-arg env=production -t getmetamapper/metamapper:$VERSION .
 
-    docker push metamapper/metamapper:$VERSION
-    echo "Pushed: metamapper/metamapper:$VERSION"
+    docker push getmetamapper/metamapper:$VERSION
+    echo "Pushed: getmetamapper/metamapper:$VERSION"
 
-    docker tag metamapper/metamapper:$VERSION metamapper/metamapper:latest
+    docker tag getmetamapper/metamapper:$VERSION getmetamapper/metamapper:latest
 
-    docker push metamapper/metamapper:latest
-    echo "Pushed: metamapper/metamapper:latest"
+    docker push getmetamapper/metamapper:latest
+    echo "Pushed: getmetamapper/metamapper:latest"
 fi

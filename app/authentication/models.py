@@ -62,6 +62,8 @@ class User(AbstractBaseUser, TimestampedModel):
     lname = models.CharField(max_length=100, null=False)
     email = models.EmailField(db_index=True, unique=True, null=False)
 
+    sub = models.CharField(max_length=128, null=True, unique=True, default=None)
+
     sso_access_token = EncryptedCharField(
         max_length=40,
         null=True,
