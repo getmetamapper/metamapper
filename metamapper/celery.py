@@ -38,7 +38,7 @@ app.conf.beat_schedule = {
     },
     'queue-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.queue_runs',
-        'schedule': crontab(minute='5,10,20'),
+        'schedule': crontab(minute='15,45'),
     },
     'zombie-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.detect_run_timeout',

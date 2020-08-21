@@ -72,7 +72,7 @@ class DatastoreAssetsTable extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.dataSource.length !== this.state.dataSource.length || nextState.loading !== this.state.loading
+    return nextState.dataSource.length !== this.state.dataSource.length || nextState.loading !== this.state.loading || nextState.nonce !== this.state.nonce
   }
 
   fetchNextPage = () => {
@@ -112,7 +112,7 @@ class DatastoreAssetsTable extends Component {
       ...item,
       ...row,
     })
-    this.setState({ dataSource: newData })
+    this.setState({ dataSource: newData, nonce: Math.random() })
   }
 
   render() {

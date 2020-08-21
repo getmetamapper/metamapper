@@ -826,6 +826,10 @@ class TestGetDatastoreAssets(cases.GraphQLTestCase):
                 factories.TableFactory(name='site%s' % str(j).zfill(3), schema=self.schema)
             )
 
+        self.other_datastore = self.factory(workspace=self.workspace)
+        self.other_schema = factories.SchemaFactory(datastore=self.other_datastore)
+        self.other_table = factories.TableFactory(schema=self.other_schema, name='yyz')
+
     @decorators.as_someone(['OWNER', 'MEMBER', 'READONLY'])
     def test_valid(self):
         """Outside users should not be able to access this resource.
@@ -846,6 +850,8 @@ class TestGetDatastoreAssets(cases.GraphQLTestCase):
 
         for asset in self.assets:
             self.assertIn(asset.name, names)
+
+        self.assertNotIn(self.other_table.name, names)
 
     def test_pagination(self):
         """It should implement cursor pagination.
