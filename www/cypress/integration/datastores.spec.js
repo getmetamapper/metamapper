@@ -393,7 +393,7 @@ describe("datastores.spec.js", () => {
           cy.get("td").eq(3).click()
         })
 
-        cy.getByTestId("EditableCell.Input").type("This is a description")
+        cy.getByTestId("EditableCell.Input").clear().type("This is a description")
 
         cy.contains("public").first().click()
         cy.contains(".ant-message-success", "Description was saved.").should(
@@ -415,8 +415,10 @@ describe("datastores.spec.js", () => {
         cy.getByTestId("DatastoreAssetsTable").contains("td", "audit_activity").parent("tr").within(() => {
           cy.get("td").eq(1).contains("audit_activity")
           cy.get("td").eq(2).contains("Base table")
-          cy.get("td").eq(3).contains("This is a description")
+          cy.get("td").eq(3).click()
         })
+
+        cy.getByTestId("EditableCell.Input").should("not.exist")
 
         cy.getByTestId("DatastoreAssetsTable").contains("td", "auth_workspaces").parent("tr").within(() => {
           cy.get("td").eq(1).contains("auth_workspaces")
