@@ -101,6 +101,10 @@ class User(AbstractBaseUser, TimestampedModel):
         return '{0} {1}'.format(self.fname, self.lname)
 
     @property
+    def display_name(self):
+        return self.name if (self.fname and self.lname) else self.email
+
+    @property
     def is_superuser(self):
         return False
 

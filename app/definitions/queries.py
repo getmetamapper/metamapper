@@ -152,7 +152,7 @@ class Query(graphene.ObjectType):
         )
 
         return [
-            {'name': user.name, 'privileges': privileges, 'pk': user.pk}
+            {'name': user.display_name, 'privileges': privileges, 'pk': user.pk}
             for user, privileges in users.items()
         ]
 
@@ -196,6 +196,7 @@ class Query(graphene.ObjectType):
 
         queryset = models.Table.search_objects.execute(
             search=search,
+            schema__datastore_id=datastore.id,
         )
 
         return queryset.order_by('schema__name', 'name')

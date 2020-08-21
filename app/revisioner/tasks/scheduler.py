@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import random
+
 from datetime import timedelta
 from django.db.models import F, Max
 from django.utils import timezone
@@ -75,7 +77,9 @@ def queue_runs(self, datastore_slug=None, *args, **kwargs):
         self.log.info(
             f'(run: {run.id}) Kicking off the run'
         )
-        coretasks.start_revisioner_run.apply_async(args=[run.id])
+        # Revisioner run starts within 15 minutes of this task call. We introduce randomness
+        # so that we don't have a thundering herd...
+        coretasks.start_revisioner_run.apply_async(args=[run.id], countdown=random.randint(0, (60 * 15)))
 
 
 @app.task(bind=True)

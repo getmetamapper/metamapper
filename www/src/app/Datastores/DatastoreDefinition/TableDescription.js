@@ -53,10 +53,12 @@ class TableDescription extends Component {
   }
 
   handleSubmitSuccess = ({ data }) => {
-    const { errors } = data.updateTableMetadata
+    const { table, errors } = data.updateTableMetadata
 
     if (errors && errors.length > 0) {
       this.resetContent()
+    } else {
+      this.setState({ shortDesc: table.shortDesc })
     }
   }
 

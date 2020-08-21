@@ -33,12 +33,6 @@ export default (
         match: { params },
       } = this.props
 
-      const authToken = localStorage.getItem(AUTH_TOKEN)
-      if (isProtected && !authToken) {
-        this.props.history.push("/login")
-        return null;
-      }
-
       let { currentWorkspace } = this.props
       if (config) {
         currentWorkspace = config.getCurrentWorkspace()
@@ -64,6 +58,8 @@ export default (
           config.setCurrentWorkspace(workspace)
         }
       }
+
+      const authToken = localStorage.getItem(AUTH_TOKEN)
 
       if (shouldRefreshUser || (authToken && !currentUser) || (!authToken && currentUser)) {
         this.props.refreshUser()
