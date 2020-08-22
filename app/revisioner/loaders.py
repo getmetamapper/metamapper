@@ -8,7 +8,7 @@ from promise.dataloader import DataLoader
 from app.revisioner.models import Revision
 from app.revisioner.collectors import DefinitionCollector
 
-from app.revisioner.revisioners import get_content_types
+from utils.contenttypes import get_content_types
 
 
 class RelatedRevisionResourceLoader(DataLoader):

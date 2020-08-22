@@ -7,8 +7,8 @@ from app.revisioner.actions import modified
 from app.revisioner.actions import dropped
 
 from app.definitions.models import Column
-from app.revisioner.revisioners import get_content_type_for_model
 
+from utils.contenttypes import get_content_type_for_model
 from utils.shortcuts import run_raw_sql
 
 

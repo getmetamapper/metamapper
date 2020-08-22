@@ -149,12 +149,8 @@ def revise_schema_definition(self, run_task_id, *args, **kwargs):
     self.log.with_fields(run=self._run_task.run_id, task=self._run_task.id)
     self.log.info(f'Processing {self._run_task.storage_path}')
 
-    datastore = self._run_task.run.datastore
-
     schema_definition = blob.get_object(self._run_task.storage_path)
-    schema_definition = definition.hydrate(datastore, schema_definition)
-
-    revisions = revisioners.extract_revisions(datastore, schema_definition)
+    revisions = revisioners.extract_revisions(self._run_task.run.datastore, schema_definition)
 
     self.log.info(f'Resulted in {len(revisions)} revisions')
 

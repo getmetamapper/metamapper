@@ -8,44 +8,16 @@ from django.db.models import F
 from django.utils.functional import cached_property
 
 from utils.shortcuts import dict_list_eq
+from utils.contenttypes import get_content_type_for_model
+
 from app.revisioner.models import Revision
+from app.revisioner.collectors import DefinitionCollector
 from app.revisioner.decorators import (
     track_revised_properties, on_modify_property
 )
 from app.definitions.models import (
     Datastore, Schema, Table, Column, Index, IndexColumn
 )
-
-
-KLASS_MAP = {
-    'Datastore': Datastore,
-    'Schema': Schema,
-    'Table': Table,
-    'Column': Column,
-    'Index': Index,
-    'IndexColumn': IndexColumn,
-}
-
-
-def get_content_type_for_model(model):
-    """If we reset the database, `django_content_types` does not
-    exist. So we have to prevent Django from loading the ContentType
-    model and throwing an error.
-    """
-    if settings.DB_RESET:
-        return collections.namedtuple(
-            'ContentType', ['id'],
-        )(id=None)
-    return ContentType.objects.get_for_model(model)
-
-
-def get_content_types():
-    """Get content types for the provided models.
-    """
-    return {
-        k: get_content_type_for_model(m)
-        for k, m in KLASS_MAP.items()
-    }
 
 
 class RevisionMixin(object):
@@ -415,8 +387,13 @@ def extract_revisions(datastore, definition):
     """
     complete_revisions = []
 
+    collector = DefinitionCollector(datastore)
+
     schema_metadata = definition['schema']
     schema_instance = schema_metadata.pop('instance')
+
+    if schema_instance:
+        schema_instance = collector.schemas.find_by_pk(schema_instance['pk'])
 
     schema_revisioner = SchemaRevisioner(
         instance=schema_instance,
@@ -432,6 +409,10 @@ def extract_revisions(datastore, definition):
     for t in definition['tables']:
         table_metadata = t.copy()
         table_instance = table_metadata.pop('instance')
+
+        if table_instance:
+            table_instance = collector.tables.find_by_pk(table_instance['pk'])
+
         table_revisioner = TableRevisioner(
             instance=table_instance,
             parent_resource=schema_instance,
@@ -450,6 +431,10 @@ def extract_revisions(datastore, definition):
         for c in columns:
             column_metadata = c.copy()
             column_instance = column_metadata.pop('instance')
+
+            if column_instance:
+                column_instance = collector.columns.find_by_pk(column_instance['pk'])
+
             column_revisioner = ColumnRevisioner(
                 instance=column_instance,
                 parent_resource=table_instance,
@@ -463,6 +448,10 @@ def extract_revisions(datastore, definition):
         for i in indexes:
             index_metadata = i.copy()
             index_instance = index_metadata.pop('instance')
+
+            if index_instance:
+                index_instance = collector.indexes.find_by_pk(index_instance['pk'])
+
             index_revisioner = IndexRevisioner(
                 instance=index_instance,
                 parent_resource=table_instance,

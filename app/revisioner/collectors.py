@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from app.definitions.models import Schema, Table, Column, Index
-from app.revisioner.revisioners import get_content_types
+from utils.contenttypes import get_content_types
 
 
 class ObjectCollector(object):

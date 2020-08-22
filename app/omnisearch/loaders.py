@@ -4,7 +4,8 @@ from promise.dataloader import DataLoader
 
 from app.comments.models import Comment
 from app.definitions.models import Column, Table
-from app.revisioner.revisioners import get_content_types
+
+from utils.contenttypes import get_content_types
 
 
 class OmnisearchResultLoader(DataLoader):
