@@ -18,6 +18,9 @@ from metamapper.celery import app as celery_app
 
 from django.test import TestCase
 
+from utils.contenttypes import get_content_types
+
+
 cmd_folder = os.path.join(os.path.dirname(__file__), 'e2e')
 
 
@@ -58,7 +61,7 @@ class End2EndRevisionerTests(TestCase):
         finally:
             clean_uploads_folder(datastore.id, run.id)
 
-        content_types = revisioners.get_content_types()
+        content_types = get_content_types()
 
         for case in cases:
             resource = None

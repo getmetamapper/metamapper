@@ -4,7 +4,7 @@ from django.db.models import IntegerField
 from django.db.models.functions import Cast
 
 from app.definitions.models import Schema, Table, Column, Index
-from app.revisioner.revisioners import get_content_type_for_model
+from utils.contenttypes import get_content_type_for_model
 
 
 class GenericDropAction(object):

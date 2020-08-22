@@ -78,9 +78,6 @@ def make(collector, *args, **kwargs):  # noqa: C901
 
         if not schema['instance']:
             schema['instance'] = collector.schemas.search_unassigned(name=schema['name'])
-            # schema['instance'] = collector.schemas.search_unassigned(lambda t: (
-            #     t.name == schema['name']
-            # ))
 
             if schema['instance']:
                 collector.schemas.mark_as_processed(schema['instance'].pk)
@@ -88,9 +85,6 @@ def make(collector, *args, **kwargs):  # noqa: C901
         for table in definition[schema_name]['tables']:
             if not table['instance'] and schema['instance']:
                 table['instance'] = collector.tables.search_unassigned(name=table['name'], schema_id=schema['instance'].pk)
-                # table['instance'] = collector.tables.search_unassigned(lambda t: (
-                #     t.name == table['name'] and t.schema_id == schema['instance'].pk
-                # ))
 
             if not table['instance']:
                 continue
@@ -102,9 +96,6 @@ def make(collector, *args, **kwargs):  # noqa: C901
                     continue
 
                 column['instance'] = collector.columns.search_unassigned(name=column['name'], table_id=table['instance'].pk)
-                # column['instance'] = collector.columns.search_unassigned(lambda t: (
-                #     t.name == column['name'] and t.table_id == table['instance'].pk
-                # ))
 
                 if column['instance']:
                     collector.columns.mark_as_processed(column['instance'].pk)
@@ -114,9 +105,6 @@ def make(collector, *args, **kwargs):  # noqa: C901
                     continue
 
                 index['instance'] = collector.indexes.search_unassigned(name=index['name'], table_id=table['instance'].pk)
-                # index['instance'] = collector.indexes.search_unassigned(lambda t: (
-                #     t.name == index['name'] and t.table_id == table['instance'].pk
-                # ))
 
                 if index['instance']:
                     collector.indexes.mark_as_processed(index['instance'].pk)
@@ -128,33 +116,3 @@ def make(collector, *args, **kwargs):  # noqa: C901
 
     for schema_name in definition.keys():
         yield (schema_name, definition[schema_name])
-
-
-def hydrate(datastore, definition, *args, **kwargs):
-    """Populate a definition pulled from blob storage with data.
-    """
-    collector = DefinitionCollector(datastore)
-
-    schema_instance = definition['schema'].get('instance')
-    if schema_instance:
-        schemas = collector.mapper[schema_instance['type']]
-        definition['schema']['instance'] = schemas.find_by_pk(schema_instance['pk'])
-
-    for table in definition['tables']:
-        table_instance = table.get('instance')
-        if table_instance:
-            tables = collector.mapper[table_instance['type']]
-            table['instance'] = tables.find_by_pk(table_instance['pk'])
-
-        for column in table['columns']:
-            column_instance = column.get('instance')
-            if column_instance:
-                columns = collector.mapper[column_instance['type']]
-                column['instance'] = columns.find_by_pk(column_instance['pk'])
-
-        for index in table['indexes']:
-            index_instance = index.get('instance')
-            if index_instance:
-                indexes = collector.mapper[index_instance['type']]
-                index['instance'] = indexes.find_by_pk(index_instance['pk'])
-    return definition

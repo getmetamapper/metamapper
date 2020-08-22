@@ -5,8 +5,8 @@ from app.definitions.models import Schema, Table, Index, Column
 
 from app.revisioner.models import Revision
 from app.revisioner.collectors import ObjectCollector
-from app.revisioner.revisioners import get_content_type_for_model
 
+from utils.contenttypes import get_content_type_for_model
 from utils.postgres.paginators import RawQuerySetPaginator
 from utils.postgres.types import ConflictAction
 

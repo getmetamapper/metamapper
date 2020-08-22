@@ -16,8 +16,8 @@ import app.omnisearch.stopwords as stopwords
 
 from app.definitions.models import Table, Column
 from app.comments.models import Comment
-from app.revisioner.revisioners import get_content_types
 
+from utils.contenttypes import get_content_types
 from utils.postgres.sql import PostgresOrSearchQuery
 
 
