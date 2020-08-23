@@ -22,6 +22,16 @@ test_cases = [
                     "employees",
                 },
             },
+            {
+                "description": "Expect first time created columns to be dropped from the revision logs.",
+                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='column').count(),
+                "pass_value": 0,
+            },
+            {
+                "description": "Expect first time created indexes to be dropped from the revision logs.",
+                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='index').count(),
+                "pass_value": 0,
+            },
         ]
     },
     {

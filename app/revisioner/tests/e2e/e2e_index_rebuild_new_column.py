@@ -80,6 +80,15 @@ inspected_indexes += [
 
 test_cases = [
     {
+        "description": "Expect revision logs to be created.",
+        "assertions": [
+            {
+                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='index').count(),
+                "pass_value": 0,
+            },
+        ]
+    },
+    {
         "model": "Index",
         "description": "The `app`.`orderdetails_pkey` index should be created.",
         "filters": {

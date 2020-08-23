@@ -293,6 +293,15 @@ index_fields = [
 
 test_cases = [
     {
+        "description": "Expect first time created columns to be dropped from the revision logs.",
+        "assertions": [
+            {
+                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='column').count(),
+                "pass_value": 0,
+            },
+        ]
+    },
+    {
         "model": "Schema",
         "description": "The `public` schema should be created.",
         "filters": {
