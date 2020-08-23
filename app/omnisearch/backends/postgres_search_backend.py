@@ -11,10 +11,12 @@ from django.db.models import CharField, DateTimeField
 from django.db.models.functions import Cast
 
 from django.utils.functional import cached_property
+from guardian.shortcuts import get_objects_for_user
 
 import app.omnisearch.stopwords as stopwords
+import app.definitions.permissions as permissions
 
-from app.definitions.models import Table, Column
+from app.definitions.models import Datastore, Table, Column
 from app.comments.models import Comment
 
 from utils.contenttypes import get_content_types
@@ -37,9 +39,14 @@ class PostgresSearchBackend(base.BaseSearchBackend):
             CommentModelSearchAdapter,
             TableModelSearchAdapter,
         ]
+
+        datastores = Datastore.objects.filter(workspace=self.workspace)
+        datastores = permissions.get_datastores_for_user(datastores, self.user)
+
         qs = None
+
         for adapter_class in adapter_classes:
-            adapter = adapter_class(search_query_string)
+            adapter = adapter_class(search_query_string, datastores)
             if not qs:
                 qs = adapter.to_queryset(**extra_filters)
             else:
@@ -60,8 +67,9 @@ class ModelSearchAdapter(object):
     """
     model_class = None
 
-    def __init__(self, query_string):
+    def __init__(self, query_string, datastores):
         self.query_string = query_string
+        self.datastores = datastores
 
     @property
     def base_queryset(self):
@@ -91,6 +99,8 @@ class ModelSearchAdapter(object):
     def to_queryset(self, **extra_filters):
         return self.filter_queryset(
             self.annotate_queryset(self.base_queryset)
+        ).filter(
+            datastore_id__in=self.datastores.values_list('id', flat=True),
         ).filter(
             **extra_filters
         ).distinct().values('pk', 'model_name', 'score', 'datastore_id')

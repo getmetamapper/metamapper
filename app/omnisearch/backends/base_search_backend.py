@@ -6,6 +6,10 @@ class BaseSearchBackend(metaclass=abc.ABCMeta):
     """Base interface for a search backend. It only implements one method, `search`, which
     needs to return a queryset of dictionaries.
     """
+    def __init__(self, workspace, user):
+        self.workspace = workspace
+        self.user = user
+
     @abc.abstractmethod
     def search(self, search_query_string, **extra_filters):
         """Search the backend with a given query string. This needs to return the following signature:

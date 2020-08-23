@@ -30,6 +30,6 @@ class Query(graphene.ObjectType):
             filter_kwargs['datastore_id'] = datastore_id
 
         start_t = time.time()
-        results = get_search_backend().search(**filter_kwargs)
+        results = get_search_backend(info.context.workspace, info.context.user).search(**filter_kwargs)
 
         return dict(search_results=results, time_elapsed=round(time.time() - start_t, 3))
