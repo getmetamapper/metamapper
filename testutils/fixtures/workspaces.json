@@ -59,7 +59,8 @@
       "custom_properties": {
         "iPOhV1HazLW6": "Business Intelligence",
         "ow5W0kw0CK0i": "Analytics"
-      }
+      },
+      "object_permissions_enabled": false
     },
     "model": "definitions.datastore",
     "pk": "s4N8p5g0wjiS"
