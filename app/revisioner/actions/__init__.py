@@ -6,7 +6,7 @@ from app.revisioner.actions import created
 from app.revisioner.actions import modified
 from app.revisioner.actions import dropped
 
-from app.definitions.models import Column
+from app.definitions.models import Table, Column, Index
 
 from utils.contenttypes import get_content_type_for_model
 from utils.shortcuts import run_raw_sql
@@ -42,16 +42,28 @@ def commit_revisions(datastore, run, logger):
 
     # We remove all of the "Column was created" revisions because they aren't super
     # useful from a debugging or UI perspective.
-    if run.is_datastore_first_run:
-        run_raw_sql(
-            '''
-            DELETE FROM revisioner_revision
-            WHERE applied_on IS NOT NULL
-              AND action = 1
-              AND resource_type_id = %(type)s
-              AND run_id = %(run)s
-            ''',
-            {'type': get_content_type_for_model(Column).id, 'run': run.id},
-        )
+    run_raw_sql(
+        '''
+        DELETE FROM revisioner_revision
+         WHERE applied_on IS NOT NULL
+           AND action = 1
+           AND resource_type_id IN (%(column)s, %(index)s)
+           AND run_id = %(run)s
+           AND parent_resource_revision_id IN (
+                SELECT revision_id
+                  FROM revisioner_revision
+                 WHERE action = 1
+                   AND run_id = %(run)s
+                   AND resource_type_id = %(table)s
+            )
+        ''',
+        {
+            'column': get_content_type_for_model(Column).id,
+            'index': get_content_type_for_model(Index).id,
+            'table': get_content_type_for_model(Table).id,
+            'run': run.id,
+        },
+    )
 
     logger.info('Run has been committed.')
+

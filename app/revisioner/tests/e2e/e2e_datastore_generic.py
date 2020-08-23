@@ -31,7 +31,6 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     # (2) We dropped the `app`.`productlines` table at some point.
     {
         "type": "dropped",
-        "description": "",
         "filters": (
             lambda row: row['table_object_id'] == 16456
         ),
@@ -168,6 +167,23 @@ inspected_tables += [
 inspected_indexes = mutate_inspected(inspected.indexes, [])
 
 test_cases = [
+    {
+        "description": "Expect revision logs to be created.",
+        "assertions": [
+            {
+                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='column').count(),
+                "pass_value": 0,
+            },
+            {
+                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='indexes').count(),
+                "pass_value": 0,
+            },
+            {
+                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=2, resource_type__model='column').count(),
+                "pass_value": 6,
+            },
+        ]
+    },
     {
         "model": "Table",
         "description": "Expect `employees.departments` table to be renamed.",

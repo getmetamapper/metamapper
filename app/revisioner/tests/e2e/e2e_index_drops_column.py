@@ -46,6 +46,15 @@ inspected_indexes = mutate_inspected(inspected.indexes, [
 
 test_cases = [
     {
+        "description": "Expect revision logs to be created.",
+        "assertions": [
+            {
+                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=2, resource_type__model='index').count() > 0,
+                "pass_value": True,
+            },
+        ]
+    },
+    {
         "model": "Column",
         "description": "The `app`.`orderdetails`.`ordernumber` column was dropped.",
         "filters": {
