@@ -112,7 +112,7 @@ class PostgresqlInspector(interface.EngineInterface):
         return {'cursor_factory': self.dictcursor}
 
     def get_db_version(self):
-        result = self.get_first("SHOW server_version;")
+        result = self.get_first('SHOW server_version;')
         if len(result):
             return result['server_version']
         return None

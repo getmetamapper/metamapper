@@ -13,6 +13,10 @@ from app.inspector.engines import redshift_inspector
 from app.inspector.engines import sqlserver_inspector
 from app.inspector.engines import mysql_inspector
 from app.inspector.engines import oracle_inspector
+from app.inspector.engines import bigquery_inspector
+from app.inspector.engines import aws_athena_inspector
+from app.inspector.engines import aws_glue_inspector
+from app.inspector.engines import hive_metastore_inspector
 
 
 engines = {
@@ -22,6 +26,10 @@ engines = {
     Datastore.SNOWFLAKE: snowflake_inspector.SnowflakeInspector,
     Datastore.SQLSERVER: sqlserver_inspector.SQLServerInspector,
     Datastore.ORACLE: oracle_inspector.OracleInspector,
+    Datastore.BIGQUERY: bigquery_inspector.BigQueryInspector,
+    Datastore.ATHENA: aws_athena_inspector.AwsAthenaInspector,
+    Datastore.GLUE: aws_glue_inspector.AwsGlueInspector,
+    Datastore.HIVE: hive_metastore_inspector.HiveMetastoreInspector,
 }
 
 
@@ -58,6 +66,7 @@ def construct_conn_dict(datastore, override_host=None, override_port=None):
         'password': datastore.password,
         'port': port,
         'database': datastore.database,
+        'extras': datastore.extras,
     }
 
 

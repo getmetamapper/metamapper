@@ -1,9 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, Fragment } from "react"
 import { Card, Col, Form, Input, Row, Switch } from "antd"
 import FormLabel from "app/Common/FormLabel"
 import CopyInput from "app/Common/CopyInput"
 
-const SnowflakeConnectionSettingsFieldset = ({
+const BigQueryConnectionFieldset = ({
   publicKey,
   datastore: { jdbcConnection, sshConfig },
   form: { getFieldDecorator, getFieldValue },
@@ -12,57 +12,9 @@ const SnowflakeConnectionSettingsFieldset = ({
 }) => {
   const [sshEnabled, setSshEnabled] = useState(sshConfig.isEnabled)
   return (
-    <>
+    <Fragment>
       <Form.Item>
-        <FormLabel label="Account" required />
-        {getFieldDecorator("host", {
-          initialValue: jdbcConnection.host,
-          rules: [],
-        })(
-          <Input
-            type="text"
-            onChange={onChange}
-            disabled={!hasPermission}
-            addonAfter=".snowflakecomputing.com"
-            data-test="ConnectionSettingsFieldset.Host"
-          />
-        )}
-      </Form.Item>
-      <Form.Item className="hidden">
-        {getFieldDecorator("port", {
-          initialValue: jdbcConnection.port || "443",
-          rules: [],
-        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
-      </Form.Item>
-      <Form.Item>
-        <FormLabel label="Username" required />
-        {getFieldDecorator("username", {
-          initialValue: jdbcConnection.username,
-          rules: [],
-        })(
-          <Input
-            type="text"
-            onChange={onChange}
-            disabled={!hasPermission}
-            data-test="ConnectionSettingsFieldset.Username"
-          />
-        )}
-      </Form.Item>
-      <Form.Item>
-        <FormLabel label="Password" required />
-        {getFieldDecorator("password", {
-          rules: [],
-        })(
-          <Input
-            type="password"
-            onChange={onChange}
-            disabled={!hasPermission}
-            data-test="ConnectionSettingsFieldset.Password"
-          />
-        )}
-      </Form.Item>
-      <Form.Item>
-        <FormLabel label="Database" required />
+        <FormLabel label="Project" required />
         {getFieldDecorator("database", {
           initialValue: jdbcConnection.database,
           rules: [],
@@ -72,6 +24,45 @@ const SnowflakeConnectionSettingsFieldset = ({
             onChange={onChange}
             disabled={!hasPermission}
             data-test="ConnectionSettingsFieldset.Database"
+          />
+        )}
+      </Form.Item>
+      <Form.Item className="hidden">
+        {getFieldDecorator("host", {
+          initialValue: jdbcConnection.host || "bigquery.googleapis.com",
+          rules: [],
+        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
+      </Form.Item>
+      <Form.Item className="hidden">
+        {getFieldDecorator("username", {
+          initialValue: jdbcConnection.username || "googleapis",
+          rules: [],
+        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
+      </Form.Item>
+      <Form.Item className="hidden">
+        {getFieldDecorator("password", {
+          initialValue: jdbcConnection.password || "secret",
+          rules: [],
+        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
+      </Form.Item>
+      <Form.Item className="hidden">
+        {getFieldDecorator("port", {
+          initialValue: jdbcConnection.port || "443",
+          rules: [],
+        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
+      </Form.Item>
+      <Form.Item>
+        <FormLabel label="Service Account Information" required />
+        {getFieldDecorator("extras.credentials", {
+          initialValue: (
+            jdbcConnection.extras.credentials ? JSON.stringify(jdbcConnection.extras.credentials, null, 2) : null
+          ),
+          rules: [],
+        })(
+          <Input.TextArea
+            onChange={onChange}
+            disabled={!hasPermission}
+            data-test="ConnectionSettingsFieldset.GoogleCredentials"
           />
         )}
       </Form.Item>
@@ -158,17 +149,21 @@ const SnowflakeConnectionSettingsFieldset = ({
           </div>
         )}
       </Form.Item>
-    </>
+    </Fragment>
   )
 }
 
-SnowflakeConnectionSettingsFieldset.defaultProps = {
+BigQueryConnectionFieldset.defaultProps = {
   datastore: {
-    jdbcConnection: {},
+    jdbcConnection: {
+      extras: {
+        credentials: null,
+      },
+    },
     sshConfig: {
       isEnabled: false,
     },
   },
 }
 
-export default SnowflakeConnectionSettingsFieldset
+export default BigQueryConnectionFieldset

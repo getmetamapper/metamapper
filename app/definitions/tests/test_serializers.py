@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import collections
 import random
 import unittest.mock as mock
@@ -13,6 +14,51 @@ import testutils.factories as factories
 import testutils.helpers as helpers
 
 from guardian.core import ObjectPermissionChecker
+
+
+GOOGLE_PRIVATE_KEY = """
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJBZeuYY/snVso
+Kkhg3nGz9N5PyDP2qGoa6wECcy3KUYYICZ230pCpN09sWnMtQn//GDFGyxL442SH
+kDtZuhrB++b+F1rhrNLWynw8cQGG8FQxlZdIHk+i1h3ajsqGB07f0VqqqErt01X5
+nLeczu1iBWG5gC82F+hXQaFqQuyfyy+lVZby6pX+/Vkx9ArYo1tJ/GqpF5VV9zmB
+A9i7hR+bf3/tzjWbTHxyVW8kK3pvfRvIg+53/vUr1St+RkoboNczLOv7xkqJuPzw
+88UYNrTqw9XhUyj6JV8k51OgHuhOIzKh4XsLJKC80qG5GUKLHXt/VXt63YI4TGoU
+SAWrXr8rAgMBAAECggEAINkGGRueHgb0f1KxcwrGP6aysQzA2PxaIj3mc1UI1XeO
+1D9mA0SoGM6N7uG00l98dN2qJ6xFVGAr7C74U8giWTJlY33Dfv7zkN+Tf3jjy/33
+dAbCqqkxUCV2yWDt3QrSq6YVD6/iVoxjDx+5rSjvB0Zj2qEEle1ALQnva2K2McIC
+sa1arcUdD7konF1s8Hz8tfTfL+3QQiY6PAfRFO6djRtMBvEbsKMZvw+L8OX2lCyl
+6n1wkV64uelY9j6qa/0ufaGC9YH/b2Cz4PvLkqkYlhZ3wLZ5SS8dIltgQZOBGdkg
+w0syv3/t3CviTqyer0A5gpbNh3YxX/+/K2ek/JrCAQKBgQDu06BTABCSxlQy+3wV
+A2Jh19JT2iEvoeEhkPDed6M7FBzqiVsg23BmRmHth9vdud9Ks7iMPWBcUtuMWpTq
+uL6RTVM+yCcBVTmgimLIyAISnz61O07t8mVe/a/n4pXn6MxPITAThdDswkTcQrvX
+fD5nu+fKNA2B9OkO+on/34hcKwKBgQDXegv8Fjx1OpFhLJhL8PxKS2BZrQRmtVd3
+AJdiqjQdYcMV2lKOEvV9FFNwAXrSOs93K7YC2iGqpElTCQYNcp94fE8h27M/g7c+
+t83DViRZQqyAymUL36bMB1zXdUB1C2EChX+0Ygz7qvSyA58+jMIJxodXASjcO86p
+dTtMz/qpAQKBgQCtgzdR1hQ0br8xoyCNK75Ik8KNhUbjEls8Rc+Z8ZW4EG7Jvy1j
++8n3pF71ceU9fBNMdLI5wUXHDbPQjubueXaKnoFCdaxQ/Zg2mRQYB6fp26R1izdX
+DOq1Tt6EPEzpBmuZeeUx6eDWgnYBCMLsVaoJN625bIP7zPGeHkwwiDjLrQKBgGId
+zutA7NKskppfBhI+b4MdA4iSAhkKpgMoH8brncNrSrveqAzNkT8dTEkKQ3ULFoE7
+RCvUS9Q57rGCwGDLOtZQNHBEbECVp5FFfMpfpTmH5KjYgF6Bvp/VEm+BkpI5Vjkh
+tN7cbvECDV4pzA9dZNWystnpS0PNb/M10ITPh2IBAoGAS8l+aUYNWrLZCWr57jpp
+1hUbqf3bN6Bkb/w8rpzaw8xkFf2/QKcxbYS0xeU3wiB13Gc7yI5TorB270AVztq0
+38OOH58OBastUF3j1iz56EZTXDvb5jt6akbsldFvhoK3/kGtDqNMEZ2Ot7Nb425R
+cGP0wsmwCkfybKi2a+C5h0g=
+-----END PRIVATE KEY-----
+"""
+
+GOOGLE_SERVICE_ACCOUNT_INFO = {
+    'type': 'service_account',
+    'project_id': 'metamapper',
+    'private_key_id': '4111c3e576f24cc5ab4fcfa5c96c2d32',
+    'private_key': GOOGLE_PRIVATE_KEY,
+    'client_email': 'metamapper@metamapper.iam.gserviceaccount.com',
+    'client_id': '7c74ff6d3a454cd4bc60108d35177d62',
+    'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+    'token_uri': 'https://oauth2.googleapis.com/token',
+    'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs',
+    'client_x509_cert_url': 'https://www.googleapis.com/robot/v1/metadata/x509/metamapper@metamapper.iam.gserviceaccount.com',
+}
 
 
 class DatastoreSerializerCreateTests(cases.SerializerTestCase):
@@ -221,6 +267,97 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertEqual(instance.ssh_user, extras['ssh_user'])
         self.assertEqual(instance.ssh_port, extras['ssh_port'])
 
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_google_bigquery_valid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        extras = {
+            'engine': models.Datastore.BIGQUERY,
+            'extras': {
+                'credentials': GOOGLE_SERVICE_ACCOUNT_INFO,
+                'invalid': 'this_will_be_stripped_off',
+            },
+        }
+
+        attributes = self._get_attributes(**extras)
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertTrue(serializer.is_valid())
+        instance = serializer.save(workspace=self.workspace, creator=self.user)
+
+        self.assertEqual(instance.host, 'bigquery.googleapis.com')
+        self.assertEqual(instance.username, 'googleapis')
+        self.assertEqual(instance.port, 443)
+        self.assertEqual(list(instance.extras.keys()), ['credentials'])
+        self.assertEqual(instance.extras['credentials'], extras['extras']['credentials'])
+
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_google_bigquery_invalid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        extras = {
+            'engine': models.Datastore.BIGQUERY,
+            'extras': {
+                'credentials': None,
+            },
+        }
+
+        attributes = self._get_attributes(**extras)
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
+        ])
+
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_aws_athena_valid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        extras = {
+            'engine': models.Datastore.ATHENA,
+            'extras': {
+                'role': 'arn:aws:iam::123456789012:role/default',
+                'region': 'us-west-2',
+                'invalid': 'this_will_be_stripped_off',
+            },
+        }
+
+        attributes = self._get_attributes(**extras)
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertTrue(serializer.is_valid())
+        instance = serializer.save(workspace=self.workspace, creator=self.user)
+        self.assertEqual(instance.host, 'api.amazonaws.com')
+        self.assertEqual(instance.username, 'amazonapis')
+        self.assertEqual(instance.port, 443)
+        self.assertEqual(list(instance.extras.keys()), ['role', 'region'])
+        self.assertEqual(instance.extras['role'], extras['extras']['role'])
+        self.assertEqual(instance.extras['region'], extras['extras']['region'])
+
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_aws_athena_invalid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        extras = {
+            'engine': models.Datastore.ATHENA,
+            'extras': {
+                'role': 'arn:aws:iam::123456789012:role/default',
+            },
+        }
+
+        attributes = self._get_attributes(**extras)
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
+        ])
+
     def test_drf_validation_rules(self):
         """It should return error messages when DRF validation fails.
         """
@@ -390,6 +527,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         """It should not clear the extra parameters.
         """
         instance = self.factory(
+            engine=models.Datastore.MYSQL,
             ssh_enabled=True,
             ssh_host='127.0.0.1',
             ssh_user='scott',
@@ -406,6 +544,142 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         self.assertTrue(serializer.is_valid())
         self.assertTrue(serializer.save())
         self.assertInstanceUpdated(instance, **attributes)
+
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_google_bigquery_valid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        extras = {
+            'extras': {
+                'credentials': GOOGLE_SERVICE_ACCOUNT_INFO,
+                'invalid': 'this_will_be_stripped_off',
+            },
+        }
+
+        instance = self.factory(
+            engine=models.Datastore.BIGQUERY,
+            database='bigquery-sample-data',
+            extras=extras['extras']['credentials'],
+        )
+
+        attributes = copy.deepcopy(extras)
+        attributes['database'] = 'metamapper'
+        attributes['extras']['credentials']['project_id'] = 'metamapper-dev'
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data=attributes,
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+
+        instance.refresh_from_db()
+
+        self.assertEqual(instance.database, attributes['database'])
+        self.assertEqual(list(instance.extras.keys()), ['credentials'])
+        self.assertEqual(instance.extras['credentials']['project_id'], attributes['extras']['credentials']['project_id'])
+
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_google_bigquery_invalid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        extras = {
+            'extras': {
+                'credentials': GOOGLE_SERVICE_ACCOUNT_INFO,
+                'invalid': 'this_will_be_stripped_off',
+            },
+        }
+
+        instance = self.factory(
+            engine=models.Datastore.BIGQUERY,
+            database='bigquery-sample-data',
+            extras=extras['extras']['credentials'],
+        )
+
+        attributes = copy.deepcopy(extras)
+        del attributes['extras']['credentials']['private_key']
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data=attributes,
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
+        ])
+
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_aws_athena_valid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        instance = self.factory(
+            engine=models.Datastore.ATHENA,
+            host='athena.amazonaws.com',
+            database='AwsDataCatalog',
+            extras={
+                'role': 'arn:aws:iam::123456789012:role/default',
+                'region': 'us-west-2',
+            },
+        )
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'extras': {
+                    'role': 'arn:aws:iam::123456789012:role/other',
+                    'region': 'us-east-1',
+                }
+            },
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+
+        instance.refresh_from_db()
+
+        self.assertEqual(instance.host, 'athena.amazonaws.com')
+        self.assertEqual(list(instance.extras.keys()), ['role', 'region'])
+        self.assertEqual(instance.extras['role'], 'arn:aws:iam::123456789012:role/other')
+        self.assertEqual(instance.extras['region'], 'us-east-1')
+
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_aws_athena_invalid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        instance = self.factory(
+            engine=models.Datastore.ATHENA,
+            host='athena.amazonaws.com',
+            database='bigquery-sample-data',
+            extras={
+                'role': 'arn:aws:iam::123456789012:role/default',
+                'region': 'us-west-2',
+            },
+        )
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'extras': {
+                    'iam_role': 'arn:aws:iam::123456789012:role/other',
+                    'region': 'us-west-2',
+                }
+            },
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
+        ])
 
     def test_drf_validation_rules(self):
         """It should return error messages when DRF validation fails.

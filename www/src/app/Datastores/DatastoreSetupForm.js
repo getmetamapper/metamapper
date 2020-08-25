@@ -58,6 +58,14 @@ class DatastoreSetupForm extends Component {
       "database",
     ])
 
+    console.log(this.props.form.getFieldsValue([
+      "host",
+      "username",
+      "password",
+      "port",
+      "database",
+    ]))
+
     if (!isValid) {
       message.error("Please fill out all the required fields.")
     }
@@ -75,11 +83,16 @@ class DatastoreSetupForm extends Component {
       "password",
       "port",
       "database",
+      "extras",
       "sshEnabled",
       "sshHost",
       "sshUser",
       "sshPort",
     ])
+
+    if (variables.engine === "bigquery") {
+      variables.extras.credentials = JSON.parse(variables.extras.credentials)
+    }
 
     if (isValid) {
       this.setState({ connectionIsTesting: true })

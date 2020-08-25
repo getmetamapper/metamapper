@@ -9,10 +9,11 @@ import app.revisioner.tasks.core as coretasks
 
 import utils.fields as fields
 
-from django.db import transaction
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.fields import ContentType
+from django.db import transaction
 from django.utils import timezone
+from google.oauth2 import service_account
 from guardian.models import UserObjectPermission, GroupObjectPermission
 
 from app.authentication.models import User
@@ -38,20 +39,16 @@ def get_audit_kwargs(instance):
     }
 
 
-class JdbcConnectionSerializer(MetamapperSerializer, serializers.Serializer):
-    """Validates connectivity to a database.
+class JdbcCredentialsSerializer(serializers.Serializer):
+    """docstring for JdbcConnectionMixin
     """
-    engine = serializers.ChoiceField(choices=models.Datastore.ENGINE_CHOICES)
+    allowed_extra_fields = []
+
     username = fields.SysnameField(max_length=128)
     password = serializers.CharField(max_length=128)
     database = fields.SysnameField(max_length=255)
     host = fields.HostnameField(max_length=512)
     port = fields.PortField()
-
-    ssh_host = serializers.IPAddressField(required=False, allow_null=True)
-    ssh_user = fields.SysnameField(required=False, max_length=128, allow_null=True)
-    ssh_port = fields.PortField(required=False, allow_null=True)
-    ssh_enabled = serializers.BooleanField(required=False, default=False, allow_null=False)
 
     class Meta:
         model = models.Datastore
@@ -61,7 +58,163 @@ class JdbcConnectionSerializer(MetamapperSerializer, serializers.Serializer):
         """
         return getattr(self.instance, attrname, None)
 
-    def validate_ssh(self, data, instance=None):
+    def sanitize_extras(self, extras):
+        """We expect some specific fields associated with this connection type:
+        """
+        output = {}
+
+        for field in self.allowed_extra_fields:
+            output[field] = extras.get(field, self.instance_attr(field))
+
+        return output
+
+
+class BigQueryConnectionSerializer(JdbcCredentialsSerializer):
+    """Validates connectivity to BigQuery through service account info.
+    """
+    allowed_extra_fields = ['credentials']
+
+    extras = serializers.JSONField(required=True)
+
+    def validate_host(self, host):
+        """Return a dummy host, since we do not need this field.
+        """
+        return 'bigquery.googleapis.com'
+
+    def validate_username(self, username):
+        """Return a dummy username, since we do not need this field.
+        """
+        return 'googleapis'
+
+    def validate_password(self, password):
+        """Return a dummy password, since we do not need this field.
+        """
+        return 'secret'
+
+    def validate_port(self, port):
+        """Return a dummy port, since we do not need this field.
+        """
+        return 443
+
+    def validate_extras(self, extras):
+        """We expect some specific fields associated with this connection type:
+        {
+            "credentials": {}
+        }
+        """
+        extras = self.sanitize_extras(extras)
+
+        try:
+            service_account.Credentials.from_service_account_info(extras['credentials'] or {})
+        except (AttributeError, ValueError, KeyError):
+            raise serializers.ValidationError('Google service account information is an invalid format.')
+
+        return extras
+
+
+class AwsConnectionSerializer(JdbcCredentialsSerializer):
+    """Validates connectivity to AWS Athena or Glue through IAM role and region.
+    """
+    allowed_extra_fields = ['role', 'region']
+
+    extras = serializers.JSONField(required=True)
+
+    def validate_host(self, host):
+        """Return a dummy host, since we do not need this field.
+        """
+        return 'api.amazonaws.com'
+
+    def validate_username(self, username):
+        """Return a dummy username, since we do not need this field.
+        """
+        return 'amazonapis'
+
+    def validate_password(self, password):
+        """Return a dummy password, since we do not need this field.
+        """
+        return 'secret'
+
+    def validate_port(self, port):
+        """Return a dummy port, since we do not need this field.
+        """
+        return 443
+
+    def validate_extras(self, extras):
+        """We expect some specific fields associated with this connection type:
+        {
+            "region": "us-west-2",
+            "role": "arn:aws:iam::123456789012:role/default"
+        }
+        """
+        extras = self.sanitize_extras(extras)
+
+        if not extras['role'] or not extras['region']:
+            raise serializers.ValidationError('Amazon account information is an invalid format.')
+
+        return extras
+
+
+class HiveMetatastoreConnectionSerializer(JdbcCredentialsSerializer):
+    """Validates connectivity to external Hive metastore hosted on Postgres, MS-SQL, or MySQL.
+    """
+    allowed_extra_fields = ['dialect', 'schema']
+
+    extras = serializers.JSONField(required=True)
+
+    def validate_extras(self, extras):
+        """We expect some specific fields associated with this connection type:
+        {
+            "dialect": "postgresql",
+            "schema": "metastore",
+        }
+        """
+        extras = self.sanitize_extras(extras)
+
+        if not extras['dialect'] not in models.Datastore.SUPPORTED_HIVE_EXTERNAL_METASTORES:
+            raise serializers.ValidationError(
+                'Hive metastore must be one of: %s' % ', '.join(models.Datastore.SUPPORTED_HIVE_EXTERNAL_METASTORES)
+            )
+
+        if not extras['schema']:
+            raise serializers.ValidationError('Hive metastore schema name is required.')
+
+        return extras
+
+
+class JdbcConnectionSerializer(MetamapperSerializer, JdbcCredentialsSerializer):
+    """Validates connectivity to a database.
+    """
+    engine = serializers.ChoiceField(choices=models.Datastore.ENGINE_CHOICES)
+    extras = serializers.JSONField(required=False)
+
+    ssh_host = serializers.IPAddressField(required=False, allow_null=True)
+    ssh_user = fields.SysnameField(required=False, max_length=128, allow_null=True)
+    ssh_port = fields.PortField(required=False, allow_null=True)
+    ssh_enabled = serializers.BooleanField(required=False, default=False, allow_null=False)
+
+    class Meta:
+        model = models.Datastore
+
+    def validate_credentials(self, data):
+        """Some datastores have non-standard credentials, so we should verify them via custom serializers.
+        """
+        engine = data.get('engine', self.instance_attr('engine'))
+
+        validators = {
+            models.Datastore.ATHENA: AwsConnectionSerializer,
+            models.Datastore.BIGQUERY: BigQueryConnectionSerializer,
+            models.Datastore.GLUE: AwsConnectionSerializer,
+            models.Datastore.HIVE: HiveMetatastoreConnectionSerializer,
+        }
+        validator_class = validators.get(engine)
+        if validator_class:
+            validator = validator_class(self.instance, data=data, partial=self.partial)
+            validator.is_valid(raise_exception=True)
+            data.update(validator.validated_data)
+
+        return data
+
+    def validate_ssh(self, data):
         """SSH is optional unless one of the parameters is provided.
         """
         ssh_enabled = data.get('ssh_enabled', self.instance_attr('ssh_enabled'))
@@ -95,7 +248,8 @@ class JdbcConnectionSerializer(MetamapperSerializer, serializers.Serializer):
     def validate(self, data):
         """Run some validation checks against the payload as a whole.
         """
-        data = self.validate_ssh(data, self.instance)
+        data = self.validate_credentials(data)
+        data = self.validate_ssh(data)
 
         workspace = self.context['request'].workspace
         datastore = models.Datastore(workspace=workspace, **data)
@@ -145,6 +299,7 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
             'database',
             'host',
             'port',
+            'extras',
             'ssh_enabled',
             'ssh_host',
             'ssh_user',
@@ -168,7 +323,8 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
     def validate(self, data):
         """Run some validation checks against the payload as a whole.
         """
-        data = self.validate_ssh(data, self.instance)
+        data = self.validate_credentials(data)
+        data = self.validate_ssh(data)
         return data
 
     @audit.capture_activity(

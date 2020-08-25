@@ -1,9 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, Fragment } from "react"
 import { Card, Col, Form, Input, Row, Switch } from "antd"
 import FormLabel from "app/Common/FormLabel"
 import CopyInput from "app/Common/CopyInput"
 
-const SnowflakeConnectionSettingsFieldset = ({
+const AwsGlueConnectionFieldset = ({
   publicKey,
   datastore: { jdbcConnection, sshConfig },
   form: { getFieldDecorator, getFieldValue },
@@ -12,57 +12,37 @@ const SnowflakeConnectionSettingsFieldset = ({
 }) => {
   const [sshEnabled, setSshEnabled] = useState(sshConfig.isEnabled)
   return (
-    <>
+    <Fragment>
       <Form.Item>
-        <FormLabel label="Account" required />
-        {getFieldDecorator("host", {
-          initialValue: jdbcConnection.host,
+        <FormLabel label="Role Address" required />
+        {getFieldDecorator("extras.role", {
+          initialValue: jdbcConnection.extras,
           rules: [],
         })(
           <Input
             type="text"
             onChange={onChange}
             disabled={!hasPermission}
-            addonAfter=".snowflakecomputing.com"
-            data-test="ConnectionSettingsFieldset.Host"
+            data-test="ConnectionSettingsFieldset.AwsRole"
           />
         )}
       </Form.Item>
-      <Form.Item className="hidden">
-        {getFieldDecorator("port", {
-          initialValue: jdbcConnection.port || "443",
-          rules: [],
-        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
-      </Form.Item>
       <Form.Item>
-        <FormLabel label="Username" required />
-        {getFieldDecorator("username", {
-          initialValue: jdbcConnection.username,
+        <FormLabel label="Region" required />
+        {getFieldDecorator("extras.region", {
+          initialValue: jdbcConnection.extras,
           rules: [],
         })(
           <Input
             type="text"
             onChange={onChange}
             disabled={!hasPermission}
-            data-test="ConnectionSettingsFieldset.Username"
+            data-test="ConnectionSettingsFieldset.AwsRegion"
           />
         )}
       </Form.Item>
       <Form.Item>
-        <FormLabel label="Password" required />
-        {getFieldDecorator("password", {
-          rules: [],
-        })(
-          <Input
-            type="password"
-            onChange={onChange}
-            disabled={!hasPermission}
-            data-test="ConnectionSettingsFieldset.Password"
-          />
-        )}
-      </Form.Item>
-      <Form.Item>
-        <FormLabel label="Database" required />
+        <FormLabel label="Account ID" required />
         {getFieldDecorator("database", {
           initialValue: jdbcConnection.database,
           rules: [],
@@ -74,6 +54,30 @@ const SnowflakeConnectionSettingsFieldset = ({
             data-test="ConnectionSettingsFieldset.Database"
           />
         )}
+      </Form.Item>
+      <Form.Item className="hidden">
+        {getFieldDecorator("host", {
+          initialValue: jdbcConnection.host || "api.amazonaws.com",
+          rules: [],
+        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
+      </Form.Item>
+      <Form.Item className="hidden">
+        {getFieldDecorator("username", {
+          initialValue: jdbcConnection.username || "amazonapis",
+          rules: [],
+        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
+      </Form.Item>
+      <Form.Item className="hidden">
+        {getFieldDecorator("password", {
+          initialValue: jdbcConnection.password || "secret",
+          rules: [],
+        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
+      </Form.Item>
+      <Form.Item className="hidden">
+        {getFieldDecorator("port", {
+          initialValue: jdbcConnection.port || "443",
+          rules: [],
+        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
       </Form.Item>
       <Form.Item>
         <Card className="ssh-tunnel-enabled">
@@ -158,11 +162,11 @@ const SnowflakeConnectionSettingsFieldset = ({
           </div>
         )}
       </Form.Item>
-    </>
+    </Fragment>
   )
 }
 
-SnowflakeConnectionSettingsFieldset.defaultProps = {
+AwsGlueConnectionFieldset.defaultProps = {
   datastore: {
     jdbcConnection: {},
     sshConfig: {
@@ -171,4 +175,4 @@ SnowflakeConnectionSettingsFieldset.defaultProps = {
   },
 }
 
-export default SnowflakeConnectionSettingsFieldset
+export default AwsGlueConnectionFieldset

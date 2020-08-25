@@ -256,7 +256,7 @@ textarea.ant-input {
   width: calc(33.3% - 20px);
   margin: 0px 10px;
 }
-.radio-icon .ant-radio-button-wrapper:nth-child(3n+0) {
+.radio-icon .ant-radio-button-wrapper:nth-child(n + 3) {
   margin-top: 20px;
 }
 .radio-icon .ant-radio-button-wrapper .text {

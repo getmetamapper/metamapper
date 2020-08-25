@@ -220,6 +220,7 @@ class JdbcConnectionType(graphene.ObjectType):
     username = graphene.String()
     database = graphene.String()
     port = graphene.Int()
+    extras = GenericScalar()
 
 
 class SSHTunnelConfigType(graphene.ObjectType):
@@ -276,7 +277,7 @@ class DatastoreType(AuthNode, DjangoObjectType):
     def resolve_jdbc_connection(instance, info):
         """Returns JDBC connection information as a separate object.
         """
-        return model_to_dict(instance, ['engine', 'host', 'username', 'database', 'port'])
+        return model_to_dict(instance, ['engine', 'host', 'username', 'database', 'port', 'extras'])
 
     def resolve_ssh_config(instance, info):
         """Returns SSH tunnel settings for the datastore.

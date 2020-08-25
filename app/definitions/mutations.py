@@ -8,6 +8,7 @@ import app.definitions.permissions as definition_permissions
 import app.definitions.schema as schema
 import app.definitions.serializers as serializers
 
+import utils.graphql.scalars as utils_scalars
 import utils.errors as errors
 import utils.mixins.mutations as mixins
 
@@ -27,6 +28,7 @@ class CreateDatastore(mixins.CreateMutationMixin, relay.ClientIDMutation):
         database = graphene.String(required=True)
         host = graphene.String(required=True)
         port = graphene.Int(required=True)
+        extras = utils_scalars.JSONObject(required=False)
 
         ssh_enabled = graphene.Boolean(required=False, default_value=False)
         ssh_host = graphene.String(required=False)
@@ -58,6 +60,7 @@ class TestJdbcConnection(mixins.CreateMutationMixin, relay.ClientIDMutation):
         database = graphene.String(required=True)
         host = graphene.String(required=True)
         port = graphene.Int(required=True)
+        extras = utils_scalars.JSONObject(required=False)
 
         ssh_enabled = graphene.Boolean(required=False, default_value=False)
         ssh_host = graphene.String(required=False)

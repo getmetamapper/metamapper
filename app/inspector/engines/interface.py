@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import boto3
 import contextlib
+import hashlib
 import sys
 
 
@@ -20,12 +22,13 @@ class EngineInterface(object):
 
     records_per_batch = 1000
 
-    def __init__(self, host, username, password, port, database):
+    def __init__(self, host, username, password, port, database, extras=None):
         self.host = host
         self.username = username
         self.password = password
         self.port = port
         self.database = database
+        self.extras = extras or {}
         self._version = None
 
     @property
@@ -223,3 +226,55 @@ class EngineInterface(object):
         return {
             k.lower(): v for k, v in r_dict.items()
         }
+
+    def override_definitions_sql(self, sql):
+        self.definitions_sql = sql
+
+
+
+class AmazonInspectorMixin(object):
+    """Adds some common funcitonality for inspectors that hit the Amazon API.
+    """
+    aws_client_type = None
+
+    def __init__(self, host, username, password, port, database, extras=None):
+        self.host = host
+        self.username = username
+        self.password = password
+        self.port = port
+        self.database = database
+        self.extras = extras or {}
+        self._client = None
+
+    @property
+    def client(self):
+        if not self._client:
+            sts = boto3.client('sts', region_name=self.region)
+
+            assumed_role_object = sts.assume_role(
+                RoleArn=self.iam_role,
+                RoleSessionName=f'metamapper_{self.region}_{self.database}'
+            )
+
+            credentials = assumed_role_object['Credentials']
+
+            self._client = boto3.client(
+                self.aws_client_type,
+                aws_access_key_id=credentials['AccessKeyId'],
+                aws_secret_access_key=credentials['SecretAccessKey'],
+                aws_session_token=credentials['SessionToken'],
+            )
+        return self._client
+
+    @property
+    def iam_role(self):
+        return self.extras.get('role')
+
+    @property
+    def region(self):
+        return self.extras.get('region')
+
+    def _to_oid(self, *items):
+        """str: We create a consistent hash of items to create a `pseudo` object identifier.
+        """
+        return hashlib.md5(''.join(map(str, items)).encode('utf-8')).hexdigest()

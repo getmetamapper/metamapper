@@ -58,7 +58,7 @@ class SysnameField(drf_fields.RegexField):
     }
 
     def __init__(self, *args, **kwargs):
-        super().__init__(regex=r'^[0-9a-zA-Z$_]+$', *args, **kwargs)
+        super().__init__(regex=r'^[0-9a-zA-Z$_-]+$', *args, **kwargs)
 
 
 class PortField(drf_fields.IntegerField):

@@ -28,6 +28,7 @@ pymssql = "<3.0"
 python3-saml = "*"
 snowflake-connector-python = "*"
 sshtunnel = "*"
+google-cloud-bigquery = "*"
 
 [dev-packages]
 factory-boy = "*"

@@ -16,6 +16,10 @@ class DatastoreSetup extends Component {
     this.props.form.validateFields((err, variables) => {
       if (err) return
 
+      if (variables.engine === "bigquery") {
+        variables.extras.credentials = JSON.parse(variables.extras.credentials)
+      }
+
       const payload = {
         variables,
         successMessage: "Datastore has been created.",

@@ -1,9 +1,9 @@
-import React, { useState } from "react"
-import { Card, Col, Form, Input, Row, Switch } from "antd"
+import React, { useState, Fragment } from "react"
+import { Card, Col, Form, Input, Row, Select, Switch } from "antd"
 import FormLabel from "app/Common/FormLabel"
 import CopyInput from "app/Common/CopyInput"
 
-const SnowflakeConnectionSettingsFieldset = ({
+const HiveMetastoreConnectionFieldset = ({
   publicKey,
   datastore: { jdbcConnection, sshConfig },
   form: { getFieldDecorator, getFieldValue },
@@ -12,9 +12,28 @@ const SnowflakeConnectionSettingsFieldset = ({
 }) => {
   const [sshEnabled, setSshEnabled] = useState(sshConfig.isEnabled)
   return (
-    <>
+    <Fragment>
       <Form.Item>
-        <FormLabel label="Account" required />
+        <FormLabel label="Metastore Engine" required />
+        {getFieldDecorator("host", {
+          initialValue: jdbcConnection.host,
+          rules: [],
+        })(
+          <Select
+            type="text"
+            onChange={onChange}
+            disabled={!hasPermission}
+            data-test="ConnectionSettingsFieldset.Host"
+          >
+            <Select.Option key="postgresql">MySQL</Select.Option>
+            <Select.Option key="mysql">Postgres</Select.Option>
+            <Select.Option key="sqlserver">MS SQL Server</Select.Option>
+            <Select.Option key="oracle">Oracle</Select.Option>
+          </Select>
+        )}
+      </Form.Item>
+      <Form.Item>
+        <FormLabel label="Host" required />
         {getFieldDecorator("host", {
           initialValue: jdbcConnection.host,
           rules: [],
@@ -23,16 +42,23 @@ const SnowflakeConnectionSettingsFieldset = ({
             type="text"
             onChange={onChange}
             disabled={!hasPermission}
-            addonAfter=".snowflakecomputing.com"
             data-test="ConnectionSettingsFieldset.Host"
           />
         )}
       </Form.Item>
-      <Form.Item className="hidden">
+      <Form.Item>
+        <FormLabel label="Port" required />
         {getFieldDecorator("port", {
-          initialValue: jdbcConnection.port || "443",
+          initialValue: jdbcConnection.port,
           rules: [],
-        })(<Input type="text" onChange={onChange} disabled={!hasPermission} />)}
+        })(
+          <Input
+            type="text"
+            onChange={onChange}
+            disabled={!hasPermission}
+            data-test="ConnectionSettingsFieldset.Port"
+          />
+        )}
       </Form.Item>
       <Form.Item>
         <FormLabel label="Username" required />
@@ -158,11 +184,11 @@ const SnowflakeConnectionSettingsFieldset = ({
           </div>
         )}
       </Form.Item>
-    </>
+    </Fragment>
   )
 }
 
-SnowflakeConnectionSettingsFieldset.defaultProps = {
+HiveMetastoreConnectionFieldset.defaultProps = {
   datastore: {
     jdbcConnection: {},
     sshConfig: {
@@ -171,4 +197,4 @@ SnowflakeConnectionSettingsFieldset.defaultProps = {
   },
 }
 
-export default SnowflakeConnectionSettingsFieldset
+export default HiveMetastoreConnectionFieldset
