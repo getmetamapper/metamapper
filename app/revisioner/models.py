@@ -100,7 +100,7 @@ class Run(UUIDModel):
         """
         return (
             Revision.objects
-                    .on_conflict(['workspace_id', 'checksum'], ConflictAction.UPDATE)
+                    .on_conflict(['workspace_id', 'revision_id'], ConflictAction.UPDATE)
                     .bulk_insert(revisions, only_fields=['run', 'updated_at'])
         )
 
@@ -119,7 +119,6 @@ class Run(UUIDModel):
                 run_id=self.id,
                 **rev.as_dict(),
             )
-            revision.set_checksum()
             revision.set_first_seen_run(self)
             rows.append(model_to_dict(revision))
             if len(rows) >= batch_size:
@@ -298,7 +297,6 @@ class Revision(TimestampedModel):
     action = models.IntegerField(choices=ACTION_CHOICES)
 
     metadata = JSONField(default=dict)
-    checksum = models.CharField(max_length=32)
 
     first_seen_run = models.ForeignKey(
         to=Run,
@@ -315,7 +313,7 @@ class Revision(TimestampedModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['workspace_id', 'checksum'],
+                fields=['workspace_id', 'revision_id'],
                 name='unique_revision_checksum',
             )
         ]
@@ -335,8 +333,7 @@ class Revision(TimestampedModel):
     def save(self, *args, **kwargs):
         """Override save method to create the checksum.
         """
-        if self._state.adding is True and not self.checksum:
-            self.set_checksum()
+        if self._state.adding is True and not self.first_seen_run:
             self.set_first_seen_run(self.run)
         return super().save(*args, **kwargs)
 
@@ -345,20 +342,3 @@ class Revision(TimestampedModel):
         """
         self.first_seen_run = run
         self.first_seen_on = timezone.now()
-
-    def set_checksum(self):
-        """Create checksum from attributes.
-        """
-        checksum_dict = {
-            'resource_id': self.resource_id,
-            'resource_type': self.resource_type_id,
-            'parent_resource_id': self.parent_resource_id,
-            'parent_resource_type': self.parent_resource_type_id,
-            'action': self.action,
-            'metadata': self.metadata,
-        }
-        if self.parent_resource_revision_id:
-            checksum_dict['parent_resource_revision_id'] = self.parent_resource_revision_id
-        self.checksum = hashlib.md5(
-            json.dumps(checksum_dict, sort_keys=True).encode('utf-8'),
-        ).hexdigest()

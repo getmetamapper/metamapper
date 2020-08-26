@@ -32,14 +32,13 @@
     "fields": {
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "run_id": "079d08c08c144c6f90eeebc0b6c9b974",
-      "revision_id": "11df57d8-b8ef-4dee-9041-9099b9dac35f",
+      "revision_id": "71d57ff4737bb6fa3847b435f55ef25d",
       "resource_id": 100,
       "resource_type": ["definitions", "schema"],
       "parent_resource_revision_id": null,
       "parent_resource_id": "za36bPxqPyeF",
       "parent_resource_type": ["definitions", "datastore"],
       "action": 1,
-      "checksum": "71d57ff4737bb6fa3847b435f55ef25d",
       "metadata": {
         "name": "public",
         "object_id": 2200
@@ -57,14 +56,13 @@
     "fields": {
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "run_id": "079d08c08c144c6f90eeebc0b6c9b974",
-      "revision_id": "4e33ff8d-f00b-40b4-8244-851fbb5f04a0",
+      "revision_id": "3412f7b1e7355062fd66b1b1853a62c4",
       "resource_id": 150,
       "resource_type": ["definitions", "table"],
       "parent_resource_revision_id": "11df57d8-b8ef-4dee-9041-9099b9dac35f",
       "parent_resource_id": 100,
       "parent_resource_type": ["definitions", "schema"],
       "action": 1,
-      "checksum": "3412f7b1e7355062fd66b1b1853a62c4",
       "metadata": {
         "kind": "base table",
         "name": "auth_user",
@@ -83,14 +81,13 @@
     "fields": {
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "run_id": "079d08c08c144c6f90eeebc0b6c9b974",
-      "revision_id": "8389c4aa-0f22-48cb-8dc5-a20b14204a17",
+      "revision_id": "4f0bf41a4559e27ab6ef15b07da0d397",
       "resource_id": 250,
       "resource_type": ["definitions", "column"],
       "parent_resource_revision_id": "4e33ff8d-f00b-40b4-8244-851fbb5f04a0",
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "4f0bf41a4559e27ab6ef15b07da0d397",
       "metadata": {
         "name": "id",
         "data_type": "integer",
@@ -115,14 +112,13 @@
     "fields": {
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "run_id": "079d08c08c144c6f90eeebc0b6c9b974",
-      "revision_id": "328cf5ea-f2c9-463c-9d9a-959393a467a5",
+      "revision_id": "80bc6f8cd8db2180df857d54ab7a1254",
       "resource_id": 251,
       "resource_type": ["definitions", "column"],
       "parent_resource_revision_id": "4e33ff8d-f00b-40b4-8244-851fbb5f04a0",
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "80bc6f8cd8db2180df857d54ab7a1254",
       "metadata": {
         "name": "password",
         "data_type": "character varying",
@@ -154,7 +150,6 @@
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "c2398fe96ee51c164b8ce82fc7402522",
       "metadata": {
         "name": "last_login",
         "data_type": "timestamp with time zone",
@@ -186,7 +181,6 @@
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "7ac174a4930514648fc6a5100926819d",
       "metadata": {
         "name": "created_at",
         "data_type": "timestamp with time zone",
@@ -218,7 +212,6 @@
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "44e1eb22295ca3f7a1f48ccd8d7801dc",
       "metadata": {
         "name": "updated_at",
         "data_type": "timestamp with time zone",
@@ -250,7 +243,6 @@
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "bb6ed9922cc6d500f5453b21797aa961",
       "metadata": {
         "name": "fname",
         "data_type": "character varying",
@@ -282,7 +274,6 @@
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "11e1b66ac794d12707a03415a8d4258d",
       "metadata": {
         "name": "lname",
         "data_type": "character varying",
@@ -314,7 +305,6 @@
       "parent_resource_id": 257,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "a74832a5c15c4fb10395ffc4c0f7caa8",
       "metadata": {
         "name": "email",
         "data_type": "character varying",
@@ -346,7 +336,6 @@
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "310fac7bf3622c3efd8efbcce3346674",
       "metadata": {
         "sql": "CREATE UNIQUE INDEX auth_user_email_key ON public.auth_user USING btree (email)",
         "name": "auth_user_email_key",
@@ -397,7 +386,6 @@
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
       "action": 1,
-      "checksum": "b31f7849936cd91d69cf6e3045074af6",
       "metadata": {
         "sql": "CREATE UNIQUE INDEX auth_user_pkey ON public.auth_user USING btree (id)",
         "name": "auth_user_pkey",

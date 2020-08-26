@@ -279,6 +279,7 @@ class TestGetTableRevisions(cases.GraphQLTestCase):
             action=Revision.MODIFIED,
             metadata={'field': 'object_id', 'old_value': 1000, 'new_value': 2000},
         )
+        revision.set_first_seen_run(self._run)
         revision.save()
 
         node_id = helpers.to_global_id('TableType', table.pk)
