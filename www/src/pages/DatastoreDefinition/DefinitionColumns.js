@@ -34,7 +34,7 @@ class DatastoreColumns extends Component {
     window.history.pushState(
       null,
       "",
-      `${pathname}?selectedColumn=${selectedColumn.pk}`
+      `${pathname}?selectedColumn=${selectedColumn.id}`
     )
   }
 
@@ -57,7 +57,7 @@ class DatastoreColumns extends Component {
     } = this.props
 
     const { selectedColumn } = qs.parse(search)
-    const column = find(tableColumns, { pk: selectedColumn })
+    const column = find(tableColumns, { id: selectedColumn })
 
     if (selectedColumn && column) {
       this.handleOpenDetails(column)
