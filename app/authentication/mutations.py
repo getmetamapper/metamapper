@@ -7,6 +7,7 @@ import graphql_jwt.shortcuts as jwt
 import app.authentication.emails as emails
 import app.authentication.models as models
 import app.authentication.schema as schema
+import app.authentication.tasks as tasks
 import app.authentication.serializers as serializers
 
 import utils.mixins.mutations as mixins
@@ -207,6 +208,19 @@ class DeleteWorkspace(mixins.DeleteMutationMixin, relay.ClientIDMutation):
 
     class Meta:
         serializer_class = serializers.WorkspaceSerializer
+
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """We should queue this datastore to be hard-deleted.
+        """
+        return [
+            {
+                "function": tasks.hard_delete_workspace.delay,
+                "arguments": {
+                    "workspace_id": instance.id,
+                },
+            }
+        ]
 
 
 class AccountSetup(mixins.CreateMutationMixin, relay.ClientIDMutation):

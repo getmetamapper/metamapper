@@ -5,6 +5,7 @@ import graphene.relay as relay
 import app.authorization.permissions as permissions
 import app.definitions.permissions as definition_permissions
 
+import app.definitions.tasks as tasks
 import app.definitions.schema as schema
 import app.definitions.serializers as serializers
 
@@ -258,6 +259,19 @@ class DeleteDatastore(mixins.DeleteMutationMixin, relay.ClientIDMutation):
 
     class Meta:
         serializer_class = serializers.DatastoreSerializer
+
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """We should queue this datastore to be hard-deleted.
+        """
+        return [
+            {
+                "function": tasks.hard_delete_datastore.delay,
+                "arguments": {
+                    "datastore_id": instance.id,
+                },
+            }
+        ]
 
 
 class UpdateTableMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):

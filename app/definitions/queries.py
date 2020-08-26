@@ -76,6 +76,7 @@ class Query(graphene.ObjectType):
         queryset = models.Datastore.search_objects.execute(
             search=search,
             workspace=info.context.workspace,
+            deleted_at__isnull=True,
             **kwargs,
         )
 
