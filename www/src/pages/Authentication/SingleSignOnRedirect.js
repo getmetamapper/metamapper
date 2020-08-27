@@ -2,7 +2,10 @@ import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
 import { Spin, Icon } from "antd"
 import { withRouter } from "react-router-dom"
+import { REDIRECT_URI } from "lib/constants"
+import { setWithExpiry } from "lib/utilities"
 import TriggerSingleSignOn from "graphql/mutations/TriggerSingleSignOn"
+import qs from "query-string"
 
 class SingleSignOnRedirect extends Component {
   componentWillMount() {
@@ -11,6 +14,12 @@ class SingleSignOnRedirect extends Component {
         params: { workspaceSlug },
       },
     } = this.props
+
+    const { next } = qs.parse(this.props.location.search)
+
+    if (next) {
+      setWithExpiry(REDIRECT_URI, next, 15000)
+    }
 
     const httpRequest = this.props.mutate({
       variables: {
@@ -45,7 +54,7 @@ class SingleSignOnRedirect extends Component {
         <p>
           <Spin indicator={<Icon type="loading" />} size="large" />
         </p>
-        <p style={{ color: "#64b7fe" }}>
+        <p className="text-primary">
           Redirecting to your single sign-on provider.
         </p>
       </div>

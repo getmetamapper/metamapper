@@ -33,13 +33,20 @@ export default (
         match: { params },
       } = this.props
 
+      const authToken = localStorage.getItem(AUTH_TOKEN)
+
+      if (shouldRefreshUser || (authToken && !currentUser) || (!authToken && currentUser)) {
+        this.props.refreshUser()
+        return null;
+      }
+
       let { currentWorkspace } = this.props
       if (config) {
         currentWorkspace = config.getCurrentWorkspace()
       }
 
       // Force reload to capture current workspace if the URL doesn't match.
-      if (params.hasOwnProperty("workspaceSlug")) {
+      if (currentUser && params.hasOwnProperty("workspaceSlug")) {
         const workspace = find(myWorkspaces, { slug: params.workspaceSlug })
 
         if (!currentWorkspace && workspace) {
@@ -59,13 +66,6 @@ export default (
         }
       }
 
-      const authToken = localStorage.getItem(AUTH_TOKEN)
-
-      if (shouldRefreshUser || (authToken && !currentUser) || (!authToken && currentUser)) {
-        this.props.refreshUser()
-        return null;
-      }
-
       // If login screen, redirect to the dashboard.
       if (!isProtected && currentUser) {
         this.props.history.push("/")
@@ -74,7 +74,7 @@ export default (
       // If it is a restricted route and currentUser is
       // not authenticated, redirect to Login page.
       if (isProtected && !currentUser && pathname !== "/login") {
-        this.props.history.push("/login")
+        this.props.history.push(`/login?next=${encodeURIComponent(window.location.href)}`)
       } else if (
         isProtected &&
         !currentWorkspace &&

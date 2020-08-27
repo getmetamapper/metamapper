@@ -276,6 +276,10 @@ describe("sso.spec.js", () => {
     })
   })
 
+  describe("automatic redirection", () => {
+
+  })
+
   describe("404", () => {
     it("when workspace does not exist", () => {
       cy.login(owner.email, owner.password, workspace.id)

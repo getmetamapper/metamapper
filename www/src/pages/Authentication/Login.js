@@ -3,7 +3,8 @@ import { Helmet } from "react-helmet"
 import { graphql } from "react-apollo"
 import { Col, Row } from "antd"
 import { Link } from "react-router-dom"
-import { setTokenAndGetRedirectUri } from "lib/utilities"
+import { setToken, parseRedirectUri } from "lib/utilities"
+import qs from "query-string"
 import AuthenticateUser from "graphql/mutations/AuthenticateUser"
 import AuthForm from "app/Authentication/AuthForm"
 import LoginForm from "app/Authentication/LoginForm"
@@ -28,8 +29,11 @@ class Login extends Component {
 
   handleSuccess = ({ data }) => {
     const { token } = data.tokenAuth
+    const { next } = qs.parse(this.props.location.search)
+
     if (token) {
-      this.props.history.push(setTokenAndGetRedirectUri(token))
+      setToken(token)
+      window.location.href = parseRedirectUri(next, "/")
     }
   }
 
