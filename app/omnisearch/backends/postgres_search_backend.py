@@ -11,7 +11,6 @@ from django.db.models import CharField, DateTimeField
 from django.db.models.functions import Cast
 
 from django.utils.functional import cached_property
-from guardian.shortcuts import get_objects_for_user
 
 import app.omnisearch.stopwords as stopwords
 import app.definitions.permissions as permissions

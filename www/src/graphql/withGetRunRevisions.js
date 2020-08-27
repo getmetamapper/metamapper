@@ -21,7 +21,7 @@ const withGetRunRevisions = graphql(GetRunRevisions, {
       return res
     }
 
-    const { runRevisions } = data
+    const { runRevisions, fetchMore } = data
 
     if (!runRevisions || !runRevisions.hasOwnProperty("edges")) {
       return res
@@ -29,9 +29,37 @@ const withGetRunRevisions = graphql(GetRunRevisions, {
 
     data.stopPolling()
 
+    const {
+      pageInfo: { endCursor, hasNextPage },
+      edges,
+    } = runRevisions
+
     return {
-      runRevisions: map(runRevisions.edges, ({ node }) => node),
+      runRevisions: map(edges, ({ node }) => node),
+      hasNextPage,
+      refetch: data.refetch,
+      fetchNextPage: () =>
+        fetchMore({
+          variables: { after: endCursor },
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            const newEdges = fetchMoreResult.runRevisions.edges;
+            const pageInfo = fetchMoreResult.runRevisions.pageInfo;
+
+            return newEdges.length
+              ? {
+                  // Put the new comments at the end of the list and update `pageInfo`
+                  // so we have the new `endCursor` and `hasNextPage` values
+                  runRevisions: {
+                    __typename: previousResult.runRevisions.__typename,
+                    edges: [...previousResult.runRevisions.edges, ...newEdges],
+                    pageInfo,
+                  }
+                }
+              : previousResult;
+          }
+        })
     }
+
   },
 })
 

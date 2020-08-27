@@ -34,10 +34,10 @@
       "run_id": "079d08c08c144c6f90eeebc0b6c9b974",
       "revision_id": "11df57d8-b8ef-4dee-9041-9099b9dac35f",
       "resource_id": 100,
-      "resource_type": ["definitions", "column"],
+      "resource_type": ["definitions", "schema"],
       "parent_resource_revision_id": null,
       "parent_resource_id": "za36bPxqPyeF",
-      "parent_resource_type": ["definitions", "schema"],
+      "parent_resource_type": ["definitions", "datastore"],
       "action": 1,
       "checksum": "71d57ff4737bb6fa3847b435f55ef25d",
       "metadata": {
@@ -308,7 +308,7 @@
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "run_id": "079d08c08c144c6f90eeebc0b6c9b974",
       "revision_id": "a42a5923-9050-4e71-acb8-7bf18daeb437",
-      "resource_id": null,
+      "resource_id": 257,
       "resource_type": ["definitions", "column"],
       "parent_resource_revision_id": "4e33ff8d-f00b-40b4-8244-851fbb5f04a0",
       "parent_resource_id": 257,
@@ -340,8 +340,8 @@
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "run_id": "079d08c08c144c6f90eeebc0b6c9b974",
       "revision_id": "d175bc99-258a-40f8-a5ba-47fdbbea3307",
-      "resource_id": null,
-      "resource_type": ["definitions", "table"],
+      "resource_id": 65123,
+      "resource_type": ["definitions", "index"],
       "parent_resource_revision_id": "4e33ff8d-f00b-40b4-8244-851fbb5f04a0",
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
@@ -370,12 +370,29 @@
     "pk": "d175bc99-258a-40f8-a5ba-47fdbbea3307"
   },
   {
+    "model": "definitions.index",
+    "pk": 65123,
+    "fields": {
+      "created_at": "2020-06-26T22:45:22.116Z",
+      "updated_at": "2020-06-26T22:45:22.116Z",
+      "created_revision_id": "d175bc99-258a-40f8-a5ba-47fdbbea3307",
+      "object_id": "16914",
+      "table": 150,
+      "workspace": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "name": "auth_user_email_key",
+      "kind": "",
+      "is_primary": false,
+      "is_unique": true,
+      "sql": "CREATE UNIQUE INDEX auth_user_email_key ON public.auth_user USING btree (email)"
+    }
+  },
+  {
     "fields": {
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "run_id": "079d08c08c144c6f90eeebc0b6c9b974",
       "revision_id": "a2f9ebe7-46eb-4542-a1bc-6f292a1aa415",
-      "resource_id": null,
-      "resource_type": ["definitions", "table"],
+      "resource_id": 65124,
+      "resource_type": ["definitions", "index"],
       "parent_resource_revision_id": "4e33ff8d-f00b-40b4-8244-851fbb5f04a0",
       "parent_resource_id": 150,
       "parent_resource_type": ["definitions", "table"],
@@ -402,6 +419,23 @@
     },
     "model": "revisioner.revision",
     "pk": "a2f9ebe7-46eb-4542-a1bc-6f292a1aa415"
+  },
+  {
+    "model": "definitions.index",
+    "pk": 65124,
+    "fields": {
+      "created_at": "2020-06-26T22:45:22.116Z",
+      "updated_at": "2020-06-26T22:45:22.116Z",
+      "created_revision_id": "a2f9ebe7-46eb-4542-a1bc-6f292a1aa415",
+      "object_id": "16912",
+      "table": 150,
+      "workspace": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "name": "auth_user_pkey",
+      "kind": "",
+      "is_primary": true,
+      "is_unique": true,
+      "sql": "CREATE UNIQUE INDEX auth_user_pkey ON public.auth_user USING btree (id)"
+    }
   },
   {
     "fields": {
