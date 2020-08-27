@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
-import { Col, Drawer, Row } from "antd"
+import { Col, Row } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import moment from "moment"
 import DatastoreLayout from "app/Datastores/DatastoreLayout"
@@ -83,18 +83,13 @@ class RunHistory extends Component {
             <RunHistoryTable runs={runHistory} onSelect={this.handleSelect} />
           </Col>
         </Row>
-        <Drawer
+        <RunRevisionLog
+          title={this.renderTitle(selectedRun)}
+          run={selectedRun}
           visible={runDetailsVisible}
           onClose={this.handleClose}
-          title={this.renderTitle(selectedRun)}
           {...defaultDrawerProps}
-        >
-          <RunRevisionLog
-            run={selectedRun}
-            visible={runDetailsVisible}
-            onClose={this.handleClose}
-          />
-        </Drawer>
+        />
       </DatastoreLayout>
     )
   }

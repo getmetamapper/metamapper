@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import collections
 import uuid
 
-from django.contrib.contenttypes.models import ContentType
-from django.conf import settings
 from django.db.models import F
 from django.utils.functional import cached_property
 
@@ -15,9 +12,7 @@ from app.revisioner.collectors import DefinitionCollector
 from app.revisioner.decorators import (
     track_revised_properties, on_modify_property
 )
-from app.definitions.models import (
-    Datastore, Schema, Table, Column, Index, IndexColumn
-)
+from app.definitions.models import Schema, Table, Column, Index
 
 
 class RevisionMixin(object):

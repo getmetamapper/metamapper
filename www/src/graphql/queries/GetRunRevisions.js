@@ -1,8 +1,21 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getRunRevisions($runId: ID!) {
-    runRevisions(runId: $runId) {
+  query GetRunRevisions(
+    $runId: ID!
+    $types: [String]
+    $actions: [String]
+    $search: String
+    $after: String
+  ) {
+    runRevisions(
+      runId: $runId
+      types: $types
+      actions: $actions
+      search: $search
+      first: 100
+      after: $after
+    ) {
       edges {
         node {
           id
@@ -22,6 +35,10 @@ export default gql`
             label
           }
         }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }

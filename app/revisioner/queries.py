@@ -2,6 +2,7 @@
 import graphene
 import graphene.relay as relay
 
+import app.revisioner.filters as filters
 import app.revisioner.models as models
 import app.revisioner.schema as schema
 
@@ -24,9 +25,9 @@ class Query(graphene.ObjectType):
     )
 
     run_revisions = fields.AuthConnectionField(
-
         type=schema.RevisionType,
         run_id=graphene.ID(required=True),
+        filterset_class=filters.RevisionFilterSet,
     )
 
     table_revisions = fields.AuthConnectionField(
@@ -44,6 +45,7 @@ class Query(graphene.ObjectType):
             'workspace': info.context.workspace,
             'pk': pk,
         }
+
         return shortcuts.get_object_or_404(models.Run, **get_kwargs)
 
     def resolve_run_history(self, info, datastore_id, *args, **kwargs):
