@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
 import { withRouter } from "react-router"
 import { Spin } from "antd"
+import { setTokenAndGetRedirectUri } from "lib/utilities"
 import { AUTH_TOKEN, WORKSPACE_TOKEN } from "lib/constants"
 import LoginWithSSOTokenMutation from "graphql/mutations/LoginWithSSOToken"
 import withGetWorkspaceBySlug from "graphql/withGetWorkspaceBySlug"
@@ -28,13 +29,11 @@ class LoginWithToken extends Component {
         },
       })
       .then(({ data: { loginWithSSOToken } }) => {
-        const { jwt } = loginWithSSOToken
+        const { jwt: token } = loginWithSSOToken
 
-        if (jwt) {
-          window.localStorage.setItem(AUTH_TOKEN, jwt)
+        if (token) {
+          window.location.href = setTokenAndGetRedirectUri(token, `/${workspaceSlug}`)
         }
-
-        window.location.href = `/${workspaceSlug}`
       })
   }
 

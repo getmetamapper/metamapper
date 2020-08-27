@@ -220,4 +220,72 @@ describe("authentication.spec.js", () => {
       cy.title().should("eq", "Log In - Metamapper")
     })
   })
+
+  describe("automatic redirection", () => {
+
+    it("does not redirect to cross-origin domain", () => {
+      cy.visit("/login?next=https://www.google.com")
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+    })
+
+    it("redirects to root when target is login page", () => {
+      cy.visit("/login?next=http%3A%2F%2Flocalhost%3A5050%2Flogin")
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+    })
+
+    it("redirects to 404 when page is invalid", () => {
+      cy.visit(`/login?next=http%3A%2F%2Flocalhost%3A5050%2F${workspace.slug}%2Fdoes-not%2Fexist`)
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/does-not/exist`)
+      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+      cy.contains("Go Back Home").click()
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+    })
+
+    it("redirects when added automatically", () => {
+      cy.visit(`/${workspace.slug}/settings/groups`)
+
+      cy.location("pathname").should("equal", "/login")
+      cy.location("search").should("equal", `?next=http%3A%2F%2Flocalhost%3A5050%2F${workspace.slug}%2Fsettings%2Fgroups`)
+
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/settings/groups`)
+    })
+
+    it("redirects when added manually", () => {
+      cy.visit(`/login?next=http%3A%2F%2Flocalhost%3A5050%2F${workspace.slug}%2Fsettings%2Fgroups`)
+
+      cy.location("pathname").should("equal", "/login")
+      cy.location("search").should("equal", `?next=http%3A%2F%2Flocalhost%3A5050%2F${workspace.slug}%2Fsettings%2Fgroups`)
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/settings/groups`)
+    })
+  })
 })

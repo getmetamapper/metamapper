@@ -3,6 +3,7 @@ import { Col, Row } from "antd"
 import { graphql, compose } from "react-apollo"
 import { Helmet } from "react-helmet"
 import { withRouter } from "react-router-dom"
+import qs from "query-string"
 import CheckUserExists from "graphql/mutations/CheckUserExists"
 import TriggerSingleSignOn from "graphql/mutations/TriggerSingleSignOn"
 import AuthForm from "app/Authentication/AuthForm"
@@ -21,14 +22,29 @@ class LoginPrompt extends Component {
   }
 
   handleSuccess = ({ data }) => {
-    const { email, ok, isSSOForced, workspaceSlug } = data.userExistsCheck
+    const {
+      email,
+      isSSOForced,
+      ok,
+      workspaceSlug,
+    } = data.userExistsCheck
+
+    const { next } = qs.parse(this.props.location.search)
+
+    let nextParam = ''
+    if (next) {
+      nextParam = `&next=${encodeURIComponent(next)}`
+    }
 
     if (ok) {
-      // Redirect
       if (isSSOForced && workspaceSlug) {
-        this.props.history.push(`/login/sso/${workspaceSlug}`)
+        this.props.history.push(
+          `/login/sso/${workspaceSlug}?sso=1${nextParam}`
+        )
       } else {
-        this.props.history.push(`/login/email?email=${email}`)
+        this.props.history.push(
+          `/login/email?email=${email}${nextParam}`
+        )
       }
     } else {
       this.props.history.push(`/signup?email=${email}`)

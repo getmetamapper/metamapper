@@ -65,10 +65,13 @@ class AuthForm extends React.Component {
   }
 
   handleError = (e) => {
-    this.setState({
-      submitting: false,
-      ...this.props.onError(e)
-    })
+    let state = { submitting: false }
+
+    if (this.props.onError) {
+      state = { ...state, ...this.props.onError(e) }
+    }
+
+    this.setState(state)
   }
 
   render() {
