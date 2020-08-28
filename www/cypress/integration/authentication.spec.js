@@ -220,4 +220,69 @@ describe("authentication.spec.js", () => {
       cy.title().should("eq", "Log In - Metamapper")
     })
   })
+
+  describe("automatic redirection", () => {
+
+    it("does not redirect to cross-origin domain", () => {
+      cy.visit("/login?next=https://www.google.com")
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+    })
+
+    it("redirects to root when target is login page", () => {
+      cy.visit("/login?next=" + encodeURIComponent(`${Cypress.config().baseUrl}/login`))
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+    })
+
+    it("redirects when added automatically", () => {
+      cy.visit(`/${workspace.slug}/settings/groups`)
+
+      cy.location("pathname").should("equal", "/login")
+      cy.location("search").should("equal", '?next=' + encodeURIComponent(`${Cypress.config().baseUrl}/${workspace.slug}/settings/groups`))
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/settings/groups`)
+    })
+
+    it("redirects when added manually", () => {
+      cy.visit("/login?next=" + encodeURIComponent(`${Cypress.config().baseUrl}/${workspace.slug}/settings/groups`))
+
+      cy.location("pathname").should("equal", "/login")
+      cy.location("search").should("equal", '?next=' + encodeURIComponent(`${Cypress.config().baseUrl}/${workspace.slug}/settings/groups`))
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/settings/groups`)
+    })
+
+    it("redirects to 404 when page is invalid", () => {
+      cy.visit("/login?next=" + encodeURIComponent(`${Cypress.config().baseUrl}/${workspace.slug}/does-not/exist`))
+
+      continueWithEmail(validUser.email)
+
+      cy.getByTestId("LoginForm.Password").type(validUser.password)
+      cy.contains("button", "Sign In").click()
+
+      cy.location("pathname").should("equal", `/${workspace.slug}/does-not/exist`)
+      cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
+    })
+  })
 })

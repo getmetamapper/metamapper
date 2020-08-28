@@ -30,11 +30,11 @@ app.conf.beat_schedule = {
     },
     'send-beacon': {
         'task': 'metamapper.tasks.send_beacon',
-        'schedule': crontab(hour='1'),
+        'schedule': crontab(minute='0', hour='0'),
     },
     'create-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.create_runs',
-        'schedule': crontab(hour='1'),
+        'schedule': crontab(minute='0', hour='*/1'),
     },
     'queue-revisioner-runs': {
         'task': 'app.revisioner.tasks.scheduler.queue_runs',

@@ -69,6 +69,7 @@ class AssetOwner(OrderedModel, TimestampedModel):
 
 
 class Datastore(StringPrimaryKeyModel,
+                SoftDeletionModel,
                 AuditableModel,
                 CustomPropertiesModel,
                 TimestampedModel):
@@ -84,7 +85,7 @@ class Datastore(StringPrimaryKeyModel,
     ATHENA = 'athena'
     GLUE = 'glue'
     HIVE = 'hive'
-    AZURE_DB = 'azure_db'
+    AZURE_SQL = 'azure_sql'
     AZURE_DWH = 'azure_dwh'
 
     ENGINE_CHOICES = (
@@ -97,7 +98,7 @@ class Datastore(StringPrimaryKeyModel,
         (BIGQUERY, 'Google BigQuery'),
         (ATHENA, 'AWS Athena'),
         (GLUE, 'AWS Glue'),
-        (AZURE_DB, 'Azure SQL Database'),
+        (AZURE_SQL, 'Azure SQL Database'),
         (AZURE_DWH, 'Azure Synapse'),
         (HIVE, 'Hive Metastore'),
     )
@@ -167,7 +168,6 @@ class Datastore(StringPrimaryKeyModel,
     # and its objects. Permissions default to the workspace level.
     object_permissions_enabled = models.BooleanField(default=True)
 
-    objects = PostgresManager()
     search_objects = SearchManager(fields=['name', 'engine', 'tags'])
 
     class Meta:

@@ -13,13 +13,11 @@ export default gql`
           newValues
           actor {
             id
-            pk
             name
             email
           }
           target {
             id
-            pk
             objectType
             displayName
             parentResource {
@@ -33,7 +31,6 @@ export default gql`
           }
           actionObject {
             id
-            pk
             objectType
           }
           timestamp

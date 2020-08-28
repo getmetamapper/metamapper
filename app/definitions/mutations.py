@@ -5,8 +5,10 @@ import graphene.relay as relay
 import app.authorization.permissions as permissions
 import app.definitions.permissions as definition_permissions
 
+import app.definitions.tasks as tasks
 import app.definitions.schema as schema
 import app.definitions.serializers as serializers
+import app.audit.tasks as audit
 
 import utils.graphql.scalars as utils_scalars
 import utils.errors as errors
@@ -79,8 +81,8 @@ class TestJdbcConnection(mixins.CreateMutationMixin, relay.ClientIDMutation):
     @classmethod
     def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
-            'ok': (errors is None),
-            'errors': errors,
+            "ok": (errors is None),
+            "errors": errors,
         }
         return cls(**return_kwargs)
 
@@ -88,7 +90,7 @@ class TestJdbcConnection(mixins.CreateMutationMixin, relay.ClientIDMutation):
 class UpdateDatastoreMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update an existing datastore.
     """
-    nullable_fields = ['short_desc']
+    nullable_fields = ["short_desc"]
 
     permission_classes = (
         permissions.WorkspaceWriteAccessOnly,
@@ -133,7 +135,7 @@ class DisableDatastoreCustomFields(mixins.UpdateMutationMixin, relay.ClientIDMut
 class UpdateDatastoreJdbcConnection(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update an existing datastore.
     """
-    nullable_fields = ['ssh_host', 'ssh_user', 'ssh_port']
+    nullable_fields = ["ssh_host", "ssh_user", "ssh_port"]
 
     permission_classes = (
         permissions.WorkspaceWriteAccessOnly,
@@ -179,8 +181,8 @@ class ToggleDatastoreObjectPermissions(mixins.UpdateMutationMixin, relay.ClientI
     @classmethod
     def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
-            'is_enabled': instance.object_permissions_enabled,
-            'errors': errors,
+            "is_enabled": instance.object_permissions_enabled,
+            "errors": errors,
         }
         return cls(**return_kwargs)
 
@@ -225,8 +227,8 @@ class UpdateDatastoreAccessPrivileges(mixins.UpdateMutationMixin, relay.ClientID
     @classmethod
     def prepare_response(cls, instance, errors, **data):
         return_kwargs = {
-            'ok': (errors is None),
-            'errors': errors,
+            "ok": (errors is None),
+            "errors": errors,
         }
         return cls(**return_kwargs)
 
@@ -262,11 +264,24 @@ class DeleteDatastore(mixins.DeleteMutationMixin, relay.ClientIDMutation):
     class Meta:
         serializer_class = serializers.DatastoreSerializer
 
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """We should queue this datastore to be hard-deleted.
+        """
+        return [
+            {
+                "function": tasks.hard_delete_datastore.delay,
+                "arguments": {
+                    "datastore_id": instance.id,
+                },
+            }
+        ]
+
 
 class UpdateTableMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update editable fields on a table.
     """
-    nullable_fields = ['short_desc']
+    nullable_fields = ["short_desc"]
 
     permission_classes = (
         permissions.WorkspaceWriteAccessOnly,
@@ -287,7 +302,7 @@ class UpdateTableMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
 class UpdateColumnMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update editable fields on a column.
     """
-    nullable_fields = ['short_desc']
+    nullable_fields = ["short_desc"]
 
     permission_classes = (
         permissions.WorkspaceWriteAccessOnly,
@@ -320,7 +335,7 @@ class CreateAssetOwner(mixins.CreateMutationMixin, relay.ClientIDMutation):
     class Meta:
         serializer_class = serializers.AssetOwnerSerializer
 
-    assetowner = graphene.Field(schema.AssetOwnerType, name='assetOwner')
+    assetowner = graphene.Field(schema.AssetOwnerType, name="assetOwner")
 
     @classmethod
     def perform_save(cls, serializer, info):
@@ -358,7 +373,7 @@ class UpdateAssetOwner(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     class Meta:
         serializer_class = serializers.AssetOwnerSerializer
 
-    assetowner = graphene.Field(schema.AssetOwnerType, name='assetOwner')
+    assetowner = graphene.Field(schema.AssetOwnerType, name="assetOwner")
 
 
 class DeleteAssetOwner(mixins.DeleteMutationMixin, relay.ClientIDMutation):
@@ -371,6 +386,25 @@ class DeleteAssetOwner(mixins.DeleteMutationMixin, relay.ClientIDMutation):
 
     class Meta:
         serializer_class = serializers.AssetOwnerSerializer
+
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """List of tasks to dispatch.
+        """
+        arguments = {
+            "actor_id": info.context.user.id,
+            "workspace_id": info.context.workspace.id,
+            "verb": "removed an owner from",
+            "old_values": {},
+            "new_values": {},
+        }
+        arguments.update(serializers.get_asset_owner_audit_kwargs(instance))
+        return [
+            {
+                "function": audit.audit.delay,
+                "arguments": arguments,
+            }
+        ]
 
 
 class Mutation(graphene.ObjectType):

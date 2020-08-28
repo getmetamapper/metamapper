@@ -92,9 +92,11 @@ class TestGetRunRevisions(cases.GraphQLTestCase):
 
     operation = 'runRevisions'
     statement = '''
-    query getRunRevisions($runId: ID!) {
+    query GetRunRevisions($runId: ID!, $types: [String], $actions: [String]) {
       runRevisions(
-        runId: $runId,
+        runId: $runId
+        types: $types
+        actions: $actions
       ) {
         edges {
           node {
@@ -136,6 +138,39 @@ class TestGetRunRevisions(cases.GraphQLTestCase):
             second=results['totalCount'],
             msg="Node count should equal totalCount field."
         )
+
+        types = set()
+        for result in results['edges']:
+            types.add(result['node']['relatedResource']['type'])
+
+        self.assertEqual(len(types), 4)
+
+    @decorators.as_someone(['OWNER', 'MEMBER', 'READONLY'])
+    def test_query_with_actions(self):
+        """Test the query with some filters.
+        """
+        node_id = helpers.to_global_id('RunType', self.run_id)
+        results = self.execute(self.statement, variables={'runId': node_id, 'actions': [2, 3]})
+        results = results['data'][self.operation]
+
+        self.assertEqual(
+            first=len(results['edges']),
+            second=0,
+        )
+
+    @decorators.as_someone(['OWNER', 'MEMBER', 'READONLY'])
+    def test_query_with_actions_and_types(self):
+        """Test the query with some filters.
+        """
+        node_id = helpers.to_global_id('RunType', self.run_id)
+        results = self.execute(self.statement, variables={'runId': node_id, 'actions': [1], 'types': ['index']})
+        results = results['data'][self.operation]
+
+        types = set()
+        for result in results['edges']:
+            types.add(result['node']['relatedResource']['type'])
+
+        self.assertEqual(len(types), 1)
 
     @decorators.as_someone(['OUTSIDER'])
     def test_query_when_not_authorized(self):
@@ -244,6 +279,7 @@ class TestGetTableRevisions(cases.GraphQLTestCase):
             action=Revision.MODIFIED,
             metadata={'field': 'object_id', 'old_value': 1000, 'new_value': 2000},
         )
+        revision.set_first_seen_run(self._run)
         revision.save()
 
         node_id = helpers.to_global_id('TableType', table.pk)

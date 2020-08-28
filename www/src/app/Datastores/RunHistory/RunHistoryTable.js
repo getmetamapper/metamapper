@@ -16,7 +16,8 @@ class RunHistoryTable extends Component {
     this.columns = [
       {
         title: "Status",
-        render: ({ status, error }) => (
+        dataIndex: "status",
+        render: (status, { error }) => (
           <>
             {status === "FAILURE" ? (
               <Popover content={<code>{error.excMessage}</code>} title="The following error was encountered:">

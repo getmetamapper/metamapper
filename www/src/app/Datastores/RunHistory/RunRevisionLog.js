@@ -1,145 +1,118 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
-import { Icon, Table, Tag, Button, Input } from "antd"
-import { renderRevisionText } from "app/Datastores/Revisions/RevisionText"
-import { renderRevisionIcon } from "app/Datastores/Revisions/RevisionIcon"
-import moment from "moment"
+import { debounce, map } from "lodash"
+import { Drawer } from "antd"
 import withGetRunRevisions from "graphql/withGetRunRevisions"
-import { withLargeLoader } from "hoc/withLoader"
+import RunRevisionLogTable from "./RunRevisionLogTable"
+
+const defaultDrawerProps = {
+  id: "run-revision-log",
+  className: "revisions",
+  placement: "right",
+  width: "85%",
+}
 
 class RunRevisionLog extends Component {
   constructor(props) {
     super(props)
 
-    this.columns = [
-      {
-        title: "Action",
-        dataIndex: "action",
-        render: renderRevisionIcon,
-        filters: [
-          { text: "Created", value: "CREATED" },
-          { text: "Modified", value: "MODIFIED" },
-          { text: "Dropped", value: "DROPPED" },
-        ],
-        onFilter: (value, record) =>
-          record.action.toUpperCase().indexOf(value) === 0,
-      },
-      {
-        title: "Type",
-        dataIndex: "relatedResource.type",
-        render: (type) => <Tag>{type}</Tag>,
-        filters: [
-          { text: "Schema", value: "Schema" },
-          { text: "Table", value: "Table" },
-          { text: "Column", value: "Column" },
-          { text: "Index", value: "Index" },
-        ],
-        onFilter: (value, { relatedResource }) =>
-          relatedResource.type.indexOf(value) === 0,
-      },
-      {
-        title: "Identifier",
-        dataIndex: "relatedResource",
-        render: ({ label }) => <Tag>{label}</Tag>,
-        ...this.getColumnSearchProps("relatedResource", ({ label }) => label),
-      },
-      {
-        title: "Applied On",
-        key: "appliedOn",
-        dataIndex: "appliedOn",
-        render: (appliedOn) => (
-          <Tag>{moment(appliedOn).format("YYYY-MM-DD")}</Tag>
-        ),
-      },
-      {
-        title: "Activity",
-        render: renderRevisionText,
-      },
-    ]
-
     this.state = {
-      searchText: "",
-      searchedColumn: "",
+      dataSource: props.runRevisions,
+      loading: false,
+      actions: null,
+      types: null,
+      search: null,
     }
+
+    this.handleScroll = this.handleScroll.bind(this)
   }
 
-  handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm()
-    this.setState({
-      searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
+  fetchNextPage = () => {
+    this.setState({ loading: true })
+
+    this.props.fetchNextPage().then(({ data }) => {
+      const { runRevisions: { edges } } = data
+
+      this.setState({
+        loading: false,
+        dataSource: [
+          ...this.state.dataSource,
+          ...map(edges, ({ node }) => node),
+        ]
+      })
     })
   }
 
-  handleReset = (clearFilters) => {
-    clearFilters()
-    this.setState({ searchText: "" })
+  componentDidUpdate(nextProps, nextState) {
+    if (nextState.actions !== this.state.actions || nextState.types !== this.state.types || nextState.search !== this.state.search) {
+      this.applyFilters()
+    }
+
+    if (this.props.loading !== nextProps.loading || this.state.loading !== nextState.loading) {
+      this.setState({
+        dataSource: this.props.runRevisions
+      })
+    }
   }
 
-  getColumnSearchProps = (dataIndex, attributeCallback = (value) => value) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={(node) => {
-            this.searchInput = node
-          }}
-          placeholder="Type to search..."
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            this.handleSearch(selectedKeys, confirm, dataIndex)
-          }
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => this.handleReset(clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      attributeCallback(record[dataIndex])
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: (visible) => {
-      if (visible) {
-        setTimeout(() => this.searchInput.select())
-      }
-    },
-  })
+  handleScroll = () => {
+    if (this.state.loading || !this.props.hasNextPage) return;
 
-  render() {
-    const { runRevisions } = this.props
+    const parent = document.getElementById("run-revision-log")
+    const documentElement = parent.getElementsByClassName("ant-drawer-wrapper-body")
+
+    if (
+      documentElement.length === 1 &&
+      documentElement[0].scrollTop + documentElement[0].offsetHeight
+      === documentElement[0].scrollHeight
+    ) {
+      this.fetchNextPage()
+    }
+  }
+
+  applyFilters = () => {
+    this.setState({ loading: true })
+
+    const {
+      actions,
+      types,
+      search,
+    } = this.state
+
+    const variables = {
+      runId: this.props.run.id,
+      actions: actions,
+      types: types,
+      search: search,
+    }
+
+    this.props.refetch(variables).then(({ data }) => {
+      const { runRevisions: { edges } } = data
+      this.setState({
+        dataSource: map(edges, ({ node }) => node)
+      })
+    }).then(() => this.setState({ loading: false }))
+  }
+
+  render () {
+    const { title, visible, onClose } = this.props
+    const { dataSource } = this.state
     return (
-      <Table
-        rowKey="id"
-        dataSource={runRevisions}
-        columns={this.columns}
-        pagination={false}
-      />
+      <Drawer
+        visible={visible}
+        onClose={onClose}
+        title={title}
+        onScroll={debounce(this.handleScroll, 100)}
+        {...defaultDrawerProps}
+      >
+        <RunRevisionLogTable
+          dataSource={dataSource}
+          loading={this.props.loading || this.state.loading}
+          onClose={onClose}
+          visible={visible}
+          onFilter={(state) => this.setState(state)}
+        />
+      </Drawer>
     )
   }
 }
@@ -148,4 +121,4 @@ RunRevisionLog.defaultProps = {
   runRevisions: [],
 }
 
-export default compose(withGetRunRevisions, withLargeLoader)(RunRevisionLog)
+export default compose(withGetRunRevisions)(RunRevisionLog)

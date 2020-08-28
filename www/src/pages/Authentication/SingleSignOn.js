@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Helmet } from "react-helmet"
 import { graphql } from "react-apollo"
 import { Col, Row, message } from "antd"
+import qs from "query-string"
 import TriggerSingleSignOn from "graphql/mutations/TriggerSingleSignOn"
 import AuthForm from "app/Authentication/AuthForm"
 import SingleSignOnForm from "app/Authentication/SingleSignOnForm"
@@ -20,10 +21,19 @@ class SingleSignOn extends Component {
   }
 
   handleSuccess = ({ data }) => {
-    const { redirectUrl } = data.triggerSingleSignOn
+    const {
+      redirectUrl,
+    } = data.triggerSingleSignOn
+
+    const { next } = qs.parse(this.props.location.search)
+
+    let nextParam = ''
+    if (next) {
+      nextParam = `?next=${encodeURIComponent(next)}`
+    }
 
     if (redirectUrl) {
-      window.location.href = redirectUrl
+      window.location.href = `${redirectUrl}${nextParam}`
     } else {
       message.error(
         "Workspace does not exist or does not have Single Sign-On enabled."

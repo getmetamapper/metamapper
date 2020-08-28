@@ -5,6 +5,7 @@ import graphene.relay as relay
 import app.audit.models as models
 
 import utils.connections as connections
+import utils.shortcuts as shortcuts
 
 from graphene_django import DjangoObjectType
 from graphene.types.generic import GenericScalar
@@ -19,12 +20,24 @@ class AuditActivityActionObjectType(graphene.ObjectType):
     id = graphene.ID()
     pk = graphene.String()
 
+    display_name = graphene.String()
     object_type = graphene.String()
+
+    def resolve_id(instance, info):
+        """Get the global ID for the object.
+        """
+        return shortcuts.to_global_id('%sType' % instance.__class__.__name__, instance.id)
 
     def resolve_object_type(instance, info):
         """The type of object being returned.
         """
         return instance.__class__.__name__
+
+    def resolve_display_name(instance, info):
+        """Special `displayName` for the UI.
+        """
+        return instance.display_name if hasattr(instance, 'display_name') else None
+
 
 
 class AuditActivityTargetType(graphene.ObjectType):
@@ -39,6 +52,11 @@ class AuditActivityTargetType(graphene.ObjectType):
     parent_resource = graphene.Field(
         'app.audit.schema.AuditActivityTargetType'
     )
+
+    def resolve_id(instance, info):
+        """Get the global ID for the object.
+        """
+        return shortcuts.to_global_id('%sType' % instance.__class__.__name__, instance.id)
 
     def resolve_object_type(instance, info):
         """The type of object being returned.

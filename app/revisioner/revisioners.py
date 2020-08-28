@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import collections
 import uuid
+import json
+import hashlib
 
-from django.contrib.contenttypes.models import ContentType
-from django.conf import settings
 from django.db.models import F
 from django.utils.functional import cached_property
 
@@ -15,9 +14,7 @@ from app.revisioner.collectors import DefinitionCollector
 from app.revisioner.decorators import (
     track_revised_properties, on_modify_property
 )
-from app.definitions.models import (
-    Datastore, Schema, Table, Column, Index, IndexColumn
-)
+from app.definitions.models import Schema, Table, Column, Index
 
 
 class RevisionMixin(object):
@@ -34,7 +31,6 @@ class RevisionMixin(object):
                  **kwargs):
         self.resource_type = resource_type
         self.resource = resource
-        self.revision_id = uuid.uuid4().hex
         self.parent_resource = parent_resource
         self.parent_resource_revision = parent_resource_revision
 
@@ -59,10 +55,34 @@ class RevisionMixin(object):
         return get_content_type_for_model(self.parent_resource.__class__)
 
     @property
+    def parent_resource_type_id(self):
+        """Get the parent resource content type if the parent resource exists.
+        """
+        return self.parent_resource.pk if self.parent_resource_type else None
+
+    @property
     def parent_resource_revision_id(self):
         if not self.parent_resource_revision:
             return None
         return self.parent_resource_revision.revision_id
+
+    @property
+    def revision_id(self):
+        """Revision is a SHA1 checksum of all the relevant properties.
+        """
+        checksum_dict = {
+            'resource_id': self.resource_id,
+            'resource_type': self.resource_type.id,
+            'parent_resource_id': self.parent_resource_id,
+            'parent_resource_type': self.parent_resource_type_id,
+            'action': self.action_type,
+            'metadata': self.get_metadata(),
+        }
+        if self.parent_resource_revision_id:
+            checksum_dict['parent_resource_revision_id'] = self.parent_resource_revision_id
+        return hashlib.sha1(
+            json.dumps(checksum_dict, sort_keys=True).encode('utf-8'),
+        ).hexdigest()
 
     def set_metadata(self, **metadata):
         """Simple `set` method for metadata.

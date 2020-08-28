@@ -20,16 +20,18 @@ from app.inspector.engines import hive_metastore_inspector
 
 
 engines = {
+    Datastore.ATHENA: aws_athena_inspector.AwsAthenaInspector,
+    Datastore.AZURE_DWH: sqlserver_inspector.SQLServerInspector,
+    Datastore.AZURE_SQL: sqlserver_inspector.SQLServerInspector,
+    Datastore.BIGQUERY: bigquery_inspector.BigQueryInspector,
+    Datastore.GLUE: aws_glue_inspector.AwsGlueInspector,
+    Datastore.HIVE: hive_metastore_inspector.HiveMetastoreInspector,
     Datastore.MYSQL: mysql_inspector.MySQLInspector,
+    Datastore.ORACLE: oracle_inspector.OracleInspector,
     Datastore.POSTGRESQL: postgresql_inspector.PostgresqlInspector,
     Datastore.REDSHIFT: redshift_inspector.RedshiftInspector,
     Datastore.SNOWFLAKE: snowflake_inspector.SnowflakeInspector,
     Datastore.SQLSERVER: sqlserver_inspector.SQLServerInspector,
-    Datastore.ORACLE: oracle_inspector.OracleInspector,
-    Datastore.BIGQUERY: bigquery_inspector.BigQueryInspector,
-    Datastore.ATHENA: aws_athena_inspector.AwsAthenaInspector,
-    Datastore.GLUE: aws_glue_inspector.AwsGlueInspector,
-    Datastore.HIVE: hive_metastore_inspector.HiveMetastoreInspector,
 }
 
 

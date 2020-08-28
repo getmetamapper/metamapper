@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='datastore',
             name='engine',
-            field=models.CharField(choices=[('postgresql', 'PostgreSQL'), ('sqlserver', 'SQL Server'), ('mysql', 'MySQL'), ('redshift', 'Redshift'), ('snowflake', 'Snowflake'), ('oracle', 'Oracle'), ('bigquery', 'Google BigQuery'), ('athena', 'AWS Athena'), ('glue', 'AWS Glue'), ('azure_db', 'Azure SQL Database'), ('azure_dwh', 'Azure Synapse'), ('hive', 'Hive Metastore')], max_length=16),
+            field=models.CharField(choices=[('postgresql', 'PostgreSQL'), ('sqlserver', 'SQL Server'), ('mysql', 'MySQL'), ('redshift', 'Redshift'), ('snowflake', 'Snowflake'), ('oracle', 'Oracle'), ('bigquery', 'Google BigQuery'), ('athena', 'AWS Athena'), ('glue', 'AWS Glue'), ('azure_sql', 'Azure SQL Database'), ('azure_dwh', 'Azure Synapse'), ('hive', 'Hive Metastore')], max_length=16),
         ),
     ]

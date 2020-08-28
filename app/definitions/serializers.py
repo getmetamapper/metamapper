@@ -703,7 +703,7 @@ class AssetOwnerSerializer(MetamapperSerializer, serializers.Serializer):
         return owner
 
     @audit.capture_activity(
-        verb='created',
+        verb='added a new owner to',
         hydrater=get_asset_owner_audit_kwargs,
     )
     def create(self, validated_data):

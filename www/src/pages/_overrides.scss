@@ -384,3 +384,17 @@ i.column-comments-icon {
   cursor: pointer;
 }
 
+.select-filter-dropdown {
+  padding: 8px;
+}
+.select-filter-dropdown .ant-checkbox-wrapper {
+  display: block;
+  width: 100%;
+  padding: 6px;
+}
+.select-filter-dropdown .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+  margin-left: 0;
+}
+.select-filter-dropdown .ant-divider {
+  margin: 8px 0;
+}
