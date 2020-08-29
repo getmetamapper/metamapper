@@ -456,6 +456,42 @@ describe("datastores.spec.js", () => {
         )
       })
     })
+
+    describe("filtering", () => {
+      it("can filter by asset name", () => {
+        cy.login(owner.email, owner.password, workspace.id)
+          .then(() =>
+            cy.visit(`/${inventoryUri}metamapper/assets`))
+
+        cy.getByTestId("DatastoreAssetSearch.Submit").clear().type("comments{enter}")
+
+        cy.location("pathname").should("equal", `${inventoryUri}metamapper/assets`)
+        cy.location("search").should("equal", `?search=comments`)
+
+        cy.getByTestId("DatastoreAssetsTable").should("exist").find("tbody").find("tr").its("length").should("be.equal", 1)
+      })
+
+      it("can filter by schema name", () => {
+        cy.login(owner.email, owner.password, workspace.id)
+          .then(() =>
+            cy.visit(`/${inventoryUri}metamapper/definition/admin/access_logs/overview`))
+
+        cy.getByTestId("DatastoreLayout.Breadcrumbs").contains("admin").click()
+
+        cy.location("pathname").should("equal", `${inventoryUri}metamapper/assets`)
+        cy.location("search").should("equal", `?schema=admin`)
+
+        cy.getByTestId("DatastoreAssetsTable").should("exist").find("tbody").find("tr").its("length").should("be.equal", 1)
+
+        // Test that we append search parameters...
+        cy.getByTestId("DatastoreAssetSearch.Submit").clear().type("comments{enter}")
+
+        cy.location("pathname").should("equal", `${inventoryUri}metamapper/assets`)
+        cy.location("search").should("equal", `?schema=admin&search=comments`)
+
+        cy.getByTestId("DatastoreAssetsTable").contains("No Data").should("be.visible")
+      })
+    })
   })
 
   describe("update datastore connection", () => {
