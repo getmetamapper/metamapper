@@ -7,22 +7,23 @@ from io import StringIO
 
 from app.definitions.models import Datastore
 
-from app.inspector.engines import snowflake_inspector
-from app.inspector.engines import postgresql_inspector
-from app.inspector.engines import redshift_inspector
-from app.inspector.engines import sqlserver_inspector
-from app.inspector.engines import mysql_inspector
-from app.inspector.engines import oracle_inspector
-from app.inspector.engines import bigquery_inspector
 from app.inspector.engines import aws_athena_inspector
 from app.inspector.engines import aws_glue_inspector
+from app.inspector.engines import azure_inspector
+from app.inspector.engines import bigquery_inspector
 from app.inspector.engines import hive_metastore_inspector
+from app.inspector.engines import mysql_inspector
+from app.inspector.engines import oracle_inspector
+from app.inspector.engines import postgresql_inspector
+from app.inspector.engines import redshift_inspector
+from app.inspector.engines import snowflake_inspector
+from app.inspector.engines import sqlserver_inspector
 
 
 engines = {
     Datastore.ATHENA: aws_athena_inspector.AwsAthenaInspector,
-    Datastore.AZURE_DWH: sqlserver_inspector.SQLServerInspector,
-    Datastore.AZURE_SQL: sqlserver_inspector.SQLServerInspector,
+    Datastore.AZURE_DWH: azure_inspector.AzureInspector,
+    Datastore.AZURE_SQL: azure_inspector.AzureInspector,
     Datastore.BIGQUERY: bigquery_inspector.BigQueryInspector,
     Datastore.GLUE: aws_glue_inspector.AwsGlueInspector,
     Datastore.HIVE: hive_metastore_inspector.HiveMetastoreInspector,

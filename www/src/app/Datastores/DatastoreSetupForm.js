@@ -58,14 +58,6 @@ class DatastoreSetupForm extends Component {
       "database",
     ])
 
-    console.log(this.props.form.getFieldsValue([
-      "host",
-      "username",
-      "password",
-      "port",
-      "database",
-    ]))
-
     if (!isValid) {
       message.error("Please fill out all the required fields.")
     }
