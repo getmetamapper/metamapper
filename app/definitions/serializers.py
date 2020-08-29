@@ -44,9 +44,10 @@ class JdbcCredentialsSerializer(serializers.Serializer):
     """
     allowed_extra_fields = []
 
-    username = fields.SysnameField(max_length=128)
+    engine = serializers.ChoiceField(choices=models.Datastore.ENGINE_CHOICES)
+    username = serializers.CharField(max_length=128)
     password = serializers.CharField(max_length=128)
-    database = fields.SysnameField(max_length=255)
+    database = serializers.CharField(max_length=255)
     host = fields.HostnameField(max_length=512)
     port = fields.PortField()
 

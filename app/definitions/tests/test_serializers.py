@@ -369,7 +369,6 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             'username': [
                 {'code': 'blank', 'value': ''},
                 {'code': 'nulled', 'value': None},
-                {'code': 'invalid', 'value': 'no spaces'},
             ],
             'password': [
                 {'code': 'blank', 'value': ''},
@@ -378,7 +377,6 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             'database': [
                 {'code': 'blank', 'value': ''},
                 {'code': 'nulled', 'value': None},
-                {'code': 'invalid', 'value': 'no spaces'},
             ],
             'host': [
                 {'code': 'blank', 'value': ''},
@@ -688,7 +686,6 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             'username': [
                 {'code': 'blank', 'value': ''},
                 {'code': 'nulled', 'value': None},
-                {'code': 'invalid', 'value': 'no spaces'},
             ],
             'password': [
                 {'code': 'blank', 'value': ''},
@@ -697,7 +694,6 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             'database': [
                 {'code': 'blank', 'value': ''},
                 {'code': 'nulled', 'value': None},
-                {'code': 'invalid', 'value': 'no spaces'},
             ],
             'host': [
                 {'code': 'blank', 'value': ''},

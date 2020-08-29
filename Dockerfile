@@ -15,6 +15,7 @@ FROM python:3.7-stretch as base
 ENV PYTHONUNBUFFERED 1
 ENV LD_LIBRARY_PATH /opt/oracle
 ENV BASE_DIR /usr/local/metamapper/
+ENV PYMSSQL_BUILD_WITH_BUNDLED_FREETDS 0
 
 RUN groupadd -r metamapper && useradd -r -m -g metamapper metamapper
 
@@ -27,6 +28,18 @@ RUN apt-get update -y && apt-get install -y \
     unixodbc-dev \
     libaio1
 
+# MS-SQL support for SSL connections
+RUN mkdir -p /opt/microsoft && \
+    cd /opt/microsoft && \
+    wget ftp://ftp.freetds.org/pub/freetds/stable/freetds-1.2.tar.gz && \
+    tar -xzf freetds-1.2.tar.gz && \
+    cd freetds-1.2 && \
+    ./configure --prefix=/usr/local --with-tdsver=7.3 && \
+    make && make install && \
+    ln -s /usr/local/lib/libsybdb.so.5 /usr/lib/libsybdb.so.5 && \
+    ldconfig
+
+# Oracle Database support
 RUN mkdir -p /opt/oracle && \
     cd /opt/oracle && \
     wget --quiet https://download.oracle.com/otn_software/linux/instantclient/19600/instantclient-basiclite-linux.x64-19.6.0.0.0dbru.zip && \
@@ -46,6 +59,8 @@ ADD ./Pipfile.lock $BASE_DIR
 RUN pip install --upgrade pip
 RUN pip install 'pipenv==2018.11.26' --quiet
 RUN pipenv install --dev --system
+RUN pip install 'Cython==0.29.21' --quiet
+RUN pip install --upgrade --force-reinstall --no-binary pymssql pymssql
 
 ADD . $BASE_DIR
 COPY --from=frontend-builder /frontend/build ${BASE_DIR}/www/build
