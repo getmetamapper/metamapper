@@ -66,3 +66,4 @@ def commit_revisions(datastore, run, logger):
     )
 
     logger.info('Run has been committed.')
+
