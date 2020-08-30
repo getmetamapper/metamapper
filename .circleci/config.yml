@@ -23,18 +23,18 @@ jobs:
       - setup_remote_docker
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - restore_cache:
-          key: pipenv-v1-{{ checksum "Pipfile.lock" }}
+          key: requirements-v1-{{ checksum "requirements.txt" }}
       - run:
           name: Install Linux dependencies
           command: |
-            sudo pip install pipenv tblib --quiet && \
+            sudo pip install pip-tools==5.3.1 tblib --quiet && \
             sudo apt-get update -y && \
             sudo apt-get install -y g++ libxml2-dev libxmlsec1-dev libxmlsec1-openssl
       - run:
           name: Install Python dependencies
-          command: sudo pipenv install --dev --system
+          command: sudo pip-sync requirements.txt requirements-dev.txt
       - save_cache:
-          key: pipenv-v1-{{ checksum "Pipfile.lock" }}
+          key: requirements-v1-{{ checksum "requirements.txt" }}
           paths:
             - "/usr/local/lib/python3.7/site-packages"
       - run:
