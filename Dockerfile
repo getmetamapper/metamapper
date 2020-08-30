@@ -40,12 +40,14 @@ ENV LD_LIBRARY_PATH /opt/oracle/instantclient_19_6:$LD_LIBRARY_PATH
 RUN mkdir $BASE_DIR
 WORKDIR $BASE_DIR
 
-ADD ./Pipfile $BASE_DIR
-ADD ./Pipfile.lock $BASE_DIR
+ADD ./requirements.in $BASE_DIR
+ADD ./requirements.txt $BASE_DIR
+ADD ./requirements-dev.in $BASE_DIR
+ADD ./requirements-dev.txt $BASE_DIR
 
 RUN pip install --upgrade pip
-RUN pip install 'pipenv==2018.11.26' --quiet
-RUN pipenv install --dev --system
+RUN pip install 'pip-tools==5.3.1' --quiet
+RUN pip-sync requirements.txt requirements-dev.txt
 
 ADD . $BASE_DIR
 COPY --from=frontend-builder /frontend/build ${BASE_DIR}/www/build
