@@ -23,20 +23,23 @@ jobs:
       - setup_remote_docker
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - restore_cache:
-          key: requirements-v1-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+          key: requirements-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Install Linux dependencies
           command: |
-            sudo pip install pip-tools==5.3.1 tblib --quiet && \
             sudo apt-get update -y && \
             sudo apt-get install -y g++ libxml2-dev libxmlsec1-dev libxmlsec1-openssl
       - run:
           name: Install Python dependencies
-          command: sudo pip-sync requirements.txt requirements-dev.txt
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install pip-tools==5.3.1 tblib --quiet
+            pip-sync requirements.txt requirements-dev.txt
       - save_cache:
-          key: requirements-v1-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+          key: requirements-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
           paths:
-            - "/usr/local/lib/python3.7/site-packages"
+            - "venv"
       - run:
           name: Wait for database
           command: dockerize -wait tcp://database:5432 -timeout 1m
