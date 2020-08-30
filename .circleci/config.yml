@@ -34,7 +34,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install pip-tools==5.3.1 tblib --quiet
+            pip install pip-tools==5.3.1 --quiet
             pip-sync requirements.txt requirements-dev.txt
       - save_cache:
           key: requirements-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
@@ -45,10 +45,14 @@ jobs:
           command: dockerize -wait tcp://database:5432 -timeout 1m
       - run:
           name: Run database migrations
-          command: python manage.py migrate
+          command: |
+          . venv/bin/activate
+          python manage.py migrate
       - run:
           name: Run test suite
-          command: python manage.py test --parallel=4 --exclude-tag=inspector
+          command: |
+          . venv/bin/activate
+          python manage.py test --parallel=4 --exclude-tag=inspector
   backend-inspector-tests:
     environment:
       COMPOSE_PROJECT_NAME: metamapper

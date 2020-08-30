@@ -3,3 +3,4 @@ factory-boy
 flower
 freezegun
 python-semantic-release==4.6.0
+tblib
