@@ -63,8 +63,6 @@ def send_beacon(self):
         except ConnectionError:
             response = None
 
-        self.log.info(payload)
-
         if not response or response.status_code >= status.HTTP_400_BAD_REQUEST:
             self.log.warning(f"(wksp: {workspace.id}) beacon.failed")
         else:

@@ -69,6 +69,7 @@ class AssetOwner(OrderedModel, TimestampedModel):
 
 
 class Datastore(StringPrimaryKeyModel,
+                SoftDeletionModel,
                 AuditableModel,
                 CustomPropertiesModel,
                 TimestampedModel):
@@ -150,7 +151,6 @@ class Datastore(StringPrimaryKeyModel,
     # and its objects. Permissions default to the workspace level.
     object_permissions_enabled = models.BooleanField(default=True)
 
-    objects = PostgresManager()
     search_objects = SearchManager(fields=['name', 'engine', 'tags'])
 
     class Meta:

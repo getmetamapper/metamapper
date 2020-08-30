@@ -12,6 +12,7 @@ export default gql`
       tableName: $tableName
     ) {
       id
+      pk
       name
       tags
       properties

@@ -208,7 +208,7 @@ class UpdateDatastoreMetadataTests(cases.GraphQLTestCase):
         self.global_id = helpers.to_global_id('DatastoreType', self.resource.pk)
 
     def execute_success_test_case(self):
-        """It should permanently delete the datastore.
+        """It should permanently updates the datastore.
         """
         variables = {
             'id': self.global_id,
@@ -236,7 +236,7 @@ class UpdateDatastoreMetadataTests(cases.GraphQLTestCase):
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_valid(self):
-        """It should permanently delete the datastore.
+        """It should permanently updates the datastore.
         """
         self.execute_success_test_case()
 
@@ -551,7 +551,7 @@ class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
         self.global_id = helpers.to_global_id('DatastoreType', self.resource.pk)
 
     def execute_success_test_case(self):
-        """It should permanently delete the datastore.
+        """It should permanently updates the datastore.
         """
         variables = {
             'id': self.global_id,
@@ -597,7 +597,7 @@ class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_valid(self, mock_verify_connection):
-        """It should permanently delete the datastore.
+        """It should updates the datastore.
         """
         self.execute_success_test_case()
 
@@ -633,7 +633,7 @@ class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_invalid(self):
-        """It should permanently delete the datastore.
+        """It should update the datastore.
         """
         variables = {
             'id': self.global_id,
@@ -675,8 +675,6 @@ class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
         )
 
     def test_not_found(self):
-        """It should permanently delete the datastore.
-        """
         variables = {
             'id': helpers.to_global_id('DatastoreType', '12345'),
             'port': 5432,
@@ -686,8 +684,6 @@ class UpdateDatastoreJdbcConnectionTests(cases.GraphQLTestCase):
 
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
     def test_unauthorized(self):
-        """It should return a "Permission Denied" error.
-        """
         variables = {
             'id': self.global_id,
             'port': 5432,

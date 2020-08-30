@@ -63,18 +63,9 @@ class GenericCreateAction(object):
 
         for page_num in paginator.page_range:
             page = paginator.get_page(page_num)
-
-            self.logger.info(
-                '[{0}] Started {1} of {2}'.format(self.model_class.__name__, page.end_index(), paginator.count)
-            )
-
             data = [
                 self.get_attributes(revision) for revision in page.object_list
             ]
-
-            self.logger.info(
-                '[{0}] Initialized {1} of {2}'.format(self.model_class.__name__, page.end_index(), paginator.count)
-            )
 
             if len(data):
                 self.bulk_insert(data)

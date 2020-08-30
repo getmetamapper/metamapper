@@ -9,7 +9,7 @@ const ColumnActivity = ({
   actor,
   verb,
   target: {
-    pk,
+    id,
     objectType,
     displayName,
     parentResource: {
@@ -21,7 +21,7 @@ const ColumnActivity = ({
   let to = `/datastores/${datastoreSlug}/definition/${schemaName}/${tableName}/columns`
 
   if (objectType === "Column") {
-    to = `${to}?selectedColumn=${pk}`
+    to = `${to}?selectedColumn=${id}`
   }
 
   return (

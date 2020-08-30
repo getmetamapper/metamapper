@@ -358,6 +358,21 @@ describe("datastores.spec.js", () => {
         cy.get("td").eq(0).contains("SUCCESS").should("be.visible")
       })
     })
+
+    it("displays the revisioner logs table", () => {
+      cy.contains("change(s) detected").should("be.visible").click()
+
+      cy.getByTestId("RunRevisionLogTable")
+        .should("exist")
+        .find("tbody")
+        .find("tr")
+        .its("length")
+        .should("be.gte", 10)
+
+      cy.getByTestId("RunRevisionLogTable")
+        .should("contain", "Schema public was added.")
+        .should("contain", "Table public.auth_group was added.")
+    })
   })
 
   describe("asset catalog", () => {

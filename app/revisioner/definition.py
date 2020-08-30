@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from app.inspector import service as inspector
-from app.revisioner.collectors import DefinitionCollector
 
 
 def make(collector, *args, **kwargs):  # noqa: C901

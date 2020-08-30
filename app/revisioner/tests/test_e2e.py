@@ -7,7 +7,6 @@ import unittest.mock as mock
 
 import app.revisioner.tasks as core
 import app.revisioner.models as models
-import app.revisioner.revisioners as revisioners
 
 from django.conf import settings
 from django.utils import timezone

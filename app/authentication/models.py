@@ -16,6 +16,7 @@ from app.sso.mixins import SSOTenantModel
 from app.sso.providers.oauth2.google.client import GoogleClient
 from app.sso.providers.oauth2.github.client import GithubClient
 
+from utils.delete.models import SoftDeletionModel
 from utils.encrypt.fields import EncryptedCharField, EncryptedTextField
 from utils.encrypt import rsa
 from utils.managers import SearchManager
@@ -218,6 +219,7 @@ class User(AbstractBaseUser, TimestampedModel):
 
 class Workspace(UUIDModel,
                 SSOTenantModel,
+                SoftDeletionModel,
                 AuditableModel,
                 TimestampedModel):
     """Represents a Tenant of the application.
