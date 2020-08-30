@@ -54,9 +54,9 @@ class ColumnDefinitionTable extends Component {
       },
       {
         title: "Nullable",
-        dataIndex: "isPrimary",
+        dataIndex: "isNullable",
         align: "center",
-        render: (isPrimary) => <BooleanIndicator value={isPrimary} />,
+        render: (isNullable) => <BooleanIndicator value={isNullable} />,
       },
       {
         title: "Default Value",

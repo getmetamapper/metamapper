@@ -104,8 +104,9 @@ class Datastore(StringPrimaryKeyModel,
     )
 
     SUPPORTED_HIVE_EXTERNAL_METASTORES = [
-        POSTGRESQL,
         MYSQL,
+        POSTGRESQL,
+        SQLSERVER,
     ]
 
     REQUIRED_SSH_FIELDS = [

@@ -3,6 +3,7 @@ import app.inspector.engines.interface as interface
 
 from app.definitions.models import Datastore
 
+from app.inspector.engines.azure_inspector import AzureInspector
 from app.inspector.engines.postgresql_inspector import PostgresqlInspector
 from app.inspector.engines.mysql_inspector import MySQLInspector
 from app.inspector.engines.sqlserver_inspector import SQLServerInspector
@@ -17,13 +18,13 @@ SELECT source.* FROM
         d.DB_ID as schema_object_id,
         t.TBL_NAME as table_name,
         t.TBL_ID as table_object_id,
-        t.TBL_TYPE,
+        t.TBL_TYPE as table_type,
         MD5(CONCAT(t.TBL_ID, '/', p.PKEY_NAME)) as column_object_id,
         p.PKEY_NAME as column_name,
         p.INTEGER_IDX as ordinal_position,
         p.PKEY_TYPE as data_type,
-        0 as "is_nullable",
-        1 as "is_primary",
+        0 as is_nullable,
+        1 as is_primary,
         '' as default_value
     FROM TBLS t
     JOIN DBS d ON t.DB_ID = d.DB_ID
@@ -35,13 +36,13 @@ SELECT source.* FROM
             d.DB_ID as schema_object_id,
             t.TBL_NAME as table_name,
             t.TBL_ID as table_object_id,
-            t.TBL_TYPE,
+            t.TBL_TYPE as table_type,
             MD5(CONCAT(t.TBL_ID, '/', c.COLUMN_NAME)) as column_object_id,
             c.COLUMN_NAME as column_name,
             c.INTEGER_IDX as ordinal_position,
             c.TYPE_NAME as data_type,
-            0 as "is_nullable",
-            0 as "is_primary",
+            0 as is_nullable,
+            0 as is_primary,
             '' as default_value
     FROM TBLS t
     JOIN DBS d ON t.DB_ID = d.DB_ID
@@ -80,6 +81,7 @@ class HiveMetastoreInspector(object):
             database,
         )
         self.inspector.override_definitions_sql(HIVE_METASTORE_DEFINITIONS_QUERY)
+        self.inspector.override_sys_schema([])
 
     @classmethod
     def has_indexes(self):

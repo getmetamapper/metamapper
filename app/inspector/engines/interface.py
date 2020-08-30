@@ -230,6 +230,8 @@ class EngineInterface(object):
     def override_definitions_sql(self, sql):
         self.definitions_sql = sql
 
+    def override_sys_schema(self, schemas):
+        self.sys_schemas = schemas
 
 
 class AmazonInspectorMixin(object):

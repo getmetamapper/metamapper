@@ -16,7 +16,7 @@ const AwsAthenaConnectionFieldset = ({
       <Form.Item>
         <FormLabel label="Role Address" required />
         {getFieldDecorator("extras.role", {
-          initialValue: jdbcConnection.extras,
+          initialValue: jdbcConnection.extras.role,
           rules: [],
         })(
           <Input
@@ -30,7 +30,7 @@ const AwsAthenaConnectionFieldset = ({
       <Form.Item>
         <FormLabel label="Region" required />
         {getFieldDecorator("extras.region", {
-          initialValue: jdbcConnection.extras,
+          initialValue: jdbcConnection.extras.region,
           rules: [],
         })(
           <Input
@@ -168,7 +168,12 @@ const AwsAthenaConnectionFieldset = ({
 
 AwsAthenaConnectionFieldset.defaultProps = {
   datastore: {
-    jdbcConnection: {},
+    jdbcConnection: {
+      extras: {
+        role: null,
+        region: null,
+      },
+    },
     sshConfig: {
       isEnabled: false,
     },

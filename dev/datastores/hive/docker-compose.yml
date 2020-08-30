@@ -1,0 +1,44 @@
+version: "3.4"
+x-mysql-defaults: &mysql_defaults
+  environment:
+    MYSQL_ROOT_PASSWORD: example
+x-postgresql-defaults: &postgresql_defaults
+  environment:
+    POSTGRES_USER: metamapper
+    POSTGRES_PASSWORD: example
+services:
+  # database:
+  #   image: postgres:9.6
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: metamapper
+  #   restart: unless-stopped
+  # metamapper:
+  #   build: ../../../
+  #   image: metamapper:inspector
+  #   environment:
+  #     METAMAPPER_DB_HOST: database
+  #     METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
+  #     METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
+  #   depends_on:
+  #     - database
+  mysql-hive-2.3.0:
+    build:
+      context: ./
+      dockerfile: mysql.Dockerfile
+      args:
+        MYSQL_VERSION: "8.0"
+    << : *mysql_defaults
+    networks:
+      - metamapper_metamapper
+  # postgres-hive-2.3.0:
+  #   build:
+  #     context: ./
+  #     dockerfile: postgres.Dockerfile
+  #     args:
+  #       POSTGRES_VERSION: "9.6"
+  #   << : *postgresql_defaults
+networks:
+  metamapper_metamapper:
+    external: true

@@ -158,7 +158,7 @@ class AwsConnectionSerializer(JdbcCredentialsSerializer):
 class HiveMetatastoreConnectionSerializer(JdbcCredentialsSerializer):
     """Validates connectivity to external Hive metastore hosted on Postgres, MS-SQL, or MySQL.
     """
-    allowed_extra_fields = ['dialect', 'schema']
+    allowed_extra_fields = ['dialect']
 
     extras = serializers.JSONField(required=True)
 
@@ -166,18 +166,14 @@ class HiveMetatastoreConnectionSerializer(JdbcCredentialsSerializer):
         """We expect some specific fields associated with this connection type:
         {
             "dialect": "postgresql",
-            "schema": "metastore",
         }
         """
         extras = self.sanitize_extras(extras)
 
-        if not extras['dialect'] not in models.Datastore.SUPPORTED_HIVE_EXTERNAL_METASTORES:
+        if extras['dialect'] not in models.Datastore.SUPPORTED_HIVE_EXTERNAL_METASTORES:
             raise serializers.ValidationError(
                 'Hive metastore must be one of: %s' % ', '.join(models.Datastore.SUPPORTED_HIVE_EXTERNAL_METASTORES)
             )
-
-        if not extras['schema']:
-            raise serializers.ValidationError('Hive metastore schema name is required.')
 
         return extras
 
@@ -207,7 +203,9 @@ class JdbcConnectionSerializer(MetamapperSerializer, JdbcCredentialsSerializer):
             models.Datastore.GLUE: AwsConnectionSerializer,
             models.Datastore.HIVE: HiveMetatastoreConnectionSerializer,
         }
+
         validator_class = validators.get(engine)
+
         if validator_class:
             validator = validator_class(self.instance, data=data, partial=self.partial)
             validator.is_valid(raise_exception=True)

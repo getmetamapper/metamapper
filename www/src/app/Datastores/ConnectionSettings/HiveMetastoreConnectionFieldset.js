@@ -15,20 +15,25 @@ const HiveMetastoreConnectionFieldset = ({
     <Fragment>
       <Form.Item>
         <FormLabel label="Metastore Engine" required />
-        {getFieldDecorator("host", {
-          initialValue: jdbcConnection.host,
+        {getFieldDecorator("extras.dialect", {
+          initialValue: jdbcConnection.extras.dialect,
           rules: [],
         })(
           <Select
             type="text"
             onChange={onChange}
             disabled={!hasPermission}
-            data-test="ConnectionSettingsFieldset.Host"
+            data-test="ConnectionSettingsFieldset.Dialect"
           >
-            <Select.Option key="postgresql">MySQL</Select.Option>
-            <Select.Option key="mysql">Postgres</Select.Option>
-            <Select.Option key="sqlserver">MS SQL Server</Select.Option>
-            <Select.Option key="oracle">Oracle</Select.Option>
+            <Select.Option key="mysql">
+              MySQL
+            </Select.Option>
+            <Select.Option key="postgresql">
+              PostgreSQL
+            </Select.Option>
+            <Select.Option key="sqlserver">
+              MS SQL (e.g., SQL Server, Azure SQL Database, etc.)
+            </Select.Option>
           </Select>
         )}
       </Form.Item>
@@ -190,7 +195,11 @@ const HiveMetastoreConnectionFieldset = ({
 
 HiveMetastoreConnectionFieldset.defaultProps = {
   datastore: {
-    jdbcConnection: {},
+    jdbcConnection: {
+      extras: {
+        dialect: 'mysql',
+      },
+    },
     sshConfig: {
       isEnabled: false,
     },
