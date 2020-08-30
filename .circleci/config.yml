@@ -23,7 +23,7 @@ jobs:
       - setup_remote_docker
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - restore_cache:
-          key: requirements-v1-{{ checksum "requirements.txt" }}
+          key: requirements-v1-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Install Linux dependencies
           command: |
@@ -34,7 +34,7 @@ jobs:
           name: Install Python dependencies
           command: sudo pip-sync requirements.txt requirements-dev.txt
       - save_cache:
-          key: requirements-v1-{{ checksum "requirements.txt" }}
+          key: requirements-v1-{{ checksum "requirements-dev.txt" }}
           paths:
             - "/usr/local/lib/python3.7/site-packages"
       - run:
