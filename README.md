@@ -1,6 +1,6 @@
 # Metamapper
 
-[![CircleCI](https://circleci.com/gh/getmetamapper/metamapper.svg?style=shield)](https://circleci.com/gh/getmetamapper/metamapper) [![Vulnerabilities](https://snyk.io/test/github/getmetamapper/metamapper/badge.svg)](https://snyk.io/test/github/getmetamapper/metamapper) [![latest version](https://img.shields.io/docker/v/getmetamapper/metamapper?sort=semver)](https://hub.docker.com/r/getmetamapper/metamapper) [![python](https://img.shields.io/github/pipenv/locked/python-version/getmetamapper/metamapper)](https://github.com/getmetamapper/metamapper/blob/master/Pipfile) [![discord](https://img.shields.io/discord/713821768237973535)](http://discuss.metamapper.io)
+[![CircleCI](https://circleci.com/gh/getmetamapper/metamapper.svg?style=shield)](https://circleci.com/gh/getmetamapper/metamapper) [![Vulnerabilities](https://snyk.io/test/github/getmetamapper/metamapper/badge.svg)](https://snyk.io/test/github/getmetamapper/metamapper) [![latest version](https://img.shields.io/docker/v/getmetamapper/metamapper?sort=semver)](https://hub.docker.com/r/getmetamapper/metamapper) [![python](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue)](https://www.python.org/downloads/release/python) [![discord](https://img.shields.io/discord/713821768237973535)](http://discuss.metamapper.io)
 
 Metamapper is an open-source metadata management platform that aims to make it easier to share data and its context across your organization. It's a self-updating data catalog complete with full-text search, an integrated commenting system, and much more.
 
