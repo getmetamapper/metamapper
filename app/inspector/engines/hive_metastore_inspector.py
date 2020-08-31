@@ -7,7 +7,6 @@ from app.inspector.engines.azure_inspector import AzureInspector
 from app.inspector.engines.postgresql_inspector import PostgresqlInspector
 from app.inspector.engines.mysql_inspector import MySQLInspector
 from app.inspector.engines.sqlserver_inspector import SQLServerInspector
-from app.inspector.engines.oracle_inspector import OracleInspector
 
 
 HIVE_METASTORE_DEFINITIONS_QUERY = """
@@ -19,7 +18,7 @@ SELECT source.* FROM
         t.TBL_NAME as table_name,
         t.TBL_ID as table_object_id,
         t.TBL_TYPE as table_type,
-        MD5(CONCAT(t.TBL_ID, '/', p.PKEY_NAME)) as column_object_id,
+        CONCAT(t.TBL_ID, '/', p.PKEY_NAME) as column_object_id,
         p.PKEY_NAME as column_name,
         p.INTEGER_IDX as ordinal_position,
         p.PKEY_TYPE as data_type,
@@ -37,7 +36,7 @@ SELECT source.* FROM
             t.TBL_NAME as table_name,
             t.TBL_ID as table_object_id,
             t.TBL_TYPE as table_type,
-            MD5(CONCAT(t.TBL_ID, '/', c.COLUMN_NAME)) as column_object_id,
+            CONCAT(t.TBL_ID, '/', c.COLUMN_NAME) as column_object_id,
             c.COLUMN_NAME as column_name,
             c.INTEGER_IDX as ordinal_position,
             c.TYPE_NAME as data_type,
@@ -54,22 +53,76 @@ ORDER by table_schema, table_name, ordinal_position
 """
 
 
+HIVE_METASTORE_DEFINITIONS_QUERY_WITH_QUOTES = """
+SELECT source.* FROM
+(
+    SELECT
+        d."NAME" as table_schema,
+        d."DB_ID" as schema_object_id,
+        t."TBL_NAME" as table_name,
+        t."TBL_ID" as table_object_id,
+        t."TBL_TYPE" as table_type,
+        MD5(CONCAT(t."TBL_ID", '/', p."PKEY_NAME")) as column_object_id,
+        p."PKEY_NAME" as column_name,
+        p."INTEGER_IDX" as ordinal_position,
+        p."PKEY_TYPE" as data_type,
+        0 as is_nullable,
+        1 as is_primary,
+        '' as default_value
+    FROM "TBLS" t
+    JOIN "DBS" d ON t."DB_ID" = d."DB_ID"
+    JOIN "PARTITION_KEYS" p ON t."TBL_ID" = p."TBL_ID"
+    LEFT JOIN "TABLE_PARAMS" tp ON (t."TBL_ID" = tp."TBL_ID" AND tp."PARAM_KEY"='comment')
+    UNION
+    SELECT
+            d."NAME" as table_schema,
+            d."DB_ID" as schema_object_id,
+            t."TBL_NAME" as table_name,
+            t."TBL_ID" as table_object_id,
+            t."TBL_TYPE" as table_type,
+            MD5(CONCAT(t."TBL_ID", '/', c."COLUMN_NAME")) as column_object_id,
+            c."COLUMN_NAME" as column_name,
+            c."INTEGER_IDX" as ordinal_position,
+            c."TYPE_NAME" as data_type,
+            0 as is_nullable,
+            0 as is_primary,
+            '' as default_value
+    FROM "TBLS" t
+    JOIN "DBS" d ON t."DB_ID" = d."DB_ID"
+    JOIN "SDS" s ON t."SD_ID" = s."SD_ID"
+    JOIN "COLUMNS_V2" c ON s."CD_ID" = c."CD_ID"
+    LEFT JOIN "TABLE_PARAMS" tp ON (t."TBL_ID" = tp."TBL_ID" AND tp."PARAM_KEY"='comment')
+) source
+ORDER by table_schema, table_name, ordinal_position
+"""
+
+
 supported_external_metastores = {
     Datastore.MYSQL: MySQLInspector,
     Datastore.POSTGRESQL: PostgresqlInspector,
     Datastore.SQLSERVER: SQLServerInspector,
-    Datastore.ORACLE: OracleInspector,
 }
 
 
-class HiveMetastoreInspector(object):
+supported_external_metastores_definitions_sql = {
+    Datastore.MYSQL: HIVE_METASTORE_DEFINITIONS_QUERY,
+    Datastore.POSTGRESQL: HIVE_METASTORE_DEFINITIONS_QUERY_WITH_QUOTES,
+    Datastore.SQLSERVER: HIVE_METASTORE_DEFINITIONS_QUERY,
+}
+
+supported_external_metastores_version_sql = {
+    Datastore.MYSQL: 'SELECT SCHEMA_VERSION FROM VERSION',
+    Datastore.POSTGRESQL: 'SELECT "SCHEMA_VERSION" FROM "VERSION"',
+    Datastore.SQLSERVER: 'SELECT SCHEMA_VERSION FROM VERSION',
+}
+
+
+class HiveMetastoreInspector(interface.EngineInterface):
     """Access external Hive metastore via JDBC connection. Supports schema version >= 2.0.0 on every datastore.
     """
     sys_schemas = []
 
     table_properties = []
-
-    definitions_sql = HIVE_METASTORE_DEFINITIONS_QUERY
 
     def __init__(self, host, username, password, port, database, extras=None):
         self.extras = extras or {}
@@ -80,8 +133,9 @@ class HiveMetastoreInspector(object):
             port,
             database,
         )
-        self.inspector.override_definitions_sql(HIVE_METASTORE_DEFINITIONS_QUERY)
+        self.inspector.override_definitions_sql(supported_external_metastores_definitions_sql[self.dialect])
         self.inspector.override_sys_schema([])
+        self._version = None
 
     @classmethod
     def has_indexes(self):
@@ -92,7 +146,7 @@ class HiveMetastoreInspector(object):
         return self.extras.get('dialect')
 
     def get_db_version(self):
-        result = self.get_first('SELECT SCHEMA_VERSION FROM VERSION')
+        result = self.inspector.get_first(supported_external_metastores_version_sql[self.dialect])
         if len(result):
             return result['SCHEMA_VERSION']
         return None

@@ -4,25 +4,29 @@ x-mysql-defaults: &mysql_defaults
     MYSQL_ROOT_PASSWORD: example
 x-postgresql-defaults: &postgresql_defaults
   environment:
-    POSTGRES_USER: metamapper
-    POSTGRES_PASSWORD: example
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_DB: hive_metastore
+x-sqlserver-defaults: &sqlserver_defaults
+  environment:
+    ACCEPT_EULA: "Y"
 services:
-  # database:
-  #   image: postgres:9.6
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgres
-  #     POSTGRES_DB: metamapper
-  #   restart: unless-stopped
-  # metamapper:
-  #   build: ../../../
-  #   image: metamapper:inspector
-  #   environment:
-  #     METAMAPPER_DB_HOST: database
-  #     METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
-  #     METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
-  #   depends_on:
-  #     - database
+  database:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: metamapper
+    restart: unless-stopped
+  metamapper:
+    build: ../../../
+    image: metamapper:inspector
+    environment:
+      METAMAPPER_DB_HOST: database
+      METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
+      METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
+    depends_on:
+      - database
   mysql-hive-2.3.0:
     build:
       context: ./
@@ -30,15 +34,18 @@ services:
       args:
         MYSQL_VERSION: "8.0"
     << : *mysql_defaults
-    networks:
-      - metamapper_metamapper
-  # postgres-hive-2.3.0:
-  #   build:
-  #     context: ./
-  #     dockerfile: postgres.Dockerfile
-  #     args:
-  #       POSTGRES_VERSION: "9.6"
-  #   << : *postgresql_defaults
-networks:
-  metamapper_metamapper:
-    external: true
+  postgresql-hive-2.3.0:
+    build:
+      context: ./
+      dockerfile: postgres.Dockerfile
+      args:
+        POSTGRES_VERSION: "9.6"
+    << : *postgresql_defaults
+  sqlserver-hive-2.3.0:
+    build:
+      context: ./
+      dockerfile: sqlserver.Dockerfile
+      args:
+        MSSQL_IMAGE: mcr.microsoft.com/mssql/server
+        MSSQL_VERSION: 2019-CU5-ubuntu-16.04
+    << : *sqlserver_defaults
