@@ -182,7 +182,7 @@ class JdbcConnectionSerializer(MetamapperSerializer, JdbcCredentialsSerializer):
     """Validates connectivity to a database.
     """
     engine = serializers.ChoiceField(choices=models.Datastore.ENGINE_CHOICES)
-    extras = serializers.JSONField(required=False)
+    extras = serializers.JSONField(required=False, allow_null=True)
 
     ssh_host = serializers.IPAddressField(required=False, allow_null=True)
     ssh_user = fields.SysnameField(required=False, max_length=128, allow_null=True)
@@ -191,6 +191,9 @@ class JdbcConnectionSerializer(MetamapperSerializer, JdbcCredentialsSerializer):
 
     class Meta:
         model = models.Datastore
+
+    def validate_extras(self, extras):
+        return {} if extras is None else extras
 
     def validate_credentials(self, data):
         """Some datastores have non-standard credentials, so we should verify them via custom serializers.

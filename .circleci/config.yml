@@ -66,6 +66,9 @@ jobs:
       - run:
           name: Run SQL Server inspector tests
           command: COMPOSE_FILE="dev/datastores/sqlserver/docker-compose.yml" bash .circleci/test-inspector.sh sqlserver
+      - run:
+          name: Run Hive Metastore inspector tests
+          command: COMPOSE_FILE="dev/datastores/hive/docker-compose.yml" bash .circleci/test-inspector.sh hive
   frontend-tests:
     docker:
       - image: circleci/node:12

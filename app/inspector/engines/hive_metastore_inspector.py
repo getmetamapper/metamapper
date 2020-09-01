@@ -53,6 +53,14 @@ ORDER by table_schema, table_name, ordinal_position
 """
 
 
+HIVE_METASTORE_VERSION_QUERY = """
+SELECT SCHEMA_VERSION FROM VERSION
+"""
+
+
+# The default Hive upgrade migrations create Postgres tables in quotes. This is done to
+# force them uppercase. If we start seeing users with downcased tables, we can make the query
+# routing process a bit more intelligent.
 HIVE_METASTORE_DEFINITIONS_QUERY_WITH_QUOTES = """
 SELECT source.* FROM
 (
@@ -97,6 +105,11 @@ ORDER by table_schema, table_name, ordinal_position
 """
 
 
+HIVE_METASTORE_VERSION_QUERY_WITH_QUOTES = """
+SELECT "SCHEMA_VERSION" FROM "VERSION"
+"""
+
+
 supported_external_metastores = {
     Datastore.MYSQL: MySQLInspector,
     Datastore.POSTGRESQL: PostgresqlInspector,
@@ -111,9 +124,9 @@ supported_external_metastores_definitions_sql = {
 }
 
 supported_external_metastores_version_sql = {
-    Datastore.MYSQL: 'SELECT SCHEMA_VERSION FROM VERSION',
-    Datastore.POSTGRESQL: 'SELECT "SCHEMA_VERSION" FROM "VERSION"',
-    Datastore.SQLSERVER: 'SELECT SCHEMA_VERSION FROM VERSION',
+    Datastore.MYSQL: HIVE_METASTORE_VERSION_QUERY,
+    Datastore.POSTGRESQL: HIVE_METASTORE_VERSION_QUERY_WITH_QUOTES,
+    Datastore.SQLSERVER: HIVE_METASTORE_VERSION_QUERY,
 }
 
 

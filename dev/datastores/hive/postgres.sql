@@ -1472,16 +1472,7 @@ INSERT INTO "DBS" VALUES (1,'Default Hive database','file:/shared_data/hive/ware
 
 INSERT INTO "CDS" VALUES (1),(6),(11),(12),(13),(14),(15),(16);
 
-INSERT INTO "SERDES" VALUES
-(1,NULL,'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'),
-(6,NULL,'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'),
-(11,NULL,'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'),
-(12,NULL,NULL),
-(13,NULL,'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'),
-(14,NULL,'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'),
-(15,NULL,'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'),
-(16,NULL,'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe');
-
+INSERT INTO "SERDES" VALUES (1,NULL,'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe');
 
 INSERT INTO "SDS" VALUES
 (1,'org.apache.hadoop.mapred.TextInputFormat', TRUE,'file:/shared_data/table_data/tpcds/customer',-1,'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',1, 1, FALSE),
@@ -1492,7 +1483,6 @@ INSERT INTO "SDS" VALUES
 (15,'org.apache.hadoop.mapred.TextInputFormat', TRUE,'file:/shared_data/table_data/tpcds/customer',-1,'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',1, 1, FALSE),
 (16,'org.apache.hadoop.mapred.TextInputFormat', TRUE,'file:/shared_data/table_data/tpcds/customer',-1,'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',1, 1, FALSE),
 (6,'org.apache.hadoop.mapred.TextInputFormat', TRUE,'file:/shared_data/table_data/tpcds/customer',-1,'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',1, 1, FALSE);
-
 
 INSERT INTO "TBLS" VALUES (1,1598384969,2,0,'root',0,1,'customer','EXTERNAL_TABLE',NULL,NULL),(6,1598385675,1,0,'root',0,6,'table_tab1','MANAGED_TABLE',NULL,NULL),(11,1598736516,8,0,'root',0,11,'employee','MANAGED_TABLE',NULL,NULL),(12,1598736550,8,0,'root',0,12,'employees_high_salary','VIRTUAL_VIEW','SELECT "employee"."eid", "employee"."name", "employee"."salary", "employee"."destination" FROM "employees"."employee"\nWHERE "employee"."salary">30000','SELECT * FROM employees.employee\nWHERE salary>30000'),(13,1598736607,9,0,'root',0,13,'log_messages','EXTERNAL_TABLE',NULL,NULL),(14,1598736646,9,0,'root',0,14,'customer','MANAGED_TABLE',NULL,NULL),(15,1598736744,9,0,'root',0,15,'orders','MANAGED_TABLE',NULL,NULL),(16,1598736796,10,0,'root',0,16,'complextest','MANAGED_TABLE',NULL,NULL);
 

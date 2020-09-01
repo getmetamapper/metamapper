@@ -358,6 +358,49 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
         ])
 
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_hive_valid(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        extras = {
+            'engine': models.Datastore.HIVE,
+            'extras': {
+                'dialect': models.Datastore.POSTGRESQL,
+                'invalid': 'this_will_be_stripped_off',
+            },
+        }
+
+        attributes = self._get_attributes(**extras)
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertTrue(serializer.is_valid())
+
+        instance = serializer.save(workspace=self.workspace, creator=self.user)
+
+        self.assertEqual(list(instance.extras.keys()), ['dialect'])
+        self.assertEqual(instance.extras['dialect'], extras['extras']['dialect'])
+
+    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_hive_invalid_dialect(self, verify_connection, mock_run):
+        """It should be able to create the resource.
+        """
+        extras = {
+            'engine': models.Datastore.HIVE,
+            'extras': {
+                'dialect': models.Datastore.BIGQUERY,
+            },
+        }
+
+        attributes = self._get_attributes(**extras)
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
+        ])
+
     def test_drf_validation_rules(self):
         """It should return error messages when DRF validation fails.
         """
@@ -455,9 +498,8 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         attributes.update(**overrides)
         return attributes
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    def test_valid_update(self, verify_connection, mock_run):
+    def test_valid_update(self, verify_connection):
         """It should update the provided attributes.
         """
         attributes = {
@@ -476,9 +518,8 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         self.assertTrue(serializer.save())
         self.assertInstanceUpdated(self.instance, **attributes)
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    def test_invalid_update(self, verify_connection, mock_run):
+    def test_invalid_update(self, verify_connection):
         """It should update the provided attributes.
         """
         attributes = {
@@ -503,9 +544,8 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         ])
         self.assertInstanceNotUpdated(self.instance, **attributes)
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    def test_cannot_update_engine(self, verify_connection, mock_run):
+    def test_cannot_update_engine(self, verify_connection):
         """It should not allow for the engine to be updated.
         """
         attributes = {'engine': models.Datastore.REDSHIFT}
@@ -519,9 +559,8 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         self.assertTrue(serializer.save())
         self.assertInstanceNotUpdated(self.instance, **attributes)
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    def test_disable_ssh(self, verify_connection, mock_run):
+    def test_disable_ssh(self, verify_connection):
         """It should not clear the extra parameters.
         """
         instance = self.factory(
@@ -543,9 +582,8 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         self.assertTrue(serializer.save())
         self.assertInstanceUpdated(instance, **attributes)
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    def test_with_google_bigquery_valid(self, verify_connection, mock_run):
+    def test_with_google_bigquery_valid(self, verify_connection):
         """It should be able to create the resource.
         """
         extras = {
@@ -580,9 +618,8 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         self.assertEqual(list(instance.extras.keys()), ['credentials'])
         self.assertEqual(instance.extras['credentials']['project_id'], attributes['extras']['credentials']['project_id'])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    def test_with_google_bigquery_invalid(self, verify_connection, mock_run):
+    def test_with_google_bigquery_invalid(self, verify_connection):
         """It should be able to create the resource.
         """
         extras = {
@@ -612,9 +649,8 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    def test_with_aws_athena_valid(self, verify_connection, mock_run):
+    def test_with_aws_athena_valid(self, verify_connection):
         """It should be able to create the resource.
         """
         instance = self.factory(
@@ -648,9 +684,8 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         self.assertEqual(instance.extras['role'], 'arn:aws:iam::123456789012:role/other')
         self.assertEqual(instance.extras['region'], 'us-east-1')
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
-    def test_with_aws_athena_invalid(self, verify_connection, mock_run):
+    def test_with_aws_athena_invalid(self, verify_connection):
         """It should be able to create the resource.
         """
         instance = self.factory(
@@ -670,6 +705,59 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
                     'iam_role': 'arn:aws:iam::123456789012:role/other',
                     'region': 'us-west-2',
                 }
+            },
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
+        ])
+
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_hive_valid(self, verify_connection):
+        """It should be able to create the resource.
+        """
+        instance = self.factory(
+            engine=models.Datastore.HIVE,
+            extras={
+                'dialect': models.Datastore.POSTGRESQL,
+            },
+        )
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'extras': {
+                    'dialect': models.Datastore.MYSQL,
+                }
+            },
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+
+        instance.refresh_from_db()
+
+        self.assertEqual(list(instance.extras.keys()), ['dialect'])
+        self.assertEqual(instance.extras['dialect'],  models.Datastore.MYSQL)
+
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_with_hive_invalid_dialect(self, verify_connection):
+        """It should be able to create the resource.
+        """
+        instance = self.factory(
+            engine=models.Datastore.HIVE,
+            extras={
+                'dialect': models.Datastore.MYSQL,
+            },
+        )
+
+        serializer = self.serializer_class(
+            instance=instance,
+            data={
+                'extras': {},
             },
             partial=True,
         )
