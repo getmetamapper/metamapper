@@ -27,13 +27,6 @@ services:
       METAMAPPER_FERNET_KEY: mHYPeDvFJ1LtDClYGtckO-PZCBZfM2xLpWKqu7qQSkI=
     depends_on:
       - database
-  mysql-hive-2.3.0:
-    build:
-      context: ./
-      dockerfile: mysql.Dockerfile
-      args:
-        MYSQL_VERSION: "8.0"
-    << : *mysql_defaults
   postgresql-hive-2.3.0:
     build:
       context: ./
@@ -49,3 +42,10 @@ services:
         MSSQL_IMAGE: mcr.microsoft.com/mssql/server
         MSSQL_VERSION: 2019-CU5-ubuntu-16.04
     << : *sqlserver_defaults
+  mysql-hive-2.3.0:
+    build:
+      context: ./
+      dockerfile: mysql.Dockerfile
+      args:
+        MYSQL_VERSION: "8.0"
+    << : *mysql_defaults

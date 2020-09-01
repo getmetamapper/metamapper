@@ -30,6 +30,10 @@ class Comment extends Component {
   toggleReply = () => {
     const isReplying = !this.state.isReplying
     this.setState({ isReplying })
+
+    if (this.props.onCreate) {
+      this.props.onCreate()
+    }
   }
 
   toggleEditing = () => {
@@ -53,6 +57,7 @@ class Comment extends Component {
       contentObject,
       hasPermission,
       childCount,
+      onDelete,
     } = this.props
 
     const actions = [
@@ -114,6 +119,7 @@ class Comment extends Component {
           key="comment-delete"
           commentId={id}
           objectId={contentObject.id}
+          onSubmit={onDelete}
         />
       )
     }

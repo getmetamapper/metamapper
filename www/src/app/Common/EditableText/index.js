@@ -14,6 +14,8 @@ const EditableText = ({
   // Exercise: It can be made dynamic by accepting initial state as props outside the component
   const [editing, setEditing] = useState(false)
 
+  const { onClickButton, ...restProps } = props
+
   // Event handler while pressing any key while editing
   const handleKeyDown = (event, type) => {
     // Handle when key is pressed
@@ -22,8 +24,8 @@ const EditableText = ({
   const handleClick = (event) => {
     setEditing(false)
 
-    if (props.onClickButton) {
-      props.onClickButton(event)
+    if (onClickButton) {
+      onClickButton(event)
     }
   }
 
@@ -44,12 +46,12 @@ const EditableText = ({
   }
 
   return (
-    <section {...props} className="editable-text">
+    <section {...restProps} className="editable-text">
       {editing && !disabled ? (
         <div {...editingProps}>
           {children}
           <>
-            {props.onClickButton && (
+            {onClickButton && (
               <Button
                 type="primary"
                 onClick={handleClick}

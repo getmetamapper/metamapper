@@ -33,7 +33,11 @@ class DeleteComment extends Component {
     this.props.handleMutation(payload, this.handleSubmitSuccess)
   }
 
-  handleSubmitSuccess = ({ data }) => {}
+  handleSubmitSuccess = ({ data }) => {
+    if (this.props.onSubmit) {
+      this.props.onSubmit()
+    }
+  }
 
   render() {
     return (

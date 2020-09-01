@@ -37,7 +37,6 @@ export default (
 
       if (shouldRefreshUser || (authToken && !currentUser) || (!authToken && currentUser)) {
         this.props.refreshUser()
-        return null;
       }
 
       let { currentWorkspace } = this.props
