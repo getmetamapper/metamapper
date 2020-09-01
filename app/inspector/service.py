@@ -7,21 +7,32 @@ from io import StringIO
 
 from app.definitions.models import Datastore
 
-from app.inspector.engines import snowflake_inspector
-from app.inspector.engines import postgresql_inspector
-from app.inspector.engines import redshift_inspector
-from app.inspector.engines import sqlserver_inspector
+from app.inspector.engines import aws_athena_inspector
+from app.inspector.engines import aws_glue_inspector
+from app.inspector.engines import azure_inspector
+from app.inspector.engines import bigquery_inspector
+from app.inspector.engines import hive_metastore_inspector
 from app.inspector.engines import mysql_inspector
 from app.inspector.engines import oracle_inspector
+from app.inspector.engines import postgresql_inspector
+from app.inspector.engines import redshift_inspector
+from app.inspector.engines import snowflake_inspector
+from app.inspector.engines import sqlserver_inspector
 
 
 engines = {
+    Datastore.ATHENA: aws_athena_inspector.AwsAthenaInspector,
+    Datastore.AZURE_DWH: azure_inspector.AzureInspector,
+    Datastore.AZURE_SQL: azure_inspector.AzureInspector,
+    Datastore.BIGQUERY: bigquery_inspector.BigQueryInspector,
+    Datastore.GLUE: aws_glue_inspector.AwsGlueInspector,
+    Datastore.HIVE: hive_metastore_inspector.HiveMetastoreInspector,
     Datastore.MYSQL: mysql_inspector.MySQLInspector,
+    Datastore.ORACLE: oracle_inspector.OracleInspector,
     Datastore.POSTGRESQL: postgresql_inspector.PostgresqlInspector,
     Datastore.REDSHIFT: redshift_inspector.RedshiftInspector,
     Datastore.SNOWFLAKE: snowflake_inspector.SnowflakeInspector,
     Datastore.SQLSERVER: sqlserver_inspector.SQLServerInspector,
-    Datastore.ORACLE: oracle_inspector.OracleInspector,
 }
 
 
@@ -58,6 +69,7 @@ def construct_conn_dict(datastore, override_host=None, override_port=None):
         'password': datastore.password,
         'port': port,
         'database': datastore.database,
+        'extras': datastore.extras,
     }
 
 

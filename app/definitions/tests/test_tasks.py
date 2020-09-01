@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-import unittest.mock as mock
-
 import testutils.cases as cases
 import app.definitions.tasks as tasks
 
 
 from app.definitions.models import Datastore, Table, AssetOwner
-from app.revisioner.models import Run
 from app.comments.models import Comment
 
 
@@ -25,7 +22,7 @@ class HardDeleteDatastoreTests(cases.UserFixtureMixin, cases.TestCase):
 
         tasks.hard_delete_datastore(self.datastore_id)
 
-        self.assertTrue(Datastore.objects.filter(id=self.datastore_id).first() == None)
+        self.assertTrue(Datastore.objects.filter(id=self.datastore_id).first() is None)
         self.assertTrue(Comment.objects.count() < comments_count)
         self.assertTrue(Table.objects.count() < tables_count)
         self.assertTrue(AssetOwner.objects.count() < owners_count)

@@ -23,8 +23,17 @@ class InspectorInterfaceTests(unittest.TestCase):
             'database': 'acme',
         }
 
+        excluded_engines = (
+            models.Datastore.BIGQUERY,
+            models.Datastore.ATHENA,
+            models.Datastore.GLUE,
+            models.Datastore.HIVE,
+        )
+
         self.engines = {}
         for name, engine in service.engines.items():
+            if name in excluded_engines:
+                continue
             self.engines[name] = engine(**self.connection)
 
     def test_all_engines_implemented(self):

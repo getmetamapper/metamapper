@@ -29,7 +29,7 @@ Here are a few features of Metamapper:
 - *Change detection*: Detects when data definitions change between schema inspection runs. Useful for alerting uncommunicated changes.
 - *Annotations:* Supports comments on almost every object so your team can crowdsource knowledge about data assets.
 - *Custom Properties:* Easily attach custom metadata to databases and tables, such as data steward or ETL process references.
-- *Search:* Everything is indexed and [searchable](https://www.postgresql.org/docs/9.5/textsearch.html). Self-service data analytics, here we come.
+- *Search:* Everything is indexed and [searchable](https://www.postgresql.org/docs/9.6/textsearch.html). Self-service data analytics, here we come.
 
 Check out the [Introducing Metamapper](https://www.metamapper.io/blog/2020/07/12/introducting-metamapper) blog post.
 
@@ -41,7 +41,7 @@ Reading the [documentation](https://www.metamapper.io/) is also a good starting 
 
 ## Supported datastores
 
-Metamapper currently supports automatic crawling and indexing of six SQL-based relational database management systems with plans to add more in the near future.
+Metamapper currently supports automatic crawling and indexing of these database management systems with plans to add more in the near future.
 
 - Amazon Redshift
 - Microsoft SQL Server

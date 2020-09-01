@@ -290,6 +290,40 @@
   },
   {
     "model": "definitions.schema",
+    "pk": 124123213,
+    "fields": {
+      "created_at": "2020-06-26T22:45:18.533Z",
+      "updated_at": "2020-06-26T22:45:18.534Z",
+      "created_revision_id": "e3c289ce-55f2-4194-a70a-582d5b395b7c",
+      "deleted_at": null,
+      "object_id": "5431",
+      "datastore": "G2ZKhp7tKkFm",
+      "workspace": "d6acb06747514d17b74f21e7b00c95a4",
+      "name": "admin",
+      "tags": []
+    }
+  },
+  {
+    "model": "definitions.table",
+    "pk": 112311,
+    "fields": {
+      "created_at": "2020-06-26T22:45:18.733Z",
+      "updated_at": "2020-06-26T22:45:18.733Z",
+      "custom_properties": {},
+      "created_revision_id": "d8e0c8d4-7d68-4b93-889f-9bba4d3f14b5",
+      "deleted_at": null,
+      "object_id": "51231",
+      "schema": 124123213,
+      "workspace": "d6acb06747514d17b74f21e7b00c95a4",
+      "name": "access_logs",
+      "tags": [],
+      "kind": "base table",
+      "short_desc": "",
+      "properties": {}
+    }
+  },
+  {
+    "model": "definitions.schema",
     "pk": 500,
     "fields": {
       "created_at": "2020-06-26T22:45:18.533Z",

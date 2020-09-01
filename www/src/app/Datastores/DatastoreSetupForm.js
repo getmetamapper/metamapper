@@ -75,11 +75,16 @@ class DatastoreSetupForm extends Component {
       "password",
       "port",
       "database",
+      "extras",
       "sshEnabled",
       "sshHost",
       "sshUser",
       "sshPort",
     ])
+
+    if (variables.engine === "bigquery") {
+      variables.extras.credentials = JSON.parse(variables.extras.credentials)
+    }
 
     if (isValid) {
       this.setState({ connectionIsTesting: true })

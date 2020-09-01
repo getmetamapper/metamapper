@@ -118,7 +118,6 @@ class DatastoreAssetsTable extends Component {
   render() {
     const { hasPermission } = this.props
     const { dataSource, loading } = this.state
-
     const columns = this.columns.map((col) => {
       if (!hasPermission || !col.editable) {
         return col
@@ -134,9 +133,8 @@ class DatastoreAssetsTable extends Component {
         }),
       }
     })
-
     return (
-      <div data-test="DatastoreAssetsTable" ref="myscroll">
+      <div data-test="DatastoreAssetsTable">
         <Table
           rowKey="id"
           rowClassName={() => "editable-row"}
@@ -162,7 +160,7 @@ const enhance = compose(
   withRouter,
   withWriteAccess,
   graphql(UpdateTableMetadata),
-  withGraphQLMutation
+  withGraphQLMutation,
 )
 
 export default enhance(DatastoreAssetsTable)

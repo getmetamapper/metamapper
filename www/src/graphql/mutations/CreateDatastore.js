@@ -10,6 +10,7 @@ export default gql`
     $database: String!
     $host: String!
     $port: Int!
+    $extras: JSONObject
     $sshEnabled: Boolean
     $sshHost: String
     $sshUser: String
@@ -25,6 +26,7 @@ export default gql`
         database: $database
         host: $host
         port: $port
+        extras: $extras
         sshEnabled: $sshEnabled
         sshHost: $sshHost
         sshUser: $sshUser

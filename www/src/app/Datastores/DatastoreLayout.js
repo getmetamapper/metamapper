@@ -118,7 +118,7 @@ class DatastoreLayout extends Component {
                 </Menu>
               </Col>
               <Col span={20} className="pull-right">
-                <div className="breadcrumbs-wrapper fixed">
+                <div className="breadcrumbs-wrapper fixed" data-test="DatastoreLayout.Breadcrumbs">
                   <Breadcrumbs breadcrumbs={breadcrumbs(datastore)} />
                 </div>
                 <Layout.Content className={className}>

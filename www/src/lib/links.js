@@ -37,15 +37,17 @@ const authLink = setContext((_, { headers }) => {
   return config
 })
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  // if (graphQLErrors)
-  //   graphQLErrors.forEach(({ message, locations, path }) =>
-  //     console.log(
-  //       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-  //     )
-  //   );
-  if (networkError) console.log(`[Network error]: ${networkError}`);
-})
+const errorLink = onError(({ graphQLErrors, networkError, response, operation, forward }) => {
+  if (response && graphQLErrors) {
+    const { code } = response;
+
+    if (code === 401) {
+      window.localStorage.removeItem(AUTH_TOKEN)
+      window.localStorage.removeItem(WORKSPACE_TOKEN)
+      window.location.reload()
+    };
+  };
+});
 
 const doNotRetry = ['testJdbcConnection']
 
