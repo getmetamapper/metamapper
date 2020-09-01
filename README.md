@@ -1,6 +1,6 @@
 # Metamapper
 
-[![CircleCI](https://circleci.com/gh/getmetamapper/metamapper.svg?style=shield)](https://circleci.com/gh/getmetamapper/metamapper) [![Vulnerabilities](https://snyk.io/test/github/getmetamapper/metamapper/badge.svg)](https://snyk.io/test/github/getmetamapper/metamapper) [![latest version](https://img.shields.io/docker/v/getmetamapper/metamapper?sort=semver)](https://hub.docker.com/r/getmetamapper/metamapper) [![python](https://img.shields.io/github/pipenv/locked/python-version/getmetamapper/metamapper)](https://github.com/getmetamapper/metamapper/blob/master/Pipfile) [![discord](https://img.shields.io/discord/713821768237973535)](http://discuss.metamapper.io)
+[![CircleCI](https://circleci.com/gh/getmetamapper/metamapper.svg?style=shield)](https://circleci.com/gh/getmetamapper/metamapper) [![Vulnerabilities](https://snyk.io/test/github/getmetamapper/metamapper/badge.svg)](https://snyk.io/test/github/getmetamapper/metamapper) [![latest version](https://img.shields.io/docker/v/getmetamapper/metamapper?sort=semver)](https://hub.docker.com/r/getmetamapper/metamapper) [![python](http://img.shields.io/badge/python-%3E=3.6-blue)](https://www.python.org/downloads/release/python) [![discord](https://img.shields.io/discord/713821768237973535)](http://discuss.metamapper.io)
 
 Metamapper is an open-source metadata management platform that aims to make it easier to share data and its context across your organization. It's a self-updating data catalog complete with full-text search, an integrated commenting system, and much more.
 
@@ -29,7 +29,7 @@ Here are a few features of Metamapper:
 - *Change detection*: Detects when data definitions change between schema inspection runs. Useful for alerting uncommunicated changes.
 - *Annotations:* Supports comments on almost every object so your team can crowdsource knowledge about data assets.
 - *Custom Properties:* Easily attach custom metadata to databases and tables, such as data steward or ETL process references.
-- *Search:* Everything is indexed and [searchable](https://www.postgresql.org/docs/9.5/textsearch.html). Self-service data analytics, here we come.
+- *Search:* Everything is indexed and [searchable](https://www.postgresql.org/docs/9.6/textsearch.html). Self-service data analytics, here we come.
 
 Check out the [Introducing Metamapper](https://www.metamapper.io/blog/2020/07/12/introducting-metamapper) blog post.
 
@@ -41,7 +41,7 @@ Reading the [documentation](https://www.metamapper.io/) is also a good starting 
 
 ## Supported datastores
 
-Metamapper currently supports automatic crawling and indexing of six SQL-based relational database management systems with plans to add more in the near future.
+Metamapper currently supports automatic crawling and indexing of these database management systems with plans to add more in the near future.
 
 - Amazon Redshift
 - Microsoft SQL Server

@@ -51,6 +51,7 @@ const withGetTableColumns = graphql(GetTableColumns, {
         map(columns.edges, ({ node }) => node),
         "ordinalPosition"
       ),
+      refetchTableDefinition: data.refetch,
     }
   },
 })

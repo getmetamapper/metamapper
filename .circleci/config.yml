@@ -23,29 +23,36 @@ jobs:
       - setup_remote_docker
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - restore_cache:
-          key: pipenv-v1-{{ checksum "Pipfile.lock" }}
+          key: v1-requirements-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Install Linux dependencies
           command: |
-            sudo pip install pipenv tblib --quiet && \
             sudo apt-get update -y && \
             sudo apt-get install -y g++ libxml2-dev libxmlsec1-dev libxmlsec1-openssl
       - run:
           name: Install Python dependencies
-          command: sudo pipenv install --dev --system
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install pip-tools==5.3.1 --quiet
+            pip-sync requirements.txt requirements-dev.txt
       - save_cache:
-          key: pipenv-v1-{{ checksum "Pipfile.lock" }}
+          key: v1-requirements-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
           paths:
-            - "/usr/local/lib/python3.7/site-packages"
+            - "venv"
       - run:
           name: Wait for database
           command: dockerize -wait tcp://database:5432 -timeout 1m
       - run:
           name: Run database migrations
-          command: python manage.py migrate
+          command: |
+            . venv/bin/activate
+            python manage.py migrate
       - run:
           name: Run test suite
-          command: python manage.py test --parallel=4 --exclude-tag=inspector
+          command: |
+            . venv/bin/activate
+            python manage.py test --parallel=4 --exclude-tag=inspector
   backend-inspector-tests:
     environment:
       COMPOSE_PROJECT_NAME: metamapper
