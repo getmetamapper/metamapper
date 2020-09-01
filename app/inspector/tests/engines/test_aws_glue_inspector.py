@@ -86,10 +86,10 @@ class AwsGlueInspectorTests(unittest.TestCase):
         ]
 
         mock_list_tables.return_value = [
-            {'Name': 'table_1', 'TableType': 'VIEW', 'StorageDescriptor': { 'Columns': [] }, 'PartitionKeys': []},
-            {'Name': 'table_2', 'TableType': 'VIEW', 'StorageDescriptor': { 'Columns': [] }, 'PartitionKeys': []},
-            {'Name': 'table_3', 'TableType': 'VIEW', 'StorageDescriptor': { 'Columns': [] }, 'PartitionKeys': []},
-            {'Name': 'table_4', 'TableType': 'VIEW', 'StorageDescriptor': { 'Columns': [] }, 'PartitionKeys': []},
+            {'Name': 'table_1', 'TableType': 'VIEW', 'StorageDescriptor': {'Columns': []}, 'PartitionKeys': []},
+            {'Name': 'table_2', 'TableType': 'VIEW', 'StorageDescriptor': {'Columns': []}, 'PartitionKeys': []},
+            {'Name': 'table_3', 'TableType': 'VIEW', 'StorageDescriptor': {'Columns': []}, 'PartitionKeys': []},
+            {'Name': 'table_4', 'TableType': 'VIEW', 'StorageDescriptor': {'Columns': []}, 'PartitionKeys': []},
         ]
 
         records = self.engine.get_tables_and_views()
@@ -207,5 +207,5 @@ class AwsGlueInspectorTests(unittest.TestCase):
                     'is_primary': True,
                     'default_value': '',
                 }
-              ]
-            })
+            ]
+        })

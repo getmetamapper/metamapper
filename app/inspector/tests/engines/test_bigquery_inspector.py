@@ -185,5 +185,5 @@ class BigQueryInspectorTests(unittest.TestCase):
                     'is_primary': False,
                     'default_value': '',
                 }
-              ]
-            })
+            ]
+        })

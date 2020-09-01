@@ -29,7 +29,7 @@ class AwsAthenaInspector(interface.AmazonInspectorMixin):
             for r in self._list_data_catalogs():
                 if r['CatalogName'] == self.database:
                     return True
-        except (exceptions.ClientError, exceptions.NoCredentialsError, exceptions.ParamValidationError) as e:
+        except (exceptions.ClientError, exceptions.NoCredentialsError, exceptions.ParamValidationError):
             return False
         return False
 

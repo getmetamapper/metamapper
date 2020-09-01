@@ -39,7 +39,6 @@ class AuditActivityActionObjectType(graphene.ObjectType):
         return instance.display_name if hasattr(instance, 'display_name') else None
 
 
-
 class AuditActivityTargetType(graphene.ObjectType):
     """The primary target of the action.
     """

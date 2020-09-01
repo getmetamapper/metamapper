@@ -220,5 +220,5 @@ class AwsAthenaInspectorTests(unittest.TestCase):
                     'is_primary': True,
                     'default_value': '',
                 }
-              ]
-            })
+            ]
+        })

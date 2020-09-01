@@ -3,7 +3,7 @@ import app.inspector.engines.interface as interface
 
 from app.definitions.models import Datastore
 
-from app.inspector.engines.azure_inspector import AzureInspector
+from app.inspector.engines.azure_inspector import AzureInspector  # noqa: F401
 from app.inspector.engines.postgresql_inspector import PostgresqlInspector
 from app.inspector.engines.mysql_inspector import MySQLInspector
 from app.inspector.engines.sqlserver_inspector import SQLServerInspector

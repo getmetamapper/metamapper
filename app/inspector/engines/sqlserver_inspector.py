@@ -141,4 +141,3 @@ class SQLServerInspector(interface.EngineInterface):
                 version = version.decode()
             return version
         return None
-

@@ -11,4 +11,3 @@ class DataAssetsFilterSet(filters.FilterSet):
     class Meta:
         model = models.Table
         fields = []
-

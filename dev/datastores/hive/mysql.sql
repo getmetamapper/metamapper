@@ -530,7 +530,7 @@ CREATE TABLE IF NOT EXISTS `SKEWED_STRING_LIST_VALUES` (
 -- Table structure for table `SKEWED_VALUES`
 --
 
-!40101 SET @saved_cs_client     = @@character_set_client ;
+/* !40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE IF NOT EXISTS `SKEWED_VALUES` (
   `SD_ID_OID` bigint(20) NOT NULL,
@@ -840,17 +840,6 @@ CREATE INDEX `CONSTRAINTS_PARENT_TABLE_ID_INDEX` ON KEY_CONSTRAINTS (`PARENT_TBL
 -- Record schema version. Should be the last step in the init script
 -- -----------------------------------------------------------------
 INSERT INTO VERSION (VER_ID, SCHEMA_VERSION, VERSION_COMMENT) VALUES (1, '2.3.0', 'Hive release version 2.3.0');
-
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 INSERT INTO `DBS` VALUES (1,'Default Hive database','file:/shared_data/hive/warehouse','default','public','ROLE'),(2,'','file:/shared_data/hive/warehouse/tpcds.db','tpcds',NULL,'USER'),(8,NULL,'file:/shared_data/hive/warehouse/employees.db','employees','root','USER'),(9,NULL,'file:/shared_data/hive/warehouse/app.db','app','root','USER'),(10,NULL,'file:/shared_data/hive/warehouse/complex.db','complex','root','USER');
 

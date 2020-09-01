@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-import unittest.mock as mock
-
 import testutils.cases as cases
 import app.authentication.tasks as tasks
 
 from app.authentication.models import Workspace
 from app.definitions.models import Datastore, Table, AssetOwner
-from app.revisioner.models import Run
 from app.comments.models import Comment
 
 
@@ -26,7 +23,7 @@ class HardDeleteWorkspaceTests(cases.UserFixtureMixin, cases.TestCase):
 
         tasks.hard_delete_workspace(self.workspace_id)
 
-        self.assertTrue(Workspace.objects.filter(id=self.workspace_id).first() == None)
+        self.assertTrue(Workspace.objects.filter(id=self.workspace_id).first() is None)
         self.assertTrue(Datastore.objects.count() < datastore_count)
         self.assertTrue(Comment.objects.count() < comments_count)
         self.assertTrue(Table.objects.count() < tables_count)

@@ -57,7 +57,9 @@ GOOGLE_SERVICE_ACCOUNT_INFO = {
     'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
     'token_uri': 'https://oauth2.googleapis.com/token',
     'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs',
-    'client_x509_cert_url': 'https://www.googleapis.com/robot/v1/metadata/x509/metamapper@metamapper.iam.gserviceaccount.com',
+    'client_x509_cert_url': (
+        'https://www.googleapis.com/robot/v1/metadata/x509/metamapper@metamapper.iam.gserviceaccount.com'
+    ),
 }
 
 
@@ -741,7 +743,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         instance.refresh_from_db()
 
         self.assertEqual(list(instance.extras.keys()), ['dialect'])
-        self.assertEqual(instance.extras['dialect'],  models.Datastore.MYSQL)
+        self.assertEqual(instance.extras['dialect'], models.Datastore.MYSQL)
 
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_hive_invalid_dialect(self, verify_connection):

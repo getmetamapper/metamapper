@@ -4,12 +4,10 @@ import unittest.mock as mock
 from django import test
 from django.utils import timezone
 
-import app.inspector.engines.mysql_inspector as engine
+import app.inspector.engines.hive_metastore_inspector as engine
 import app.revisioner.tasks.core as coretasks
 
 import testutils.factories as factories
-
-import app.inspector.engines.hive_metastore_inspector as engine
 
 
 class HiveMetastoreInspectorTests(test.TestCase):
@@ -40,7 +38,6 @@ class HiveMetastoreInspectorTests(test.TestCase):
                 **self.connection,
             )
             assert isinstance(instance.inspector, inspector_class)
-
 
     @mock.patch.object(engine.MySQLInspector, 'get_first', return_value={'version': '5.7.0'})
     def test_get_tables_and_views_sql_inherited(self, get_first):
@@ -88,7 +85,6 @@ class HiveMetastoreInspectorTests(test.TestCase):
         """It should implement Snowflake.version
         """
         self.assertEqual(self.engine.version, '4.8.1')
-
 
 
 class HiveMetastoreInspectorIntegrationTestMixin(object):
