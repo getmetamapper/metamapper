@@ -38,6 +38,7 @@ class DatastoreColumns extends Component {
     )
   }
 
+
   handleCloseDetails = () => {
     const {
       location: { pathname },
@@ -71,7 +72,10 @@ class DatastoreColumns extends Component {
       tableColumns,
       tableDefinition,
     } = this.props
-    const { columnDetailsVisible, selectedColumn } = this.state
+    const {
+      columnDetailsVisible,
+      selectedColumn,
+    } = this.state
     return (
       <Layout
         datastore={datastore}

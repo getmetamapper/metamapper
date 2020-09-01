@@ -27,8 +27,6 @@ services:
         MSSQL_VERSION: 2017-CU21-ubuntu-16.04
     << : *sqlserver_defaults
   sqlserver-2019:
-    ports:
-      - "1433:1433"
     build:
       context: ./
       args:

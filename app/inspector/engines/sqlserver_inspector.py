@@ -115,6 +115,22 @@ class SQLServerInspector(interface.EngineInterface):
     def cursor_kwargs(self):
         return {'as_dict': True}
 
+    @property
+    def connect_kwargs(self):
+        """Override connection kwargs per https://github.com/pymssql/pymssql/issues/339#issuecomment-165740512
+        """
+        _kwargs = {
+            'host': self.host,
+            'user': self.username,
+            'password': self.password,
+            'port': self.port,
+            'database': self.database,
+            'conn_properties': '',
+        }
+        if self.connect_timeout_attr is not None:
+            _kwargs[self.connect_timeout_attr] = self.connect_timeout_value
+        return _kwargs
+
     def get_db_version(self):
         result = self.get_first(
             "SELECT SERVERPROPERTY('BuildClrVersion') as version"

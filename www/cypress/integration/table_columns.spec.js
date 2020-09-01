@@ -86,11 +86,11 @@ describe("table_columns.spec.js", () => {
 
         it("renders nullable indicator", () => {
           testTableColumnValue("id", () => {
-            cy.get("td").eq(4).find("i").should("be.visible").should("have.class", "anticon-check-circle")
+            cy.get("td").eq(4).find("i").should("be.visible").should("have.class", "anticon-close-circle")
           })
 
           testTableColumnValue("exc_stacktrace", () => {
-            cy.get("td").eq(4).find("i").should("be.visible").should("have.class", "anticon-close-circle")
+            cy.get("td").eq(4).find("i").should("be.visible").should("have.class", "anticon-check-circle")
           })
         })
       })

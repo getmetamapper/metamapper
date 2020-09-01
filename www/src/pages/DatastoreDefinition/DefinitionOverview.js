@@ -11,9 +11,7 @@ import withGetTableCustomProperties from "graphql/withGetTableCustomProperties"
 import UpdateCustomProperties from "app/Datastores/CustomProperties/UpdateCustomProperties"
 import CreateComment from "app/Comments/CreateComment"
 import CommentThread from "app/Comments/CommentThread"
-
 import TableOwners from "app/Datastores/DatastoreDefinition/TableOwners"
-
 
 class DefinitionOverview extends Component {
   state = {}

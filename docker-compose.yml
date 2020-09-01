@@ -3,8 +3,6 @@ x-restart-policy: &restart_policy
   restart: unless-stopped
 x-metamapper-defaults: &metamapper_defaults
   << : *restart_policy
-  build:
-    context: ./
   image: metamapper
   env_file:
     - .env
@@ -36,6 +34,8 @@ services:
      - metamapper
   webserver:
     << : *metamapper_defaults
+    build:
+      context: ./
     command: webserver
     ports:
       - 5050:5050
@@ -45,12 +45,14 @@ services:
     depends_on:
       - database
       - rabbitmq
+      - webserver
   scheduler:
     << : *metamapper_defaults
     command: scheduler
     depends_on:
       - database
       - rabbitmq
+      - webserver
   redis:
     << : *restart_policy
     image: redis:alpine

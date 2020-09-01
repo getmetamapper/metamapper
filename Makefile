@@ -26,7 +26,7 @@ build-assets:
 	@npm run build --prefix www
 
 build-docker:
-	@docker build --build-arg env=development -t metamapper --rm ./
+	@docker-compose build --build-arg env=development
 
 initdb:
 	@docker-compose run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0

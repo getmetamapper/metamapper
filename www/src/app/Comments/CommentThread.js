@@ -3,7 +3,7 @@ import { map } from "lodash"
 import withGetObjectComments from "graphql/withGetObjectComments"
 import Comment from "./Comment"
 
-const CommentThread = ({ comments, contentObject }) => (
+const CommentThread = ({ comments, contentObject, onCreate, onDelete }) => (
   <div className="comment-thread">
     {map(comments, ({ childComments, ...comment }) => (
       <Comment
@@ -11,6 +11,8 @@ const CommentThread = ({ comments, contentObject }) => (
         isParent
         childCount={childComments.length}
         contentObject={contentObject}
+        onCreate={onCreate}
+        onDelete={onDelete}
         {...comment}
       >
         {map(childComments, (child) => (
@@ -19,6 +21,8 @@ const CommentThread = ({ comments, contentObject }) => (
             isParent={false}
             childCount={0}
             contentObject={contentObject}
+            onCreate={onCreate}
+            onDelete={onDelete}
             {...child}
           />
         ))}

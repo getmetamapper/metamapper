@@ -33,11 +33,14 @@ const ColumnDefinitionDetails = ({
       contentObject={column}
       loading={loading}
       hasPermission={hasPermission}
+      onSubmit={() => column.commentsCount += 1}
     />
     <CommentThread
       contentType="COLUMN"
       contentObject={column}
       loading={loading}
+      onCreate={() => column.commentsCount += 1}
+      onDelete={() => column.commentsCount -= 1}
     />
   </Drawer>
 )

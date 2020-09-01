@@ -9,6 +9,18 @@ trix-editor {
 trix-toolbar .trix-button-group {
   border: 1px solid #e8e8e8;
 }
+trix-editor pre {
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+  font-family: monospace;
+  font-size: 0.9em;
+  margin: 0;
+  padding: 0.5em;
+  white-space: pre;
+  background-color: #eee;
+  overflow-x: auto;
+}
 .hidden {
   display: none !important;
 }
@@ -256,12 +268,12 @@ textarea.ant-input {
   width: calc(33.3% - 20px);
   margin: 0px 10px;
 }
-.radio-icon .ant-radio-button-wrapper:nth-child(3n+0) {
+.radio-icon .ant-radio-button-wrapper:nth-child(n + 3) {
   margin-top: 20px;
 }
 .radio-icon .ant-radio-button-wrapper .text {
   display: block;
-  font-size: 15px;
+  font-size: 14px;
   margin-top: 10px;
 }
 .radio-icon img {

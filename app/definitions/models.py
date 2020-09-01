@@ -81,6 +81,12 @@ class Datastore(StringPrimaryKeyModel,
     REDSHIFT = 'redshift'
     SNOWFLAKE = 'snowflake'
     ORACLE = 'oracle'
+    BIGQUERY = 'bigquery'
+    ATHENA = 'athena'
+    GLUE = 'glue'
+    HIVE = 'hive'
+    AZURE_SQL = 'azure_sql'
+    AZURE_DWH = 'azure_dwh'
 
     ENGINE_CHOICES = (
         (POSTGRESQL, 'PostgreSQL'),
@@ -89,7 +95,19 @@ class Datastore(StringPrimaryKeyModel,
         (REDSHIFT, 'Redshift'),
         (SNOWFLAKE, 'Snowflake'),
         (ORACLE, 'Oracle'),
+        (BIGQUERY, 'Google BigQuery'),
+        (ATHENA, 'AWS Athena'),
+        (GLUE, 'AWS Glue'),
+        (AZURE_SQL, 'Azure SQL Database'),
+        (AZURE_DWH, 'Azure Synapse'),
+        (HIVE, 'Hive Metastore'),
     )
+
+    SUPPORTED_HIVE_EXTERNAL_METASTORES = [
+        MYSQL,
+        POSTGRESQL,
+        SQLSERVER,
+    ]
 
     REQUIRED_SSH_FIELDS = [
         'ssh_host',

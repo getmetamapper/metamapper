@@ -782,9 +782,10 @@ class TestGetDatastoreAssets(cases.GraphQLTestCase):
     factory = factories.DatastoreFactory
     operation = 'datastoreAssets'
     statement = '''
-    query GetDatastoreAssets($datastoreSlug: String!, $search: String, $first: Int, $after: String) {
+    query GetDatastoreAssets($datastoreSlug: String!, $schemaName: String, $search: String, $first: Int, $after: String) {
       datastoreAssets(
         slug: $datastoreSlug
+        schema: $schemaName
         search: $search
         first: $first
         after: $after
@@ -885,6 +886,22 @@ class TestGetDatastoreAssets(cases.GraphQLTestCase):
         results = results['data'][self.operation]
 
         self.assertEqual(len(results['edges']), 10)
+
+    def test_filter_by_schema(self):
+        """It should filter the queryset by the provided schema.
+        """
+        schema = factories.SchemaFactory(datastore=self.datastore, name='public')
+        tables = factories.TableFactory.create_batch(5, schema=schema)
+
+        variables = {
+            'datastoreSlug': self.datastore.slug,
+            'schemaName': schema.name,
+        }
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertEqual(len(results['edges']), len(tables))
 
     @decorators.as_someone(['OUTSIDER'])
     def test_not_authorized(self):

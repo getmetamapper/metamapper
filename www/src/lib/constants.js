@@ -12,9 +12,6 @@ export const PERMISSION_CHOICES = {
   OWNER: "Owner",
 }
 export const ORIGIN_HOST =
-  window.location.hostname === "localhost"
+  process.env.NODE_ENV === "development"
     ? "http://localhost:5050"
     : window.location.origin
-export const GITHUB_OAUTH2_CLIENT_ID = "3b9267cdfdc22a9776d7"
-export const GOOGLE_OAUTH2_CLIENT_ID =
-  "152652839171-k0u7lr2ckq84b2a4bsbde5rvcd52kni2.apps.googleusercontent.com"

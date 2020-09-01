@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import hashlib
-import json
 import time
 
 from django.apps import apps

@@ -4,7 +4,7 @@ import utils.graphql.filters as filters
 
 
 class RevisionFilterSet(filters.FilterSet):
-    """Filtering capabilities for scheduled events interface.
+    """Filtering capabilities for reivion changes interface.
     """
     actions = filters.MultipleChoiceFilter(
         field_name='action',

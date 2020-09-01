@@ -3,6 +3,7 @@ import graphene
 
 import app.definitions.models as models
 import app.definitions.schema as schema
+import app.definitions.filters as filters
 import app.definitions.permissions as permissions
 
 import utils.errors as errors
@@ -56,6 +57,7 @@ class Query(graphene.ObjectType):
         type=schema.TableType,
         slug=graphene.String(required=True),
         search=graphene.String(required=False),
+        filterset_class=filters.DataAssetsFilterSet,
     )
 
     schema_names_by_datastore = graphene.List(
