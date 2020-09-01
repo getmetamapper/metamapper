@@ -72,6 +72,14 @@ class SSOConnection(StringPrimaryKeyModel, DirtyModel, TimestampedModel):
             return 'oauth2'
 
     @classmethod
+    def get_client_id(cls, provider):
+        if provider == SSOConnection.GOOGLE and settings.GOOGLE_ENABLED:
+            return settings.GOOGLE_CLIENT_ID
+        if provider == SSOConnection.GITHUB and settings.GITHUB_ENABLED:
+            return settings.GITHUB_CLIENT_ID
+        return None
+
+    @classmethod
     def provider_is_enabled(cls, provider):
         """If certain environment variables are not set, the provider is inactive.
         """
