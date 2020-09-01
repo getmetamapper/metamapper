@@ -5,7 +5,6 @@ x-metamapper-defaults: &metamapper_defaults
   << : *restart_policy
   build:
     context: ./
-  image: metamapper
   env_file:
     - .env
   depends_on:
