@@ -70,7 +70,7 @@ class AwsAthenaInspector(interface.AmazonInspectorMixin):
             yield from page['TableMetadataList']
 
     def _get_table_as_dict(self, schema_name, table_metadata):
-        """Retrieve the table based on the provided reference. Format the table into the standard Metamapper inspector response.
+        """Retrieve the table based on the provided reference. Format the table into the standard inspector response.
         """
         full_table_id = '.'.join([self.database, schema_name, table_metadata['Name']])
         partition_col = [p['Name'] for p in table_metadata['PartitionKeys']]
@@ -86,6 +86,7 @@ class AwsAthenaInspector(interface.AmazonInspectorMixin):
                 {
                     'column_object_id': self._to_oid(full_table_id, column['Name']),
                     'column_name': column['Name'],
+                    'column_description': column['Comment'],
                     'ordinal_position': position,
                     'data_type': column['Type'].lower(),
                     'max_length': None,

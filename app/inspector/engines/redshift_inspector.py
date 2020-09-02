@@ -17,6 +17,7 @@ REDSHIFT_DEFINITIONS_SQL = """
                WHEN c.relkind IN ('v', 'm')
                THEN 'view' END AS table_type,
           a.attname AS column_name,
+          pgd.description as column_description,
           c.oid || '/' || a.attnum as column_object_id,
           a.attnum AS ordinal_position,
           t.typname AS data_type,
@@ -41,6 +42,9 @@ REDSHIFT_DEFINITIONS_SQL = """
 LEFT JOIN pg_attrdef d
        ON c.oid = d.adrelid
       AND a.attnum = d.adnum
+LEFT JOIN pg_catalog.pg_description pgd
+       ON pgd.objsubid = a.attnum
+      AND pgd.objoid = t.oid
     WHERE ns.nspname NOT IN ({excluded})
       AND ns.nspname NOT LIKE 'pg_temp%%'
       AND ns.nspname NOT LIKE 'pg_am%%'

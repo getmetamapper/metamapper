@@ -204,7 +204,7 @@ class ColumnFactory(factory.django.DjangoModelFactory):
     is_nullable = factory.Faker('pybool')
     is_primary = False
     default_value = ''
-    comment = factory.Faker('sentence')
+    db_comment = factory.Faker('sentence')
 
     class Meta:
         model = definition_models.Column

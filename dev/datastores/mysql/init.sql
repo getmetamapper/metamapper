@@ -24,6 +24,8 @@ CREATE TABLE employees (
     PRIMARY KEY (emp_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+ALTER TABLE employees MODIFY COLUMN emp_no INT NOT NULL COMMENT 'The employee identification number';
+
 CREATE TABLE departments (
     dept_no     CHAR(4)         NOT NULL,
     dept_name   VARCHAR(40)     NOT NULL,

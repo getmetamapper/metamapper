@@ -85,6 +85,7 @@ class AwsGlueInspector(interface.AmazonInspectorMixin):
                 {
                     'column_object_id': self._to_oid(full_table_id, column['Name']),
                     'column_name': column['Name'],
+                    'column_description': column['Comment'],
                     'ordinal_position': position,
                     'data_type': column['Type'].lower(),
                     'max_length': None,

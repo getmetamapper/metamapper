@@ -13,6 +13,7 @@ SELECT
       COALESCE(LOWER(t.table_type), 'external table') AS "table_type",
       c.column_id AS "column_object_id",
       LOWER(c.column_name) as "column_name",
+      c.comment AS "column_description",
       c.ordinal_position as "ordinal_position",
       LOWER(c.data_type) as "data_type",
       CASE WHEN c.character_maximum_length IS NOT NULL

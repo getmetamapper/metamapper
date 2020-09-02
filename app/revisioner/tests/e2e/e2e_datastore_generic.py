@@ -73,6 +73,20 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
             "new_value": "integer",
         },
     },
+    # (6) Comment was added to a resource.
+    {
+        "type": "modified",
+        "filters": (
+            lambda row: row['table_object_id'] == 16442
+        ),
+        "column_filters": (
+            lambda col: col['column_name'] == "postalcode"
+        ),
+        "metadata": {
+            "field": "columns.column_description",
+            "new_value": "5-digit mailing code",
+        },
+    },
     {
         "type": "modified",
         "filters": (
@@ -141,6 +155,7 @@ inspected_tables += [
             {
                 "column_object_id": "99999/1",
                 "column_name": "category_id",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -152,6 +167,7 @@ inspected_tables += [
             {
                 "column_object_id": "99999/1",
                 "column_name": "name",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "varchar",
                 "max_length": 256,
@@ -180,7 +196,7 @@ test_cases = [
             },
             {
                 "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=2, resource_type__model='column').count(),
-                "pass_value": 6,
+                "pass_value": 8,
             },
         ]
     },
@@ -288,6 +304,10 @@ test_cases = [
             {
                 "evaluation": lambda datastore, column: column.default_value,
                 "pass_value": "default_sequence()",
+            },
+            {
+                "evaluation": lambda datastore, column: column.db_comment,
+                "pass_value": "5-digit mailing code",
             }
         ]
     },

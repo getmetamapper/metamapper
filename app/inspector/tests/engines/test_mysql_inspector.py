@@ -5,6 +5,7 @@ import unittest.mock as mock
 from django import test
 from django.utils import timezone
 
+import app.definitions.models as models
 import app.inspector.engines.mysql_inspector as engine
 import app.revisioner.tasks.core as coretasks
 
@@ -222,6 +223,10 @@ class MySQLInspectorIntegrationTestMixin(object):
         self.assertTrue(run.finished_at is not None)
         self.assertEqual(run.errors.count(), 0)
         self.assertEqual(datastore.schemas.count(), self.schema_count)
+
+        column = models.Column.objects.get(name='emp_no', table__name='employees')
+
+        self.assertEqual(column.db_comment, 'The employee identification number')
 
 
 @test.tag('mysql', 'inspector')
