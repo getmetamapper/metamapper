@@ -39,8 +39,8 @@ resetdb:
 
 rebuild-db: stop
 	@docker-compose start database
-	@docker exec metamapper_database_1 dropdb metamapper -U postgres
-	@docker exec metamapper_database_1 createdb metamapper -U postgres
+	@docker-compose exec database dropdb metamapper -U postgres
+	@docker-compose exec database createdb metamapper -U postgres
 	@docker-compose run -e DB_RESET=1 --rm webserver python manage.py migrate
 
 start:

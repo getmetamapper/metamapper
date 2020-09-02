@@ -13,6 +13,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/1",
                 "column_name": "customernumber",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -24,6 +25,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/2",
                 "column_name": "customername",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -35,6 +37,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/3",
                 "column_name": "contactlastname",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -46,6 +49,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/4",
                 "column_name": "contactfirstname",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -57,6 +61,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/5",
                 "column_name": "phone",
+                "column_description": None,
                 "ordinal_position": 5,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -68,6 +73,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/6",
                 "column_name": "addressline1",
+                "column_description": None,
                 "ordinal_position": 6,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -79,6 +85,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/7",
                 "column_name": "addressline2",
+                "column_description": None,
                 "ordinal_position": 7,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -90,6 +97,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/8",
                 "column_name": "city",
+                "column_description": None,
                 "ordinal_position": 8,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -101,6 +109,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/9",
                 "column_name": "state",
+                "column_description": None,
                 "ordinal_position": 9,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -112,6 +121,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/10",
                 "column_name": "postalcode",
+                "column_description": None,
                 "ordinal_position": 10,
                 "data_type": "character varying",
                 "max_length": 15,
@@ -123,6 +133,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/11",
                 "column_name": "country",
+                "column_description": None,
                 "ordinal_position": 11,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -134,6 +145,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/12",
                 "column_name": "salesrepemployeenumber",
+                "column_description": None,
                 "ordinal_position": 12,
                 "data_type": "integer",
                 "max_length": 32,
@@ -145,6 +157,7 @@ tables_and_views = [
             {
                 "column_object_id": "16442/13",
                 "column_name": "creditlimit",
+                "column_description": None,
                 "ordinal_position": 13,
                 "data_type": "numeric",
                 "max_length": 10,
@@ -166,6 +179,7 @@ tables_and_views = [
             {
                 "column_object_id": "16522/1",
                 "column_name": "id",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -177,6 +191,7 @@ tables_and_views = [
             {
                 "column_object_id": "16522/2",
                 "column_name": "dept_name",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 40,
@@ -198,6 +213,7 @@ tables_and_views = [
             {
                 "column_object_id": "16501/1",
                 "column_name": "ordernumber",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -209,6 +225,7 @@ tables_and_views = [
             {
                 "column_object_id": "16501/2",
                 "column_name": "productcode",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 15,
@@ -220,6 +237,7 @@ tables_and_views = [
             {
                 "column_object_id": "16501/3",
                 "column_name": "quantityordered",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "integer",
                 "max_length": 32,
@@ -231,6 +249,7 @@ tables_and_views = [
             {
                 "column_object_id": "16501/4",
                 "column_name": "priceeach",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "numeric",
                 "max_length": 10,
@@ -242,6 +261,7 @@ tables_and_views = [
             {
                 "column_object_id": "16501/5",
                 "column_name": "orderlinenumber",
+                "column_description": None,
                 "ordinal_position": 5,
                 "data_type": "integer",
                 "max_length": 32,
@@ -263,6 +283,7 @@ tables_and_views = [
             {
                 "column_object_id": "16465/1",
                 "column_name": "ordernumber",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -274,6 +295,7 @@ tables_and_views = [
             {
                 "column_object_id": "16465/2",
                 "column_name": "orderdate",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "date",
                 "max_length": None,
@@ -285,6 +307,7 @@ tables_and_views = [
             {
                 "column_object_id": "16465/3",
                 "column_name": "requireddate",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "date",
                 "max_length": None,
@@ -296,6 +319,7 @@ tables_and_views = [
             {
                 "column_object_id": "16465/4",
                 "column_name": "shippeddate",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "date",
                 "max_length": None,
@@ -307,6 +331,7 @@ tables_and_views = [
             {
                 "column_object_id": "16465/5",
                 "column_name": "status",
+                "column_description": None,
                 "ordinal_position": 5,
                 "data_type": "character varying",
                 "max_length": 15,
@@ -318,6 +343,7 @@ tables_and_views = [
             {
                 "column_object_id": "16465/6",
                 "column_name": "comments",
+                "column_description": None,
                 "ordinal_position": 6,
                 "data_type": "text",
                 "max_length": None,
@@ -329,6 +355,7 @@ tables_and_views = [
             {
                 "column_object_id": "16465/7",
                 "column_name": "customernumber",
+                "column_description": None,
                 "ordinal_position": 7,
                 "data_type": "integer",
                 "max_length": 32,
@@ -350,6 +377,7 @@ tables_and_views = [
             {
                 "column_object_id": "16478/1",
                 "column_name": "customernumber",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -361,6 +389,7 @@ tables_and_views = [
             {
                 "column_object_id": "16478/2",
                 "column_name": "checknumber",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -372,6 +401,7 @@ tables_and_views = [
             {
                 "column_object_id": "16478/3",
                 "column_name": "paymentdate",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "date",
                 "max_length": None,
@@ -383,6 +413,7 @@ tables_and_views = [
             {
                 "column_object_id": "16478/4",
                 "column_name": "amount",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "numeric",
                 "max_length": 10,
@@ -404,6 +435,7 @@ tables_and_views = [
             {
                 "column_object_id": "16456/1",
                 "column_name": "productline",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -415,6 +447,7 @@ tables_and_views = [
             {
                 "column_object_id": "16456/2",
                 "column_name": "textdescription",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 4000,
@@ -426,6 +459,7 @@ tables_and_views = [
             {
                 "column_object_id": "16456/3",
                 "column_name": "htmldescription",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "text",
                 "max_length": None,
@@ -437,6 +471,7 @@ tables_and_views = [
             {
                 "column_object_id": "16456/4",
                 "column_name": "image",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "bytea",
                 "max_length": None,
@@ -458,6 +493,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/1",
                 "column_name": "productcode",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "character varying",
                 "max_length": 15,
@@ -469,6 +505,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/2",
                 "column_name": "productname",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 70,
@@ -480,6 +517,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/3",
                 "column_name": "productline",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -491,6 +529,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/4",
                 "column_name": "productscale",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "character varying",
                 "max_length": 10,
@@ -502,6 +541,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/5",
                 "column_name": "productvendor",
+                "column_description": None,
                 "ordinal_position": 5,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -513,6 +553,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/6",
                 "column_name": "productdescription",
+                "column_description": None,
                 "ordinal_position": 6,
                 "data_type": "text",
                 "max_length": None,
@@ -524,6 +565,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/7",
                 "column_name": "quantityinstock",
+                "column_description": None,
                 "ordinal_position": 7,
                 "data_type": "integer",
                 "max_length": 32,
@@ -535,6 +577,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/8",
                 "column_name": "buyprice",
+                "column_description": None,
                 "ordinal_position": 8,
                 "data_type": "numeric",
                 "max_length": 10,
@@ -546,6 +589,7 @@ tables_and_views = [
             {
                 "column_object_id": "16488/9",
                 "column_name": "msrp",
+                "column_description": None,
                 "ordinal_position": 9,
                 "data_type": "numeric",
                 "max_length": 10,
@@ -567,6 +611,7 @@ tables_and_views = [
             {
                 "column_object_id": "16516/1",
                 "column_name": "customernumber",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -578,6 +623,7 @@ tables_and_views = [
             {
                 "column_object_id": "16516/2",
                 "column_name": "customername",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 50,
@@ -589,6 +635,7 @@ tables_and_views = [
             {
                 "column_object_id": "16516/3",
                 "column_name": "salesrepemployeenumber",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "integer",
                 "max_length": 32,
@@ -600,6 +647,7 @@ tables_and_views = [
             {
                 "column_object_id": "16516/4",
                 "column_name": "emp_no",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "integer",
                 "max_length": 32,
@@ -611,6 +659,7 @@ tables_and_views = [
             {
                 "column_object_id": "16516/5",
                 "column_name": "name",
+                "column_description": None,
                 "ordinal_position": 5,
                 "data_type": "text",
                 "max_length": None,
@@ -632,6 +681,7 @@ tables_and_views = [
             {
                 "column_object_id": "16437/1",
                 "column_name": "emp_no",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -643,6 +693,7 @@ tables_and_views = [
             {
                 "column_object_id": "16437/2",
                 "column_name": "dept_no",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character",
                 "max_length": 4,
@@ -654,6 +705,7 @@ tables_and_views = [
             {
                 "column_object_id": "16437/3",
                 "column_name": "from_date",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "date",
                 "max_length": None,
@@ -665,6 +717,7 @@ tables_and_views = [
             {
                 "column_object_id": "16437/4",
                 "column_name": "to_date",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "date",
                 "max_length": None,
@@ -686,6 +739,7 @@ tables_and_views = [
             {
                 "column_object_id": "16392/1",
                 "column_name": "dept_no",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "character",
                 "max_length": 4,
@@ -697,6 +751,7 @@ tables_and_views = [
             {
                 "column_object_id": "16392/2",
                 "column_name": "dept_name",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 40,
@@ -708,6 +763,7 @@ tables_and_views = [
             {
                 "column_object_id": "16392/3",
                 "column_name": "started_on",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "timestamp without time zone",
                 "max_length": None,
@@ -729,6 +785,7 @@ tables_and_views = [
             {
                 "column_object_id": "16418/1",
                 "column_name": "emp_no",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -740,6 +797,7 @@ tables_and_views = [
             {
                 "column_object_id": "16418/2",
                 "column_name": "dept_no",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character",
                 "max_length": 4,
@@ -751,6 +809,7 @@ tables_and_views = [
             {
                 "column_object_id": "16418/3",
                 "column_name": "from_date",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "date",
                 "max_length": None,
@@ -762,6 +821,7 @@ tables_and_views = [
             {
                 "column_object_id": "16418/4",
                 "column_name": "to_date",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "date",
                 "max_length": None,
@@ -783,6 +843,7 @@ tables_and_views = [
             {
                 "column_object_id": "16433/1",
                 "column_name": "emp_no",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -794,6 +855,7 @@ tables_and_views = [
             {
                 "column_object_id": "16433/2",
                 "column_name": "from_date",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "date",
                 "max_length": None,
@@ -805,6 +867,7 @@ tables_and_views = [
             {
                 "column_object_id": "16433/3",
                 "column_name": "to_date",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "date",
                 "max_length": None,
@@ -826,6 +889,7 @@ tables_and_views = [
             {
                 "column_object_id": "16399/1",
                 "column_name": "dept_no",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "character",
                 "max_length": 4,
@@ -837,6 +901,7 @@ tables_and_views = [
             {
                 "column_object_id": "16399/2",
                 "column_name": "emp_no",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "integer",
                 "max_length": 32,
@@ -848,6 +913,7 @@ tables_and_views = [
             {
                 "column_object_id": "16399/3",
                 "column_name": "from_date",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "date",
                 "max_length": None,
@@ -859,6 +925,7 @@ tables_and_views = [
             {
                 "column_object_id": "16399/4",
                 "column_name": "to_date",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "date",
                 "max_length": None,
@@ -870,6 +937,7 @@ tables_and_views = [
             {
                 "column_object_id": "16399/5",
                 "column_name": "extras",
+                "column_description": None,
                 "ordinal_position": 5,
                 "data_type": "text",
                 "max_length": None,
@@ -881,6 +949,7 @@ tables_and_views = [
             {
                 "column_object_id": "16399/6",
                 "column_name": "rating",
+                "column_description": "The NPS score for this manager",
                 "ordinal_position": 6,
                 "data_type": "integer",
                 "max_length": 32,
@@ -902,6 +971,7 @@ tables_and_views = [
             {
                 "column_object_id": "16387/1",
                 "column_name": "emp_no",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -913,6 +983,7 @@ tables_and_views = [
             {
                 "column_object_id": "16387/2",
                 "column_name": "birth_date",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "date",
                 "max_length": None,
@@ -924,6 +995,7 @@ tables_and_views = [
             {
                 "column_object_id": "16387/3",
                 "column_name": "first_name",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "character varying",
                 "max_length": 14,
@@ -935,6 +1007,7 @@ tables_and_views = [
             {
                 "column_object_id": "16387/4",
                 "column_name": "last_name",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "character varying",
                 "max_length": 16,
@@ -946,6 +1019,7 @@ tables_and_views = [
             {
                 "column_object_id": "16387/5",
                 "column_name": "hire_date",
+                "column_description": None,
                 "ordinal_position": 5,
                 "data_type": "date",
                 "max_length": None,
@@ -957,6 +1031,7 @@ tables_and_views = [
             {
                 "column_object_id": "16387/6",
                 "column_name": "created_at",
+                "column_description": None,
                 "ordinal_position": 6,
                 "data_type": "timestamp without time zone",
                 "max_length": None,

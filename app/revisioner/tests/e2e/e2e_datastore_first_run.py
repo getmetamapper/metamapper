@@ -191,6 +191,10 @@ test_cases = [
                 "evaluation": lambda datastore, column: column.is_primary,
                 "pass_value": False,
             },
+            {
+                "evaluation": lambda datastore, column: column.db_comment,
+                "pass_value": "The NPS score for this manager",
+            },
         ]
     },
 ]

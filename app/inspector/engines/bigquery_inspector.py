@@ -131,13 +131,14 @@ class BigQueryInspector(object):
                 {
                     'column_object_id': self._to_oid(table_object.full_table_id, column.name),
                     'column_name': column.name,
+                    'column_description': column.description,
                     'ordinal_position': position,
                     'data_type': column.field_type.lower(),
                     'max_length': None,
                     'numeric_scale': None,
                     'is_nullable': column.is_nullable,
                     'is_primary': False,
-                    'default_value': ""
+                    'default_value': "",
                 }
                 for position, column in enumerate(table_object.schema, 1)
             ],

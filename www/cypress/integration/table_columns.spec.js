@@ -61,7 +61,7 @@ describe("table_columns.spec.js", () => {
 
         it("renders the correct data types", () => {
           const testDataType = (column, type) => {
-            testTableColumnValue(column, () => cy.get("td").eq(3).contains(type))
+            testTableColumnValue(column, () => cy.get("td").eq(4).contains(type))
           }
 
           testDataType("id", "integer(32)")
@@ -70,28 +70,32 @@ describe("table_columns.spec.js", () => {
           testDataType("created_at", "timestamp with time zone")
         })
 
-        it("renders default values", () => {
-          const testDefaultValue = (column, type) => {
-            testTableColumnValue(column, () => cy.get("td").eq(5).contains(type))
-          }
-
-          testDefaultValue("id", "nextval('revisioner_error_id_seq'::regclass)")
-        })
-
         it("renders the primary key icon", () => {
           testTableColumnValue("id", () => {
-            cy.get("td").eq(1).find("i").should("be.visible").should("have.class", "anticon-key")
+            cy.get("td").eq(2).find("i").should("be.visible").should("have.class", "anticon-key")
           })
         })
 
         it("renders nullable indicator", () => {
           testTableColumnValue("id", () => {
-            cy.get("td").eq(4).find("i").should("be.visible").should("have.class", "anticon-close-circle")
+            cy.get("td").eq(5).find("i").should("be.visible").should("have.class", "anticon-close-circle")
           })
 
           testTableColumnValue("exc_stacktrace", () => {
-            cy.get("td").eq(4).find("i").should("be.visible").should("have.class", "anticon-check-circle")
+            cy.get("td").eq(5).find("i").should("be.visible").should("have.class", "anticon-check-circle")
           })
+        })
+
+        it("renders expandable section", () => {
+          testTableColumnValue("id", () => {
+            cy.get("td").eq(0).click()
+          })
+
+          cy.contains("Comment").should("not.be.visible")
+
+          // It should display the default value if it exists.
+          cy.contains("Default Value").should("be.visible")
+          cy.contains("nextval('revisioner_error_id_seq'::regclass)").should("be.visible")
         })
       })
     })

@@ -115,6 +115,7 @@ class BigQueryInspectorTests(unittest.TestCase):
                 field_type='string' if i % 2 == 0 else 'bigint',
             )
             col.name = 'name_%s' % str(i).zfill(3)
+            col.description = 'description_%s' % str(i).zfill(3)
             schema.append(col)
 
         mock_get_table_attrs = {
@@ -144,6 +145,7 @@ class BigQueryInspectorTests(unittest.TestCase):
                 {
                     'column_object_id': 'd99ac599f4a51e993edb1864f335636c',
                     'column_name': 'name_000',
+                    'column_description': 'description_000',
                     'ordinal_position': 1,
                     'data_type': 'string',
                     'max_length': None,
@@ -155,6 +157,7 @@ class BigQueryInspectorTests(unittest.TestCase):
                 {
                     'column_object_id': '428daceac1f67db20a4f9d1a33ef4bf0',
                     'column_name': 'name_001',
+                    'column_description': 'description_001',
                     'ordinal_position': 2,
                     'data_type': 'bigint',
                     'max_length': None,
@@ -166,6 +169,7 @@ class BigQueryInspectorTests(unittest.TestCase):
                 {
                     'column_object_id': 'f57bb57d15d32fd04800a8168ee29ce4',
                     'column_name': 'name_002',
+                    'column_description': 'description_002',
                     'ordinal_position': 3,
                     'data_type': 'string',
                     'max_length': None,
@@ -177,6 +181,7 @@ class BigQueryInspectorTests(unittest.TestCase):
                 {
                     'column_object_id': '210f5f939018a68f8811fa837c8af8bd',
                     'column_name': 'name_003',
+                    'column_description': 'description_003',
                     'ordinal_position': 4,
                     'data_type': 'bigint',
                     'max_length': None,

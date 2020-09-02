@@ -21,6 +21,8 @@ CREATE TABLE employees.employees (
     created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+COMMENT ON COLUMN employees.employees.emp_no IS 'The employee identification number';
+
 CREATE TABLE employees.departments (
     dept_no     CHAR(4)         NOT NULL,
     dept_name   VARCHAR(40)     NOT NULL,

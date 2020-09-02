@@ -35,6 +35,7 @@ inspected_tables += [
             {
                 "column_object_id": "24725/1",
                 "column_name": "id",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -46,6 +47,7 @@ inspected_tables += [
             {
                 "column_object_id": "24725/2",
                 "column_name": "group_name",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 255,
@@ -57,6 +59,7 @@ inspected_tables += [
             {
                 "column_object_id": "24725/3",
                 "column_name": "created_at",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "timestamp without time zone",
                 "max_length": None,
@@ -78,6 +81,7 @@ inspected_tables += [
             {
                 "column_object_id": "24737/1",
                 "column_name": "user_id",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -89,6 +93,7 @@ inspected_tables += [
             {
                 "column_object_id": "24737/2",
                 "column_name": "group_id",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "integer",
                 "max_length": 32,
@@ -100,6 +105,7 @@ inspected_tables += [
             {
                 "column_object_id": "24737/3",
                 "column_name": "role",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "character varying",
                 "max_length": 255,
@@ -111,6 +117,7 @@ inspected_tables += [
             {
                 "column_object_id": "24737/4",
                 "column_name": "granted_at",
+                "column_description": None,
                 "ordinal_position": 4,
                 "data_type": "timestamp without time zone",
                 "max_length": None,
@@ -132,6 +139,7 @@ inspected_tables += [
             {
                 "column_object_id": "24714/1",
                 "column_name": "id",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -143,6 +151,7 @@ inspected_tables += [
             {
                 "column_object_id": "24714/2",
                 "column_name": "email",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "character varying",
                 "max_length": 255,
@@ -154,6 +163,7 @@ inspected_tables += [
             {
                 "column_object_id": "24714/3",
                 "column_name": "created_at",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "timestamp without time zone",
                 "max_length": None,

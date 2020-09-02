@@ -30,6 +30,7 @@ export default gql`
             isNullable
             isPrimary
             defaultValue
+            dbComment
             shortDesc
             commentsCount
           }

@@ -42,6 +42,7 @@ inspected_tables += [
             {
                 "column_object_id": "26522/1",
                 "column_name": "id",
+                "column_description": None,
                 "ordinal_position": 1,
                 "data_type": "integer",
                 "max_length": 32,
@@ -53,6 +54,7 @@ inspected_tables += [
             {
                 "column_object_id": "26522/2",
                 "column_name": "category",
+                "column_description": None,
                 "ordinal_position": 2,
                 "data_type": "varchar",
                 "max_length": 255,
@@ -64,6 +66,7 @@ inspected_tables += [
             {
                 "column_object_id": "26522/3",
                 "column_name": "dept_name",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "character varying",
                 "max_length": 40,
@@ -75,6 +78,7 @@ inspected_tables += [
             {
                 "column_object_id": "26522/4",
                 "column_name": "dept_head",
+                "column_description": None,
                 "ordinal_position": 3,
                 "data_type": "integer",
                 "max_length": 32,

@@ -307,6 +307,7 @@ class ColumnRevisioner(Revisioner):
         'is_nullable',
         'is_primary',
         'default_value',
+        'db_comment',
     ]
 
     modified_fields = [
@@ -319,6 +320,7 @@ class ColumnRevisioner(Revisioner):
         'is_nullable',
         'is_primary',
         'default_value',
+        'db_comment',
     ]
 
     @cached_property

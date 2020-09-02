@@ -366,6 +366,7 @@ class Table(AuditableModel,
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
     kind = models.CharField(max_length=100, null=False, blank=False)
 
+    db_comment = models.TextField(null=True, blank=True)
     short_desc = models.CharField(max_length=140, null=True, blank=True)
     properties = JSONField(default=dict)
 
@@ -466,7 +467,7 @@ class Column(AuditableModel,
     is_primary = models.BooleanField(null=False, default=False)
     is_nullable = models.BooleanField(null=False)
     default_value = models.CharField(max_length=255, null=False, blank=True)
-    comment = models.TextField(null=True, blank=True)
+    db_comment = models.TextField(null=True, blank=True)
     short_desc = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:

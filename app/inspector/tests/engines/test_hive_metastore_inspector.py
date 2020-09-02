@@ -4,6 +4,7 @@ import unittest.mock as mock
 from django import test
 from django.utils import timezone
 
+import app.definitions.models as models
 import app.inspector.engines.hive_metastore_inspector as engine
 import app.revisioner.tasks.core as coretasks
 
@@ -161,6 +162,10 @@ class HiveMetastoreInspectorIntegrationTestMixin(object):
         self.assertTrue(run.finished_at is not None)
         self.assertEqual(run.errors.count(), 0)
         self.assertEqual(datastore.schemas.count(), self.schema_count)
+
+        column = models.Column.objects.get(name='c_birth_country', table__name='customer', table__schema__name='tpcds')
+
+        self.assertEqual(column.db_comment, 'The country where they were born')
 
 
 @test.tag('hive', 'inspector')
