@@ -29,15 +29,31 @@ Here are a few features of Metamapper:
 - *Change detection*: Detects when data definitions change between schema inspection runs. Useful for alerting uncommunicated changes.
 - *Annotations:* Supports comments on almost every object so your team can crowdsource knowledge about data assets.
 - *Custom Properties:* Easily attach custom metadata to databases and tables, such as data steward or ETL process references.
-- *Search:* Everything is indexed and [searchable](https://www.postgresql.org/docs/9.5/textsearch.html). Self-service data analytics, here we come.
+- *Search:* Everything is indexed and [searchable](https://www.postgresql.org/docs/9.6/textsearch.html). Self-service data analytics, here we come.
 
 Check out the [Introducing Metamapper](https://www.metamapper.io/blog/2020/07/12/introducting-metamapper) blog post.
 
-## Getting started
+## Quickstart
 
-Recommended deployment method is through [Docker](https://www.docker.com/). Setup instructions can be found in [this Github repo](https://github.com/getmetamapper/metamapper-setup).
+You can try out a default version of Metamapper with sample data using [Docker](https://docs.docker.com/get-docker/) and [Docker-Compose](https://docs.docker.com/compose/install/).
 
-Reading the [documentation](https://www.metamapper.io/) is also a good starting point.
+Clone the repository:
+
+```
+git clone git@github.com:getmetamapper/metamapper.git
+```
+
+From the repository root:
+
+```
+docker-compose -f docker-quickstart.yml up
+```
+
+Head to [http://localhost:5555](http://localhost:5555) to view the Metamapper UI.
+
+## Deployment
+
+We recommend deploying using our [pre-baked Docker images](https://hub.docker.com/r/getmetamapper/metamapper). Detailed setup instructions can be found in [this Github repository](https://github.com/getmetamapper/metamapper-setup).
 
 ## Supported datastores
 

@@ -26,12 +26,9 @@ services:
       - metamapper
     environment:
       POSTGRES_PASSWORD: postgres
-  rabbitmq:
+  msgbroker:
     << : *restart_policy
-    image: rabbitmq:3.6
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+    image: redis:alpine
     networks:
      - metamapper
   webserver:
@@ -44,18 +41,13 @@ services:
     command: worker --concurrency=1
     depends_on:
       - database
-      - rabbitmq
+      - msgbroker
   scheduler:
     << : *metamapper_defaults
     command: scheduler
     depends_on:
       - database
-      - rabbitmq
-  redis:
-    << : *restart_policy
-    image: redis:alpine
-    networks:
-     - metamapper
+      - msgbroker
 volumes:
   metamapper-database:
     driver: local

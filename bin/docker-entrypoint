@@ -7,6 +7,10 @@ shell() {
     python manage.py shell
 }
 
+initdb() {
+    DB_SETUP=1 python manage.py initdb
+}
+
 migrate() {
     DB_SETUP=1 python manage.py migrate
 }
@@ -45,7 +49,7 @@ case "$1" in
     shift
     scheduler "$@"
     ;;
-  ci-webserver)
+  migrate-then-webserver)
     shift
     migrate
     webserver "$@"

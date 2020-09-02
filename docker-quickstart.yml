@@ -1,0 +1,42 @@
+version: '3.4'
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+x-metamapper-defaults: &metamapper_defaults
+  << : *restart_policy
+  image: getmetamapper/metamapper:0.1.2
+  env_file:
+    - .env.quickstart
+  depends_on:
+    - database
+    - msgbroker
+services:
+  database:
+    << : *restart_policy
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: metamapper
+    volumes:
+      - 'mm-quickstart-db:/var/lib/postgresql/data'
+  msgbroker:
+    << : *restart_policy
+    image: redis:alpine
+  webserver:
+    << : *metamapper_defaults
+    command: ["./wait-for-it.sh", "database:5432", "--", "./bin/docker-entrypoint", "migrate-then-webserver"]
+    ports:
+      - 5555:5050
+  worker:
+    << : *metamapper_defaults
+    command: worker --queue default,revisioner
+    depends_on:
+      - webserver
+  scheduler:
+    << : *metamapper_defaults
+    command: scheduler
+    depends_on:
+      - webserver
+volumes:
+  mm-quickstart-db:
+    driver: local
