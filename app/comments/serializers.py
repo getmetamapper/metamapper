@@ -34,7 +34,7 @@ def get_audit_kwargs(instance):
 class CommentSerializer(MetamapperSerializer, serializers.ModelSerializer):
     """Serializer for interacting with comments.
     """
-    html = serializers.CharField(required=True, min_length=1, max_length=2048)
+    html = serializers.CharField(required=True, min_length=1)
 
     content_object = fields.RelatedObjectField(
         allowed_models=Comment.commentable_types(),
