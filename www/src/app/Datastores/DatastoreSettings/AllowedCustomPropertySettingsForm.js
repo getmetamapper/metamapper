@@ -4,7 +4,7 @@ import Link from "app/Navigation/Link"
 import RestrictedButton from "app/Common/RestrictedButton"
 import AllowedCustomPropertySettingsFieldset from "./AllowedCustomPropertySettingsFieldset"
 
-const CustomFieldLink = (props) => <Link to="/settings/customfields">custom properties </Link>
+const CustomFieldLink = (props) => <Link to="/settings/customproperties">custom properties </Link>
 
 const AllowedCustomPropertySettingsForm = ({
   form,

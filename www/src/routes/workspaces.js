@@ -56,7 +56,7 @@ export default [
   },
   {
     component: CustomFields,
-    path: "/:workspaceSlug/settings/customfields",
+    path: "/:workspaceSlug/settings/customproperties",
     namespace: "workspace",
   },
   {

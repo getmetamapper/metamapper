@@ -53,6 +53,7 @@ class Omnisearch extends Component {
           <div className="omnisearch-box">
             <Input.Search
               block
+              placeholder="type and hit enter to search your data assets..."
               size="large"
               onSearch={this.handleSearch}
               data-test="Omnisearch.Searchbox"

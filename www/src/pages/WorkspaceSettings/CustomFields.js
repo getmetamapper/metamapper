@@ -24,8 +24,8 @@ const breadcrumbs = ({ slug }) => {
       to: `/${slug}/settings`,
     },
     {
-      label: "Custom Fields",
-      to: `/${slug}/settings/customfields`,
+      label: "Custom Properties",
+      to: `/${slug}/settings/customproperties`,
     },
   ]
 }
@@ -96,13 +96,13 @@ class CustomFields extends Component {
     const { loading, hasPermission, workspace } = this.props
     return (
       <WorkspaceLayout
-        title={`Custom Fields - ${workspace.slug} - Metamapper`}
+        title={`Custom Properties - ${workspace.slug} - Metamapper`}
         breadcrumbs={breadcrumbs}
       >
-        <h2>Custom Fields</h2>
+        <h2>Custom Properties</h2>
         <Divider />
         <p>
-          You can use custom fields to document more specific information about
+          You can use custom properties to document more specific information about
           your data assets, such as product area, data steward, ETL source, etc.
         </p>
         <Tabs type="card" activeKey={activeKey} onChange={this.onChange}>
@@ -113,7 +113,7 @@ class CustomFields extends Component {
                 onClick={this.onOpenSetupForm}
                 hasPermission={hasPermission}
               >
-                Add Custom {singularized} Field
+                Add Custom {singularized} Property
               </RestrictedButton>
             </Tabs.TabPane>
           ))}

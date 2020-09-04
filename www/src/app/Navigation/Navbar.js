@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { compose } from "react-apollo"
 import { withRouter, Link } from "react-router-dom"
-import { Layout, Col, Row, Menu, Icon, Dropdown } from "antd"
+import { Layout, Col, Row, Menu, Icon, Dropdown, Popover } from "antd"
 import { withUserContext } from "context/UserContext"
 import NavbarSearch from "app/Navigation/NavbarSearch"
 import UserAvatar from "app/Common/UserAvatar"
@@ -32,16 +32,17 @@ const Navbar = ({ config, currentUser }) => {
           <Menu
             mode="horizontal"
             theme="dark"
-            style={{ float: "right", display: "inline-block" }}
           >
             <Menu.Item key="omnisearch" className="navbar-search">
               <NavbarSearch />
             </Menu.Item>
             {currentWorkspace && (
               <Menu.Item key="databases">
-                <Link to={`/${currentWorkspace.slug}/datastores`}>
-                  <Icon type="database" style={{ fontSize: "24px" }} />
-                </Link>
+                <Popover content="Browse Datastores" title={null} placement="bottom">
+                  <Link to={`/${currentWorkspace.slug}/datastores`}>
+                    <Icon type="database" style={{ fontSize: "24px" }} />
+                  </Link>
+                </Popover>
               </Menu.Item>
             )}
             <Menu.Item key="dropdown" data-test="Navbar.Dropdown">
