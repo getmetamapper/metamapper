@@ -27,13 +27,14 @@ class TableDefinitionTags extends Component {
   handleSave = (e) => {
     e.preventDefault()
 
-    const { table: { id } } = this.props
+    const { table: { id, shortDesc } } = this.props
     const { currentTags, tags } = this.state
 
     const payload = {
       variables: {
         id,
         tags,
+        shortDesc,
       },
       successMessage: "Tags were updated.",
     }
