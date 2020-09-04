@@ -9,7 +9,7 @@ trix-editor {
 trix-toolbar .trix-button-group {
   border: 1px solid #e8e8e8;
 }
-trix-editor pre {
+.ant-comment-content-detail pre, trix-editor pre {
   display: inline-block;
   width: 100%;
   vertical-align: top;
