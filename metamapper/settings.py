@@ -161,6 +161,8 @@ DATABASES = {
     }
 }
 
+INCLUDE_EXAMPLE_DATASTORES = envtobool('METAMAPPER_INCLUDE_EXAMPLE_DATASTORES', False)
+
 # Used when hard resets on migrations during development.
 DB_RESET = os.getenv('DB_RESET') or os.getenv('DB_SETUP')
 #

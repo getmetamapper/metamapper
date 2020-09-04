@@ -10,8 +10,6 @@ Metamapper is an open-source metadata management platform that aims to make it e
   <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-3.png" width="270">
 </p>
 
-*Note: Metamapper is a new project. Each release should be stable, but the project is still in it's fledgling stage. So proceed with that in mind.*
-
 ## What we're trying to accomplish
 
 Growing organizations rely on data and analytics to drive decisions. With the emergence of tools like [Airflow](https://github.com/apache/airflow) and companies like [Segment](https://segment.com/) and [Fivetran](https://get.fivetran.com/demo), it's never been easier to get data into your warehouse.
@@ -57,9 +55,15 @@ We recommend deploying using our [pre-baked Docker images](https://hub.docker.co
 
 ## Supported datastores
 
-Metamapper currently supports automatic crawling and indexing of six SQL-based relational database management systems with plans to add more in the near future.
+Metamapper currently supports automatic crawling and indexing of these relational database management systems (with plans to add more in the near future):
 
 - Amazon Redshift
+- AWS Athena
+- AWS Glue
+- Azure SQL Database
+- Azure Synapse (formerly Azure DW)
+- Google BigQuery
+- Hive Metastore
 - Microsoft SQL Server
 - MySQL
 - Oracle
@@ -69,6 +73,8 @@ Metamapper currently supports automatic crawling and indexing of six SQL-based r
 ## Community Feedback
 
 Metamapper is an open source project. Feedback from the community greatly influences our roadmap and the direction of the project. If you want to provide some input, the best place to do it is through [this Typeform survey](https://metamapper.typeform.com/to/rQT0lccB).
+
+We also hang out in [Discord](http://discuss.metamapper.io), so stop by!
 
 ## Resources
 
