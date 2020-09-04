@@ -45,7 +45,7 @@ case "$1" in
     shift
     scheduler "$@"
     ;;
-  ci-webserver)
+  migrate-then-webserver)
     shift
     migrate
     webserver "$@"

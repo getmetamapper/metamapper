@@ -23,7 +23,7 @@ services:
   webserver:
     ipc: host
     build: ../
-    command: ["./wait-for-it.sh", "database:5432", "--", "./bin/docker-entrypoint", "ci-webserver"]
+    command: ["./wait-for-it.sh", "database:5432", "--", "./bin/docker-entrypoint", "migrate-then-webserver"]
     ports:
       - "5050:5050"
     << : *metamapper_service
