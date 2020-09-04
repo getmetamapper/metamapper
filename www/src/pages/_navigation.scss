@@ -18,6 +18,10 @@
 .top-navbar .ant-menu-dark {
   background: $color-navbar;
 }
+.top-navbar .ant-menu-dark {
+  display: inline-block;
+  float: right;
+}
 .top-navbar .ant-avatar {
   height: 40px;
   line-height: 40px;
@@ -99,6 +103,13 @@
   color: rgba(0, 0, 0, 0.65);
   cursor: initial;
 }
+.workspace-settings .ant-menu-item a,
+.workspace-layout-header {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+}
 .content.private {
   margin-top: 66px;
 }
@@ -125,6 +136,10 @@
   .top-navbar .logo > img {
     width: 200px;
     padding: 0 20px;
+  }
+  .top-navbar .ant-menu-dark {
+    display: block;
+    float: none;
   }
 }
 

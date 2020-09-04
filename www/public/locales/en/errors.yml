@@ -113,19 +113,19 @@ errors:
       unique: Provided object is already an owner of that asset.
   CustomField:
     field_name:
-      blank: Custom field name is required.
-      nulled: Custom field name is required.
-      max_length: Custom field name is limited to 30 characters.
+      blank: Custom property name is required.
+      nulled: Custom property name is required.
+      max_length: Custom property name is limited to 30 characters.
     field_type:
-      nulled: Please choose a valid custom field type.
-      invalid_choice: Please choose a valid custom field type.
+      nulled: Please choose a valid custom property type.
+      invalid_choice: Please choose a valid custom property type.
     short_desc:
-      max_length: Custom field descriptions cannot be longer than 60 characters.
+      max_length: Custom property descriptions cannot be longer than 60 characters.
     choices:
-      required: Enum fields require a list of allowed input value.
-      empty: Enum fields require a list of allowed input value.
+      required: Enum properties require a list of allowed input value.
+      empty: Enum properties require a list of allowed input value.
     none:
-      unique: Custom field with this name already exists.
+      unique: Custom property with this name already exists.
   Comments:
     html:
       blank: Comment cannot be empty.

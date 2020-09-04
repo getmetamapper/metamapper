@@ -31,7 +31,7 @@ class DeleteCustomField extends Component {
       contentType,
     } = this.props
     const payload = {
-      successMessage: "Custom field has been removed.",
+      successMessage: "Custom property has been removed.",
       variables: { id },
       refetchQueries: [
         {
@@ -56,7 +56,7 @@ class DeleteCustomField extends Component {
     return (
       <Modal
         visible={visible}
-        title="Delete this custom field"
+        title="Delete this custom property"
         onCancel={this.handleCancel}
         footer={[
           <Button
@@ -66,13 +66,13 @@ class DeleteCustomField extends Component {
             onClick={this.handleSubmit}
             data-test="DeleteCustomField.Submit"
           >
-            {submitting ? 'Deleting...' : 'Delete this custom field'}
+            {submitting ? 'Deleting...' : 'Delete this custom property'}
           </Button>,
         ]}
       >
         <Form>
           <p>
-            Once you delete a custom field, you will lose all data related to
+            Once you delete a custom property, you will lose all data related to
             it.
           </p>
           <p>

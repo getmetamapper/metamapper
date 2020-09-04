@@ -41,11 +41,11 @@ describe("customfields.spec.js", () => {
     beforeEach(() => {
       cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${workspace.slug}/settings/customfields`))
+          cy.visit(`/${workspace.slug}/settings/customproperties`))
     })
 
     it("displays the right meta title", () => {
-      cy.title().should("eq", `Custom Fields - ${workspace.slug} - Metamapper`)
+      cy.title().should("eq", `Custom Properties - ${workspace.slug} - Metamapper`)
     })
 
     it("displays Datastore custom fields", () => {
@@ -92,10 +92,10 @@ describe("customfields.spec.js", () => {
       it("fails with readonly permission", () => {
         cy.login(readonly.email, readonly.password, workspace.id)
           .then(() =>
-            cy.visit(`/${workspace.slug}/settings/customfields`))
+            cy.visit(`/${workspace.slug}/settings/customproperties`))
 
         cy.contains(kind).click()
-        cy.contains(`Add Custom ${kind} Field`).should("be.disabled")
+        cy.contains(`Add Custom ${kind} Property`).should("be.disabled")
 
         cy.getByTestId("CustomFieldsTable").within(() => {
           cy.get("td").eq(3).should("not.have.value", "Edit")
@@ -107,7 +107,7 @@ describe("customfields.spec.js", () => {
         beforeEach(() => {
           cy.login(owner.email, owner.password, workspace.id)
             .then(() =>
-              cy.visit(`/${workspace.slug}/settings/customfields`))
+              cy.visit(`/${workspace.slug}/settings/customproperties`))
         })
 
         describe(`create custom ${kind.toLowerCase()} field`, () => {
@@ -119,7 +119,7 @@ describe("customfields.spec.js", () => {
             }
 
             cy.contains(kind).click()
-            cy.contains(`Add Custom ${kind} Field`).click()
+            cy.contains(`Add Custom ${kind} Property`).click()
 
             cy.fillInputs({
               "CustomFieldFieldset.Name": formInputs.name,
@@ -181,7 +181,7 @@ describe("customfields.spec.js", () => {
           formValidationFixtures.forEach(({ describe, inputs }) => {
             it(describe, () => {
               cy.contains(kind).click()
-              cy.contains(`Add Custom ${kind} Field`).click()
+              cy.contains(`Add Custom ${kind} Property`).click()
 
               cy.fillInputs({
                 "CustomFieldFieldset.Name": inputs["Name"]["value"],
@@ -203,7 +203,7 @@ describe("customfields.spec.js", () => {
             }
 
             cy.contains(kind).click()
-            cy.contains(`Add Custom ${kind} Field`).click()
+            cy.contains(`Add Custom ${kind} Property`).click()
 
             cy.fillInputs({
               "CustomFieldFieldset.Name": formInputs.name,
@@ -213,7 +213,7 @@ describe("customfields.spec.js", () => {
 
             cy.getByTestId("CustomFieldSetupForm.Submit").click()
 
-            cy.contains(".ant-message-error", "Custom field with this name already exists.").should(
+            cy.contains(".ant-message-error", "Custom property with this name already exists.").should(
               "be.visible"
             )
           })
@@ -283,7 +283,7 @@ describe("customfields.spec.js", () => {
             })
             cy.getByTestId("DeleteCustomField.Submit").click()
 
-            cy.contains(".ant-message-success", "Custom field has been removed.").should(
+            cy.contains(".ant-message-success", "Custom property has been removed.").should(
               "be.visible"
             )
 
@@ -298,7 +298,7 @@ describe("customfields.spec.js", () => {
     it("when workspace does not exist", () => {
       cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit("/does-not-exist/settings/customfields"))
+          cy.visit("/does-not-exist/settings/customproperties"))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })
@@ -306,7 +306,7 @@ describe("customfields.spec.js", () => {
     it("when user is unauthorized", () => {
       cy.login(owner.email, owner.password, workspace.id)
         .then(() =>
-          cy.visit(`/${privateWorkspace.slug}/settings/customfields`))
+          cy.visit(`/${privateWorkspace.slug}/settings/customproperties`))
 
       cy.contains("Sorry, the page you are looking for doesn't exist.").should("be.visible")
     })

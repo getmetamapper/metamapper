@@ -18,7 +18,7 @@ const UpdateCustomFieldForm = ({
         disabled={isSubmitting}
         data-test="UpdateCustomFieldForm.Submit"
       >
-        {isSubmitting ? "Saving..." : "Update Custom Field"}
+        {isSubmitting ? "Saving..." : "Update Custom Property"}
       </Button>
     </Form.Item>
   </Form>
