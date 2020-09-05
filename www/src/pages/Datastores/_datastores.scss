@@ -76,6 +76,22 @@
     font-weight: 500;
   }
 }
+.datastores .datastore-columns .datastore-columns-expansion {
+  .form-label {
+    margin-bottom: 8px;
+  }
+  .form-label .popover {
+    float: none;
+    margin-right: 0;
+    margin-left: 8px;
+  }
+  .datastore-columns-expansion-item {
+    margin-bottom: 12px;
+  }
+  .datastore-columns-expansion-item:last-child {
+    margin-bottom: 0;
+  }
+}
 .datastores .datastore-indexes {
   background-color: #FFFFFF;
 }

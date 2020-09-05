@@ -22,6 +22,10 @@ $color-dark: rgba(0, 0, 0, 0.65);
   border: 1px solid $color-primary !important;
 }
 
+.not-expandable .ant-table-row-expand-icon {
+  display: none;
+}
+
 .comments {
   .ant-card-body {
     padding: 0;

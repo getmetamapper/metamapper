@@ -26,7 +26,7 @@ build-assets:
 	@npm run build --prefix www
 
 build-docker:
-	@docker build --build-arg env=development -t metamapper --rm ./
+	@docker-compose build --build-arg env=development
 
 initdb:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0
@@ -38,10 +38,10 @@ resetdb:
 	@docker-compose -f docker-development.yml run --rm webserver bash www/cypress/cmd/resetdb.sh
 
 rebuild-db: stop
-	@docker-compose -f docker-development.yml start database
-	@docker exec metamapper_database_1 dropdb metamapper -U postgres
-	@docker exec metamapper_database_1 createdb metamapper -U postgres
-	@docker-compose -f docker-development.yml run -e DB_RESET=1 --rm webserver python manage.py migrate
+	@docker-compose start database
+	@docker-compose exec database dropdb metamapper -U postgres
+	@docker-compose exec database createdb metamapper -U postgres
+	@docker-compose run -e DB_RESET=1 --rm webserver python manage.py migrate
 
 start:
 	@rm -f celerybeat.pid

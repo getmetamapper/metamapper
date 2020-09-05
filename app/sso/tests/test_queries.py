@@ -224,7 +224,7 @@ class TestGetSSODomain(cases.GraphQLTestCase):
         self.assertPermissionDenied(results)
 
 
-@override_settings(GOOGLE_ENABLED=True, GITHUB_ENABLED=True)
+@override_settings(GOOGLE_ENABLED=True, GITHUB_ENABLED=True, GOOGLE_CLIENT_ID='meow', GITHUB_CLIENT_ID='wuph')
 class TestGetSSOProviders(cases.GraphQLTestCase):
     """Test cases for the fetching the list of supported SSO providers.
     """
@@ -246,16 +246,19 @@ class TestGetSSOProviders(cases.GraphQLTestCase):
 
         self.assertEqual(response, [
             {
+                'clientId': 'wuph',
                 'provider': 'GITHUB',
                 'label': 'Github',
                 'protocol': 'oauth2',
             },
             {
+                'clientId': 'meow',
                 'provider': 'GOOGLE',
                 'label': 'Google for Work',
                 'protocol': 'oauth2',
             },
             {
+                'clientId': None,
                 'provider': 'GENERIC',
                 'label': 'SAML2',
                 'protocol': 'saml2',

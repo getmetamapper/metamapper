@@ -19,7 +19,7 @@ const AllowedCustomPropertySettingsFieldset = ({
         {customDatastoreFields.length > 0 ? (
           <span>Check the box next to the property name to enable.</span>
         ) : (
-          <span>No datastore custom fields exist in this workspace.</span>
+          <span>No datastore custom properties exist in this workspace.</span>
         )}
       </small>
       {getFieldDecorator("enabledDatastoreProperties", {
@@ -43,7 +43,7 @@ const AllowedCustomPropertySettingsFieldset = ({
         {customTableFields.length > 0 ? (
           <span>Check the box next to the property name to enable.</span>
         ) : (
-          <span>No table custom fields exist in this workspace.</span>
+          <span>No table custom properties exist in this workspace.</span>
         )}
       </small>
       {getFieldDecorator("enabledTableProperties", {

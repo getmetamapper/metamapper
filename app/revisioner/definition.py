@@ -41,9 +41,10 @@ def make(collector, *args, **kwargs):  # noqa: C901
             column_instance = collector.columns.find_by_oid(column['column_object_id'])
             if column_instance:
                 collector.columns.mark_as_processed(column_instance.pk)
-            column['name'] = column.pop('column_name')
             column['instance'] = column_instance
+            column['name'] = column.pop('column_name')
             column['object_id'] = column.pop('column_object_id')
+            column['db_comment'] = column.pop('column_description')
             columns.append(column)
 
         for i in filter(lambda i: i['table_object_id'] == row['table_object_id'], index_list):

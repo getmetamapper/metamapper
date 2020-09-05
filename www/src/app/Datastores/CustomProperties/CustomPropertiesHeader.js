@@ -13,7 +13,7 @@ const CustomPropertiesHeader = ({ isEditable, onToggleEdit }) => (
     )}
     <Tooltip title="Manage custom properties">
       <span className="custom-fields-toolbar-item" data-test="CustomProperties.Manage">
-        <Link to="/settings/customfields" target="_blank">
+        <Link to="/settings/customproperties" target="_blank">
           <Button size="small" icon="tool" />
         </Link>
       </span>

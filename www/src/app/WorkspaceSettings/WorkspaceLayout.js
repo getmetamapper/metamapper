@@ -38,8 +38,8 @@ class WorkspaceLayout extends Component {
       },
       {
         icon: "tool",
-        label: "Custom Fields",
-        to: `/${slug}/settings/customfields`,
+        label: "Custom Properties",
+        to: `/${slug}/settings/customproperties`,
       },
     ]
   }
@@ -69,10 +69,12 @@ class WorkspaceLayout extends Component {
                   mode="inline"
                   defaultSelectedKeys={this.currentPageIndex()}
                 >
-                  <div className="dropdown-menu-header">Workspace Settings</div>
+                  <div className="dropdown-menu-header workspace-layout-header" title="Workspace Settings">
+                    Workspace Settings
+                  </div>
                   {map(this.links, ({ icon, label, to }, idx) => (
                     <Menu.Item key={idx}>
-                      <Link to={to}>
+                      <Link to={to} title={label}>
                         <Icon type={icon} /> {label}
                       </Link>
                     </Menu.Item>

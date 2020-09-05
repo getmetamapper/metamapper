@@ -4,6 +4,7 @@ import unittest.mock as mock
 from django import test
 from django.utils import timezone
 
+import app.definitions.models as models
 import app.inspector.engines.oracle_inspector as engine
 import app.revisioner.tasks.core as coretasks
 
@@ -230,6 +231,10 @@ class OracleInspectorIntegrationTestMixin(object):
         self.assertTrue(run.finished_at is not None)
         self.assertEqual(run.errors.count(), 0)
         self.assertEqual(datastore.schemas.count(), self.schema_count)
+
+        column = models.Column.objects.get(name__iexact='emp_no', table__name__iexact='employees')
+
+        self.assertEqual(column.db_comment, 'The employee identification number')
 
 
 @test.tag('oracle', 'inspector')

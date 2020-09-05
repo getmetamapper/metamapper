@@ -13,7 +13,7 @@ const CustomFieldSetupForm = ({ form, isSubmitting, onSubmit }) => (
         disabled={isSubmitting}
         data-test="CustomFieldSetupForm.Submit"
       >
-        {isSubmitting ? "Creating..." : "Create Custom Field"}
+        {isSubmitting ? "Creating..." : "Create Custom Property"}
       </Button>
     </Form.Item>
   </Form>

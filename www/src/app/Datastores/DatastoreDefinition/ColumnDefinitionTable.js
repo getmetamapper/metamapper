@@ -1,8 +1,10 @@
 import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
-import { Icon, Table, Tooltip, Tag } from "antd"
+import { Card, Icon, Table, Tooltip, Tag } from "antd"
+import { isEmpty, pick, map, some } from "lodash"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { components } from "app/Common/EditableCell"
+import FormLabel from "app/Common/FormLabel"
 import BooleanIndicator from "app/Common/BooleanIndicator"
 import UpdateColumnMetadata from "graphql/mutations/UpdateColumnMetadata"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
@@ -14,6 +16,7 @@ class ColumnDefinitionTable extends Component {
     this.columns = [
       {
         align: "center",
+        width: 60,
         render: (row) => (
           <div className={row.commentsCount > 0 ? "has-comments" : ""}>
             <Tooltip title={`${row.commentsCount} comment(s)`}>
@@ -30,6 +33,7 @@ class ColumnDefinitionTable extends Component {
         key: "isPrimary",
         dataIndex: "isPrimary",
         align: "center",
+        width: 60,
         render: (isPrimary) => (
           <>
             {isPrimary && (
@@ -54,14 +58,9 @@ class ColumnDefinitionTable extends Component {
       },
       {
         title: "Nullable",
-        dataIndex: "isPrimary",
+        dataIndex: "isNullable",
         align: "center",
-        render: (isPrimary) => <BooleanIndicator value={isPrimary} />,
-      },
-      {
-        title: "Default Value",
-        dataIndex: "defaultValue",
-        key: "defaultValue",
+        render: (isNullable) => <BooleanIndicator value={isNullable} />,
       },
       {
         title: "Description",
@@ -69,6 +68,19 @@ class ColumnDefinitionTable extends Component {
         key: "shortDesc",
         editable: true,
       },
+    ]
+
+    this.expandedColumns = [
+      {
+        title: "Comment",
+        key: "dbComment",
+        helpText: "This is the comment set within the database system.",
+      },
+      {
+        title: "Default Value",
+        key: "defaultValue",
+        helpText: "This will be the value of the column if none is provided."
+      }
     ]
 
     this.state = {
@@ -105,6 +117,26 @@ class ColumnDefinitionTable extends Component {
     this.setState({ dataSource: newData })
   }
 
+  shouldExpand = (record) => {
+    return some(pick(record, map(this.expandedColumns, 'key')), (i) => !isEmpty(i))
+  }
+
+  renderExpandedRow = (record) => {
+    return (
+      <Card className="datastore-columns-expansion">
+        {map(this.expandedColumns, ({ title, key, helpText }) => {
+          if (isEmpty(record[key])) return null;
+          return (
+            <div className="datastore-columns-expansion-item">
+              <FormLabel label={title} helpText={helpText} />
+              <span>{record[key]}</span>
+            </div>
+          )
+        })}
+      </Card>
+    )
+  }
+
   render() {
     const { hasPermission } = this.props
     const { dataSource } = this.state
@@ -128,12 +160,13 @@ class ColumnDefinitionTable extends Component {
       <span data-test="ColumnDefinitionTable">
         <Table
           rowKey="id"
-          rowClassName={() => "editable-row"}
           className="datastore-columns"
           components={components}
           dataSource={dataSource}
           columns={columns}
           pagination={false}
+          expandedRowRender={this.renderExpandedRow}
+          rowClassName={record => (this.shouldExpand(record) ? "editable-row" : "editable-row not-expandable")}
         />
       </span>
     )

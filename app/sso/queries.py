@@ -82,9 +82,10 @@ class Query(graphene.ObjectType):
         """
         return [
             {
-                'provider': provider,
+                'clientId': SSOConnection.get_client_id(provider),
                 'label': label,
                 'protocol': SSOConnection.get_protocol(provider),
+                'provider': provider,
             }
             for provider, label in SSOConnection.PROVIDER_CHOICES
             if SSOConnection.provider_is_enabled(provider)

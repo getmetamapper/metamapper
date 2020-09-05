@@ -5,11 +5,12 @@ import GetDatastoreAssets from "graphql/queries/GetDatastoreAssets"
 const withGetDatastoreAssets = graphql(GetDatastoreAssets, {
   options: ({
     search,
+    schema,
     match: { params: { datastoreSlug } },
   }) => {
     return {
       fetchPolicy: "network-only",
-      variables: { datastoreSlug, search },
+      variables: { datastoreSlug, schema, search },
     }
   },
   props: ({ data }) => {

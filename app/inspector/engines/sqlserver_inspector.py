@@ -28,6 +28,7 @@ WITH primary_key AS (
            THEN 'view' END AS table_type,
       CONCAT(t.object_id, '/', c.column_id) AS column_object_id,
       c.name as column_name,
+      CAST(PROP_COL.VALUE AS NVARCHAR(MAX))  as column_description,
       ic.ordinal_position,
       LOWER(ic.data_type) as data_type,
       CASE WHEN c.max_length IS NOT NULL
@@ -50,6 +51,10 @@ LEFT JOIN primary_key pk
        ON LOWER(SCHEMA_NAME(t.schema_id)) = LOWER(pk.table_schema)
       AND LOWER(t.name) = LOWER(pk.table_name)
       AND LOWER(c.name) = LOWER(pk.column_name)
+LEFT JOIN SYS.EXTENDED_PROPERTIES PROP_COL
+       ON prop_col.MAJOR_ID = OBJECT_ID(ic.table_schema + '.' + ic.table_name)
+      AND prop_col.MINOR_ID = ic.ordinal_position
+      AND prop_col.NAME = 'MS_Description'
     WHERE LOWER(SCHEMA_NAME(t.schema_id)) NOT IN ({excluded})
       AND UPPER(t.type) IN ('U', 'V')
  ORDER BY SCHEMA_NAME(t.schema_id), t.name, ic.ordinal_position
@@ -114,6 +119,22 @@ class SQLServerInspector(interface.EngineInterface):
     @property
     def cursor_kwargs(self):
         return {'as_dict': True}
+
+    @property
+    def connect_kwargs(self):
+        """Override connection kwargs per https://github.com/pymssql/pymssql/issues/339#issuecomment-165740512
+        """
+        _kwargs = {
+            'host': self.host,
+            'user': self.username,
+            'password': self.password,
+            'port': self.port,
+            'database': self.database,
+            'conn_properties': '',
+        }
+        if self.connect_timeout_attr is not None:
+            _kwargs[self.connect_timeout_attr] = self.connect_timeout_value
+        return _kwargs
 
     def get_db_version(self):
         result = self.get_first(

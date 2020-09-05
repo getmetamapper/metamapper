@@ -21,7 +21,7 @@ class UpdateCustomField extends Component {
 
       const payload = {
         variables: { id, ...variables },
-        successMessage: "Custom field has been updated.",
+        successMessage: "Custom property has been updated.",
         refetchQueries: [
           {
             query: GetCustomFields,

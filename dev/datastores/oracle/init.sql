@@ -25,6 +25,8 @@ CREATE TABLE employees.employees (
     PRIMARY KEY(emp_no)
 );
 
+COMMENT ON COLUMN employees.employees.emp_no IS 'The employee identification number';
+
 CREATE TABLE employees.departments (
     dept_no     VARCHAR2(4)     NOT NULL,
     dept_name   VARCHAR2(40)    NOT NULL UNIQUE,

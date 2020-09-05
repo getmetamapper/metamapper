@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getTableColumns(
+  query GetTableColumns(
     $datastoreId: ID!
     $schemaName: String!
     $tableName: String!
@@ -12,7 +12,6 @@ export default gql`
       tableName: $tableName
     ) {
       id
-      pk
       name
       tags
       properties
@@ -24,7 +23,6 @@ export default gql`
         edges {
           node {
             id
-            pk
             name
             objectId
             ordinalPosition
@@ -32,6 +30,7 @@ export default gql`
             isNullable
             isPrimary
             defaultValue
+            dbComment
             shortDesc
             commentsCount
           }

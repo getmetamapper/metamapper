@@ -55,7 +55,7 @@ We recommend deploying using our [pre-baked Docker images](https://hub.docker.co
 
 ## Supported datastores
 
-Metamapper currently supports automatic crawling and indexing of these relational database management systems (with plans to add more in the near future):
+Metamapper currently supports automatic crawling and indexing of these database management systems with plans to add more in the near future.
 
 - Amazon Redshift
 - AWS Athena

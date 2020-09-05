@@ -9,11 +9,8 @@ import qs from "query-string"
 import Link from "app/Navigation/Link"
 import SSOProviderIcon from "app/WorkspaceSettings/Authentication/SSOProviderIcon"
 import withGetSSOProviders from "graphql/withGetSSOProviders"
-import {
-  GITHUB_OAUTH2_CLIENT_ID,
-  GOOGLE_OAUTH2_CLIENT_ID,
-  ORIGIN_HOST,
-} from "lib/constants"
+import { ORIGIN_HOST } from "lib/constants"
+
 
 const navigate = (history, currentWorkspace, currentUser, provider) => {
   const stateStruct = {
@@ -24,21 +21,21 @@ const navigate = (history, currentWorkspace, currentUser, provider) => {
 
   const state = window.btoa(qs.stringify(stateStruct))
 
-  if (provider.toUpperCase() === "GITHUB") {
+  if (provider.provider.toUpperCase() === "GITHUB" && provider.clientId) {
     const redirectUri = `${ORIGIN_HOST}/oauth2/github/callback?state=${state}`
 
     window.location.href = `
       https://github.com/login/oauth/authorize
-        ?client_id=${GITHUB_OAUTH2_CLIENT_ID}
+        ?client_id=${provider.clientId}
         &scope=user:email,read:org,repo
         &redirect_uri=${redirectUri}
     `.replace(/\s/g, "")
-  } else if (provider.toUpperCase() === "GOOGLE") {
+  } else if (provider.provider.toUpperCase() === "GOOGLE" && provider.clientId) {
     const redirectUri = `${ORIGIN_HOST}/oauth2/google/callback`
 
     window.location.href = `
       https://accounts.google.com/o/oauth2/auth
-        ?client_id=${GOOGLE_OAUTH2_CLIENT_ID}
+        ?client_id=${provider.clientId}
         &scope=email
         &access_type=offline
         &response_type=code
@@ -49,7 +46,7 @@ const navigate = (history, currentWorkspace, currentUser, provider) => {
     history.push(
       `/${
         currentWorkspace.slug
-      }/settings/authentication/setup/${provider.toLowerCase()}`
+      }/settings/authentication/setup/${provider.provider.toLowerCase()}`
     )
   }
 }
@@ -83,7 +80,7 @@ const AuthenticationSetupRouting = ({
         }
       >
         {map(ssoProviders, (ssoProvider) => (
-          <Radio.Button value={ssoProvider.provider}>
+          <Radio.Button value={ssoProvider}>
             <SSOProviderIcon {...ssoProvider} size={50} />
             <span className="text">{ssoProvider.label}</span>
           </Radio.Button>
@@ -96,5 +93,5 @@ const AuthenticationSetupRouting = ({
 export default compose(
   withRouter,
   withUserContext,
-  withGetSSOProviders
+  withGetSSOProviders,
 )(AuthenticationSetupRouting)

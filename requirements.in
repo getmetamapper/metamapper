@@ -2,6 +2,7 @@ bleach
 celery[redis]
 cryptography
 cx-oracle
+Cython==0.29.21
 django==3.0.8
 django-cacheops
 django-cors-headers>=3.1.1
@@ -15,6 +16,7 @@ djangorestframework
 djangorestframework-jwt
 dnspython
 graphene-django>=2.9.0
+google-cloud-bigquery
 gunicorn
 mysql-connector-python
 psycopg2-binary

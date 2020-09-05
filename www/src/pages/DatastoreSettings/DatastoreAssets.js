@@ -57,9 +57,10 @@ class DatastoreAssets extends Component {
       if (err) return
 
       const rootUri = `/${slug}/datastores/${datastoreSlug}/assets`
+      const qParams = qs.parse(window.location.search)
 
       if (search) {
-        this.props.history.push(`${rootUri}?search=${search}`)
+        this.props.history.push(`${rootUri}?${qs.stringify({ ...qParams, search })}`)
       } else {
         this.props.history.push(rootUri)
       }
@@ -113,9 +114,9 @@ class DatastoreAssets extends Component {
 const withSearchQuery = (ChildComponent) => {
   const ComposedComponent = (props) => {
     const {
-      search
+      search, schema,
     } = qs.parse(window.location.search)
-    return <ChildComponent search={search} {...props} />
+    return <ChildComponent search={search} schema={schema} {...props} />
   }
   return ComposedComponent
 }

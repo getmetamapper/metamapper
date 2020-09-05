@@ -18,6 +18,7 @@ Datastore = collections.namedtuple("Datastore", [
     "host",
     "port",
     "database",
+    "extras",
     "ssh_enabled",
 ])
 
@@ -35,6 +36,7 @@ class InspectorServiceTests(unittest.TestCase):
             'host': None,
             'port': None,
             'database': None,
+            'extras': {},
             'ssh_enabled': False,
         }
 

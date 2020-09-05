@@ -3,7 +3,7 @@ import { Card, Col, Form, Input, Row, Switch } from "antd"
 import FormLabel from "app/Common/FormLabel"
 import CopyInput from "app/Common/CopyInput"
 
-const GenericConnectionSettingsFieldset = ({
+const SnowflakeConnectionSettingsFieldset = ({
   publicKey,
   datastore: { jdbcConnection, sshConfig },
   form: { getFieldDecorator, getFieldValue },
@@ -162,7 +162,7 @@ const GenericConnectionSettingsFieldset = ({
   )
 }
 
-GenericConnectionSettingsFieldset.defaultProps = {
+SnowflakeConnectionSettingsFieldset.defaultProps = {
   datastore: {
     jdbcConnection: {},
     sshConfig: {
@@ -171,4 +171,4 @@ GenericConnectionSettingsFieldset.defaultProps = {
   },
 }
 
-export default GenericConnectionSettingsFieldset
+export default SnowflakeConnectionSettingsFieldset

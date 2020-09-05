@@ -25,6 +25,10 @@ WITH primary_key AS (
           LOWER(t.table_type) AS table_type,
           to_regclass(c.table_schema || '.' || c.table_name)::oid || '/' || c.ordinal_position AS column_object_id,
           c.column_name,
+          pg_catalog.col_description(
+            to_regclass(c.table_schema || '.' || c.table_name)::oid,
+            c.ordinal_position
+          ) as column_description,
           c.ordinal_position,
           c.data_type,
           CASE WHEN c.character_maximum_length IS NOT NULL
@@ -112,7 +116,7 @@ class PostgresqlInspector(interface.EngineInterface):
         return {'cursor_factory': self.dictcursor}
 
     def get_db_version(self):
-        result = self.get_first("SHOW server_version;")
+        result = self.get_first('SHOW server_version;')
         if len(result):
             return result['server_version']
         return None

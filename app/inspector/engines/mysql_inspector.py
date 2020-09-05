@@ -22,6 +22,7 @@ MYSQL_DEFINITIONS_QUERY = """
           c.column_name
         )) AS CHAR) as column_object_id,
         c.column_name,
+        c.column_comment AS column_description,
         c.ordinal_position,
         c.data_type,
         CASE WHEN c.character_maximum_length IS NOT NULL

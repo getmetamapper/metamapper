@@ -111,6 +111,12 @@ CREATE TABLE [employees].[employees] (
 )
 GO
 
+EXEC sp_addextendedproperty
+  @name = N'MS_Description', @value = 'The employee identification number',
+  @level0type = N'Schema', @level0name = 'employees',
+  @level1type = N'Table', @level1name = 'employees',
+  @level2type = N'Column', @level2name = 'emp_no'
+GO
 
 CREATE TABLE [employees].[departments] (
     dept_no     NVARCHAR(4)     NOT NULL,

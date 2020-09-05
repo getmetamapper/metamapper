@@ -23,7 +23,7 @@ def get_request_logger():
 class GraphqlRequestLogger(object):
     """Middleware for logging HTTP requests against the Graphql endpoint.
     """
-    fields_to_redact = []
+    fields_to_redact = ['extras']
 
     delimiter = "\n"
 

@@ -3,8 +3,6 @@ x-restart-policy: &restart_policy
   restart: unless-stopped
 x-metamapper-defaults: &metamapper_defaults
   << : *restart_policy
-  build:
-    context: ./
   image: metamapper
   env_file:
     - .env
@@ -33,6 +31,8 @@ services:
      - metamapper
   webserver:
     << : *metamapper_defaults
+    build:
+      context: ./
     command: webserver
     ports:
       - 5050:5050

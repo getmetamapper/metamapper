@@ -21,6 +21,7 @@ export default gql`
         username
         database
         port
+        extras
       }
       sshConfig {
         isEnabled
