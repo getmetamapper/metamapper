@@ -12,7 +12,7 @@ initdb() {
 }
 
 migrate() {
-    DB_SETUP=1 python manage.py migrate
+    DB_SETUP=1 python manage.py runmigrations
 }
 
 # Starts the Metamapper web server. We recommend running a few

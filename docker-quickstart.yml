@@ -29,12 +29,12 @@ services:
       - 5555:5050
   worker:
     << : *metamapper_defaults
-    command: worker --queue default,revisioner
+    command: ["./wait-for-it.sh", "webserver:5555", "--", "./bin/docker-entrypoint", "worker"]
     depends_on:
       - webserver
   scheduler:
     << : *metamapper_defaults
-    command: scheduler
+    command: ["./wait-for-it.sh", "webserver:5555", "--", "./bin/docker-entrypoint", "scheduler"]
     depends_on:
       - webserver
 volumes:
