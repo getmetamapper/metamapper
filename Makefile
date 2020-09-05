@@ -26,32 +26,32 @@ build-assets:
 	@npm run build --prefix www
 
 build-docker:
-	@docker-compose build --build-arg env=development
+	@docker-compose -f docker-development.yml build --build-arg env=development
 
 initdb:
-	@docker-compose run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0
+	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0
 
 migrate:
-	@docker-compose run -e DB_SETUP=1 --rm webserver python manage.py migrate
+	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py migrate
 
 resetdb:
-	@docker-compose run --rm webserver bash www/cypress/cmd/resetdb.sh
+	@docker-compose -f docker-development.yml run --rm webserver bash www/cypress/cmd/resetdb.sh
 
 rebuild-db: stop
-	@docker-compose start database
-	@docker-compose exec database dropdb metamapper -U postgres
-	@docker-compose exec database createdb metamapper -U postgres
-	@docker-compose run -e DB_RESET=1 --rm webserver python manage.py migrate
+	@docker-compose -f docker-development.yml start database
+	@docker-compose -f docker-development.yml exec database dropdb metamapper -U postgres
+	@docker-compose -f docker-development.yml exec database createdb metamapper -U postgres
+	@docker-compose -f docker-development.yml run -e DB_RESET=1 --rm webserver python manage.py migrate
 
 start:
 	@rm -f celerybeat.pid
-	@docker-compose up -d --remove-orphans
+	@docker-compose -f docker-development.yml up -d --remove-orphans
 
 stop:
-	@docker-compose stop
+	@docker-compose -f docker-development.yml stop
 
 status:
-	@docker-compose ps
+	@docker-compose -f docker-development.yml ps
 
 restart: stop start
 
@@ -59,10 +59,10 @@ frontend:
 	@npm run start --prefix www
 
 shell:
-	@docker-compose run --rm webserver python manage.py shell
+	@docker-compose -f docker-development.yml run --rm webserver python manage.py shell
 
 cypress-resetdb:
-	@docker-compose run --rm webserver bash www/cypress/cmd/resetdb.sh
+	@docker-compose -f docker-development.yml run --rm webserver bash www/cypress/cmd/resetdb.sh
 
 cypress: cypress-resetdb
 	@npx cypress open
@@ -74,7 +74,7 @@ test-cypress: cypress-resetdb
 test-py:
 	@echo "--> Running Python (webserver) tests"
 	@find . -name \*.pyc -delete
-	@docker-compose --log-level ERROR run --rm webserver python manage.py test --exclude-tag=inspector
+	@docker-compose -f docker-development.yml --log-level ERROR run --rm webserver python manage.py test --exclude-tag=inspector
 
 test-js:
 	@echo "--> Running JavaScript (client) tests"

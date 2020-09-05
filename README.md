@@ -10,8 +10,6 @@ Metamapper is an open-source metadata management platform that aims to make it e
   <img src="https://github.com/metamapper-io/metamapper/raw/master/.github/screenshots/preview-3.png" width="270">
 </p>
 
-*Note: Metamapper is a new project. Each release should be stable, but the project is still in it's fledgling stage. So proceed with that in mind.*
-
 ## What we're trying to accomplish
 
 Growing organizations rely on data and analytics to drive decisions. With the emergence of tools like [Airflow](https://github.com/apache/airflow) and companies like [Segment](https://segment.com/) and [Fivetran](https://get.fivetran.com/demo), it's never been easier to get data into your warehouse.
@@ -33,17 +31,39 @@ Here are a few features of Metamapper:
 
 Check out the [Introducing Metamapper](https://www.metamapper.io/blog/2020/07/12/introducting-metamapper) blog post.
 
-## Getting started
+## Quickstart
 
-Recommended deployment method is through [Docker](https://www.docker.com/). Setup instructions can be found in [this Github repo](https://github.com/getmetamapper/metamapper-setup).
+You can try out a default version of Metamapper with sample data using [Docker](https://docs.docker.com/get-docker/) and [Docker-Compose](https://docs.docker.com/compose/install/).
 
-Reading the [documentation](https://www.metamapper.io/) is also a good starting point.
+Clone the repository:
+
+```
+git clone git@github.com:getmetamapper/metamapper.git
+```
+
+From the repository root:
+
+```
+docker-compose -f docker-quickstart.yml up
+```
+
+Head to [http://localhost:5555](http://localhost:5555) to view the Metamapper UI. Try searching for "clickstream events" and see what happens!
+
+## Deployment
+
+We recommend deploying using our [pre-baked Docker images](https://hub.docker.com/r/getmetamapper/metamapper). Detailed setup instructions can be found in [this Github repository](https://github.com/getmetamapper/metamapper-setup).
 
 ## Supported datastores
 
 Metamapper currently supports automatic crawling and indexing of these database management systems with plans to add more in the near future.
 
 - Amazon Redshift
+- AWS Athena
+- AWS Glue
+- Azure SQL Database
+- Azure Synapse (formerly Azure DW)
+- Google BigQuery
+- Hive Metastore
 - Microsoft SQL Server
 - MySQL
 - Oracle
@@ -53,6 +73,8 @@ Metamapper currently supports automatic crawling and indexing of these database 
 ## Community Feedback
 
 Metamapper is an open source project. Feedback from the community greatly influences our roadmap and the direction of the project. If you want to provide some input, the best place to do it is through [this Typeform survey](https://metamapper.typeform.com/to/rQT0lccB).
+
+We also hang out in [Discord](http://discuss.metamapper.io), so stop by!
 
 ## Resources
 

@@ -4,7 +4,6 @@ import unittest.mock as mock
 from django import test
 from django.utils import timezone
 
-import app.definitions.models as models
 import app.inspector.engines.redshift_inspector as engine
 import app.revisioner.tasks.core as coretasks
 
