@@ -47,7 +47,7 @@ From the repository root:
 docker-compose -f docker-quickstart.yml up
 ```
 
-Head to [http://localhost:5555](http://localhost:5555) to view the Metamapper UI.
+Head to [http://localhost:5555](http://localhost:5555) to view the Metamapper UI. Try searching for "clickstream events" and see what happens!
 
 ## Deployment
 

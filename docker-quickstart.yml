@@ -3,7 +3,7 @@ x-restart-policy: &restart_policy
   restart: unless-stopped
 x-metamapper-defaults: &metamapper_defaults
   << : *restart_policy
-  image: metamapper-quickstart:latest
+  image: getmetamapper/preview:e9f0aa
   env_file:
     - .env.quickstart
   depends_on:
