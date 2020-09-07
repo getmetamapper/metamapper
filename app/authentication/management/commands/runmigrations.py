@@ -18,4 +18,3 @@ class Command(MigrateCommand):
             return
 
         call_command('loaddata', 'example', **{'verbosity': 0})
-

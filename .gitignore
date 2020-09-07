@@ -6,6 +6,7 @@ www/cypress/screenshots/*
 celerybeat.pid
 
 uploads/
+
 .env
 
 # Byte-compiled / optimized / DLL files

@@ -183,4 +183,3 @@ def commit_revisions(self, run_id, *args, **kwargs):
     self._run = Run.objects.get(pk=run_id)
 
     actions.commit_revisions(self._run.datastore, self._run, self.log)
-    self._run.mark_as_finished()

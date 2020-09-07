@@ -57,11 +57,11 @@ class DatastoreAssetsTable extends Component {
       // Checks that the page has scrolled to the bottom
       if (
         document.documentElement.scrollTop + document.documentElement.offsetHeight
-        === document.documentElement.scrollHeight
+        >= (document.documentElement.scrollHeight * 0.985)
       ) {
+        console.log('hit next page!')
         this.fetchNextPage()
       }
-
     }, 100);
 
 

@@ -49,9 +49,13 @@ docker-compose -f docker-quickstart.yml up
 
 Head to [http://localhost:5555](http://localhost:5555) to view the Metamapper UI. Try searching for "clickstream events" and see what happens!
 
-## Deployment
+## Installation
 
-We recommend deploying using our [pre-baked Docker images](https://hub.docker.com/r/getmetamapper/metamapper). Detailed setup instructions can be found in [this Github repository](https://github.com/getmetamapper/metamapper-setup).
+Use our [pre-baked Docker images](https://hub.docker.com/r/getmetamapper/metamapper). Detailed setup instructions can be found here: https://github.com/getmetamapper/metamapper-setup
+
+## Documentation
+
+* https://www.metamapper.io/docs/
 
 ## Supported datastores
 
@@ -70,13 +74,13 @@ Metamapper currently supports automatic crawling and indexing of these database 
 - PostgreSQL
 - Snowflake
 
-## Community Feedback
+## Community / Get Involved
 
-Metamapper is an open source project. Feedback from the community greatly influences our roadmap and the direction of the project. If you want to provide some input, the best place to do it is through [this Typeform survey](https://metamapper.typeform.com/to/rQT0lccB).
+* Join the discussion on Discord (http://discuss.metamapper.io)
+* Join the mailing list (getmetamapper+subscribe@googlegroups.com)
+* Give feedback through [this Typeform survey](https://metamapper.typeform.com/to/rQT0lccB)
 
-We also hang out in [Discord](http://discuss.metamapper.io), so stop by!
-
-## Resources
+## Other Resources
 
 - [User Documentation](https://www.metamapper.io)
 - [Contributing](CONTRIBUTING.md)

@@ -41,7 +41,7 @@ SELECT DISTINCT
     CASE WHEN PKS.COLUMN_NAME IS NOT NULL
          THEN 1
          ELSE 0 END AS is_primary,
-    ' ' AS default_value
+    NULL AS default_value
   FROM DBA_OBJECTS T
   JOIN ALL_TAB_COLS C
     ON C.TABLE_NAME = T.OBJECT_NAME
