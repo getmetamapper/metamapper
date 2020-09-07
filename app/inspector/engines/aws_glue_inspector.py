@@ -67,6 +67,11 @@ class AwsGlueInspector(interface.AmazonInspectorMixin):
         for page in paginator.paginate(CatalogId=self.database, DatabaseName=schema_name):
             yield from page['TableList']
 
+    def _get_data_type(self, data_type):
+        if data_type[:6] == 'struct':
+            return 'struct'
+        return data_type
+
     def _get_table_as_dict(self, schema_name, table):
         """Retrieve the table based on the provided reference. Format the table
         into the standard Metamapper inspector response.
@@ -85,9 +90,9 @@ class AwsGlueInspector(interface.AmazonInspectorMixin):
                 {
                     'column_object_id': self._to_oid(full_table_id, column['Name']),
                     'column_name': column['Name'],
-                    'column_description': column['Comment'],
+                    'column_description': column.get('Comment'),
                     'ordinal_position': position,
-                    'data_type': column['Type'].lower(),
+                    'data_type': self._get_data_type(column['Type'].lower()),
                     'max_length': None,
                     'numeric_scale': None,
                     'is_nullable': True,

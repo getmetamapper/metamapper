@@ -466,7 +466,7 @@ class Column(AuditableModel,
     numeric_scale = models.IntegerField(null=True)
     is_primary = models.BooleanField(null=False, default=False)
     is_nullable = models.BooleanField(null=False)
-    default_value = models.CharField(max_length=255, null=False, blank=True)
+    default_value = models.CharField(max_length=255, null=True, blank=True)
     db_comment = models.TextField(null=True, blank=True)
     short_desc = models.CharField(max_length=50, null=True, blank=True)
 

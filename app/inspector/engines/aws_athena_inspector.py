@@ -69,32 +69,37 @@ class AwsAthenaInspector(interface.AmazonInspectorMixin):
         for page in paginator.paginate(CatalogName=self.database, DatabaseName=schema_name):
             yield from page['TableMetadataList']
 
-    def _get_table_as_dict(self, schema_name, table_metadata):
+    def _get_data_type(self, data_type):
+        if data_type[:6] == 'struct':
+            return 'struct'
+        return data_type
+
+    def _get_table_as_dict(self, schema_name, table):
         """Retrieve the table based on the provided reference. Format the table into the standard inspector response.
         """
-        full_table_id = '.'.join([self.database, schema_name, table_metadata['Name']])
-        partition_col = [p['Name'] for p in table_metadata['PartitionKeys']]
+        full_table_id = '.'.join([self.database, schema_name, table['Name']])
+        partition_col = [p['Name'] for p in table['PartitionKeys']]
 
         return {
             'schema_object_id': self._to_oid(self.database, schema_name),
             'table_schema': schema_name,
             'table_object_id': self._to_oid(full_table_id),
-            'table_name': table_metadata['Name'],
-            'table_type': table_metadata['TableType'],
+            'table_name': table['Name'],
+            'table_type': table['TableType'],
             'properties': {},
             'columns': [
                 {
                     'column_object_id': self._to_oid(full_table_id, column['Name']),
                     'column_name': column['Name'],
-                    'column_description': column['Comment'],
+                    'column_description': column.get('Comment'),
                     'ordinal_position': position,
-                    'data_type': column['Type'].lower(),
+                    'data_type': self._get_data_type(column['Type'].lower()),
                     'max_length': None,
                     'numeric_scale': None,
                     'is_nullable': True,
                     'is_primary': column['Name'] in partition_col,
                     'default_value': "",
                 }
-                for position, column in enumerate(table_metadata['Columns'] + table_metadata['PartitionKeys'], 1)
+                for position, column in enumerate(table['Columns'] + table['PartitionKeys'], 1)
             ],
         }
