@@ -106,7 +106,6 @@ class TestGetRunRevisions(cases.GraphQLTestCase):
             appliedOn
             relatedResource {
               id
-              pk
               type
               label
             }
@@ -217,7 +216,6 @@ class TestGetTableRevisions(cases.GraphQLTestCase):
             createdAt
             relatedResource {
               id
-              pk
               type
               label
             }

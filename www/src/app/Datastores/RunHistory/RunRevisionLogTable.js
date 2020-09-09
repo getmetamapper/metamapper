@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { map } from "lodash"
+import { map, filter } from "lodash"
 import { Icon, Table, Tag, Button, Input, Divider, Checkbox } from "antd"
 import { renderRevisionText } from "app/Datastores/Revisions/RevisionText"
 import { renderRevisionIcon } from "app/Datastores/Revisions/RevisionIcon"
@@ -29,15 +29,15 @@ class RunRevisionLogTable extends Component {
         ...this.getSelectionSearchProps(actionTypeFilterOptions, "actions"),
       },
       {
-        title: "Type",
+        title: "Resource Type",
         dataIndex: "relatedResource.type",
         render: (type) => <Tag>{type}</Tag>,
         ...this.getSelectionSearchProps(resourceTypeFilterOptions, "types"),
       },
       {
-        title: "Identifier",
+        title: "Resource Name",
         dataIndex: "relatedResource",
-        render: ({ label }) => <Tag>{label}</Tag>,
+        render: ({ name }) => <Tag>{name}</Tag>,
         ...this.getFreeTextSearchProps(),
       },
       {
@@ -167,7 +167,7 @@ class RunRevisionLogTable extends Component {
       <div data-test="RunRevisionLogTable">
         <Table
           rowKey="id"
-          dataSource={dataSource}
+          dataSource={filter(dataSource, (r) => r.relatedResource !== null)}
           columns={this.columns}
           pagination={false}
           loading={loading}

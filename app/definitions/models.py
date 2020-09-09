@@ -421,6 +421,19 @@ class Table(AuditableModel,
             'datastore_id': self.datastore_id,
         }
 
+    @property
+    def revisioner_pathname(self):
+        return '/datastores/%s/assets?schema=%s' % (
+            self.datastore_slug,
+            self.schema.name,
+        )
+
+    @property
+    def revisioner_parent_label(self):
+        """Decorator function for label in Revisioner output.
+        """
+        return self.schema.name
+
 
 class TableProperty(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -525,6 +538,20 @@ class Column(AuditableModel,
             dtype = dtype + ')'
         return dtype
 
+    @property
+    def revisioner_pathname(self):
+        return '/datastores/%s/definition/%s/%s/columns' % (
+            self.datastore_slug,
+            self.table.schema.name,
+            self.table.name,
+        )
+
+    @property
+    def revisioner_parent_label(self):
+        """Decorator function for label in Revisioner output.
+        """
+        return '%s.%s' % (self.table.schema.name, self.table.name)
+
 
 class Index(RevisableModel, TimestampedModel):
     """Represents a index within a table.
@@ -568,6 +595,24 @@ class Index(RevisableModel, TimestampedModel):
     @property
     def datastore_id(self):
         return self.table.datastore_id
+
+    @property
+    def datastore_slug(self):
+        return self.table.datastore_slug
+
+    @property
+    def revisioner_pathname(self):
+        return '/datastores/%s/definition/%s/%s/indexes' % (
+            self.datastore_slug,
+            self.table.schema.name,
+            self.table.name,
+        )
+
+    @property
+    def revisioner_parent_label(self):
+        """Decorator function for label in Revisioner output.
+        """
+        return '%s.%s' % (self.table.schema.name, self.table.name)
 
     class Meta:
         unique_together = ('table', 'name',)

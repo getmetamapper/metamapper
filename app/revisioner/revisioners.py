@@ -335,7 +335,6 @@ class IndexRevisioner(Revisioner):
     created_fields = [
         'name',
         'object_id',
-        'sql',
         'is_primary',
         'is_unique',
         'columns',
@@ -344,7 +343,6 @@ class IndexRevisioner(Revisioner):
     modified_fields = [
         'name',
         'object_id',
-        'sql',
         'is_primary',
         'is_unique',
     ]

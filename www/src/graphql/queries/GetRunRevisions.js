@@ -13,7 +13,7 @@ export default gql`
       types: $types
       actions: $actions
       search: $search
-      first: 100
+      first: 50
       after: $after
     ) {
       edges {
@@ -24,15 +24,11 @@ export default gql`
           appliedOn
           relatedResource {
             id
-            pk
             type
+            name
             label
-          }
-          parentResource {
-            id
-            pk
-            type
-            label
+            parentLabel
+            pathname
           }
         }
       }

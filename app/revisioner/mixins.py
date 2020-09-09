@@ -19,3 +19,11 @@ class RevisableModel(models.Model):
         """Decorator function for label in Revisioner output.
         """
         return self.name
+
+    @property
+    def revisioner_parent_label(self):
+        return None
+
+    @property
+    def revisioner_pathname(self):
+        return None

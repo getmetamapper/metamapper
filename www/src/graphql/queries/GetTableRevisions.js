@@ -11,15 +11,11 @@ export default gql`
           createdAt
           relatedResource {
             id
-            pk
             type
+            name
             label
-          }
-          parentResource {
-            id
-            pk
-            type
-            label
+            parentLabel
+            pathname
           }
         }
       }

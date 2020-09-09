@@ -64,7 +64,7 @@ class RunRevisionLog extends Component {
     if (
       documentElement.length === 1 &&
       documentElement[0].scrollTop + documentElement[0].offsetHeight
-      === documentElement[0].scrollHeight
+      >= (documentElement[0].scrollHeight * 0.985)
     ) {
       this.fetchNextPage()
     }

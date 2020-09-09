@@ -85,5 +85,4 @@ Metamapper currently supports automatic crawling and indexing of these database 
 - [User Documentation](https://www.metamapper.io)
 - [Contributing](CONTRIBUTING.md)
 - [Issue Tracker](https://github.com/getmetamapper/metamapper/issues)
-- [Roadmap](https://trello.com/b/QT28sJAz/metamapper-io)
 - [Code](https://github.com/getmetamapper/metamapper)
