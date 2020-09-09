@@ -65,9 +65,11 @@ class RelatedResourceType(graphene.ObjectType):
     """Generic type for all Revisable models.
     """
     id = graphene.ID()
-    pk = graphene.String()
     type = graphene.String()
+    name = graphene.String()
     label = graphene.String()
+    pathname = graphene.String()
+    parent_label = graphene.String()
 
 
 class RevisionType(AuthNode, DjangoObjectType):

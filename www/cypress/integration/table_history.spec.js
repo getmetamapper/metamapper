@@ -54,9 +54,9 @@ describe("table_history.spec.js", () => {
 
     it("renders some activities", () => {
       cy.getByTestId("TableRevisionLog")
-        .should("contain", "Table public.definitions_table was added.")
-        .should("contain", "Column definitions_table.kind was added.")
-        .should("contain", "Column definitions_table.deleted_at was added.")
+        .should("contain", "Table named definitions_table was added to the public schema.")
+        .should("contain", "Column named workspace_id was added to the public.definitions_table table.")
+        .should("contain", "Column named tags was added to the public.definitions_table table.")
     })
   })
 

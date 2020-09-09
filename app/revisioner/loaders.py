@@ -23,9 +23,11 @@ class RelatedRevisionResourceLoader(DataLoader):
 
         related_resource = {
             'id': relay.Node.to_global_id(_type, resource.pk),
-            'pk': resource.pk,
             'type': klass,
+            'name': resource.name,
             'label': resource.revisioner_label,
+            'parent_label': resource.revisioner_parent_label,
+            'pathname': resource.revisioner_pathname,
         }
 
         return related_resource

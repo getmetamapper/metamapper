@@ -370,8 +370,8 @@ describe("datastores.spec.js", () => {
         .should("be.gte", 10)
 
       cy.getByTestId("RunRevisionLogTable")
-        .should("contain", "Schema public was added.")
-        .should("contain", "Table public.auth_group was added.")
+        .should("contain", "Schema named public was created.")
+        .should("contain", "Table named auth_memberships was added to the public schema.")
     })
   })
 

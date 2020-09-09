@@ -22,6 +22,7 @@ class TableRevisionLog extends Component {
             </Tooltip>
           </>
         ),
+        width: 250,
         dataIndex: "createdAt",
         key: "createdAt",
         render: (createdAt) => moment(createdAt).format(),
