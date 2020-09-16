@@ -1,6 +1,7 @@
 export const AUTH_TOKEN = "auth-token"
 export const WORKSPACE_TOKEN = "workspace-token"
 export const REDIRECT_URI = "redirect-uri"
+export const USER_ID = "user-id"
 export const WORKSPACE_ID = "workspace-id"
 export const PASSWORD_STRENGTH = 2
 export const JWT_EXPIRATION_DELTA = 5 * 60 * 1000 // 5 minutes
