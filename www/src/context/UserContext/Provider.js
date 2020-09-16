@@ -3,7 +3,7 @@ import { compose, graphql } from "react-apollo"
 import { find } from "lodash"
 import { withRouter } from "react-router-dom"
 import gql from "graphql-tag"
-import { WORKSPACE_TOKEN } from "lib/constants"
+import { USER_ID, WORKSPACE_TOKEN } from "lib/constants"
 import withLoader from "hoc/withLoader"
 import { UserConfiguration } from "lib/user-config"
 import { Provider } from "./context"
@@ -55,6 +55,8 @@ class UserProvider extends Component {
         }
       }
     }
+
+    localStorage.setItem(USER_ID, currentUser.pk)
 
     return {
       value: {
