@@ -5,7 +5,7 @@ from django.conf import settings
 from rest_framework import status
 from requests.exceptions import ConnectionError
 
-from metamapper import get_version, is_docker
+from metamapper import get_version, get_install_id, is_docker
 from metamapper.celery import app
 
 from utils import logging
@@ -42,6 +42,7 @@ def send_beacon(self):
         payload = {
             "docker": is_docker(),
             "version": get_version(),
+            "install_id": get_install_id(),
             "workspace_id": str(workspace.id),
             "usage": {
                 "team": workspace.team_members.count(),

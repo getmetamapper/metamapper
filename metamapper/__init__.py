@@ -1,6 +1,7 @@
 # flake8: noqa
 from __future__ import absolute_import
 from os import environ
+from hashlib import sha1
 
 # This will make sure the app is always imported when
 # Django starts so that shared_task will use this app.
@@ -20,6 +21,13 @@ except ImportError:
 
     if raise_import_exception:
         raise
+
+
+def get_install_id():
+    # We take an anonymized hash of the Django secret so we can
+    # accurately report on the number of production installations of
+    # Metamapper for usage purposes.
+    return sha1(settings.SECRET_KEY.encode('utf-8')).hexdigest()
 
 
 def get_version(prefix='v'):

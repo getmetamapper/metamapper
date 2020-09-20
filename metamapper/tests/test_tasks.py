@@ -26,6 +26,7 @@ class BeaconUsageTaskTests(cases.UserFixtureMixin, cases.TestCase):
         self.assertEqual(mock_http_request.call_count, len(workspaces))
 
     @mock.patch('requests.post')
+    @override_settings(SECRET_KEY='meowmeowmeow')
     def test_execution_content(self, mock_http_request):
         """It should provide the correct data.
         """
@@ -42,6 +43,7 @@ class BeaconUsageTaskTests(cases.UserFixtureMixin, cases.TestCase):
             json={
                 'docker': False,
                 'version': 'v%s' % __version__,
+                'install_id': '29eda88ef0cff1bf5ced0821a6ed82eab16721a2',
                 'workspace_id': str(self.workspace.pk),
                 'usage': {
                     'team': 5,
