@@ -53,6 +53,8 @@ ENV LD_LIBRARY_PATH /opt/oracle/instantclient_19_6:$LD_LIBRARY_PATH
 RUN mkdir $BASE_DIR
 WORKDIR $BASE_DIR
 
+COPY --from=frontend-builder /frontend/build ${BASE_DIR}/www/build
+
 ADD ./requirements.in $BASE_DIR
 ADD ./requirements.txt $BASE_DIR
 ADD ./requirements-dev.in $BASE_DIR
@@ -64,7 +66,6 @@ RUN pip-sync requirements.txt requirements-dev.txt --quiet
 RUN pip install --upgrade --force-reinstall --no-binary pymssql pymssql --quiet
 
 ADD . $BASE_DIR
-COPY --from=frontend-builder /frontend/build ${BASE_DIR}/www/build
 
 RUN chmod +x ${BASE_DIR}bin/docker-entrypoint
 

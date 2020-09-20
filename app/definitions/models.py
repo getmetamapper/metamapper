@@ -375,6 +375,17 @@ class Table(AuditableModel,
     class Meta:
         unique_together = ('schema', 'name',)
 
+    def to_doc(self):
+        return {
+            'pk': str(self.id),
+            'workspace_id': self.workspace.id,
+            'datastore_id': self.schema.datastore.id,
+            'datastore': self.schema.datastore.name,
+            'schema': self.schema.name,
+            'name': self.name,
+            'description': self.short_desc,
+        }
+
     @property
     def parent_resource(self):
         return self.schema
@@ -526,6 +537,18 @@ class Column(AuditableModel,
             'label': self.search_label,
             'description': self.short_desc,
             'datastore_id': self.datastore_id,
+        }
+
+    def to_doc(self):
+        return {
+            'pk': str(self.id),
+            'workspace_id': self.table.workspace.id,
+            'datastore_id': self.table.schema.datastore.id,
+            'datastore': self.table.schema.datastore.name,
+            'schema': self.table.schema.name,
+            'table': self.table.name,
+            'name': self.name,
+            'description': self.short_desc,
         }
 
     @property

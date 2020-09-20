@@ -34,6 +34,9 @@ initdb:
 migrate:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py migrate
 
+reindex:
+	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py reindex
+
 resetdb:
 	@docker-compose -f docker-development.yml run --rm webserver bash www/cypress/cmd/resetdb.sh
 

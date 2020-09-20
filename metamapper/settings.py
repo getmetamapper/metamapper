@@ -418,13 +418,16 @@ if CACHEOPS_REDIS:
 # Search
 #
 # Metamapper supports searching on some of the database objects it indexes. We default
-# to using Postgres full-text search, though have plans to roll out Elasticsearch and Solr at some point.
-#
-# You can also roll out your own search interface as long as it implements the same interface.
+# to using Elasticsearch, though have plans to roll out Solr as an option at some point.
 #
 SEARCH_BACKEND = os.getenv(
     'METAMAPPER_SEARCH_BACKEND',
-    'app.omnisearch.backends.postgres_search_backend.PostgresSearchBackend',
+    'app.omnisearch.backends.elastic_backend.ElasticBackend',
+)
+
+ELASTIC_URL = os.getenv(
+    'METAMAPPER_ELASTIC_URL',
+    'http://elastic:9200',
 )
 
 #
