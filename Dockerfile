@@ -7,8 +7,8 @@ ENV NODE_ENV $env
 WORKDIR /frontend
 COPY /www /frontend
 
-RUN npm ci --unsafe-perm
-RUN npm run build
+RUN npm ci --unsafe-perm --loglevel silent
+RUN npm run build --loglevel silent
 
 FROM python:3.7-stretch as base
 
