@@ -13,11 +13,11 @@ const iconMapping = {
 const maxDescriptionLength = 140;
 
 const relevance = (score) => {
-  if (score >= 0.06) {
+  if (score >= 0.66) {
     return <Tag color="geekblue">High</Tag>
   }
 
-  if (score >= 0.02) {
+  if (score >= 0.33) {
     return <Tag color="volcano">Medium</Tag>
   }
 
@@ -60,7 +60,7 @@ const SearchResultItem = ({
     </div>
     <div className="search-result-metadata">
       <span className="pull-right">
-        <Tooltip title="Revelance Score">
+        <Tooltip title="Relevance Score">
           {relevance(score)}
         </Tooltip>
         {datastore && (

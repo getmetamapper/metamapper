@@ -114,6 +114,14 @@ class Comment(StringPrimaryKeyModel,
             'datastore_id': self.content_object.datastore_id,
         }
 
+    def to_doc(self):
+        return {
+            'pk': str(self.id),
+            'workspace_id': self.workspace.id,
+            'datastore_id': self.content_object.datastore_id,
+            'text': self.text,
+        }
+
     def pin(self, user):
         """Pin by a specific user.
         """

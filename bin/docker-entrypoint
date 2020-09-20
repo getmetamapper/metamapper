@@ -15,6 +15,10 @@ migrate() {
     DB_SETUP=1 python manage.py runmigrations
 }
 
+reindex() {
+    DB_SETUP=1 python manage.py reindex
+}
+
 # Starts the Metamapper web server. We recommend running a few
 # of these behind a load balancer.
 webserver() {

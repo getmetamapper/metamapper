@@ -19,6 +19,14 @@ services:
       POSTGRES_DB: metamapper
     volumes:
       - 'mm-quickstart-db:/var/lib/postgresql/data'
+  elastic:
+    << : *restart_policy
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      discovery.type: single-node
   msgbroker:
     << : *restart_policy
     image: redis:alpine

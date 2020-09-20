@@ -11,6 +11,7 @@ from utils.contenttypes import get_content_types
 class OmnisearchResultLoader(DataLoader):
     """Prefetch search results based on the provided metadata.
     """
+
     def batch_load_fn(self, result_tuples):
         """Input is provided as a list of tuples: ("pk", "model_name",)
         """
