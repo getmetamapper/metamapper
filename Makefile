@@ -20,10 +20,10 @@ help:
 setup: install-npm-pkgs build-assets build-docker initdb
 
 install-npm-pkgs:
-	@npm install --prefix www --quiet
+	@npm install --prefix www --loglevel silent
 
 build-assets:
-	@npm run build --prefix www
+	@npm run build --prefix www --loglevel silent
 
 build-docker:
 	@docker-compose -f docker-development.yml build --build-arg env=development
