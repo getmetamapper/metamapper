@@ -44,7 +44,7 @@ rebuild-db: stop
 	@docker-compose -f docker-development.yml start database
 	@docker-compose -f docker-development.yml exec database dropdb metamapper -U postgres
 	@docker-compose -f docker-development.yml exec database createdb metamapper -U postgres
-	@docker-compose -f docker-development.yml run -e DB_RESET=1 --rm webserver python manage.py migrate
+	@docker-compose -f docker-development.yml run -e DB_RESET=1 --rm webserver python manage.py runmigrations
 
 start:
 	@rm -f celerybeat.pid

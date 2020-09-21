@@ -9,6 +9,7 @@ x-metamapper-defaults: &metamapper_defaults
   depends_on:
     - database
     - msgbroker
+    - elastic
 services:
   database:
     << : *restart_policy
@@ -32,7 +33,7 @@ services:
     image: redis:alpine
   webserver:
     << : *metamapper_defaults
-    command: ["./wait-for-it.sh", "database:5432", "--", "./bin/docker-entrypoint", "migrate-then-webserver"]
+    command: ["./wait-for-it.sh", "elastic:9200", "--", "./bin/docker-entrypoint", "migrate-then-webserver"]
     ports:
       - 5555:5050
   worker:
