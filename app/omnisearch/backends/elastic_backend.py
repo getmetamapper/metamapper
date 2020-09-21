@@ -29,8 +29,8 @@ class ElasticBackend(base.BaseSearchBackend):
     @classmethod
     def create_client(cls, *args, **kwargs):
         return Elasticsearch(
-            [settings.ELASTIC_URL],
-            **settings.ELASTIC_CLIENT_CONFIG,
+            settings.ELASTIC_URL.split(','),
+            **settings.ELASTIC_CLIENT_KWARGS,
         )
 
     def __new__(cls, *args, **kwargs):
