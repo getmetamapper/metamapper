@@ -30,9 +30,7 @@ class ElasticBackend(base.BaseSearchBackend):
     def create_client(cls, *args, **kwargs):
         return Elasticsearch(
             [settings.ELASTIC_URL],
-            sniff_on_start=True,
-            sniff_on_connection_fail=True,
-            sniffer_timeout=60,
+            **settings.ELASTIC_CLIENT_CONFIG,
         )
 
     def __new__(cls, *args, **kwargs):
