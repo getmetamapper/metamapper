@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
-import { Input } from "antd"
+import { Input, Form } from "antd"
 import { withUserContext } from "context/UserContext"
 import qs from "query-string"
 
@@ -43,15 +43,17 @@ class NavbarSearch extends Component {
   render() {
     const { query } = this.state
     return (
-      <Input.Search
-        type="text"
-        placeholder="Type to search..."
-        className={query ? "focused" : ""}
-        value={query}
-        onChange={this.handleChange}
-        onSearch={this.handleSearch}
-        data-test="Omnisearch.NavbarSearch"
-      />
+      <Form layout="inline" id="navbar-search">
+        <Input.Search
+          type="text"
+          placeholder="Type to search..."
+          className={query ? "focused" : ""}
+          value={query}
+          onChange={this.handleChange}
+          onSearch={this.handleSearch}
+          data-test="Omnisearch.NavbarSearch"
+        />
+      </Form>
     )
   }
 }

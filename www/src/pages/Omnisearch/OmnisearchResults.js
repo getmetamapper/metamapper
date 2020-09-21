@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Helmet } from "react-helmet"
 import { compose } from "react-apollo"
-import { find } from "lodash"
+import { find, pick } from "lodash"
 import { Row, Col } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import { withRouter } from "react-router-dom"
@@ -31,7 +31,7 @@ class OmnisearchResults extends Component {
       location: { pathname, search },
     } = this.props
 
-    const params = qs.parse(search)
+    const params = pick(qs.parse(search), ['d', 'q'])
 
     if (!datastore && "d" in params) {
       delete params.d

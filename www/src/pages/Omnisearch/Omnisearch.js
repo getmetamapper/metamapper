@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet"
 import { compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
 import { withUserContext } from "context/UserContext"
-import { Row, Col, Input } from "antd"
+import { Row, Col, Input, Form } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
 import withGetDatastoreCount from "graphql/withGetDatastoreCount"
@@ -50,7 +50,7 @@ class Omnisearch extends Component {
               The search engine for your data.
             </p>
           </div>
-          <div className="omnisearch-box">
+          <Form className="omnisearch-box" id="omnisearch-box">
             <Input.Search
               block
               placeholder="type and hit enter to search your data assets..."
@@ -58,7 +58,7 @@ class Omnisearch extends Component {
               onSearch={this.handleSearch}
               data-test="Omnisearch.Searchbox"
             />
-          </div>
+          </Form>
         </Col>
       </Row>
     )
