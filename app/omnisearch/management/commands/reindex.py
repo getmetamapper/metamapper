@@ -118,7 +118,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         action_map = {
             'table': index_tables,
-            # 'column': index_columns,
+            'column': index_columns,
             'comment': index_comments,
         }
 
