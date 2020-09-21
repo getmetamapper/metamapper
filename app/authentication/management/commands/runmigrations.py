@@ -18,3 +18,4 @@ class Command(MigrateCommand):
             return
 
         call_command('loaddata', 'example', **{'verbosity': 0})
+        call_command('reindex', **{'verbosity': 0})

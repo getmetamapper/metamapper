@@ -8,6 +8,7 @@ x-metamapper-defaults: &metamapper_defaults
     - .env
   depends_on:
     - database
+    - elastic
   networks:
     - metamapper
   volumes:
