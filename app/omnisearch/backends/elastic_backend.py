@@ -5,6 +5,7 @@ from django.conf import settings
 import app.omnisearch.backends.base_search_backend as base
 
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import parallel_bulk
 
 from elasticsearch_dsl import Search
 
@@ -49,6 +50,12 @@ class ElasticBackend(base.BaseSearchBackend):
 
         return self.workspace.id, [datastore.id for datastore in datastores]
 
+    def bulk_insert(self, actions, as_list=True, **kwargs):
+        response = parallel_bulk(self.client, actions, **kwargs)
+        if as_list:
+            return list(response)
+        return response
+
     def search(self, search_query_string, datastore_id=None, start=0, size=100, **extra_filters):
         workspace_id, datastore_ids = self.user_permission_ids()
 
@@ -86,7 +93,7 @@ class ElasticBackend(base.BaseSearchBackend):
                 'pk': hit.pk,
                 'model_name': self.INDEX_MODEL_MAP[hit.meta.index],
                 'score': hit.meta.score / results._response.hits.max_score,
-                'datastore_id': 'datastore_id',
+                'datastore_id': hit.datastore_id,
             }
             for hit in results
         ]
