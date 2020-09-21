@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import unittest.mock as mock
+
 import testutils.cases as cases
 import testutils.decorators as decorators
 import testutils.factories as factories
@@ -44,88 +46,73 @@ class TestOmnisearch(cases.GraphQLTestCase):
         self.other_schema = factories.SchemaFactory(datastore=self.other_datastore)
         self.other_table = factories.TableFactory(schema=self.other_schema, name='customers')
 
-    def execute_search_query(self):
+    def execute_search_query(self, content='customer information', datastore_id=None):
         """Used for consistent test results.
         """
-        content = 'customer information'
-        results = self.execute(self.statement, variables={'content': content})
+        variables = {'content': content}
+        if datastore_id:
+            variables['datastoreId'] = datastore_id
+        results = self.execute(self.statement, variables=variables)
         results = results['data'][self.operation]
         return results
 
     @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
-    def test_query_when_object_permissions_are_disabled(self):
+    @mock.patch('app.omnisearch.queries.get_search_backend')
+    def test_query_with_no_response(self, get_search_backend):
+        """It should return an empty list.
+        """
+        client = mock.MagicMock()
+        client.search.return_value = []
+
+        get_search_backend.return_value = client
+
+        results = self.execute_search_query()
+
+        self.assertTrue(len(results['searchResults']) == 0)
+        self.assertTrue(isinstance(results['timeElapsed'], (float,)))
+
+    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
+    @mock.patch('app.omnisearch.queries.get_search_backend')
+    def test_query_with_some_response(self, get_search_backend):
+        """It should return whatever the search backend returns.
+        """
+        client = mock.MagicMock()
+        client.search.return_value = [
+            {
+                'pk': 1,
+                'model_name': 'Column',
+                'score': 0.10,
+                'datastore_id': 'meow',
+            },
+            {
+                'pk': 2,
+                'model_name': 'Table',
+                'score': 0.75,
+                'datastore_id': 'meow',
+            }
+        ]
+
+        get_search_backend.return_value = client
+
+        results = self.execute_search_query()
+
+        self.assertTrue(len(results['searchResults']) == 2)
+        self.assertTrue(isinstance(results['timeElapsed'], (float,)))
+
+    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
+    @mock.patch('app.omnisearch.queries.get_search_backend')
+    def test_query_without_datastore_permission(self, get_search_backend):
         """It should return results for all datastores in the workspace.
         """
-        results = self.execute_search_query()
+        client = mock.MagicMock()
+        client.user_permission_ids.return_value = ('woof', ['1', '2', '3'])
 
-        self.assertTrue(len(results) > 1)
+        get_search_backend.return_value = client
+
+        results = self.execute_search_query(datastore_id='4')
+
+        self.assertTrue(len(results['searchResults']) == 0)
         self.assertTrue(isinstance(results['timeElapsed'], (float,)))
-        self.assertTrue(str(self.other_table.pk) in [d['pk'] for d in results['searchResults']])
-        self.assertEqual(set([d['modelName'] for d in results['searchResults']]), {'Column', 'Comment', 'Table'})
-        self.assertEqual(
-            set([d['datastoreId'] for d in results['searchResults']]),
-            {self.datastore.id, self.other_datastore.id},
-        )
-
-    @decorators.as_someone(['MEMBER', 'READONLY'])
-    def test_query_when_object_permissions_are_enabled_without_access(self):
-        """It filter out datastore results if does not have permissions.
-        """
-        self.other_datastore.object_permissions_enabled = True
-        self.other_datastore.save()
-
-        results = self.execute_search_query()
-
-        self.assertTrue(len(results) > 1)
-        self.assertEqual(
-            set([d['datastoreId'] for d in results['searchResults']]),
-            {self.datastore.id},
-        )
-
-    @decorators.as_someone(['MEMBER', 'READONLY'])
-    def test_query_when_object_permissions_are_enabled_with_access(self):
-        """It should honor object-level permissions when enabled.
-        """
-        self.other_datastore.object_permissions_enabled = True
-        self.other_datastore.save()
-        self.other_datastore.assign_perm(self.user, 'definitions.view_datastore')
-
-        results = self.execute_search_query()
-
-        self.assertTrue(len(results) > 1)
-        self.assertEqual(
-            set([d['datastoreId'] for d in results['searchResults']]),
-            {self.datastore.id, self.other_datastore.id},
-        )
-
-    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
-    def test_query_returns_results_for_a_single_datastore(self):
-        """It should allow you to scope your query to a specific datastore.
-        """
-        content = 'customer information'
-        results = self.execute(self.statement, variables={
-            'content': content,
-            'datastoreId': self.other_datastore.pk,
-        })
-        results = results['data'][self.operation]
-
-        self.assertTrue(len(results['searchResults']) == 1)
-        self.assertEqual(
-            set([d['datastoreId'] for d in results['searchResults']]),
-            {self.other_datastore.id},
-        )
-
-    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
-    def test_query_returns_results_for_only_this_workspace(self):
-        """It should not return results from other datastores.
-        """
-        table = factories.TableFactory(name='customers')
-
-        content = 'customer information'
-        results = self.execute(self.statement, variables={'content': content})
-        results = results['data'][self.operation]
-
-        self.assertTrue(table.pk not in [d['pk'] for d in results['searchResults']])
 
     @decorators.as_someone(['OUTSIDER', 'ANONYMOUS'])
     def test_query_unauthorized(self):
