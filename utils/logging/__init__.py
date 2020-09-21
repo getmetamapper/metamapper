@@ -89,3 +89,7 @@ def task_logger(name):
                 raise
         return func_wrapper
     return the_decorator
+
+
+def getLogger(name, extra=None):
+    return Logger(name, extra)
