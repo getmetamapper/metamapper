@@ -430,6 +430,13 @@ ELASTIC_URL = os.getenv(
     'http://elastic:9200',
 )
 
+# This can be overridden via the settings.py file in your fork.
+ELASTIC_CLIENT_KWARGS = {
+    'sniff_on_start': True,
+    'sniff_on_connection_fail': True,
+    'sniffer_timeout': 60,
+}
+
 #
 # Django Storages (required)
 # (https://django-storages.readthedocs.io/en/1.9.1/index.html)
