@@ -590,7 +590,7 @@ class TableSerializer(MetamapperSerializer, serializers.ModelSerializer):
         required=False,
     )
 
-    short_desc = serializers.CharField(max_length=140, allow_null=True, allow_blank=True, trim_whitespace=True)
+    short_desc = serializers.CharField(allow_null=True, allow_blank=True, trim_whitespace=True)
 
     class Meta:
         model = models.Table
@@ -627,7 +627,7 @@ class TableSerializer(MetamapperSerializer, serializers.ModelSerializer):
 class ColumnSerializer(MetamapperSerializer, serializers.ModelSerializer):
     """Enables user to create and update Datastore instances.
     """
-    short_desc = serializers.CharField(max_length=90, allow_null=True, allow_blank=True, trim_whitespace=True)
+    short_desc = serializers.CharField(allow_null=True, allow_blank=True, trim_whitespace=True)
 
     class Meta:
         model = models.Column

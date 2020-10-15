@@ -58,7 +58,9 @@ class TableDescription extends Component {
     if (errors && errors.length > 0) {
       this.resetContent()
     } else {
-      this.setState({ shortDesc: table.shortDesc })
+      this.setState({
+        shortDesc: table.shortDesc
+      })
     }
   }
 
@@ -87,11 +89,12 @@ class TableDescription extends Component {
           disabled={!hasPermission}
           onClickButton={this.handleSave}
         >
-          <Input
+          <Input.TextArea
             value={shortDesc}
             onChange={this.handleChange}
             placeholder="Enter a brief description of the table"
             data-test="TableDescription.Input"
+            rows={3}
           />
         </EditableText>
       </div>
