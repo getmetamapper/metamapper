@@ -46,11 +46,12 @@ export class EditableCell extends Component {
           rules,
           initialValue: record[dataIndex],
         })(
-          <Input
+          <Input.TextArea
             ref={(node) => (this.input = node)}
             onPressEnter={this.save}
             onBlur={this.save}
             data-test="EditableCell.Input"
+            rows={3}
           />
         )}
       </Form.Item>

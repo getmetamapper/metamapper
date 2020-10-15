@@ -1138,40 +1138,6 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
         self.assertPermissionDenied(response)
         self.assertInstanceNotUpdated(self.resource, short_desc=variables['shortDesc'])
 
-    @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_invalid(self):
-        """It should not update the table.
-        """
-        variables = {
-            'id': self.global_id,
-            'shortDesc': ''.join(['a' for i in range(512)]),
-        }
-
-        response = self.execute(variables=variables)
-        response = response['data'][self.operation]
-
-        self.assertEqual(response, {
-            'table': None,
-            'errors': [
-                {
-                    'resource': 'Table',
-                    'field': 'short_desc',
-                    'code': 'max_length',
-                },
-            ]
-        })
-
-        self.assertInstanceNotUpdated(
-            instance=self.resource,
-            short_desc=variables['shortDesc'],
-        )
-
-        self.assertInstanceDoesNotExist(
-            audit.Activity,
-            verb='updated',
-            **serializers.get_audit_kwargs(self.resource),
-        )
-
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
     def test_unauthorized(self):
         """It should return a "Permission Denied" error.
@@ -1292,40 +1258,6 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
 
         self.assertPermissionDenied(response)
         self.assertInstanceNotUpdated(self.resource, short_desc=variables['shortDesc'])
-
-    @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_invalid(self):
-        """It should not update the column.
-        """
-        variables = {
-            'id': self.global_id,
-            'shortDesc': ''.join(['a' for i in range(512)]),
-        }
-
-        response = self.execute(variables=variables)
-        response = response['data'][self.operation]
-
-        self.assertEqual(response, {
-            'column': None,
-            'errors': [
-                {
-                    'resource': 'Column',
-                    'field': 'short_desc',
-                    'code': 'max_length',
-                },
-            ]
-        })
-
-        self.assertInstanceNotUpdated(
-            instance=self.resource,
-            short_desc=variables['shortDesc'],
-        )
-
-        self.assertInstanceDoesNotExist(
-            audit.Activity,
-            verb='updated',
-            **serializers.get_audit_kwargs(self.resource),
-        )
 
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
     def test_unauthorized(self):

@@ -98,11 +98,12 @@ class ColumnDefinitionTable extends Component {
     }
 
     this.props.handleMutation(payload, ({ data }) => {
-      const { column } = data.updateColumnMetadata
+      const { column, errors } = data.updateColumnMetadata
 
-      row.shortDesc = column.shortDesc
-
-      this.updateRow(row)
+      if (!errors) {
+        row.shortDesc = column.shortDesc
+        this.updateRow(row)
+      }
     })
   }
 

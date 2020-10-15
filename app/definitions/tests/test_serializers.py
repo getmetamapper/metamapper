@@ -1127,12 +1127,6 @@ class TableSerializerUpdateTests(cases.SerializerTestCase):
         """It should return error messages when DRF validation fails.
         """
         test_case_dict = {
-            'short_desc': [
-                {
-                    'code': 'max_length',
-                    'value': helpers.faker.pystr(145, 175),
-                },
-            ],
             'tags': [
                 {
                     'code': 'item_max_length',
@@ -1213,24 +1207,6 @@ class ColumnSerializerUpdateTests(cases.SerializerTestCase):
         self.assertTrue(serializer.is_valid())
         self.assertTrue(serializer.save())
         self.assertInstanceUpdated(self.instance, short_desc='')
-
-    def test_drf_validation_rules(self):
-        """It should return error messages when DRF validation fails.
-        """
-        test_case_dict = {
-            'short_desc': [
-                {
-                    'code': 'max_length',
-                    'value': helpers.faker.pystr(91, 105),
-                },
-            ],
-        }
-
-        self.assertDjangoRestFrameworkRules(
-            test_case_dict,
-            instance=self.instance,
-            partial=True,
-        )
 
 
 class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
