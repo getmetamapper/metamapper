@@ -59,7 +59,8 @@ jobs:
     docker:
       - image: circleci/node:12
     steps:
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 19.03.13
       - checkout
       - run:
           name: Run MySQL inspector tests
@@ -93,7 +94,8 @@ jobs:
     docker:
       - image: circleci/node:12
     steps:
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 19.03.13
       - checkout
       - run: docker-compose up -d
       - run: |
