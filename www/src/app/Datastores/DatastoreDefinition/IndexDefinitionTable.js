@@ -1,6 +1,7 @@
 import React, { Component } from "react"
-import { Table, Tag } from "antd"
+import { Tag } from "antd"
 import { map } from "lodash"
+import ExportableTable from "app/Common/ExportableTable"
 import BooleanIndicator from "app/Common/BooleanIndicator"
 
 class IndexDefinitionTable extends Component {
@@ -38,17 +39,38 @@ class IndexDefinitionTable extends Component {
         ),
       },
     ]
+
+    this.headers = [
+      {
+        label: "index",
+        key: "name",
+      },
+      {
+        label: "primary",
+        key: "isPrimary",
+      },
+      {
+        label: "unique",
+        key: "isUnique",
+      },
+      {
+        label: "columns",
+        key: "columns",
+        transformColumn: (value) => map(value, 'name').join(',')
+      },
+    ]
   }
 
   render() {
     const { dataSource } = this.props
     return (
       <span data-test="IndexDefinitionTable">
-        <Table
+        <ExportableTable
           rowKey="id"
           className="datastore-indexes"
           dataSource={dataSource}
           columns={this.columns}
+          headers={this.headers}
           pagination={false}
         />
       </span>

@@ -280,7 +280,24 @@ textarea.ant-input {
   -o-object-fit: contain;
   object-fit: contain;
 }
-
+.exportable-table {
+  .table-operations {
+    padding: 8px 0;
+    text-align: right;
+  }
+  .table-operations button {
+    margin-right: 8px;
+  }
+  .ant-table-thead > tr > th {
+    border-top: 1px solid #e8e8e8;
+  }
+  .ant-table-thead > tr:first-child > th:first-child {
+    border-top-left-radius: 0;
+  }
+  .ant-table-thead > tr:first-child > th:last-child {
+    border-top-right-radius: 0;
+  }
+}
 .editable-cell {
   position: relative;
 }

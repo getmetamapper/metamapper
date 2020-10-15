@@ -1,10 +1,11 @@
 import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
-import { Card, Icon, Table, Tooltip, Tag } from "antd"
+import { Card, Icon, Tooltip, Tag } from "antd"
 import { isEmpty, pick, map, some } from "lodash"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { components } from "app/Common/EditableCell"
 import FormLabel from "app/Common/FormLabel"
+import ExportableTable from "app/Common/ExportableTable"
 import BooleanIndicator from "app/Common/BooleanIndicator"
 import UpdateColumnMetadata from "graphql/mutations/UpdateColumnMetadata"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
@@ -68,6 +69,16 @@ class ColumnDefinitionTable extends Component {
         key: "shortDesc",
         editable: true,
       },
+    ]
+
+    this.headers = [
+      { label: "column", key: "name" },
+      { label: "primary", key: "isPrimary" },
+      { label: "nullable", key: "isNullable" },
+      { label: "data_type", key: "fullDataType" },
+      { label: "description", key: "shortDesc" },
+      { label: "comment", key: "dbComment" },
+      { label: "default_value", key: "defaultValue" },
     ]
 
     this.expandedColumns = [
@@ -158,12 +169,13 @@ class ColumnDefinitionTable extends Component {
 
     return (
       <span data-test="ColumnDefinitionTable">
-        <Table
+        <ExportableTable
           rowKey="id"
           className="datastore-columns"
           components={components}
           dataSource={dataSource}
           columns={columns}
+          headers={this.headers}
           pagination={false}
           expandedRowRender={this.renderExpandedRow}
           rowClassName={record => (this.shouldExpand(record) ? "editable-row" : "editable-row not-expandable")}
