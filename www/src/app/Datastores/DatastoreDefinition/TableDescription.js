@@ -32,13 +32,6 @@ class TableDescription extends Component {
     } = this.props
     const { currentDesc, shortDesc } = this.state
 
-    if (shortDesc && shortDesc.length > 140) {
-      message.error('Table description cannot be longer than 140 characters.')
-      this.setState({ shortDesc: currentDesc })
-      this.resetContent()
-      return;
-    }
-
     const payload = {
       variables: {
         id,
