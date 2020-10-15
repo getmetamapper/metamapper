@@ -28,6 +28,7 @@
     "query-string": "^6.12.1",
     "react": "^16.11.0",
     "react-apollo": "^2.4.1",
+    "react-csv": "^2.0.3",
     "react-dom": "^16.11.0",
     "react-helmet": "^5.2.1",
     "react-i18next": "^11.7.0",
