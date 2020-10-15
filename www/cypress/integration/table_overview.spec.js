@@ -88,23 +88,25 @@ describe("table_overview.spec.js", () => {
         cy.getByTestId("TableDescription.Container").click()
       })
 
-      it("cannot be greater than 140 characters", () => {
-        let invalidInput = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
-                           "Aenean commodo ligula eget dolor. Aenean massa. Cum sociis" +
-                           " natoque penatibus et magnis."
+      it("can be greater than 140 characters", () => {
+        let validInput = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. " +
+                         "Aenean commodo ligula eget dolor. Aenean massa. Cum sociis" +
+                         " natoque penatibus et magnis."
 
         cy.fillInputs({
-          "TableDescription.Input": invalidInput,
+          "TableDescription.Input": validInput,
         })
 
         cy.getByTestId("TableDescription.Submit").should("be.visible")
         cy.getByTestId("TableDescription.Submit").click()
 
-        cy.contains(".ant-message-error", "Table description cannot be longer than 140 characters.").should(
+        cy.contains(".ant-message-success", "Description was saved.").should(
           "be.visible"
         )
 
-        cy.getByTestId("TableDescription").contains("Click here to enter a brief description.")
+        cy.reload()
+
+        cy.getByTestId("TableDescription").contains(validInput)
       })
 
       it("can be set to something", () => {

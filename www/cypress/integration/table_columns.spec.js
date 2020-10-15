@@ -154,37 +154,6 @@ describe("table_columns.spec.js", () => {
         cy.reload().then(() =>
           testTableColumnValue(columnName, () => cy.get("td").eq(descIndex).should("have.value", "")))
       })
-
-      it("with invalid input", () => {
-        const columnName = "exc_stacktrace"
-
-        testTableColumnValue(columnName, () => {
-          const input = "This is the full stacktrace of the revisioner error, which is too " +
-                        "long of a description. It's definitely over 90 characters."
-
-          cy.get("td").eq(descIndex).click().then(() => {
-            cy.getByTestId("EditableCell.Input").should("be.visible")
-            cy.fillInputs({
-              "EditableCell.Input": input
-            })
-          })
-
-          cy.get("td").eq(5).click()
-        })
-
-        cy.contains(
-          ".ant-message-error",
-          "Column description cannot be longer than 90 characters."
-        ).should(
-          "be.visible"
-        )
-
-        testTableColumnValue(columnName, () => cy.get("td").eq(descIndex).should("have.value", ""))
-
-        // Should persist after reload.
-        cy.reload().then(() =>
-          testTableColumnValue(columnName, () => cy.get("td").eq(descIndex).should("have.value", "")))
-      })
     })
 
     describe("as readonly", () => {
