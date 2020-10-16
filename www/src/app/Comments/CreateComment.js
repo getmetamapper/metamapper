@@ -1,29 +1,26 @@
 import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
-import { TrixEditor } from "react-trix"
-import GetComments from "graphql/queries/GetComments"
 import CreateCommentMutation from "graphql/mutations/CreateComment"
-import withGraphQLMutation from "hoc/withGraphQLMutation"
+import GetComments from "graphql/queries/GetComments"
 import RestrictedButton from "app/Common/RestrictedButton"
+import TextEditor from "app/Common/TextEditor"
+import withGraphQLMutation from "hoc/withGraphQLMutation"
 
 class CreateComment extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      bodyHtml: null,
-      bodyText: null,
-      editor: null,
+      html: null,
+      text: null,
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.handleEditorReady = this.handleEditorReady.bind(this)
   }
 
-  handleEditorReady(editor) {
-    editor.insertString("")
-    this.setState({ editor })
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.html === null || nextProps.submitting !== this.props.submitting
   }
 
   handleSubmit(evt) {
@@ -33,9 +30,9 @@ class CreateComment extends Component {
       contentObject: { id: objectId },
       parentId,
     } = this.props
-    const { bodyHtml: html } = this.state
+    const { html, text } = this.state
 
-    if (!html) {
+    if (!text) {
       return
     }
 
@@ -61,11 +58,8 @@ class CreateComment extends Component {
 
   resetEditor = () => {
     this.setState({
-      bodyHtml: "",
-      bodyText: "",
+      html: null,
     })
-
-    this.state.editor.loadHTML("")
   }
 
   handleSubmitSuccess = ({ data }) => {
@@ -80,22 +74,22 @@ class CreateComment extends Component {
     }
   }
 
-  handleChange(bodyHtml, bodyText) {
+  handleChange(content, delta, source, editor) {
     this.setState({
-      bodyHtml,
-      bodyText,
+      html: editor.getHTML(),
+      text: editor.getText(),
     })
   }
 
+  // https://github.com/SmallImprovements/quill-auto-links
   render() {
     const { hasPermission, submitting } = this.props
     return (
       <div className="create-comment" data-test="CreateComment">
-        <TrixEditor
+        <TextEditor
           data-test="CreateComment.Input"
+          value={this.state.html}
           onChange={this.handleChange}
-          onEditorReady={this.handleEditorReady}
-          disabled
         />
         <div className="create-comment-btn">
           <RestrictedButton
@@ -122,5 +116,5 @@ CreateComment.defaultProps = {
 
 export default compose(
   graphql(CreateCommentMutation),
-  withGraphQLMutation
+  withGraphQLMutation,
 )(CreateComment)

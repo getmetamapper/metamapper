@@ -9,9 +9,10 @@ import NotFound from "app/Errors/NotFound"
 import WorkspaceRedirect from "pages/Workspaces/WorkspaceRedirect"
 
 // eslint-disable-next-line
-import trix from "trix" /* eslint-disable no-unused-vars */
-
+import "react-quill/dist/quill.snow.css"
 import "./index.scss"
+
+// eslint-disable-next-line
 import i18n from "./i18n"
 import * as serviceWorker from "./serviceWorker"
 import link from "./lib/links"

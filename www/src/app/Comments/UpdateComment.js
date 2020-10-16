@@ -1,29 +1,26 @@
 import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
-import { TrixEditor } from "react-trix"
 import GetComments from "graphql/queries/GetComments"
+import RestrictedButton from "app/Common/RestrictedButton"
+import TextEditor from "app/Common/TextEditor"
 import UpdateCommentMutation from "graphql/mutations/UpdateComment"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
-import RestrictedButton from "app/Common/RestrictedButton"
 
 class UpdateComment extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      bodyHtml: null,
-      bodyText: null,
-      editor: null,
+      html: props.html,
+      text: null,
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.handleEditorReady = this.handleEditorReady.bind(this)
   }
 
-  handleEditorReady(editor) {
-    editor.insertHTML(this.props.html)
-    this.setState({ editor })
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.submitting !== this.props.submitting
   }
 
   handleSubmit(evt) {
@@ -33,14 +30,14 @@ class UpdateComment extends Component {
       contentObject: { id: objectId },
       commentId: id,
     } = this.props
-    const { bodyHtml: html } = this.state
+    const { html, text } = this.state
 
-    if (!html) {
+    if (!text) {
       return
     }
 
     const payload = {
-      successMessage: "Comment has been added.",
+      successMessage: "Comment has been updated.",
       variables: {
         id,
         html,
@@ -66,10 +63,10 @@ class UpdateComment extends Component {
     }
   }
 
-  handleChange(bodyHtml, bodyText) {
+  handleChange(content, delta, source, editor) {
     this.setState({
-      bodyHtml,
-      bodyText,
+      html: editor.getHTML(),
+      text: editor.getText(),
     })
   }
 
@@ -77,10 +74,10 @@ class UpdateComment extends Component {
     const { hasPermission, submitting } = this.props
     return (
       <div className="update-comment" data-test="UpdateComment">
-        <TrixEditor
+        <TextEditor
           data-test="UpdateComment.Input"
+          value={this.state.html}
           onChange={this.handleChange}
-          onEditorReady={this.handleEditorReady}
         />
         <div className="update-comment-btn">
           <RestrictedButton

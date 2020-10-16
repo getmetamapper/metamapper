@@ -338,8 +338,6 @@ i.column-comments-icon {
   }
 }
 
-
-
 .comments {
   padding: 0;
   padding-bottom: 12px;
@@ -384,8 +382,6 @@ i.column-comments-icon {
   }
 }
 
-
-
 .user-settings {
   .ant-drawer-body {
     padding: 0;
@@ -425,4 +421,68 @@ i.column-comments-icon {
 }
 .select-filter-dropdown .ant-divider {
   margin: 8px 0;
+}
+
+.ql-container .ql-editor {
+  min-height: 60px;
+  font-size: 14px;
+}
+.ql-mention-list-container {
+  width: 270px;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px 0 rgba(30, 30, 30, 0.08);
+  z-index: 9001;
+  overflow: auto;
+}
+.ql-mention-loading {
+  line-height: 44px;
+  padding: 0 20px;
+  vertical-align: middle;
+  font-size: 16px;
+}
+.ql-mention-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.ql-mention-list-item {
+  cursor: pointer;
+  line-height: 44px;
+  font-size: 16px;
+  padding: 6px 14px;
+  vertical-align: middle;
+}
+.ql-mention-list-item .avatar {
+  display: inline-block;
+  margin-right: 5px;
+}
+.ql-mention-list-item.disabled {
+  cursor: auto;
+}
+.ql-mention-list-item.selected {
+  background-color: #e8e8e8;
+  text-decoration: none;
+}
+.mention {
+  display: inline;
+  background: rgba(9, 30, 66, 0.08);
+  border: 1px solid transparent;
+  border-radius: 20px;
+  color: rgb(66, 82, 110);
+  cursor: pointer;
+  padding: 0px 0.3em 2px 0.23em;
+  line-height: 1.714;
+  font-size: 1em;
+  font-weight: normal;
+  word-break: break-word;
+}
+.mention a, .ql-snow .ql-editor .mention a {
+  color: inherit;
+  text-decoration: none;
+}
+.mention > span {
+  margin: 0 3px;
 }
