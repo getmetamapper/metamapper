@@ -21,9 +21,8 @@ from utils.encrypt.fields import EncryptedCharField, EncryptedTextField
 from utils.encrypt import rsa
 from utils.managers import SearchManager
 from utils.regexp import email_regex
-from utils.mixins.models import (
-    UUIDModel, TimestampedModel, AuditableModel
-)
+from utils.mixins.models import UUIDModel, TimestampedModel, AuditableModel
+from utils.shortcuts import get_gratavar_url
 
 
 class UserManager(BaseUserManager):
@@ -108,6 +107,10 @@ class User(AbstractBaseUser, TimestampedModel):
     @property
     def is_superuser(self):
         return False
+
+    @property
+    def avatar_url(self):
+        return get_gratavar_url(self.email)
 
     def has_perm(self, perm, obj):
         """Check if the user has a permission scoped to an object.

@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Input, message } from "antd"
+import { Input } from "antd"
 import { compose, graphql } from "react-apollo"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import EditableText from "app/Common/EditableText"

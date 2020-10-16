@@ -15,6 +15,7 @@ export default gql`
             id
             name
             email
+            avatarUrl
           }
           target {
             id

@@ -1,5 +1,4 @@
 import React from "react"
-import md5 from "blueimp-md5"
 import { Avatar } from "antd"
 import { coalesce } from "lib/utilities"
 
@@ -13,10 +12,10 @@ const avatarColors = [
   { color: "#6a00f5", backgroundColor: "#e3cffd" }, // purple
 ]
 
-const UserAvatar = ({ pk, name, email, noColor, size }) => (
+const UserAvatar = ({ pk, name, email, avatarUrl, noColor, size }) => (
   <div className="avatar">
     <Avatar
-      src={`https://www.gravatar.com/avatar/${md5(email.toLowerCase())}?d=robohash`}
+      src={avatarUrl}
       style={noColor ? { backgroundColor: "#cccccc" } : avatarColors[pk % avatarColors.length]}
       size={size}
     >
