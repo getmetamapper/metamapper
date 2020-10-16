@@ -9,6 +9,7 @@ export default gql`
           pk
           name
           email
+          avatarUrl
         }
       }
       totalCount

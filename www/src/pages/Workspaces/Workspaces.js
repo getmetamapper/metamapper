@@ -1,11 +1,27 @@
 import React, { Component } from "react"
 import { Helmet } from "react-helmet"
-import { Button, Col, Row } from "antd"
+import { Button, Col, Row, message } from "antd"
+import { withRouter } from "react-router-dom"
 import WorkspaceList from "app/Workspaces/WorkspaceList"
 import WorkspaceSetup from "app/Workspaces/WorkspaceSetup"
+import qs from "query-string"
 
 class Workspaces extends Component {
-  state = { setupVisible: false }
+  constructor(props) {
+    super(props)
+
+    const {
+      deleted
+    } = qs.parse(props.location.search)
+
+    if (deleted) {
+      message.success("Workspace has been deleted.")
+    }
+
+    this.state = {
+      setupVisible: false
+    }
+  }
 
   onOpenSetupForm = () => {
     this.setState({ setupVisible: true })
@@ -53,4 +69,4 @@ class Workspaces extends Component {
   }
 }
 
-export default Workspaces
+export default withRouter(Workspaces)

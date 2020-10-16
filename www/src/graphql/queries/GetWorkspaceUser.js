@@ -5,6 +5,7 @@ export default gql`
     workspaceUser(id: $userId) {
       pk
       userId
+      avatarUrl
       name
       email
       createdAt

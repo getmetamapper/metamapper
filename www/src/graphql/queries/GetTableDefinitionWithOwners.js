@@ -27,6 +27,7 @@ export default gql`
           id
           pk
           name
+          avatarUrl
         }
       }
     }
