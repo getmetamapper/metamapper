@@ -20,9 +20,9 @@ const TableOwnerGroupDisplay = ({ ownerId, owner: { id, pk, name }, isEditing })
   </div>
 )
 
-const TableOwnerUserDisplay = ({ ownerId, owner: { id, pk, name }, isEditing }) => (
+const TableOwnerUserDisplay = ({ ownerId, owner: { id, pk, name, avatarUrl }, isEditing }) => (
   <div className="table-owner-display" data-test={`TableOwner.Item(${ownerId})`}>
-    <UserAvatar pk={pk} name={name} email={name} />
+    <UserAvatar pk={pk} name={name} email={name} avatarUrl={avatarUrl} />
     <div className="metadata">
       <div className="name">
         <Link to={`/settings/users/${id}`}>{name}</Link>

@@ -228,6 +228,8 @@ describe("datastores.spec.js", () => {
         .should("contain", "Test Connection")
         .click()
         .then(() => cy.wait(1500))
+
+      cy.getByTestId("DatastoreSetupForm.TestConnection")
         .should("not.be.visible")
 
       cy.getByTestId("DatastoreSetupForm.VerifyConnection")
