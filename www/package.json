@@ -12,6 +12,7 @@
     "apollo-link-retry": "^2.2.16",
     "apollo-upload-client": "^11.0.0",
     "blueimp-md5": "^2.17.0",
+    "codemirror": "^5.58.1",
     "craco-antd": "^1.18.1",
     "elliptic": "^6.5.3",
     "graphql": "^14.5.8",
