@@ -50,19 +50,25 @@ class CommentSerializer(MetamapperSerializer, serializers.ModelSerializer):
     def validate_html(self, html):
         """Clean HTML to reduce risk of injection attacks.
         """
-        return bleach.clean(html, tags=[
-            'del',
-            'strong',
-            'em',
-            'p',
+        tags = [
             'a',
-            'div',
-            'pre',
-            'ul',
-            'ol',
-            'li',
             'br',
-        ])
+            'del',
+            'div',
+            'em',
+            'h1',
+            'h2',
+            'h3',
+            'li',
+            'ol',
+            'p',
+            'pre',
+            'span',
+            'strong',
+            'ul',
+        ]
+
+        return bleach.clean(html, tags=tags, attributes={'span': ['class', 'data-id'], 'a': ['href']})
 
     class Meta:
         model = Comment
