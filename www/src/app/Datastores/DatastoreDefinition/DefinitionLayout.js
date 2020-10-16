@@ -30,6 +30,11 @@ class DefinitionLayout extends Component {
         isDisplayed: true,
       },
       {
+        to: `${baseUri}/discussions`,
+        label: "Discussions",
+        isDisplayed: true,
+      },
+      {
         to: `${baseUri}/columns`,
         label: "Columns",
         isDisplayed: true,
