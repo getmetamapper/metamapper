@@ -2,25 +2,6 @@ body {
   background-color: $color-layout;
   margin: 0;
 }
-trix-editor {
-  border: 1px solid #e8e8e8;
-  border-radius: 0;
-}
-trix-toolbar .trix-button-group {
-  border: 1px solid #e8e8e8;
-}
-.ant-comment-content-detail pre, trix-editor pre {
-  display: inline-block;
-  width: 100%;
-  vertical-align: top;
-  font-family: monospace;
-  font-size: 0.9em;
-  margin: 0;
-  padding: 0.5em;
-  white-space: pre;
-  background-color: #eee;
-  overflow-x: auto;
-}
 .hidden {
   display: none !important;
 }
@@ -422,7 +403,29 @@ i.column-comments-icon {
 .select-filter-dropdown .ant-divider {
   margin: 8px 0;
 }
-
+.ant-comment-content-detail pre {
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+  font-size: 14px;
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  white-space: pre;
+  border-radius: 3px;
+  overflow-x: auto;
+}
+.ant-comment-content-detail pre, .ql-snow .ql-editor pre.ql-syntax {
+  background-color: #fafbfc;
+  border: 1px solid #cccccc;
+  color: #23241f;
+}
+.ql-snow .ql-editor pre {
+  font-size: 14px;
+  padding: 8px 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .ql-container .ql-editor {
   min-height: 60px;
   font-size: 14px;
@@ -479,10 +482,52 @@ i.column-comments-icon {
   font-weight: normal;
   word-break: break-word;
 }
-.mention a, .ql-snow .ql-editor .mention a {
+.mention a, .ql-editor .mention a {
   color: inherit;
   text-decoration: none;
 }
 .mention > span {
   margin: 0 3px;
+}
+
+
+
+
+.copy-code-button {
+    color: #272822;
+    background-color: #FFF;
+    border-color: #272822;
+    border: 2px solid;
+    border-radius: 3px 3px 0px 0px;
+
+    /* right-align */
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+
+    margin-bottom: -2px;
+    padding: 3px 8px;
+    font-size: 0.8em;
+}
+
+.copy-code-button:hover {
+    cursor: pointer;
+    background-color: #F2F2F2;
+}
+
+.copy-code-button:focus {
+    /* Avoid an ugly focus outline on click in Chrome,
+       but darken the button for accessibility.
+       See https://stackoverflow.com/a/25298082/1481479 */
+    background-color: #E6E6E6;
+    outline: 0;
+}
+
+.copy-code-button:active {
+    background-color: #D9D9D9;
+}
+
+.highlight pre {
+    /* Avoid pushing up the copy buttons. */
+    margin: 0;
 }

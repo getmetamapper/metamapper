@@ -7,9 +7,12 @@ import { InMemoryCache } from "apollo-cache-inmemory"
 import Route from "app/Navigation/Route"
 import NotFound from "app/Errors/NotFound"
 import WorkspaceRedirect from "pages/Workspaces/WorkspaceRedirect"
+import hljs from "highlight.js"
 
 // eslint-disable-next-line
+import "react-quill/dist/quill.core.css"
 import "react-quill/dist/quill.snow.css"
+import "highlight.js/styles/solarized-light.css"
 import "./index.scss"
 
 // eslint-disable-next-line
@@ -17,6 +20,8 @@ import i18n from "./i18n"
 import * as serviceWorker from "./serviceWorker"
 import link from "./lib/links"
 import routes from "./routes"
+
+window.hljs = hljs
 
 const client = new ApolloClient({
   link,

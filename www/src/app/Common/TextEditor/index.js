@@ -21,21 +21,7 @@ class TextEditor extends Component {
   }
 
   handleSource = (searchTerm, renderList, mentionChar) => {
-    const { currentWorkspace: { slug } } = this.props
-    let values = [
-      {
-        id: 'VXNlclR5cGU6Mjg=',
-        value: 'Scott Cruwys',
-        email: 'scruwys@gmail.com',
-        link: `/${slug}/settings/users/VXNlclR5cGU6Mjg=`,
-      },
-      {
-        id: 1,
-        value: 'Sam Crust',
-        email: 'scruwys@gmail.com',
-      }
-    ]
-    // const values = []
+    const values = []
 
     if (searchTerm.length === 0) {
       renderList(values, searchTerm);
@@ -64,6 +50,10 @@ class TextEditor extends Component {
           onChange={onChange}
           value={value}
           modules={{
+            syntax: {
+              highlight: text => window.hljs.highlightAuto(text).value,
+            },
+            toolbar: this.toolbar,
             mention: {
               allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
               minChars: 1,
@@ -71,7 +61,6 @@ class TextEditor extends Component {
               source: this.handleSource,
               renderItem: this.handleRenderItem,
             },
-            toolbar: this.toolbar,
           }}
         />
       </span>
