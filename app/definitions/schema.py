@@ -95,11 +95,16 @@ class OwnerType(graphene.ObjectType):
     name = graphene.String()
     type = graphene.String()
 
+    avatar_url = graphene.String()
+
     def resolve_id(root, info):
         return shortcuts.to_global_id(f'{root.__class__.__name__}Type', root.pk)
 
     def resolve_pk(root, info):
         return root.id
+
+    def resolve_avatar_url(root, info):
+        return root.avatar_url
 
 
 class AssetOwnerType(AuthNode, DjangoObjectType):

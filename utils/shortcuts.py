@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import bleach
+
 from itertools import chain
+from hashlib import md5
 
 from django.db import connection, models
 from django.contrib.auth import get_user_model
@@ -35,6 +38,13 @@ def get_object_or_404(klass, message=None, exception_class=NotFound, *args, **kw
         if not message:
             message = 'Resource was not found.'
         raise exception_class(message)
+
+
+def get_gratavar_url(value, d='robohash'):
+    """Retrieve the gravatar using the md5-hashed property.
+    """
+    md5hash = md5(value.lower().encode('utf-8')).hexdigest()
+    return f'https://www.gravatar.com/avatar/{md5hash}?d={d}'
 
 
 def run_raw_sql(sql, params=None):
@@ -120,3 +130,26 @@ def from_global_id(global_id, id_only=False):
         return id_
 
     return type_, id_
+
+
+def clean_html(txt):
+    """Helper function to strip out unwanted HTML tags.
+    """
+    tags = [
+        'a',
+        'br',
+        'del',
+        'div',
+        'em',
+        'h1',
+        'h2',
+        'h3',
+        'li',
+        'ol',
+        'p',
+        'pre',
+        'span',
+        'strong',
+        'ul',
+    ]
+    return bleach.clean(txt, tags=tags, attributes={'span': ['class', 'data-id'], 'a': ['href']})

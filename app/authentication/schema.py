@@ -17,6 +17,7 @@ class UserType(AuthNode, DjangoObjectType):
 
     pk = graphene.Int()
     name = graphene.String()
+    avatar_url = graphene.String()
 
     current_membership = graphene.Field(MembershipType)
     is_current_user = graphene.Boolean()
@@ -40,6 +41,9 @@ class UserType(AuthNode, DjangoObjectType):
         """Return the id of the current user.
         """
         return instance.id
+
+    def resolve_avatar_url(instance, info):
+        return instance.avatar_url
 
     def resolve_current_membership(instance, info):
         """Resolve the current membership, if applicable.

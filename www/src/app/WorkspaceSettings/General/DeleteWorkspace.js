@@ -41,7 +41,7 @@ class DeleteWorkspace extends Component {
       workspace: { id },
     } = this.props
     const payload = {
-      successMessage: "Workspace has been deleted.",
+      successMessage: null,
       variables: { id },
     }
 
@@ -54,7 +54,7 @@ class DeleteWorkspace extends Component {
 
     if (ok && !errors) {
       this.props.refreshUser()
-      this.props.history.push(`/workspaces`)
+      window.location.href = '/workspaces?deleted=1'
     }
   }
 

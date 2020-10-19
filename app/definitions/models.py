@@ -369,6 +369,7 @@ class Table(AuditableModel,
     db_comment = models.TextField(null=True, blank=True)
     short_desc = models.TextField(null=True, blank=True)
     properties = JSONField(default=dict)
+    readme = models.TextField(null=True, blank=True)
 
     search_objects = SearchManager(fields=['name', 'schema__name', 'short_desc'])
 
@@ -493,6 +494,7 @@ class Column(AuditableModel,
     default_value = models.CharField(max_length=255, null=True, blank=True)
     db_comment = models.TextField(null=True, blank=True)
     short_desc = models.TextField(null=True, blank=True)
+    readme = models.TextField(null=True, blank=True)
 
     class Meta:
         unique_together = ('table', 'name',)

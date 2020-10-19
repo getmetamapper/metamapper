@@ -4,9 +4,21 @@ import DefinitionOverview from "pages/DatastoreDefinition/DefinitionOverview"
 import DefinitionHistory from "pages/DatastoreDefinition/DefinitionHistory"
 import DefinitionDiscussions from "pages/DatastoreDefinition/DefinitionDiscussions"
 import DefinitionReadmeEditor from "pages/DatastoreDefinition/DefinitionReadmeEditor"
-
+import DefinitionColumnReadmeEditor from "pages/DatastoreDefinition/DefinitionColumnReadmeEditor"
 
 export default [
+  {
+    component: DefinitionReadmeEditor,
+    path:
+      "/:workspaceSlug/datastores/:datastoreSlug/definition/:schemaName/:tableName/readme/edit",
+    namespace: "datastores",
+  },
+  {
+    component: DefinitionColumnReadmeEditor,
+    path:
+      "/:workspaceSlug/datastores/:datastoreSlug/definition/:schemaName/:tableName/columns/:columnName/readme/edit",
+    namespace: "datastores",
+  },
   {
     component: DefinitionHistory,
     path:
@@ -23,12 +35,6 @@ export default [
     component: DefinitionColumns,
     path:
       "/:workspaceSlug/datastores/:datastoreSlug/definition/:schemaName/:tableName/columns",
-    namespace: "datastores",
-  },
-  {
-    component: DefinitionReadmeEditor,
-    path:
-      "/:workspaceSlug/datastores/:datastoreSlug/definition/:schemaName/:tableName/readme/edit",
     namespace: "datastores",
   },
   {

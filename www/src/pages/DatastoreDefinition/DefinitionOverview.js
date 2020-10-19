@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
-import { Card, Col, Row } from "antd"
+import { Col, Row } from "antd"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"

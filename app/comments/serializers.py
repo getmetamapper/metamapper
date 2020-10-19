@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import bleach
 import rest_framework.serializers as serializers
 
 import app.audit.decorators as audit
 
 import utils.fields as fields
+import utils.shortcuts as shortcuts
 
 from app.authentication.models import User
 from app.comments.models import Comment
@@ -50,19 +50,7 @@ class CommentSerializer(MetamapperSerializer, serializers.ModelSerializer):
     def validate_html(self, html):
         """Clean HTML to reduce risk of injection attacks.
         """
-        return bleach.clean(html, tags=[
-            'del',
-            'strong',
-            'em',
-            'p',
-            'a',
-            'div',
-            'pre',
-            'ul',
-            'ol',
-            'li',
-            'br',
-        ])
+        return shortcuts.clean_html(html)
 
     class Meta:
         model = Comment

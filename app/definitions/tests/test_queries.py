@@ -436,7 +436,6 @@ class TestGetTableDefinition(cases.GraphQLTestCase):
             'datastoreId': helpers.to_global_id('DatastoreType', datastore.pk),
             'schemaName': schema.name,
             'tableName': table.name,
-
         }
 
         return datastore, variables
@@ -525,6 +524,127 @@ class TestGetTableDefinition(cases.GraphQLTestCase):
 
     def test_not_found(self):
         """If the datastore does not exist, we return a 404 – Not Found message.
+        """
+        _, variables = self._setup_and_get_variables()
+        variables.update({'tableName': 'not_real'})
+
+        results = self.execute(self.statement, variables=variables)
+        self.assertNotFound(results)
+
+    @decorators.as_someone(['OUTSIDER'])
+    def test_not_authorized(self):
+        """Outside users should not be able to access this resource.
+        """
+        _, variables = self._setup_and_get_variables()
+
+        results = self.execute(self.statement, variables=variables)
+        self.assertPermissionDenied(results)
+
+
+class TestGetColumnDefinition(cases.GraphQLTestCase):
+    """Tests for getting a column definition for a datastore.
+    """
+    factory = factories.ColumnFactory
+    operation = 'columnDefinition'
+    statement = '''
+    query GetColumnDefinition(
+      $datastoreId: ID!
+      $schemaName: String!
+      $tableName: String!
+      $columnName: String!
+    ) {
+      columnDefinition(
+        datastoreId: $datastoreId
+        schemaName: $schemaName
+        tableName: $tableName
+        columnName: $columnName
+      ) {
+        name
+        readme
+        table {
+          name
+        }
+      }
+    }
+    '''
+
+    readme = '''
+    # Foobar
+
+    Foobar is a Python library for dealing with word pluralization.
+
+    ## Installation
+
+    Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+
+    ```bash
+    pip install foobar
+    ```
+    '''
+
+    def _setup_and_get_variables(self, **overrides):
+        """Setup test and return variables for query.
+        """
+        datastore = factories.DatastoreFactory(workspace=self.workspace, **overrides)
+        schema = factories.SchemaFactory(workspace=self.workspace, datastore=datastore)
+        table = factories.TableFactory(workspace=self.workspace, schema=schema)
+        column = self.factory(workspace=self.workspace, table=table, readme=self.readme)
+
+        variables = {
+            'datastoreId': helpers.to_global_id('DatastoreType', datastore.pk),
+            'schemaName': schema.name,
+            'tableName': table.name,
+            'columnName': column.name,
+        }
+
+        return datastore, variables
+
+    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
+    def test_query(self):
+        """It returns the table definition object.
+        """
+        _, variables = self._setup_and_get_variables()
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertEqual(results, {
+            'name': variables['columnName'],
+            'readme': self.readme,
+            'table': {
+                'name': variables['tableName'],
+            },
+        })
+
+    @decorators.as_someone(['MEMBER', 'READONLY'])
+    def test_query_with_object_permissions(self):
+        """It returns the datastore object.
+        """
+        datastore, variables = self._setup_and_get_variables(object_permissions_enabled=True)
+        datastore.assign_perm(self.user, 'definitions.view_datastore')
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertEqual(results, {
+            'name': variables['columnName'],
+            'readme': self.readme,
+            'table': {
+                'name': variables['tableName'],
+            },
+        })
+
+    @decorators.as_someone(['MEMBER', 'READONLY'])
+    def test_query_without_object_permissions(self):
+        """It returns a 403 - Permission Denied error.
+        """
+        _, variables = self._setup_and_get_variables(object_permissions_enabled=True)
+
+        results = self.execute(self.statement, variables=variables)
+        self.assertPermissionDenied(results)
+
+    def test_not_found(self):
+        """If the column does not exist, we return a 404 – Not Found message.
         """
         _, variables = self._setup_and_get_variables()
         variables.update({'tableName': 'not_real'})

@@ -13,6 +13,7 @@ export default gql`
             pk
             name
             email
+            avatarUrl
             isCurrentUser
           }
           createdAt
@@ -30,6 +31,7 @@ export default gql`
               pk
               name
               email
+              avatarUrl
               isCurrentUser
             }
             createdAt

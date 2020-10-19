@@ -1,6 +1,4 @@
-import React, { Component } from "react"
-import PropTypes from "prop-types"
-const CodeMirror = window.CodeMirror
+import React from "react"
 
 const IS_MOBILE = typeof navigator === 'undefined' || (
   navigator.userAgent.match(/Android/i)
@@ -23,7 +21,7 @@ class CodeMirrorEditor extends React.Component {
   componentDidMount() {
     const isTextArea = this.props.forceTextArea || IS_MOBILE;
     if (!isTextArea) {
-      this.editor = CodeMirror.fromTextArea(this.editorRef.current, this.props);
+      this.editor = window.CodeMirror.fromTextArea(this.editorRef.current, this.props);
       this.editor.on('change', this.handleChange);
     }
   }
@@ -77,22 +75,4 @@ class CodeMirrorEditor extends React.Component {
   }
 }
 
-const DefinitionReadmeEditor = (props) => {
-  return (
-    <form className="editor">
-      <CodeMirrorEditor mode="markdown" theme="solarized" value={props.value} onChange={props.onChange} />
-    </form>
-  )
-}
-
-DefinitionReadmeEditor.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string
-}
-
-DefinitionReadmeEditor.defaultProps = {
-  value: ''
-}
-
-export default DefinitionReadmeEditor
-
+export default CodeMirrorEditor

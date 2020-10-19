@@ -281,7 +281,7 @@ class DeleteDatastore(mixins.DeleteMutationMixin, relay.ClientIDMutation):
 class UpdateTableMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update editable fields on a table.
     """
-    nullable_fields = ["short_desc"]
+    nullable_fields = ["short_desc", "readme"]
 
     permission_classes = (
         permissions.WorkspaceWriteAccessOnly,
@@ -291,6 +291,7 @@ class UpdateTableMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     class Input:
         id = graphene.ID(required=True)
         tags = graphene.List(graphene.String, required=False)
+        readme = graphene.String(required=False)
         short_desc = graphene.String(required=False)
 
     class Meta:
@@ -302,7 +303,7 @@ class UpdateTableMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
 class UpdateColumnMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update editable fields on a column.
     """
-    nullable_fields = ["short_desc"]
+    nullable_fields = ["short_desc", "readme"]
 
     permission_classes = (
         permissions.WorkspaceWriteAccessOnly,
@@ -311,6 +312,7 @@ class UpdateColumnMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
 
     class Input:
         id = graphene.ID(required=True)
+        readme = graphene.String(required=False)
         short_desc = graphene.String(required=False)
 
     class Meta:

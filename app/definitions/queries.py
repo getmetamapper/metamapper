@@ -43,6 +43,14 @@ class Query(graphene.ObjectType):
         table_name=graphene.String(required=True),
     )
 
+    column_definition = graphene.Field(
+        type=schema.ColumnType,
+        datastore_id=graphene.ID(required=True),
+        schema_name=graphene.String(required=True),
+        table_name=graphene.String(required=True),
+        column_name=graphene.String(required=True),
+    )
+
     datastore_user_access_privileges = graphene.List(
         of_type=schema.DatastoreUserGranteeType,
         datastore_id=graphene.ID(required=True),
@@ -133,6 +141,20 @@ class Query(graphene.ObjectType):
             'workspace': info.context.workspace,
         }
         return shortcuts.get_object_or_404(models.Table, **get_kwargs)
+
+    @permissions.can_view_datastore_objects(lambda instance: instance.datastore)
+    @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
+    def resolve_column_definition(self, info, datastore_id, schema_name, table_name, column_name, **kwargs):
+        """Retrieve detailed column definition.
+        """
+        get_kwargs = {
+            'name__iexact': column_name,
+            'table__schema__datastore_id': shortcuts.from_global_id(datastore_id, True),
+            'table__schema__name__iexact': schema_name,
+            'table__name__iexact': table_name,
+            'workspace': info.context.workspace,
+        }
+        return shortcuts.get_object_or_404(models.Column, **get_kwargs)
 
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
     def resolve_datastore_user_access_privileges(self, info, datastore_id):

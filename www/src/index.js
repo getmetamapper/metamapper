@@ -7,15 +7,26 @@ import { InMemoryCache } from "apollo-cache-inmemory"
 import Route from "app/Navigation/Route"
 import NotFound from "app/Errors/NotFound"
 import WorkspaceRedirect from "pages/Workspaces/WorkspaceRedirect"
+import hljs from "highlight.js"
+import CodeMirror from "codemirror"
 
 // eslint-disable-next-line
-import trix from "trix" /* eslint-disable no-unused-vars */
-
+import "react-quill/dist/quill.core.css"
+import "react-quill/dist/quill.snow.css"
+import "highlight.js/styles/solarized-light.css"
+import "codemirror/lib/codemirror.css"
+import "codemirror/theme/monokai.css"
+import "codemirror/mode/markdown/markdown"
 import "./index.scss"
+
+// eslint-disable-next-line
 import i18n from "./i18n"
 import * as serviceWorker from "./serviceWorker"
 import link from "./lib/links"
 import routes from "./routes"
+
+window.hljs = hljs
+window.CodeMirror = CodeMirror
 
 const client = new ApolloClient({
   link,

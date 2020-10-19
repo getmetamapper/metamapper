@@ -7,21 +7,21 @@ import { withLargeLoader } from "hoc/withLoader"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
-import withGetTableDefinition from "graphql/withGetTableDefinition"
+import withGetColumnDefinition from "graphql/withGetColumnDefinition"
 import ReadmeMirrorEditor from "app/Datastores/Readme/ReadmeMirrorEditor"
-import UpdateTableMetadataMutation from "graphql/mutations/UpdateTableMetadata"
+import UpdateColumnMetadataMutation from "graphql/mutations/UpdateColumnMetadata"
 
-class DefinitionReadmeEditor extends Component {
+class DefinitionColumnReadmeEditor extends Component {
   constructor(props) {
     super(props)
 
     const {
-      tableDefinition
+      columnDefinition
     } = props
 
     this.state = {
-      current: tableDefinition.readme,
-      previous: tableDefinition.readme,
+      current: columnDefinition.readme,
+      previous: columnDefinition.readme,
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -31,7 +31,7 @@ class DefinitionReadmeEditor extends Component {
   handleSubmit = () => {
     const { current: readme } = this.state
     const {
-      tableDefinition: { id }
+      columnDefinition: { id }
     } = this.props
 
     const payload = {
@@ -46,7 +46,7 @@ class DefinitionReadmeEditor extends Component {
   }
 
   handleSubmitSuccess = ({ data }) => {
-    const { errors } = data.updateTableMetadata
+    const { errors } = data.updateColumnMetadata
 
     if (!errors) {
       const { current } = this.state
@@ -66,10 +66,11 @@ class DefinitionReadmeEditor extends Component {
           tableName,
         },
       },
+      columnDefinition: { id },
       currentWorkspace: { slug },
     } = this.props
     return (
-      `/${slug}/datastores/${datastoreSlug}/definition/${schemaName}/${tableName}/overview`
+      `/${slug}/datastores/${datastoreSlug}/definition/${schemaName}/${tableName}/columns?selectedColumn=${id}`
     )
   }
 
@@ -81,10 +82,11 @@ class DefinitionReadmeEditor extends Component {
           tableName,
         },
       },
+      columnDefinition: { name },
     } = this.props
     return (
       <>
-        Currently editing: <Link to={this.getRedirectUrl()}>{schemaName}.{tableName}</Link>
+        Currently editing: <Link to={this.getRedirectUrl()}>{schemaName}.{tableName}.{name}</Link>
       </>
     )
   }
@@ -119,9 +121,8 @@ class DefinitionReadmeEditor extends Component {
   }
 }
 
-
-const withNotFound = withNotFoundHandler(({ tableDefinition }) => {
-  return !tableDefinition || !tableDefinition.hasOwnProperty("id")
+const withNotFound = withNotFoundHandler(({ columnDefinition }) => {
+  return !columnDefinition || !columnDefinition.hasOwnProperty("id")
 })
 
 const enhance = compose(
@@ -129,11 +130,11 @@ const enhance = compose(
   withUserContext,
   withWriteAccess,
   withGetDatastoreDefinition,
-  withGetTableDefinition,
-  graphql(UpdateTableMetadataMutation),
+  withGetColumnDefinition,
+  graphql(UpdateColumnMetadataMutation),
   withGraphQLMutation,
   withLargeLoader,
   withNotFound,
 )
 
-export default enhance(DefinitionReadmeEditor)
+export default enhance(DefinitionColumnReadmeEditor)

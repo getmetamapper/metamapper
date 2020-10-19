@@ -1,25 +1,21 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query GetTableDefinition(
+  query GetColumnDefinition(
     $datastoreId: ID!
     $schemaName: String!
     $tableName: String!
+    $columnName: String!
   ) {
-    tableDefinition(
+    columnDefinition(
       datastoreId: $datastoreId
       schemaName: $schemaName
       tableName: $tableName
+      columnName: $columnName
     ) {
       id
       name
-      properties
-      shortDesc
       readme
-      tags
-      schema {
-        name
-      }
     }
   }
 `

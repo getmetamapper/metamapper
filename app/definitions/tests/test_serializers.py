@@ -1079,6 +1079,7 @@ class TableSerializerUpdateTests(cases.SerializerTestCase):
         attributes = {
             'tags': helpers.faker.words(unique=True),
             'short_desc': helpers.faker.text(max_nb_chars=80),
+            'readme': helpers.faker.text(max_nb_chars=80),
         }
         attributes.update(**overrides)
         return attributes
@@ -1164,6 +1165,7 @@ class ColumnSerializerUpdateTests(cases.SerializerTestCase):
         """
         attributes = {
             'short_desc': helpers.faker.text(max_nb_chars=45),
+            'readme': helpers.faker.text(max_nb_chars=45),
         }
         attributes.update(**overrides)
         return attributes

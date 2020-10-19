@@ -19,6 +19,7 @@ export default gql`
       schema {
         name
       }
+      readme
       owners {
         id
         type
@@ -27,6 +28,7 @@ export default gql`
           id
           pk
           name
+          avatarUrl
         }
       }
     }

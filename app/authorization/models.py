@@ -3,7 +3,9 @@ from django.db import models
 from django.contrib.auth.models import Group
 
 from app.authorization import constants
+
 from utils.mixins.models import TimestampedModel, AuditableModel
+from utils.shortcuts import get_gratavar_url
 
 
 Group.add_to_class('description', models.CharField(max_length=180, null=True, blank=True))
@@ -17,6 +19,8 @@ Group.add_to_class(
         to='authentication.Workspace',
     )
 )
+
+setattr(Group, 'avatar_url', property(lambda s: None))
 
 
 class Membership(TimestampedModel, AuditableModel):
@@ -64,3 +68,7 @@ class Membership(TimestampedModel, AuditableModel):
     @property
     def is_owner(self):
         return self.permissions == Membership.OWNER
+
+    @property
+    def avatar_url(self):
+        return get_gratavar_url(self.user_id)

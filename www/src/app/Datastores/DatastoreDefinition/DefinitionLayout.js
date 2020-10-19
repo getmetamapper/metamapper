@@ -31,7 +31,7 @@ class DefinitionLayout extends Component {
       },
       {
         to: `${baseUri}/discussions`,
-        label: "Discussions",
+        label: "Discussion",
         isDisplayed: true,
       },
       {

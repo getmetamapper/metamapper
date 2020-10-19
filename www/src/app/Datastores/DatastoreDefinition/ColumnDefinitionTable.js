@@ -19,10 +19,10 @@ class ColumnDefinitionTable extends Component {
         align: "center",
         width: 60,
         render: (row) => (
-          <div className={row.commentsCount > 0 ? "has-comments" : ""}>
-            <Tooltip title={`${row.commentsCount} comment(s)`}>
+          <div className={row.commentsCount > 0 || (row.readme && row.readme.length > 0) ? "has-comments" : ""}>
+            <Tooltip title="View column details">
               <Icon
-                type="message"
+                type="eye"
                 className="column-comments-icon"
                 onClick={() => props.onOpenDetails(row)}
               />

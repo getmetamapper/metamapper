@@ -94,6 +94,7 @@ const currentUser = graphql(
         fname
         lname
         email
+        avatarUrl
         currentMembership {
           permissions
         }
