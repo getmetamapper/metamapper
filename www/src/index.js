@@ -9,10 +9,14 @@ import NotFound from "app/Errors/NotFound"
 import WorkspaceRedirect from "pages/Workspaces/WorkspaceRedirect"
 import hljs from "highlight.js"
 import CodeMirror from "codemirror"
+import ReactQuill from "react-quill"
+import QuillMagicUrl from "quill-magic-url"
+import QuillEmoji from "quill-emoji"
 
 // eslint-disable-next-line
 import "react-quill/dist/quill.core.css"
 import "react-quill/dist/quill.snow.css"
+import "quill-emoji/dist/quill-emoji.css"
 import "highlight.js/styles/solarized-light.css"
 import "codemirror/lib/codemirror.css"
 import "codemirror/theme/monokai.css"
@@ -27,6 +31,17 @@ import routes from "./routes"
 
 window.hljs = hljs
 window.CodeMirror = CodeMirror
+
+ReactQuill.Quill.register('modules/magicUrl', QuillMagicUrl)
+ReactQuill.Quill.register(
+  {
+    "formats/emoji": QuillEmoji.EmojiBlot,
+    "modules/emoji-toolbar": QuillEmoji.ToolbarEmoji,
+    "modules/emoji-textarea": QuillEmoji.TextAreaEmoji,
+    "modules/emoji-shortname": QuillEmoji.ShortNameEmoji,
+  },
+  true,
+)
 
 const client = new ApolloClient({
   link,

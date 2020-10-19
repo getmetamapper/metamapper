@@ -13,6 +13,7 @@ class TextEditor extends Component {
       [{ 'header': [1, 2, 3, false] }],
       ['bold', 'italic', 'underline', 'strike'],
       ['blockquote', 'code-block'],
+      ['emoji'],
       [{ 'color': [] }, { 'background': [] }],
       [{'list': 'ordered'}, {'list': 'bullet'}],
       ['link'],
@@ -53,6 +54,10 @@ class TextEditor extends Component {
             syntax: {
               highlight: text => window.hljs.highlightAuto(text).value,
             },
+            "emoji-toolbar": true,
+            "emoji-textarea": false,
+            "emoji-shortname": false,
+            magicUrl: true,
             toolbar: this.toolbar,
             mention: {
               allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
