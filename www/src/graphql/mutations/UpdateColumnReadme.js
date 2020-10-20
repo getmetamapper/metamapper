@@ -1,18 +1,14 @@
 import gql from "graphql-tag"
 
 export default gql`
-  mutation UpdateTableMetadata(
+  mutation UpdateColumnReadme(
     $id: ID!
-    $tags: [String]
-    $shortDesc: String
+    $readme: String
   ) {
-    updateTableMetadata(
-      input: { id: $id, tags: $tags, shortDesc: $shortDesc }
-    ) {
-      table {
+    updateColumnMetadata(input: { id: $id, readme: $readme }) {
+      column {
         id
         name
-        tags
         shortDesc
       }
       errors {

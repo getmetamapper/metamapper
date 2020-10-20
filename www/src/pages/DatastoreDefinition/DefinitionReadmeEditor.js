@@ -10,7 +10,7 @@ import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableDefinition from "graphql/withGetTableDefinition"
 import PermissionDenied from "app/Errors/PermissionDenied"
 import ReadmeMirrorEditor from "app/Datastores/Readme/ReadmeMirrorEditor"
-import UpdateTableMetadataMutation from "graphql/mutations/UpdateTableMetadata"
+import UpdateTableReadmeMutation from "graphql/mutations/UpdateTableReadme"
 
 class DefinitionReadmeEditor extends Component {
   constructor(props) {
@@ -138,7 +138,7 @@ const enhance = compose(
   withWriteAccess,
   withGetDatastoreDefinition,
   withGetTableDefinition,
-  graphql(UpdateTableMetadataMutation),
+  graphql(UpdateTableReadmeMutation),
   withGraphQLMutation,
   withLargeLoader,
   withNotFound,

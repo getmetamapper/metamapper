@@ -10,7 +10,7 @@ import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetColumnDefinition from "graphql/withGetColumnDefinition"
 import PermissionDenied from "app/Errors/PermissionDenied"
 import ReadmeMirrorEditor from "app/Datastores/Readme/ReadmeMirrorEditor"
-import UpdateColumnMetadataMutation from "graphql/mutations/UpdateColumnMetadata"
+import UpdateColumnReadmeMutation from "graphql/mutations/UpdateColumnReadme"
 
 class DefinitionColumnReadmeEditor extends Component {
   constructor(props) {
@@ -139,7 +139,7 @@ const enhance = compose(
   withWriteAccess,
   withGetDatastoreDefinition,
   withGetColumnDefinition,
-  graphql(UpdateColumnMetadataMutation),
+  graphql(UpdateColumnReadmeMutation),
   withGraphQLMutation,
   withLargeLoader,
   withNotFound,
