@@ -35,8 +35,7 @@ const withPermissionsRequired = ({ roles, message = null }) => (
 
 export const withOwnersOnly = withPermissionsRequired({
   roles: ["OWNER"],
-  message:
-    "These settings can only be edited by users with the administrator role.",
+  message: "These settings can only be edited by users with the administrator role.",
 })
 
 export const withWriteAccess = withPermissionsRequired({

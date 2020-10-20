@@ -69,11 +69,11 @@ class ColumnDefinitionDetails extends Component {
           <Menu.Item key="discussion">Discussion</Menu.Item>
         </Menu>
         {visible && current === "readme" && (
-          <div className="column-definition-readme">
+          <div className="column-definition-readme" data-test="ColumnReadme">
             {hasPermission  && (
               <Alert message={
                 <span>
-                  You can <Link to={this.getReadmeUrl(column)}>click here</Link> to edit this README.
+                  You can <Link to={this.getReadmeUrl(column)} data-test="ColumnReadme.Edit">click here</Link> to edit this README.
                 </span>
               }/>
             )}

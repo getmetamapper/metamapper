@@ -526,6 +526,7 @@
       "name": "definitions_table",
       "tags": [],
       "kind": "base table",
+      "readme": "The quick brown fox jumps over the lazy dog.",
       "short_desc": "",
       "properties": {}
     }
@@ -905,7 +906,8 @@
       "is_nullable": false,
       "default_value": "",
       "db_comment": "",
-      "short_desc": ""
+      "short_desc": "",
+      "readme": "### The \"kind\" column  \n The type of entity that this row represents."
     }
   },
   {

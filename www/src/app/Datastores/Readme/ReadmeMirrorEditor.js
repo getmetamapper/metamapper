@@ -32,20 +32,23 @@ class ReadmeMirrorEditor extends Component {
       onClose,
     } = this.props
     return (
-      <div className="markdown-editor">
+      <div className="markdown-editor" data-test="ReadmeMirrorEditor">
         <div className="editor-options fixed">
-          <div className="title">
+          <div className="title" data-test="ReadmeMirrorEditor.Title">
             {title}
           </div>
           <div className="buttons">
-            <Button type="primary" onClick={onSubmit} disabled={submitting}>
+            <Button type="primary" onClick={onSubmit} disabled={submitting} data-test="ReadmeMirrorEditor.Submit">
               {submitting ? 'Saving...' : 'Save Changes'}
             </Button>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose} data-test="ReadmeMirrorEditor.Close">Close</Button>
           </div>
         </div>
-        <div className="editor-pane">
-          <ReadmeEditor value={this.state.markdownSrc} onChange={this.handleMarkdownChange} />
+        <div className="editor-pane" data-test="ReadmeMirrorEditor.Editor">
+          <ReadmeEditor
+            value={this.state.markdownSrc}
+            onChange={this.handleMarkdownChange}
+          />
         </div>
         <div className="result-pane">
           <Readme

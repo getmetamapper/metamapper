@@ -34,7 +34,7 @@ describe("table_comments.spec.js", () => {
   }
 
   const databaseUri = `/${workspace.slug}/datastores/${datastore.slug}`
-  const overviewUri = `${databaseUri}/definition/${table.schema}/${table.name}/overview`
+  const overviewUri = `${databaseUri}/definition/${table.schema}/${table.name}/discussions`
 
   const commentOne = "Here is some information about this table."
   const commentTwo = "Here is an unrelated comment."

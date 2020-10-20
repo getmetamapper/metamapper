@@ -3,7 +3,7 @@ import Markdown from "react-markdown"
 import CodeBlock from "app/Common/CodeMirror/CodeBlock"
 
 const Readme = ({ markdown, emptyText, ...props }) => (
-  <div className="readme">
+  <div className="readme" data-test="Readme">
     {markdown ? (
       <Markdown
         renderers={{ code: CodeBlock }}

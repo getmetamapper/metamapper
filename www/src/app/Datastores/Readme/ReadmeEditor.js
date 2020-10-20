@@ -4,12 +4,13 @@ import CodeMirrorEditor from "app/Common/CodeMirror/CodeMirrorEditor"
 
 const ReadmeEditor = (props) => {
   return (
-    <form className="editor">
+    <form className="editor" data-test="ReadmeEditor">
       <CodeMirrorEditor
         mode="markdown"
         theme="monokai"
         value={props.value}
         onChange={props.onChange}
+        placeholder="read"
       />
     </form>
   )

@@ -8,6 +8,7 @@ import withGraphQLMutation from "hoc/withGraphQLMutation"
 import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableDefinition from "graphql/withGetTableDefinition"
+import PermissionDenied from "app/Errors/PermissionDenied"
 import ReadmeMirrorEditor from "app/Datastores/Readme/ReadmeMirrorEditor"
 import UpdateTableMetadataMutation from "graphql/mutations/UpdateTableMetadata"
 
@@ -98,7 +99,14 @@ class DefinitionReadmeEditor extends Component {
   }
 
   render() {
-    const { loading, submitting } = this.props
+    const {
+      loading,
+      submitting,
+      hasPermission,
+    } = this.props
+    if (!hasPermission) {
+      return <PermissionDenied to={this.getRedirectUrl()} />
+    }
     return (
       <div className="definition-readme-editor">
         <Prompt
