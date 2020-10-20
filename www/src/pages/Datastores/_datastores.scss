@@ -76,6 +76,9 @@
     font-weight: 500;
   }
 }
+.datastores .datastore-discussions {
+  padding: 24px;
+}
 .datastores .datastore-columns .datastore-columns-expansion {
   .form-label {
     margin-bottom: 8px;
@@ -90,6 +93,22 @@
   }
   .datastore-columns-expansion-item:last-child {
     margin-bottom: 0;
+  }
+}
+.column-definition-details {
+  .ant-drawer-body {
+    padding: 0;
+  }
+  .column-definition-comments {
+    padding: 24px;
+  }
+  .column-definition-readme {
+    padding: 24px;
+  }
+  .column-definition-readme {
+    .ant-alert {
+      margin-bottom: 24px;
+    }
   }
 }
 .datastores .datastore-indexes {

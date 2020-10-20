@@ -19,6 +19,7 @@ export default gql`
       schema {
         name
       }
+      readme
       owners {
         id
         type

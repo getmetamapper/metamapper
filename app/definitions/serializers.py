@@ -8,6 +8,7 @@ import app.inspector.service as inspector
 import app.revisioner.tasks.core as coretasks
 
 import utils.fields as fields
+import utils.shortcuts as shortcuts
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.fields import ContentType
@@ -592,11 +593,14 @@ class TableSerializer(MetamapperSerializer, serializers.ModelSerializer):
 
     short_desc = serializers.CharField(allow_null=True, allow_blank=True, trim_whitespace=True)
 
+    readme = serializers.CharField(allow_null=True, allow_blank=True)
+
     class Meta:
         model = models.Table
         fields = (
             'tags',
-            'short_desc',)
+            'short_desc',
+            'readme',)
 
     def validate_tags(self, tags):
         """We should remove any duplicate tags that exist.
@@ -607,6 +611,11 @@ class TableSerializer(MetamapperSerializer, serializers.ModelSerializer):
         """We should convert null descriptions to blank.
         """
         return '' if short_desc is None else short_desc
+
+    def validate_readme(self, readme):
+        """We should convert null readme to blank.
+        """
+        return shortcuts.clean_html('' if readme is None else readme)
 
     def create(self, validated_data):
         raise NotImplementedError('TableSerializer cannot create Table instances.')
@@ -621,6 +630,7 @@ class TableSerializer(MetamapperSerializer, serializers.ModelSerializer):
         """
         instance.tags = validated_data.get('tags', instance.tags)
         instance.short_desc = validated_data.get('short_desc', instance.short_desc)
+        instance.readme = validated_data.get('readme', instance.readme)
         return instance
 
 
@@ -629,9 +639,11 @@ class ColumnSerializer(MetamapperSerializer, serializers.ModelSerializer):
     """
     short_desc = serializers.CharField(allow_null=True, allow_blank=True, trim_whitespace=True)
 
+    readme = serializers.CharField(allow_null=True, allow_blank=True)
+
     class Meta:
         model = models.Column
-        fields = ('short_desc',)
+        fields = ('short_desc', 'readme',)
 
     def create(self, validated_data):
         raise NotImplementedError('ColumnSerializer cannot create Table instances.')
@@ -640,6 +652,11 @@ class ColumnSerializer(MetamapperSerializer, serializers.ModelSerializer):
         """We should convert null descriptions to blank.
         """
         return '' if short_desc is None else short_desc
+
+    def validate_readme(self, readme):
+        """We should convert null readme to blank.
+        """
+        return shortcuts.clean_html('' if readme is None else readme)
 
     @audit.capture_activity(
         verb='updated',
@@ -650,6 +667,7 @@ class ColumnSerializer(MetamapperSerializer, serializers.ModelSerializer):
         """Update the provided Table instance.
         """
         instance.short_desc = validated_data.get('short_desc', instance.short_desc)
+        instance.readme = validated_data.get('readme', instance.readme)
         return instance
 
 

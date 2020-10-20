@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import bleach
+
 from itertools import chain
 from hashlib import md5
 
@@ -128,3 +130,26 @@ def from_global_id(global_id, id_only=False):
         return id_
 
     return type_, id_
+
+
+def clean_html(txt):
+    """Helper function to strip out unwanted HTML tags.
+    """
+    tags = [
+        'a',
+        'br',
+        'del',
+        'div',
+        'em',
+        'h1',
+        'h2',
+        'h3',
+        'li',
+        'ol',
+        'p',
+        'pre',
+        'span',
+        'strong',
+        'ul',
+    ]
+    return bleach.clean(txt, tags=tags, attributes={'span': ['class', 'data-id'], 'a': ['href']})

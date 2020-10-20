@@ -1,12 +1,11 @@
 import gql from "graphql-tag"
 
 export default gql`
-  mutation UpdateColumnMetadata(
+  mutation UpdateColumnReadme(
     $id: ID!
-    $shortDesc: String
     $readme: String
   ) {
-    updateColumnMetadata(input: { id: $id, shortDesc: $shortDesc, readme: $readme }) {
+    updateColumnMetadata(input: { id: $id, readme: $readme }) {
       column {
         id
         name

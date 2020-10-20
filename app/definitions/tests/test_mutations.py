@@ -1003,11 +1003,13 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
       $id: ID!,
       $tags: [String],
       $shortDesc: String,
+      $readme: String,
     ) {
       updateTableMetadata(input: {
         id: $id,
         tags: $tags,
         shortDesc: $shortDesc,
+        readme: $readme,
       }) {
         table {
           id
@@ -1162,15 +1164,18 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
     mutation UpdateColumnMetadata(
       $id: ID!,
       $shortDesc: String,
+      $readme: String,
     ) {
       updateColumnMetadata(input: {
         id: $id,
         shortDesc: $shortDesc,
+        readme: $readme,
       }) {
         column {
           id
           name
           shortDesc
+          readme
         }
         errors {
           resource
@@ -1187,6 +1192,7 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
         self.resource_kwargs = {
             'name': 'accounts',
             'short_desc': '',
+            'readme': 'Something random',
             'workspace': self.workspace,
         }
 
@@ -1199,7 +1205,8 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
         """
         variables = {
             'id': self.global_id,
-            'shortDesc': 'Hello, is it me you are looking for?'
+            'shortDesc': 'Hello, is it me you are looking for?',
+            'readme': 'Something else random',
         }
 
         response = self.execute(variables=variables)
@@ -1210,6 +1217,7 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
                 'id': self.global_id,
                 'name': 'accounts',
                 'shortDesc': variables['shortDesc'],
+                'readme': variables['readme'],
             },
             'errors': None,
         })

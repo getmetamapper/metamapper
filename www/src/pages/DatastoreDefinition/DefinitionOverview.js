@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
-import { Card, Col, Row } from "antd"
+import { Col, Row } from "antd"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"
@@ -9,8 +9,7 @@ import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableDefinitionWithOwners from "graphql/withGetTableDefinitionWithOwners"
 import withGetTableCustomProperties from "graphql/withGetTableCustomProperties"
 import UpdateCustomProperties from "app/Datastores/CustomProperties/UpdateCustomProperties"
-import CreateComment from "app/Comments/CreateComment"
-import CommentThread from "app/Comments/CommentThread"
+import TableReadme from "app/Datastores/DatastoreDefinition/TableReadme"
 import TableOwners from "app/Datastores/DatastoreDefinition/TableOwners"
 
 class DefinitionOverview extends Component {
@@ -46,19 +45,12 @@ class DefinitionOverview extends Component {
             />
           </Col>
           <Col span={14}>
-            <Card className="comments">
-              <CreateComment
-                parentId={null}
-                contentObject={tableDefinition}
-                loading={loading}
-                hasPermission={hasPermission}
-              />
-              <CommentThread
-                contentType="TABLE"
-                contentObject={tableDefinition}
-                loading={loading}
-              />
-            </Card>
+            <TableReadme
+              datastore={datastore}
+              tableDefinition={tableDefinition}
+              loading={loading}
+              hasPermission={hasPermission}
+            />
           </Col>
         </Row>
       </Layout>
