@@ -3,11 +3,11 @@ celery[redis]
 cryptography
 cx-oracle
 Cython==0.29.21
-django==3.0.8
+django==3.0.10
 django-cacheops
 django-cors-headers>=3.1.1
 django-dirtyfields
-django-filter
+django-filter==2.4.0
 django-graphql-jwt
 django-guardian
 django-ordered-model

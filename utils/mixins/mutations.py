@@ -180,8 +180,6 @@ class UpdateMutationMixin(GenericMutationMixin):
     def get_serializer_kwargs(cls, root, info, **data):
         instance = cls.get_instance(info, data)
 
-        print(data)
-
         if not instance:
             raise PermissionDenied()
 
