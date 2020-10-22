@@ -394,6 +394,14 @@ GOOGLE_ENABLED = GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 #
 CACHEOPS_REDIS = os.getenv('METAMAPPER_CACHEOPS_REDIS_URL')
 
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'django_db_cache',
+    }
+}
+
 # If the CACHEOPS_REDIS variable isn't set, we assume you don't want
 # the cache, so we disable it.
 if CACHEOPS_REDIS:

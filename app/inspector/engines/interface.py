@@ -59,6 +59,10 @@ class EngineInterface(object):
         return self._version
 
     @property
+    def last_updated_at(self):
+        return None
+
+    @property
     def cursor_kwargs(self):
         return {'cursorclass': self.dictcursor}
 
@@ -73,6 +77,11 @@ class EngineInterface(object):
     @classmethod
     def has_indexes(self):
         raise NotImplementedError()
+
+    def get_last_commit_time_for_table(self, *args, **kwargs):
+        """Retrieve the last time a table was modified.
+        """
+        return None
 
     def get_db_version(self):
         """Retrieve the version of the provided datastore.

@@ -12,15 +12,20 @@ class AwsAthenaInspector(interface.AmazonInspectorMixin):
 
     @classmethod
     def has_indexes(self):
-        """bool: BigQuery does not have indexes, so we default this to False.
+        """bool: Athena does not have indexes, so we default this to False.
         """
         return False
 
     @property
     def version(self):
-        """str: The version of the BigQuery module that we're working with.
+        """str: The version of the Athena module that we're working with.
         """
         return boto3.__version__
+
+    def get_last_commit_time_for_table(self, *args, **kwargs):
+        """Retrieve the last time a table was modified.
+        """
+        return None
 
     def verify_connection(self):
         """bool: Verify the ability to connect to the datastore.
@@ -54,7 +59,7 @@ class AwsAthenaInspector(interface.AmazonInspectorMixin):
         return self.client.list_data_catalogs()['DataCatalogsSummary']
 
     def _list_datasets(self, **extras):
-        """List the datasets that this BigQuery service account has access to.
+        """List the datasets that this Athena service account has access to.
         """
         paginator = self.client.get_paginator('list_databases')
 

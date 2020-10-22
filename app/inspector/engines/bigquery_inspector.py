@@ -50,11 +50,19 @@ class BigQueryInspector(object):
         """
         if not self._client:
             try:
-                credentials = service_account.Credentials.from_service_account_info(self.account_info, scopes=self.scopes)
+                credentials = service_account.Credentials.from_service_account_info(
+                    self.account_info,
+                    scopes=self.scopes,
+                )
             except ValueError:
                 raise GoogleAuthError('Provided service account credentials are invalid.')
             self._client = bigquery.Client(credentials=credentials, project=self.project)
         return self._client
+
+    def get_last_commit_time_for_table(self, *args, **kwargs):
+        """Retrieve the last time a table was modified.
+        """
+        return None
 
     def verify_connection(self):
         """bool: Verify the ability to connect to the datastore.

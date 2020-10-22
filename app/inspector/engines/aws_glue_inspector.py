@@ -12,15 +12,20 @@ class AwsGlueInspector(interface.AmazonInspectorMixin):
 
     @classmethod
     def has_indexes(self):
-        """bool: BigQuery does not have indexes, so we default this to False.
+        """bool: Glue does not have indexes, so we default this to False.
         """
         return False
 
     @property
     def version(self):
-        """str: The version of the BigQuery module that we're working with.
+        """str: The version of the Glue module that we're working with.
         """
         return boto3.__version__
+
+    def get_last_commit_time_for_table(self, *args, **kwargs):
+        """Retrieve the last time a table was modified.
+        """
+        return None
 
     def verify_connection(self):
         """bool: Verify the ability to connect to the datastore.
@@ -52,7 +57,7 @@ class AwsGlueInspector(interface.AmazonInspectorMixin):
         self.client.get_databases(CatalogId=self.database)
 
     def _list_datasets(self, **extras):
-        """List the datasets that this BigQuery service account has access to.
+        """List the datasets that this Glue service account has access to.
         """
         paginator = self.client.get_paginator('get_databases')
 

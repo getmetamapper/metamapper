@@ -91,7 +91,14 @@ class DefinitionLayout extends Component {
   }
 
   render() {
-    const { children, datastore, table, lastCrumb, loading } = this.props
+    const {
+      children,
+      datastore,
+      table,
+      lastCrumb,
+      loading,
+      lastCommitTimeForTable,
+    } = this.props
     return (
       <DatastoreLayout
         breadcrumbs={this.breadcrumbs}
@@ -104,9 +111,9 @@ class DefinitionLayout extends Component {
           <Col span={20}>
             <div>
               <TableDefinitionDetails
+                datastore={datastore}
                 table={table}
                 schema={table.schema}
-                latestRun={datastore.latestRun}
                 loading={loading}
               />
               <Menu

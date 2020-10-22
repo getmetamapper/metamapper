@@ -216,3 +216,8 @@ class AwsGlueInspectorTests(unittest.TestCase):
                 }
             ]
         })
+
+    def test_get_last_commit_time_for_table(self):
+        """It should implement Glue.get_last_commit_time_for_table
+        """
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)

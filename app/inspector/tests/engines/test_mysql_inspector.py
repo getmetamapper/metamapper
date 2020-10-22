@@ -121,6 +121,11 @@ class MySQLInspectorInterfaceTests(test.TestCase):
             'connect_timeout': 5,
         }
 
+    def test_get_last_commit_time_for_table(self):
+        """It should implement MySQL.get_last_commit_time_for_table
+        """
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)
+
 
 class MySQLInspectorIntegrationTestMixin(object):
     """Test cases that hit a live database spun up via Docker.
