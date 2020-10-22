@@ -167,6 +167,11 @@ class HiveMetastoreInspectorIntegrationTestMixin(object):
 
         self.assertEqual(column.db_comment, 'The country where they were born')
 
+    def test_get_last_commit_time_for_table(self):
+        """It should implement Hive.get_last_commit_time_for_table
+        """
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)
+
 
 @test.tag('hive', 'inspector')
 class HiveMySQLIntegrationTests(HiveMetastoreInspectorIntegrationTestMixin, test.TestCase):

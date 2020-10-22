@@ -129,6 +129,11 @@ class OracleInspectorTests(test.TestCase):
         """
         self.assertEqual(self.engine.version, '10.1.2')
 
+    def test_get_last_commit_time_for_table(self):
+        """It should implement Oracle.get_last_commit_time_for_table
+        """
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)
+
 
 class OracleInspectorIntegrationTestMixin(object):
     """Test cases that hit a live database spun up via Docker.

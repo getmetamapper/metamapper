@@ -5,10 +5,12 @@ import app.definitions.models as models
 import app.definitions.schema as schema
 import app.definitions.filters as filters
 import app.definitions.permissions as permissions
+import app.inspector.service as inspector
 
 import utils.errors as errors
 import utils.shortcuts as shortcuts
 
+from django.core.cache import cache
 from graphene.types.generic import GenericScalar
 from guardian.shortcuts import get_users_with_perms, get_groups_with_perms
 
@@ -77,6 +79,13 @@ class Query(graphene.ObjectType):
         of_type=graphene.String,
         datastore_id=graphene.ID(required=True),
         schema_name=graphene.String(required=True),
+    )
+
+    table_last_commit_timestamp = graphene.Field(
+        type=graphene.String,
+        datastore_id=graphene.ID(required=True),
+        schema_name=graphene.String(required=True),
+        table_name=graphene.String(required=True),
     )
 
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
@@ -258,3 +267,34 @@ class Query(graphene.ObjectType):
             raise errors.PermissionDenied()
 
         return sorted(schema.tables.values_list('name', flat=True))
+
+    @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
+    def resolve_table_last_commit_timestamp(self, info, datastore_id, schema_name, table_name, **kwargs):
+        """Retrieve the last time a table was modified.
+        """
+        get_kwargs = {
+            'name__iexact': table_name,
+            'schema__datastore_id': shortcuts.from_global_id(datastore_id, True),
+            'schema__name__iexact': schema_name,
+            'workspace': info.context.workspace,
+        }
+
+        table = shortcuts.get_object_or_404(models.Table, **get_kwargs)
+
+        if not permissions.request_can_view_datastore(info, table.datastore):
+            raise errors.PermissionDenied()
+
+        ca_id = "table.last_commit.%s" % table.id
+        value = cache.get(ca_id)
+
+        if value is not None:
+            return value
+
+        value = (
+            inspector.get_engine(table.datastore)
+                     .get_last_commit_time_for_table(schema_name, table_name)
+        )
+
+        cache.set(ca_id, value, (15 * 60))
+
+        return value

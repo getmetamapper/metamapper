@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import unittest.mock as mock
 import app.definitions.models as models
 
 import testutils.cases as cases
@@ -1169,3 +1170,63 @@ class TestGetTableNamesBySchema(cases.GraphQLTestCase):
         """
         results = self.execute(self.statement, variables=self.variables)
         self.assertPermissionDenied(results)
+
+
+class TestGetTableLastCommitTimestamp(cases.GraphQLTestCase):
+    """Test cases for retrieving the last time a table was modified.
+    """
+    factory = factories.TableFactory
+    operation = 'tableLastCommitTimestamp'
+    statement = '''
+    query GetTableLastCommitTimestamp(
+      $datastoreId: ID!
+      $schemaName: String!
+      $tableName: String!
+    ) {
+      tableLastCommitTimestamp(
+        datastoreId: $datastoreId
+        schemaName: $schemaName
+        tableName: $tableName
+      )
+    }
+    '''
+
+    def _setup_and_get_variables(self, **overrides):
+        """Setup test and return variables for query.
+        """
+        datastore = factories.DatastoreFactory(workspace=self.workspace, **overrides)
+        schema = factories.SchemaFactory(workspace=self.workspace, datastore=datastore)
+
+        table = self.factory(workspace=self.workspace, schema=schema)
+
+        variables = {
+            'datastoreId': helpers.to_global_id('DatastoreType', datastore.pk),
+            'schemaName': schema.name,
+            'tableName': table.name,
+        }
+
+        return variables
+
+    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
+    @mock.patch('app.inspector.service.get_engine')
+    def test_query_when_authorized(self, mock_get_engine):
+        mocked = mock.MagicMock()
+        mocked.get_last_commit_time_for_table.return_value = '2020-01-01'
+        mock_get_engine.return_value = mocked
+
+        variables = self._setup_and_get_variables()
+
+        results = self.execute(self.statement, variables=variables)
+        results = results['data'][self.operation]
+
+        self.assertEqual(
+            results,
+            mocked.get_last_commit_time_for_table.return_value,
+        )
+
+    @decorators.as_someone(['OUTSIDER'])
+    def test_not_authorized(self):
+        """Outside users should not be able to access this resource.
+        """
+        variables = self._setup_and_get_variables()
+        self.assertPermissionDenied(self.execute(self.statement, variables=variables))

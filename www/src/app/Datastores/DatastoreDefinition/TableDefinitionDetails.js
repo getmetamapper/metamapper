@@ -1,20 +1,29 @@
 import React from "react"
 import { Card, Col, Row } from "antd"
+import { withRouter } from "react-router-dom"
 import TableDescription from "./TableDescription"
-import TablePropertiesPillGroup from "./TablePropertiesPillGroup"
+import TableLastCommitTimestamp from "./TableLastCommitTimestamp"
 import TableDefinitionTags from "./TableDefinitionTags"
+import withGetTableLastCommitTimestamp from "graphql/withGetTableLastCommitTimestamp"
 
-const TableDefinitionDetails = ({ table, schema, latestRun }) => (
+const TableDefinitionDetails = ({
+  table,
+  schema,
+  lastCommitTimestamp,
+  loading,
+}) => (
   <Card className="table-definition-details">
     <Row>
       <Col span={18}>
         <h3>
-          <small>{schema.name}.</small>
-          {table.name}
+          <small>{schema.name}.</small><span>{table.name}</span>
         </h3>
       </Col>
       <Col span={6} className="text-right">
-        <TablePropertiesPillGroup properties={table.properties} />
+        <TableLastCommitTimestamp
+          loading={loading}
+          timestamp={lastCommitTimestamp}
+        />
       </Col>
     </Row>
     <p className="mb-0">
@@ -26,4 +35,4 @@ const TableDefinitionDetails = ({ table, schema, latestRun }) => (
   </Card>
 )
 
-export default TableDefinitionDetails
+export default withRouter(withGetTableLastCommitTimestamp(TableDefinitionDetails))

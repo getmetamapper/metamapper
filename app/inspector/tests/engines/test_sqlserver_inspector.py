@@ -211,6 +211,11 @@ class SQLServerInspectorIntegrationTestMixin(object):
 
         self.assertEqual(column.db_comment, 'The employee identification number')
 
+    def test_get_last_commit_time_for_table(self):
+        """It should implement MSSQL.get_last_commit_time_for_table
+        """
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)
+
 
 @test.tag('sqlserver', 'inspector')
 class SQLServerTwentySeventeenIntegrationTests(SQLServerInspectorIntegrationTestMixin, test.TestCase):

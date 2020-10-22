@@ -88,6 +88,20 @@ class SnowflakeInspector(interface.EngineInterface):
             return result['VERSION']
         return None
 
+    def get_last_commit_time_for_table(self, table_schema, table_name):
+        """Retrieve the last time a table was modified.
+        """
+        try:
+            result = self.get_first(
+                sql="SELECT TO_TIMESTAMP_NTZ(SYSTEM$LAST_CHANGE_COMMIT_TIME(%s) / 1000) as TS",
+                parameters=('.'.join([table_schema, table_name]),)
+            )
+        except self.connector.DatabaseError:
+            return None
+        if len(result):
+            return result['TS']
+        return None
+
     def get_tables_and_views_sql(self, excluded_schemas):
         """Generate SQL statement for getting tables and views.
         """

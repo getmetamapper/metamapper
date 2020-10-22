@@ -193,6 +193,11 @@ class RedshiftInspectorIntegrationTestMixin(object):
         self.assertEqual(run.errors.count(), 0)
         self.assertEqual(datastore.schemas.count(), self.schema_count)
 
+    def test_get_last_commit_time_for_table(self):
+        """It should implement Redshift.get_last_commit_time_for_table
+        """
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)
+
 
 @test.tag('redshift', 'inspector')
 class RedshiftIntegrationTests(RedshiftInspectorIntegrationTestMixin, test.TestCase):

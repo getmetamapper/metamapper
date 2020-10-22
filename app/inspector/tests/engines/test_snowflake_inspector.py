@@ -2,6 +2,8 @@
 import unittest
 import unittest.mock as mock
 
+import snowflake.connector
+
 import app.inspector.engines.snowflake_inspector as engine
 
 
@@ -101,3 +103,17 @@ class SnowflakeInspectorTests(unittest.TestCase):
         """It should implement Snowflake.version
         """
         self.assertEqual(self.engine.version, '4.8.1')
+
+    @mock.patch.object(engine.SnowflakeInspector, 'get_first', return_value={'TS': '2020-01-01 00:00:00'})
+    def test_get_last_commit_time_for_table(self, get_first):
+        """It should implement Snowflake.get_last_commit_time_for_table
+        """
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), '2020-01-01 00:00:00')
+
+    @mock.patch.object(engine.SnowflakeInspector, 'get_first')
+    def test_get_last_commit_time_for_table_on_error(self, get_first):
+        """It should implement Snowflake.get_last_commit_time_for_table
+        """
+        get_first.side_effect = snowflake.connector.DatabaseError()
+
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)
