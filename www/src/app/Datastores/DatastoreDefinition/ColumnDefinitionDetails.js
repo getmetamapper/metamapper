@@ -65,8 +65,12 @@ class ColumnDefinitionDetails extends Component {
           selectedKeys={[current]}
           mode="horizontal"
         >
-          <Menu.Item key="readme">README</Menu.Item>
-          <Menu.Item key="discussion">Discussion</Menu.Item>
+          <Menu.Item key="readme" data-test="ColumnDefinitionDetails.Navigation(README)">
+            README
+          </Menu.Item>
+          <Menu.Item key="discussion" data-test="ColumnDefinitionDetails.Navigation(Discussion)">
+            Discussion
+          </Menu.Item>
         </Menu>
         {visible && current === "readme" && (
           <div className="column-definition-readme" data-test="ColumnReadme">

@@ -36,17 +36,19 @@ describe("table_comments.spec.js", () => {
   const databaseUri = `/${workspace.slug}/datastores/${datastore.slug}`
   const overviewUri = `${databaseUri}/definition/${table.schema}/${table.name}/discussions`
 
-  const commentOne = "Here is some information about this table."
-  const commentTwo = "Here is an unrelated comment."
+  let commentOne = "Here is some information about this table."
+  let commentTwo = "Here is an unrelated comment."
 
   describe("as member", () => {
-    before(() => {
-      cy.login(member.email, member.password, workspace.id).then(() => cy.visit(overviewUri))
+    beforeEach(() => {
+      cy.login(member.email, member.password, workspace.id)
+        .then(() => cy.visit(overviewUri))
+        .then(() => cy.wait(1500))
     })
 
     it("can create comment", () => {
       [commentOne, commentTwo].forEach(commentText => {
-        cy.getByTestId("CreateComment").find("trix-editor").type(commentText)
+        cy.getByTestId("CreateComment").find(".ql-editor").type(commentText)
         cy.getByTestId("CreateComment.Submit").click()
 
         cy.contains(".ant-message-success", "Comment has been added.").should(
@@ -54,7 +56,6 @@ describe("table_comments.spec.js", () => {
         )
 
         cy.contains(commentText).should("be.visible")
-
         cy.wait(1000)
       })
     })
@@ -64,7 +65,7 @@ describe("table_comments.spec.js", () => {
         cy.getByTestId("VoteForComment.UP").contains("0")
         cy.getByTestId("VoteForComment.DOWN").contains("0")
 
-        cy.getByTestId("VoteForComment.UP.Submit").click().then(() => cy.wait(500))
+        cy.getByTestId("VoteForComment.UP.Submit").click().then(() => cy.wait(1500))
 
         cy.getByTestId("VoteForComment.UP").contains("1")
         cy.getByTestId("VoteForComment.DOWN").contains("0")
@@ -81,7 +82,7 @@ describe("table_comments.spec.js", () => {
         cy.getByTestId("VoteForComment.UP").contains("1")
         cy.getByTestId("VoteForComment.DOWN").contains("0")
 
-        cy.getByTestId("VoteForComment.DOWN.Submit").click().then(() => cy.wait(500))
+        cy.getByTestId("VoteForComment.DOWN.Submit").click().then(() => cy.wait(1500))
 
         cy.getByTestId("VoteForComment.DOWN").contains("1")
         cy.getByTestId("VoteForComment.UP").contains("0")
@@ -94,7 +95,7 @@ describe("table_comments.spec.js", () => {
       getCommentByText(commentOne).within(() => {
         cy.contains("reply").click()
 
-        cy.getByTestId("CreateComment").find("trix-editor").type(commentText)
+        cy.getByTestId("CreateComment").find(".ql-editor").type(commentText)
         cy.getByTestId("CreateComment.Submit").click()
 
         cy.contains(commentText)
@@ -111,7 +112,7 @@ describe("table_comments.spec.js", () => {
       getCommentByText(commentTwo).within(() => {
         cy.contains("edit").click()
 
-        cy.getByTestId("UpdateComment").find("trix-editor").clear().type(commentText)
+        cy.getByTestId("UpdateComment").find(".ql-editor").clear().type(commentText)
         cy.getByTestId("UpdateComment.Submit").click()
         cy.getByTestId("UpdateComment.Submit").should("be.disabled")
       })
@@ -131,14 +132,18 @@ describe("table_comments.spec.js", () => {
 
       cy.get(".ant-popover-content").should("be.visible").within(() => cy.contains("Yes").click())
 
+      cy.wait(1000).then(() => cy.reload())
+
       getCommentByText(commentOne).parent().should("have.class", "pinned")
-      getCommentByText(commentOne).parent().contains("Pinned by David Wallace")
+      getCommentByText(commentOne).parent().contains("Pinned by")
     })
   })
 
   describe("as another team member", () => {
     beforeEach(() => {
-      cy.login(owner.email, owner.password, workspace.id).then(() => cy.visit(overviewUri))
+      cy.login(owner.email, owner.password, workspace.id)
+        .then(() => cy.visit(overviewUri))
+        .then(() => cy.wait(1500))
     })
 
     it("can reply to a comment", () => {
@@ -147,7 +152,7 @@ describe("table_comments.spec.js", () => {
       getCommentByText(commentOne).within(() => {
         cy.contains("reply").click()
 
-        cy.getByTestId("CreateComment").find("trix-editor").type(commentText)
+        cy.getByTestId("CreateComment").find(".ql-editor").type(commentText)
         cy.getByTestId("CreateComment.Submit").click()
 
         cy.contains(commentText)
@@ -172,7 +177,7 @@ describe("table_comments.spec.js", () => {
     it("can vote for a comment", () => {
       getCommentByText(commentTwo).within(() => {
         cy.getByTestId("VoteForComment.DOWN").contains("1")
-        cy.getByTestId("VoteForComment.DOWN.Submit").click().then(() => cy.wait(500))
+        cy.getByTestId("VoteForComment.DOWN.Submit").click().then(() => cy.wait(1500))
         cy.getByTestId("VoteForComment.DOWN").contains("2")
       })
     })
@@ -187,7 +192,11 @@ describe("table_comments.spec.js", () => {
   })
 
   describe("as readonly", () => {
-    beforeEach(() => cy.quickLogin("readonly").then(() => cy.visit(overviewUri)))
+    beforeEach(() => {
+      cy.login(readonly.email, readonly.password, workspace.id)
+        .then(() => cy.visit(overviewUri))
+        .then(() => cy.wait(1500))
+    })
 
     it("cannot create comment", () => {
       cy.getByTestId("CreateComment.Submit").should("be.disabled")
@@ -208,7 +217,9 @@ describe("table_comments.spec.js", () => {
 
   describe("final thoughts", () => {
     beforeEach(() => {
-      cy.login(member.email, member.password, workspace.id).then(() => cy.visit(overviewUri))
+      cy.login(member.email, member.password, workspace.id)
+        .then(() => cy.visit(overviewUri))
+        .then(() => cy.wait(1500))
     })
 
     it("can delete childless comment", () => {

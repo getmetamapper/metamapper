@@ -103,6 +103,11 @@ class SQLServerInspectorTests(test.TestCase):
         """
         self.assertEqual(self.engine.version, '10.1.2')
 
+    def test_get_last_commit_time_for_table(self):
+        """It should implement MSSQL.get_last_commit_time_for_table
+        """
+        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)
+
 
 class SQLServerInspectorIntegrationTestMixin(object):
     """Test cases that hit a live database spun up via Docker.
@@ -210,11 +215,6 @@ class SQLServerInspectorIntegrationTestMixin(object):
         column = models.Column.objects.get(name='emp_no', table__name='employees')
 
         self.assertEqual(column.db_comment, 'The employee identification number')
-
-    def test_get_last_commit_time_for_table(self):
-        """It should implement MSSQL.get_last_commit_time_for_table
-        """
-        self.assertEqual(self.engine.get_last_commit_time_for_table('public', 'accounts'), None)
 
 
 @test.tag('sqlserver', 'inspector')
