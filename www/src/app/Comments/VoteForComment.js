@@ -63,7 +63,7 @@ class VoteForComment extends Component {
 
 const WrappedVoteForComment = compose(
   graphql(VoteForCommentMutation),
-  withGraphQLMutation
+  withGraphQLMutation,
 )(VoteForComment)
 
 export const UpvoteComment = ({ commentId, count, onChange }) => (
