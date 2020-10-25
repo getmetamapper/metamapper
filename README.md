@@ -29,8 +29,6 @@ Here are a few features of Metamapper:
 - *Custom Properties:* Easily attach custom metadata to databases and tables, such as data steward or ETL process references.
 - *Search:* Everything is indexed and [searchable](https://www.elastic.co/). Self-service data analytics, here we come!
 
-Check out the [Introducing Metamapper](https://www.metamapper.io/blog/2020/07/12/introducting-metamapper) blog post.
-
 ## Quickstart
 
 You can try out a default version of Metamapper with sample data using [Docker](https://docs.docker.com/get-docker/) and [Docker-Compose](https://docs.docker.com/compose/install/).
