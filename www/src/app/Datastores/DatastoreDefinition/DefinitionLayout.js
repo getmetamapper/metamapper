@@ -97,7 +97,6 @@ class DefinitionLayout extends Component {
       table,
       lastCrumb,
       loading,
-      lastCommitTimeForTable,
     } = this.props
     return (
       <DatastoreLayout

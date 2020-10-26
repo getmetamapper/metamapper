@@ -992,6 +992,7 @@ class DeleteDatastoreTests(cases.GraphQLTestCase):
         self.assertPermissionDenied(response)
 
 
+@mock.patch('app.omnisearch.tasks.update_single_es_object.delay')
 class UpdateTableMetadataTests(cases.GraphQLTestCase):
     """Tests for updating table metadata.
     """
@@ -1075,13 +1076,14 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
         )
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_valid(self):
+    def test_valid(self, mock_es_update):
         """It should update the table.
         """
         self.execute_success_test_case()
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER'])
-    def test_valid_with_object_permission(self):
+    def test_valid_with_object_permission(self, mock_es_update):
         """It should update the table when the user has the proper permissions.
         """
         self.datastore.object_permissions_enabled = True
@@ -1090,9 +1092,10 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
         self.datastore.assign_perm(self.user, 'definitions.change_datastore_metadata')
 
         self.execute_success_test_case()
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_blank(self):
+    def test_blank(self, mock_es_update):
         """It should update the table.
         """
         variables = {
@@ -1119,9 +1122,10 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
             tags=variables['tags'],
             short_desc=variables['shortDesc'],
         )
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER'])
-    def test_invalid_without_object_permission(self):
+    def test_invalid_without_object_permission(self, mock_es_update):
         """It should return a Permission Denied error.
         """
         self.datastore.object_permissions_enabled = True
@@ -1139,9 +1143,10 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
 
         self.assertPermissionDenied(response)
         self.assertInstanceNotUpdated(self.resource, short_desc=variables['shortDesc'])
+        self.assertFalse(mock_es_update.called)
 
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
-    def test_unauthorized(self):
+    def test_unauthorized(self, mock_es_update):
         """It should return a "Permission Denied" error.
         """
         variables = {
@@ -1152,8 +1157,10 @@ class UpdateTableMetadataTests(cases.GraphQLTestCase):
 
         self.assertPermissionDenied(self.execute(variables=variables))
         self.assertInstanceNotUpdated(self.resource, short_desc=variables['shortDesc'])
+        self.assertFalse(mock_es_update.called)
 
 
+@mock.patch('app.omnisearch.tasks.update_single_es_object.delay')
 class UpdateColumnMetadata(cases.GraphQLTestCase):
     """Tests for updating table metadata.
     """
@@ -1234,13 +1241,14 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
         )
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_valid(self):
+    def test_valid(self, mock_es_update):
         """It should update the column.
         """
         self.execute_success_test_case()
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER'])
-    def test_valid_with_object_permission(self):
+    def test_valid_with_object_permission(self, mock_es_update):
         """It should update the column when the user has the proper permissions.
         """
         self.datastore.datobject_permissions_enabled = True
@@ -1249,9 +1257,10 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
         self.datastore.assign_perm(self.user, 'definitions.change_datastore_metadata')
 
         self.execute_success_test_case()
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER'])
-    def test_invalid_without_object_permission(self):
+    def test_invalid_without_object_permission(self, mock_es_update):
         """It should return a Permission Denied error.
         """
         self.datastore.object_permissions_enabled = True
@@ -1266,9 +1275,10 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
 
         self.assertPermissionDenied(response)
         self.assertInstanceNotUpdated(self.resource, short_desc=variables['shortDesc'])
+        self.assertFalse(mock_es_update.called)
 
     @decorators.as_someone(['READONLY', 'OUTSIDER'])
-    def test_unauthorized(self):
+    def test_unauthorized(self, mock_es_update):
         """It should return a "Permission Denied" error.
         """
         variables = {
@@ -1278,6 +1288,7 @@ class UpdateColumnMetadata(cases.GraphQLTestCase):
 
         self.assertPermissionDenied(self.execute(variables=variables))
         self.assertInstanceNotUpdated(self.resource, short_desc=variables['shortDesc'])
+        self.assertFalse(mock_es_update.called)
 
 
 class TestJdbcConnectionTests(cases.GraphQLTestCase):
