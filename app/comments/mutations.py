@@ -7,9 +7,11 @@ import app.definitions.permissions as definition_permissions
 
 import app.comments.schema as schema
 import app.comments.serializers as serializers
+import app.omnisearch.tasks as omnisearch
 
-import utils.mixins.mutations as mixins
 import utils.errors as errors
+import utils.mixins.mutations as mixins
+import utils.shortcuts as shortcuts
 
 
 class CreateComment(mixins.CreateMutationMixin, relay.ClientIDMutation):
@@ -58,6 +60,20 @@ class CreateComment(mixins.CreateMutationMixin, relay.ClientIDMutation):
             },
         }
 
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """We should re-index the object in Elasticsearch immediately.
+        """
+        return [
+            {
+                "function": omnisearch.update_single_es_object.delay,
+                "arguments": {
+                    "index_name": "comment",
+                    "instance_id": instance.id,
+                },
+            }
+        ]
+
 
 class UpdateComment(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update an existing comment that you created.
@@ -85,6 +101,20 @@ class UpdateComment(mixins.UpdateMutationMixin, relay.ClientIDMutation):
             raise errors.PermissionDenied()
         return instance
 
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """We should re-index the object in Elasticsearch immediately.
+        """
+        return [
+            {
+                "function": omnisearch.update_single_es_object.delay,
+                "arguments": {
+                    "index_name": "comment",
+                    "instance_id": instance.id,
+                },
+            }
+        ]
+
 
 class DeleteComment(mixins.DeleteMutationMixin, relay.ClientIDMutation):
     """Delete an existing comment that you created.
@@ -108,6 +138,20 @@ class DeleteComment(mixins.DeleteMutationMixin, relay.ClientIDMutation):
         if not instance or instance.author_id != info.context.user.id:
             raise errors.PermissionDenied()
         return instance
+
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """We should re-index the object in Elasticsearch immediately.
+        """
+        return [
+            {
+                "function": omnisearch.remove_single_es_object.delay,
+                "arguments": {
+                    "index_name": "comment",
+                    "instance_id": instance._previous_id,
+                },
+            }
+        ]
 
 
 class TogglePinnedComment(mixins.UpdateMutationMixin, relay.ClientIDMutation):

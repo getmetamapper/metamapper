@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-import app.audit.models as audit
+import unittest.mock as mock
 
 import app.comments.models as models
 import app.comments.serializers as serializers
+import app.audit.models as audit
 
 import testutils.cases as cases
 import testutils.decorators as decorators
@@ -10,6 +11,7 @@ import testutils.factories as factories
 import testutils.helpers as helpers
 
 
+@mock.patch('app.omnisearch.tasks.update_single_es_object.delay')
 class CreateCommentTests(cases.GraphQLTestCase):
     """Tests for creating a comment.
     """
@@ -82,22 +84,24 @@ class CreateCommentTests(cases.GraphQLTestCase):
         )
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_valid(self):
+    def test_valid(self, mock_es_update):
         """It should create the comment successfully.
         """
         self.execute_success_test_case()
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['OWNER'])
-    def test_valid_with_object_permission_as_owner(self):
+    def test_valid_with_object_permission_as_owner(self, mock_es_update):
         """It should create the comment successfully.
         """
         self.resource.datastore.object_permissions_enabled = True
         self.resource.datastore.save()
 
         self.execute_success_test_case()
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER'])
-    def test_valid_with_object_permission_as_member(self):
+    def test_valid_with_object_permission_as_member(self, mock_es_update):
         """It should create the comment successfully.
         """
         self.resource.datastore.object_permissions_enabled = True
@@ -113,9 +117,10 @@ class CreateCommentTests(cases.GraphQLTestCase):
             self.resource.datastore.assign_perm(self.user, permission)
 
         self.execute_success_test_case()
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER'])
-    def test_invalid_without_object_permission(self):
+    def test_invalid_without_object_permission(self, mock_es_update):
         """It should return a "Permission Denied" error.
         """
         self.resource.datastore.object_permissions_enabled = True
@@ -133,9 +138,10 @@ class CreateCommentTests(cases.GraphQLTestCase):
         response = self.execute(variables=variables)
 
         self.assertPermissionDenied(response)
+        self.assertFalse(mock_es_update.called)
 
     @decorators.as_someone(['READONLY'])
-    def test_invalid_with_object_permission_as_readonly(self):
+    def test_invalid_with_object_permission_as_readonly(self, mock_es_update):
         """It should return a "Permission Denied" error.
         """
         self.resource.datastore.object_permissions_enabled = True
@@ -153,9 +159,10 @@ class CreateCommentTests(cases.GraphQLTestCase):
         response = self.execute(variables=variables)
 
         self.assertPermissionDenied(response)
+        self.assertFalse(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_when_invalid_html(self):
+    def test_when_invalid_html(self, mock_es_update):
         """It should NOT create the comment.
         """
         variables = self._get_attributes(html='')
@@ -173,9 +180,10 @@ class CreateCommentTests(cases.GraphQLTestCase):
                 },
             ],
         })
+        self.assertFalse(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_when_valid_parent(self):
+    def test_when_valid_parent(self, mock_es_update):
         """It should create the comment with a parent.
         """
         parent = factories.CommentFactory(content_object=self.resource)
@@ -201,8 +209,10 @@ class CreateCommentTests(cases.GraphQLTestCase):
             verb='commented on',
             **serializers.get_audit_kwargs(models.Comment.objects.last()),
         )
+        self.assertTrue(mock_es_update.called)
 
 
+@mock.patch('app.omnisearch.tasks.update_single_es_object.delay')
 class UpdateCommentTests(cases.GraphQLTestCase):
     """Tests for updating a comment.
     """
@@ -237,7 +247,7 @@ class UpdateCommentTests(cases.GraphQLTestCase):
         self.objectid = helpers.to_global_id('ColumnType', self.resource.pk)
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_when_valid_html(self):
+    def test_when_valid_html(self, mock_es_update):
         """It should update the HTML of a comment.
         """
         resource = factories.CommentFactory(content_object=self.resource, author=self.user)
@@ -260,18 +270,20 @@ class UpdateCommentTests(cases.GraphQLTestCase):
             verb='updated comment on',
             **serializers.get_audit_kwargs(resource),
         )
+        self.assertTrue(mock_es_update.called)
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_when_not_exists(self):
+    def test_when_not_exists(self, mock_es_update):
         """It should return a 404 error.
         """
         globalid = helpers.to_global_id('CommentType', '1234')
         response = self.execute(variables={'id': globalid, 'html': 'Test'})
 
         self.assertPermissionDenied(response)
+        self.assertFalse(mock_es_update.called)
 
     @decorators.as_someone(['OWNER', 'OUTSIDER', 'ANONYMOUS'])
-    def test_update_other_user_comment(self):
+    def test_update_other_user_comment(self, mock_es_update):
         """It should not update the comment of another user.
         """
         resource = factories.CommentFactory(content_object=self.resource, author=self.users['MEMBER'])
@@ -286,8 +298,10 @@ class UpdateCommentTests(cases.GraphQLTestCase):
             verb='updated comment on',
             **serializers.get_audit_kwargs(resource),
         )
+        self.assertFalse(mock_es_update.called)
 
 
+@mock.patch('app.omnisearch.tasks.remove_single_es_object.delay')
 class DeleteCommentTests(cases.GraphQLTestCase):
     """Tests for deleting a comment.
     """
@@ -311,7 +325,7 @@ class DeleteCommentTests(cases.GraphQLTestCase):
     }
     '''
 
-    def test_on_own_comment(self):
+    def test_on_own_comment(self, mock_es_remove):
         """It should permanently delete the comment.
         """
         resource = self.factory(workspace_id=self.workspace.pk, author=self.user)
@@ -321,9 +335,10 @@ class DeleteCommentTests(cases.GraphQLTestCase):
 
         self.assertOk(response)
         self.assertInstanceDeleted(models.Comment, pk=resource.pk)
+        self.assertTrue(mock_es_remove.called)
 
     @decorators.as_someone(['MEMBER', 'ANONYMOUS'])
-    def test_update_other_user_comment(self):
+    def test_update_other_user_comment(self, mock_es_remove):
         """It should not delete the comment.
         """
         resource = self.factory(workspace_id=self.workspace.pk)
@@ -331,15 +346,17 @@ class DeleteCommentTests(cases.GraphQLTestCase):
         response = self.execute(variables={'id': globalid})
 
         self.assertPermissionDenied(response)
+        self.assertFalse(mock_es_remove.called)
 
     @decorators.as_someone(['MEMBER', 'OWNER'])
-    def test_when_not_exists(self):
+    def test_when_not_exists(self, mock_es_remove):
         """It should return a 404 error.
         """
         globalid = helpers.to_global_id('CommentType', '1234')
         response = self.execute(variables={'id': globalid, 'html': 'Test'})
 
         self.assertPermissionDenied(response)
+        self.assertFalse(mock_es_remove.called)
 
 
 class TogglePinnedCommentTests(cases.GraphQLTestCase):

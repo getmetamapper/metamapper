@@ -9,10 +9,12 @@ import app.definitions.tasks as tasks
 import app.definitions.schema as schema
 import app.definitions.serializers as serializers
 import app.audit.tasks as audit
+import app.omnisearch.tasks as omnisearch
 
 import utils.graphql.scalars as utils_scalars
 import utils.errors as errors
 import utils.mixins.mutations as mixins
+import utils.shortcuts as shortcuts
 
 
 class CreateDatastore(mixins.CreateMutationMixin, relay.ClientIDMutation):
@@ -299,6 +301,20 @@ class UpdateTableMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
 
     table = graphene.Field(schema.TableType)
 
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """We should re-index the object in Elasticsearch immediately.
+        """
+        return [
+            {
+                "function": omnisearch.update_single_es_object.delay,
+                "arguments": {
+                    "index_name": "table",
+                    "instance_id": instance.id,
+                },
+            }
+        ]
+
 
 class UpdateColumnMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
     """Update editable fields on a column.
@@ -319,6 +335,20 @@ class UpdateColumnMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation):
         serializer_class = serializers.ColumnSerializer
 
     column = graphene.Field(schema.ColumnType)
+
+    @classmethod
+    def tasks_on_success(cls, instance, info):
+        """We should re-index the object in Elasticsearch immediately.
+        """
+        return [
+            {
+                "function": omnisearch.update_single_es_object.delay,
+                "arguments": {
+                    "index_name": "column",
+                    "instance_id": instance.id,
+                },
+            }
+        ]
 
 
 class CreateAssetOwner(mixins.CreateMutationMixin, relay.ClientIDMutation):

@@ -219,6 +219,7 @@ class DeleteMutationMixin(GenericMutationMixin):
     @classmethod
     def perform_mutate(cls, instance, info, **data):
         errors = None
+        instance_id = instance.pk
         try:
             cls.perform_delete(instance, info, **data)
         except ProtectedError:
@@ -229,6 +230,7 @@ class DeleteMutationMixin(GenericMutationMixin):
             errors = [
                 ErrorType(code='invalid', field='none', resource=cls.resource_name)
             ]
+        instance._previous_id = instance_id
         return cls.prepare_response(instance, errors)
 
     @classmethod
