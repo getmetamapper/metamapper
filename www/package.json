@@ -11,7 +11,7 @@
     "apollo-link-error": "^1.1.12",
     "apollo-link-retry": "^2.2.16",
     "apollo-upload-client": "^11.0.0",
-    "codemirror": "^5.58.1",
+    "codemirror": "^5.58.2",
     "craco-antd": "^1.18.1",
     "elliptic": "^6.5.3",
     "graphql": "^14.5.8",
