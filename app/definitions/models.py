@@ -379,12 +379,13 @@ class Table(AuditableModel,
     def to_doc(self):
         return {
             'pk': str(self.id),
-            'workspace_id': self.workspace.id,
-            'datastore_id': self.schema.datastore.id,
-            'datastore': self.schema.datastore.name,
+            'workspace_id': self.workspace_id,
+            'datastore_id': self.schema.datastore_id,
+            'datastore_engine': self.schema.datastore.engine,
             'schema': self.schema.name,
             'name': self.name,
             'description': self.short_desc,
+            'tags': self.tags,
         }
 
     @property
@@ -544,13 +545,14 @@ class Column(AuditableModel,
     def to_doc(self):
         return {
             'pk': str(self.id),
-            'workspace_id': self.table.workspace.id,
-            'datastore_id': self.table.schema.datastore.id,
-            'datastore': self.table.schema.datastore.name,
+            'workspace_id': self.table.workspace_id,
+            'datastore_id': self.table.schema.datastore_id,
+            'datastore_engine': self.table.schema.datastore.engine,
             'schema': self.table.schema.name,
             'table': self.table.name,
             'name': self.name,
             'description': self.short_desc,
+            'tags': self.table.tags,
         }
 
     @property

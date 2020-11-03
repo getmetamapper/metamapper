@@ -117,8 +117,9 @@ class Comment(StringPrimaryKeyModel,
     def to_doc(self):
         return {
             'pk': str(self.id),
-            'workspace_id': self.workspace.id,
-            'datastore_id': self.content_object.datastore_id,
+            'workspace_id': self.workspace_id,
+            'datastore_id': self.content_object.datastore.id,
+            'datastore_engine': self.content_object.datastore.engine,
             'text': self.text,
         }
 

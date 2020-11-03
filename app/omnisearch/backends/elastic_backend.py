@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import collections
+import time
+
 from django.conf import settings
 
 import app.omnisearch.backends.base_search_backend as base
@@ -7,7 +9,7 @@ import app.omnisearch.backends.base_search_backend as base
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import parallel_bulk
 
-from elasticsearch_dsl import Search
+from elasticsearch_dsl import Search, A
 
 import app.definitions.permissions as definition_permissions
 import app.definitions.models as definition_models
@@ -24,6 +26,13 @@ class ElasticBackend(base.BaseSearchBackend):
         'comment': 'Comment',
     }
 
+    ALLOWED_FACET_MAP = {
+        'datastores': 'datastore_id',
+        'datastore_engines': 'datastore_engine',
+        'schemas': 'schema.keyword',
+        'tags': 'tags.keyword',
+    }
+
     client = None
 
     @classmethod
@@ -37,11 +46,21 @@ class ElasticBackend(base.BaseSearchBackend):
         if cls.client is None:
             cls.client = cls.create_client()
         instance = super().__new__(cls)
-
         return instance
 
+    def to_dict(self):
+        return {
+            'elapsed': self.elapsed,
+            'results': self.results,
+            'facets': self.facets,
+        }
+
+    @property
+    def possible_indexes(self):
+        return list(self.INDEX_MODEL_MAP.keys())
+
     def user_permission_ids(self):
-        """ Returns workspace_id and datastore_ids that a user can view.
+        """Returns workspace_id and datastore_ids that a user can view.
         """
         datastores = definition_models.Datastore.objects.filter(workspace=self.workspace)
         datastores = definition_permissions.get_datastores_for_user(datastores, self.user)
@@ -54,21 +73,21 @@ class ElasticBackend(base.BaseSearchBackend):
             return list(response)
         return response
 
-    def search(self, search_query_string, datastore_id=None, start=0, size=100, **extra_filters):
+    def execute(self, query, types=None, datastores=None, start=0, size=100, **facets):
         workspace_id, datastore_ids = self.user_permission_ids()
 
         if not datastore_ids:
             # User has no access to any datastores.
             return []
 
-        if datastore_id and datastore_id not in datastore_ids:
-            # User is requesting a datastore they don't have access to.
-            return []
+        # Filter out datastores that the User does not have access to.
+        if datastores:
+            datastore_ids = [d for d in datastores if d in datastore_ids]
 
-        elif datastore_id:
-            datastore_ids = [datastore_id]
+        index = [t for t in (types or []) if t in self.possible_indexes]
 
-        s = Search(using=self.client)
+        t = time.time()
+        s = Search(index=index, using=self.client)
         s = s.query(
             'multi_match',
             type='phrase_prefix',
@@ -77,21 +96,49 @@ class ElasticBackend(base.BaseSearchBackend):
                 'table',
                 'description',
                 'name^1.1',
-                'text^1.1'
+                'text^1.1',
             ],
-            query=search_query_string,
+            query=query,
+        ).filter(
+            'term',
+            workspace_id=workspace_id,
+        ).filter(
+            'terms',
+            datastore_id=datastore_ids,
         )
-        s = s.filter('term', workspace_id=workspace_id)
-        s = s.filter('terms', datastore_id=datastore_ids)
 
-        results = s[start:start + size]
+        for facet_name, es_field in self.ALLOWED_FACET_MAP.items():
+            # Register facet in Elasticsearch query
+            s.aggs.bucket(facet_name, A('terms', field=es_field))
 
-        return [
+            value = facets.get(facet_name)
+
+            if value:
+                s = s.filter('terms', **{es_field: value})
+
+        results = s.execute()
+
+        self._results = [
             {
                 'pk': hit.pk,
                 'model_name': self.INDEX_MODEL_MAP[hit.meta.index],
-                'score': hit.meta.score / results._response.hits.max_score,
+                'score': hit.meta.score / results.hits.max_score,
                 'datastore_id': hit.datastore_id,
             }
-            for hit in results
+            for hit in results.hits[start:start + size]
         ]
+
+        self._facets = results.aggs
+        self._elapsed = round(time.time() - t, 3)
+
+    @property
+    def results(self):
+        return self._results
+
+    @property
+    def facets(self):
+        return self._facets.to_dict()
+
+    @property
+    def elapsed(self):
+        return self._elapsed

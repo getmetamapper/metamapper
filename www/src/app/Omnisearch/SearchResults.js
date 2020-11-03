@@ -1,45 +1,35 @@
 import React from "react"
 import { compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
-import { List, Divider, Row, Col } from "antd"
+import { List, Card } from "antd"
 import { mapKeys } from "lodash"
-import SearchResultItem from "app/Omnisearch/SearchResultItem"
 import { withLargeLoader } from "hoc/withLoader"
-import withGetOmnisearchResults from "graphql/withGetOmnisearchResults"
+import SearchResultItem from "app/Omnisearch/SearchResultItem"
+import SearchEntityNavigator from "app/Omnisearch/SearchEntityNavigator"
 
-const SearchResults = ({ datastores, searchResults, timeElapsed }) => {
+const SearchResults = ({ datastores, results, elapsed }) => {
   const datastoreMap = mapKeys(datastores, "pk")
   return (
-    <span data-test="SearchResults">
-      <Row>
-        <Col span={12}>
-          <span className="omnisearch-results-title">
-            <h3>Search Results</h3>
-          </span>
-        </Col>
-        <Col span={12}>
-          <span className="omnisearch-results-count">
-            {searchResults.length} results ({timeElapsed} seconds)
-          </span>
-        </Col>
-      </Row>
-      <Divider />
+    <Card title="Search Results" extra={
+      <span className="omnisearch-results-count">
+        {results.length} results ({elapsed} seconds)
+      </span>
+    }>
+      <SearchEntityNavigator />
       <List
-        dataSource={searchResults}
+        dataSource={results}
         renderItem={(item) => (
           <SearchResultItem
             datastore={datastoreMap[item.datastoreId]}
-            highlightWords={["customer"]}
             {...item}
           />
         )}
       />
-    </span>
+    </Card>
   )
 }
 
 export default compose(
   withRouter,
-  withGetOmnisearchResults,
-  withLargeLoader
+  withLargeLoader,
 )(SearchResults)

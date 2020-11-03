@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import graphene
 
+from graphene.types.generic import GenericScalar
+
 
 class OmnisearchResultType(graphene.ObjectType):
     """GraphQL representation of an individual search result.
@@ -47,6 +49,8 @@ class OmnisearchResultListType(graphene.ObjectType):
 class OmnisearchResponseType(graphene.ObjectType):
     """Parent response type for all omnisearch results.
     """
-    search_results = graphene.List(OmnisearchResultListType)
+    results = graphene.List(OmnisearchResultListType)
 
-    time_elapsed = graphene.Float()
+    facets = graphene.Field(GenericScalar)
+
+    elapsed = graphene.Float()

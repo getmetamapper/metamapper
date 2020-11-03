@@ -1,9 +1,24 @@
 import gql from "graphql-tag"
 
 export default gql`
-query getSearchResults($content: String!, $datastoreId: String) {
-  omnisearch(content: $content, datastoreId: $datastoreId) {
-    searchResults {
+query GetSearchResults(
+  $content: String!
+  $types: [String]
+  $datastores: [String]
+  $engines: [String]
+  $schemas: [String]
+  $tags: [String]
+) {
+  omnisearch(
+    content: $content
+    types: $types
+    datastores: $datastores
+    engines: $engines
+    schemas: $schemas
+    tags: $tags
+  ) {
+    facets
+    results {
       pk
       score
       modelName
@@ -14,7 +29,7 @@ query getSearchResults($content: String!, $datastoreId: String) {
         pathname
       }
     }
-    timeElapsed
+    elapsed
   }
 }
 `

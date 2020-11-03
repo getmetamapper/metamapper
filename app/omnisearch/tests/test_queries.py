@@ -20,9 +20,12 @@ class TestOmnisearch(cases.GraphQLTestCase):
 
     operation = 'omnisearch'
     statement = '''
-    query getSearchResults($content: String!, $datastoreId: String) {
-      omnisearch(content: $content, datastoreId: $datastoreId) {
-        searchResults {
+    query GetSearchResults(
+        $content: String!
+        $datastores: [String]
+    ) {
+      omnisearch(content: $content, datastores: $datastores) {
+        results {
           pk
           modelName
           score
@@ -33,7 +36,7 @@ class TestOmnisearch(cases.GraphQLTestCase):
             pathname
           }
         }
-        timeElapsed
+        elapsed
       }
     }
     '''
@@ -51,7 +54,7 @@ class TestOmnisearch(cases.GraphQLTestCase):
         """
         variables = {'content': content}
         if datastore_id:
-            variables['datastoreId'] = datastore_id
+            variables['datastores'] = [datastore_id]
         results = self.execute(self.statement, variables=variables)
         results = results['data'][self.operation]
         return results
@@ -68,8 +71,8 @@ class TestOmnisearch(cases.GraphQLTestCase):
 
         results = self.execute_search_query()
 
-        self.assertTrue(len(results['searchResults']) == 0)
-        self.assertTrue(isinstance(results['timeElapsed'], (float,)))
+        self.assertTrue(len(results['results']) == 0)
+        self.assertTrue(isinstance(results['elapsed'], (float,)))
 
     @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
     @mock.patch('app.omnisearch.queries.get_search_backend')
@@ -77,27 +80,31 @@ class TestOmnisearch(cases.GraphQLTestCase):
         """It should return whatever the search backend returns.
         """
         client = mock.MagicMock()
-        client.search.return_value = [
-            {
-                'pk': 1,
-                'model_name': 'Column',
-                'score': 0.10,
-                'datastore_id': 'meow',
-            },
-            {
-                'pk': 2,
-                'model_name': 'Table',
-                'score': 0.75,
-                'datastore_id': 'meow',
-            }
-        ]
+        client.to_dict.return_value = {
+            'elapsed': 0.1,
+            'results': [
+                {
+                    'pk': 1,
+                    'model_name': 'Column',
+                    'score': 0.10,
+                    'datastore_id': 'meow',
+                },
+                {
+                    'pk': 2,
+                    'model_name': 'Table',
+                    'score': 0.75,
+                    'datastore_id': 'meow',
+                }
+            ],
+            'facets': {},
+        }
 
         get_search_backend.return_value = client
 
         results = self.execute_search_query()
 
-        self.assertTrue(len(results['searchResults']) == 2)
-        self.assertTrue(isinstance(results['timeElapsed'], (float,)))
+        self.assertTrue(len(results['results']) == 2)
+        self.assertTrue(isinstance(results['elapsed'], (float,)))
 
     @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
     @mock.patch('app.omnisearch.queries.get_search_backend')
@@ -111,8 +118,8 @@ class TestOmnisearch(cases.GraphQLTestCase):
 
         results = self.execute_search_query(datastore_id='4')
 
-        self.assertTrue(len(results['searchResults']) == 0)
-        self.assertTrue(isinstance(results['timeElapsed'], (float,)))
+        self.assertTrue(len(results['results']) == 0)
+        self.assertTrue(isinstance(results['elapsed'], (float,)))
 
     @decorators.as_someone(['OUTSIDER', 'ANONYMOUS'])
     def test_query_unauthorized(self):

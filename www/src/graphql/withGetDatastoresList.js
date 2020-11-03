@@ -3,7 +3,7 @@ import { map } from "lodash"
 import GetDatastores from "graphql/queries/GetDatastores"
 
 const withGetDatastoresList = graphql(GetDatastores, {
-  options: () => ({ fetchPolicy: "network-only "}),
+  options: () => ({ fetchPolicy: "network-only" }),
   props: ({ data }) => {
     const res = {
       loading: data && data.loading,
