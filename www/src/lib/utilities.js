@@ -29,6 +29,11 @@ export const memoize = (method) => {
   };
 }
 
+export const capitalize = (s) => {
+  if (typeof s !== 'string') return ''
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 export let getErrorDefinition = memoize(async function(locale) {
   const res = await fetch(`/assets/locales/${locale}/errors.yml`)
   const txt = await res.text()

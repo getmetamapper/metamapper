@@ -138,7 +138,7 @@ TABLE_INDEX_SETTINGS = {
                 },
                 'custom_english_stop': {
                     'type': 'stop',
-                    'stopwords': ENGLISH_STOPWORDS
+                    'stopwords': ENGLISH_STOPWORDS,
                 }
             },
             'tokenizer': {
@@ -160,13 +160,8 @@ TABLE_INDEX_SETTINGS = {
             'datastore_id': {
                 'type': 'keyword',
             },
-            'datastore': {
-                'type': 'text',
-                'analyzer': 'slug_case_split',
-            },
-            'schema': {
-                'type': 'text',
-                'analyzer': 'slug_case_split',
+            'datastore_engine': {
+                'type': 'keyword',
             },
             'name': {
                 'type': 'text',
@@ -175,6 +170,29 @@ TABLE_INDEX_SETTINGS = {
             'description': {
                 'type': 'text',
                 'analyzer': 'custom_english_stop',
+            },
+            'schema': {
+                'type': 'text',
+                'fields': {
+                    'keyword': {
+                        'type': 'keyword',
+                    },
+                    'text': {
+                        'type': 'text',
+                        'analyzer': 'slug_case_split',
+                    }
+                }
+            },
+            'tags': {
+                'type': 'text',
+                'fields': {
+                    'keyword': {
+                        'type': 'keyword',
+                    },
+                    'text': {
+                        'type': 'text',
+                    }
+                }
             },
         }
     }
@@ -204,21 +222,16 @@ COLUMN_INDEX_SETTINGS = {
     'mappings': {
         'properties': {
             'pk': {
-                'type': 'keyword'
+                'type': 'keyword',
             },
             'workspace_id': {
-                'type': 'keyword'
+                'type': 'keyword',
             },
             'datastore_id': {
-                'type': 'keyword'
+                'type': 'keyword',
             },
-            'datastore': {
-                'type': 'text',
-                'analyzer': 'slug_case_split',
-            },
-            'schema': {
-                'type': 'text',
-                'analyzer': 'slug_case_split',
+            'datastore_engine': {
+                'type': 'keyword',
             },
             'table': {
                 'type': 'text',
@@ -231,6 +244,29 @@ COLUMN_INDEX_SETTINGS = {
             'description': {
                 'type': 'text',
                 'analyzer': 'custom_english_stop',
+            },
+            'schema': {
+                'type': 'text',
+                'fields': {
+                    'keyword': {
+                        'type': 'keyword',
+                    },
+                    'text': {
+                        'type': 'text',
+                        'analyzer': 'slug_case_split',
+                    }
+                }
+            },
+            'tags': {
+                'type': 'text',
+                'fields': {
+                    'keyword': {
+                        'type': 'keyword',
+                    },
+                    'text': {
+                        'type': 'text',
+                    }
+                }
             },
         }
     }
@@ -257,6 +293,9 @@ COMMENT_INDEX_SETTINGS = {
                 'type': 'keyword',
             },
             'datastore_id': {
+                'type': 'keyword',
+            },
+            'datastore_engine': {
                 'type': 'keyword',
             },
             'text': {

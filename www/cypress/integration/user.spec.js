@@ -297,7 +297,7 @@ describe("user.spec.js", () => {
       // It should keep the user logged in.
       cy.reload()
 
-      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+      cy.location("pathname").should("equal", `/${workspace.slug}`)
 
       // It should allow the user to log in with the new password.
       cy.logout()
@@ -310,7 +310,7 @@ describe("user.spec.js", () => {
       cy.getByTestId("LoginForm.Password").type(passwords.newSafe)
       cy.contains("button", "Sign In").click()
 
-      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+      cy.location("pathname").should("equal", `/${workspace.slug}`)
     })
   })
 

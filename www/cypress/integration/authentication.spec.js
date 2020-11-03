@@ -95,8 +95,6 @@ describe("authentication.spec.js", () => {
             window.localStorage.getItem(WORKSPACE_TOKEN)
           ).to.be.a("string")
         })
-
-      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
     })
   })
 
@@ -231,7 +229,7 @@ describe("authentication.spec.js", () => {
       cy.getByTestId("LoginForm.Password").type(validUser.password)
       cy.contains("button", "Sign In").click()
 
-      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+      cy.location("pathname").should("equal", `/${workspace.slug}`)
     })
 
     it("redirects to root when target is login page", () => {
@@ -242,7 +240,7 @@ describe("authentication.spec.js", () => {
       cy.getByTestId("LoginForm.Password").type(validUser.password)
       cy.contains("button", "Sign In").click()
 
-      cy.location("pathname").should("equal", `/${workspace.slug}/datastores`)
+      cy.location("pathname").should("equal", `/${workspace.slug}`)
     })
 
     it("redirects when added automatically", () => {

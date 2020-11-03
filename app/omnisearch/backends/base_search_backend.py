@@ -7,12 +7,12 @@ class BaseSearchBackend(metaclass=abc.ABCMeta):
         needs to return a list of dictionaries or similar iterable of objects that support __getitem__.
     """
 
-    def __init__(self, workspace, user):
+    def __init__(self, workspace, user, **kwargs):
         self.workspace = workspace
         self.user = user
 
     @abc.abstractmethod
-    def search(self, search_query_string, **extra_filters):
+    def execute(self, query, types=None, datastores=None, start=0, size=100, **facets):
         """ Search the backend with a given query string. This needs to return the following signature:
 
         [
