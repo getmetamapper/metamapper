@@ -63,7 +63,9 @@ class ElasticBackend(base.BaseSearchBackend):
         """Returns workspace_id and datastore_ids that a user can view.
         """
         datastores = definition_models.Datastore.objects.filter(workspace=self.workspace)
-        datastores = definition_permissions.get_datastores_for_user(datastores, self.user)
+
+        if not self.user.is_owner(self.workspace.id):
+            datastores = definition_permissions.get_datastores_for_user(datastores, self.user)
 
         return self.workspace.id, [datastore.id for datastore in datastores]
 
