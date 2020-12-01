@@ -49,12 +49,12 @@ class TestOmnisearch(cases.GraphQLTestCase):
         self.other_schema = factories.SchemaFactory(datastore=self.other_datastore)
         self.other_table = factories.TableFactory(schema=self.other_schema, name='customers')
 
-    def execute_search_query(self, content='customer information', datastore_id=None):
+    def execute_search_query(self, content='customer information', datastores=None):
         """Used for consistent test results.
         """
         variables = {'content': content}
-        if datastore_id:
-            variables['datastores'] = [datastore_id]
+        if datastores:
+            variables['datastores'] = datastores
         results = self.execute(self.statement, variables=variables)
         results = results['data'][self.operation]
         return results
@@ -106,17 +106,15 @@ class TestOmnisearch(cases.GraphQLTestCase):
         self.assertTrue(len(results['results']) == 2)
         self.assertTrue(isinstance(results['elapsed'], (float,)))
 
-    @decorators.as_someone(['MEMBER', 'READONLY', 'OWNER'])
+    @decorators.as_someone(['MEMBER', 'READONLY'])
     @mock.patch('app.omnisearch.queries.get_search_backend')
     def test_query_without_datastore_permission(self, get_search_backend):
-        """It should return results for all datastores in the workspace.
-        """
         client = mock.MagicMock()
         client.user_permission_ids.return_value = ('woof', ['1', '2', '3'])
 
         get_search_backend.return_value = client
 
-        results = self.execute_search_query(datastore_id='4')
+        results = self.execute_search_query(datastores=['4'])
 
         self.assertTrue(len(results['results']) == 0)
         self.assertTrue(isinstance(results['elapsed'], (float,)))
