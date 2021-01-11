@@ -84,7 +84,7 @@ pytz==2020.1              # via celery, django, django-dirtyfields, google-api-c
 redis==3.5.3              # via celery, django-cacheops
 requests-oauthlib==1.3.0  # via msrest
 requests==2.23.0          # via azure-core, google-api-core, msrest, requests-oauthlib, snowflake-connector-python
-rsa==4.6                  # via google-auth
+rsa==4.7                  # via google-auth
 rx==1.6.1                 # via graphql-core
 s3transfer==0.3.3         # via boto3
 singledispatch==3.4.0.3   # via graphene-django
