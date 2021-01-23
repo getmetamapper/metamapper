@@ -84,13 +84,17 @@ def queue_runs(self, datastore_slug=None, *args, **kwargs):
 
 @app.task(bind=True)
 @logging.task_logger(__name__)
-def detect_run_timeout(self, minutes=60, *args, **kwargs):
-    """Garbage collection. Clears out runs if they haven't finished running after 60 minutes.
+def detect_run_timeout(self, minutes=60 * 2, *args, **kwargs):
+    """Garbage collection. Clears out runs if they haven't finished running after 120 minutes.
     """
     date_from = timezone.now() - timedelta(minutes=minutes)
     runs = Run.objects.filter(created_at__lte=date_from, finished_at=None)
 
     for run in runs:
+        self.log.info(
+            f'(run: {run.id}) Marking run as timed out'
+        )
+
         run.mark_as_finished()
 
         RevisionerError.objects.create(

@@ -28,7 +28,7 @@ class ElasticBackend(base.BaseSearchBackend):
 
     ALLOWED_FACET_MAP = {
         'datastores': 'datastore_id',
-        'datastore_engines': 'datastore_engine',
+        'engines': 'datastore_engine',
         'schemas': 'schema.keyword',
         'tags': 'tags.keyword',
     }
@@ -91,14 +91,16 @@ class ElasticBackend(base.BaseSearchBackend):
         t = time.time()
         s = Search(index=index, using=self.client)
         s = s.query(
-            'multi_match',
-            type='phrase_prefix',
+            'simple_query_string',
             fields=[
-                'schema',
-                'table',
-                'description',
-                'name^1.1',
+                'exact_name^100',
+                'name.raw^30',
+                'name^10',
+                'table^5',
+                'schema^3',
+                'description^3',
                 'text^1.1',
+                'tags',
             ],
             query=query,
         ).filter(

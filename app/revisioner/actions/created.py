@@ -63,9 +63,12 @@ class GenericCreateAction(object):
 
         for page_num in paginator.page_range:
             page = paginator.get_page(page_num)
-            data = [
-                self.get_attributes(revision) for revision in page.object_list
-            ]
+            data = []
+
+            for revision in page.object_list:
+                attributes = self.get_attributes(revision)
+                if attributes is not None:
+                    data.append(attributes)
 
             if len(data):
                 self.bulk_insert(data)
@@ -135,6 +138,8 @@ class ColumnCreateAction(GenericCreateAction):
         """Get the instance attributes from the Revision.
         """
         table_id = revision.parent_instance_id
+        if table_id is None:
+            return None
         defaults = {
             'workspace_id': self.workspace_id,
             'table_id': table_id,
@@ -158,6 +163,8 @@ class IndexCreateAction(GenericCreateAction):
         """
         metadata = revision.metadata.copy()
         table_id = revision.parent_instance_id
+        if table_id is None:
+            return None
         defaults = {
             'workspace_id': self.workspace_id,
             'table_id': table_id,

@@ -128,13 +128,26 @@ ENGLISH_STOPWORDS = [
     'now'
 ]
 
+SNAKE_CASE_SPLIT_TOKENIZER = {
+    'type': 'simple_pattern_split',
+    'pattern': '_',
+}
+
+DBO_NAME_SPLIT_TOKENIZER = {
+    'type': 'simple_pattern_split',
+    'pattern': '|'.join([
+        '\\.',
+        ' ',
+        '_',
+    ])
+}
 
 TABLE_INDEX_SETTINGS = {
     'settings': {
         'analysis': {
             'analyzer': {
-                'slug_case_split': {
-                    'tokenizer': 'slug_case_split',
+                'dbo_name_split': {
+                    'tokenizer': 'dbo_name_split',
                 },
                 'custom_english_stop': {
                     'type': 'stop',
@@ -142,10 +155,7 @@ TABLE_INDEX_SETTINGS = {
                 }
             },
             'tokenizer': {
-                'slug_case_split': {
-                    'type': 'simple_pattern_split',
-                    'pattern': '_',
-                }
+                'dbo_name_split': DBO_NAME_SPLIT_TOKENIZER,
             }
         }
     },
@@ -165,7 +175,10 @@ TABLE_INDEX_SETTINGS = {
             },
             'name': {
                 'type': 'text',
-                'analyzer': 'slug_case_split',
+                'analyzer': 'dbo_name_split',
+            },
+            'exact_name': {
+                'type': 'text',
             },
             'description': {
                 'type': 'text',
@@ -179,7 +192,7 @@ TABLE_INDEX_SETTINGS = {
                     },
                     'text': {
                         'type': 'text',
-                        'analyzer': 'slug_case_split',
+                        'analyzer': 'dbo_name_split',
                     }
                 }
             },
@@ -203,8 +216,8 @@ COLUMN_INDEX_SETTINGS = {
     'settings': {
         'analysis': {
             'analyzer': {
-                'slug_case_split': {
-                    'tokenizer': 'slug_case_split',
+                'dbo_name_split': {
+                    'tokenizer': 'dbo_name_split',
                 },
                 'custom_english_stop': {
                     'type': 'stop',
@@ -212,10 +225,7 @@ COLUMN_INDEX_SETTINGS = {
                 }
             },
             'tokenizer': {
-                'slug_case_split': {
-                    'type': 'simple_pattern_split',
-                    'pattern': '_',
-                }
+                'dbo_name_split': DBO_NAME_SPLIT_TOKENIZER,
             }
         }
     },
@@ -235,11 +245,14 @@ COLUMN_INDEX_SETTINGS = {
             },
             'table': {
                 'type': 'text',
-                'analyzer': 'slug_case_split',
+                'analyzer': 'dbo_name_split',
             },
             'name': {
                 'type': 'text',
-                'analyzer': 'slug_case_split',
+                'analyzer': 'dbo_name_split',
+            },
+            'exact_name': {
+                'type': 'text',
             },
             'description': {
                 'type': 'text',
@@ -253,7 +266,7 @@ COLUMN_INDEX_SETTINGS = {
                     },
                     'text': {
                         'type': 'text',
-                        'analyzer': 'slug_case_split',
+                        'analyzer': 'dbo_name_split',
                     }
                 }
             },

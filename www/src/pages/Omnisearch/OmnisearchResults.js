@@ -108,7 +108,7 @@ class OmnisearchResults extends Component {
             <FacetCheckboxWidget
               title="Schema"
               form={form}
-              name="schema"
+              name="schemas"
               options={this.getSchemas()}
             />
             <FacetCheckboxWidget
