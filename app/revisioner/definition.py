@@ -2,7 +2,7 @@
 from app.inspector import service as inspector
 
 
-def make(collector, *args, **kwargs):  # noqa: C901
+def make(collector, logger=None, *args, **kwargs):  # noqa: C901
     """We take an initial pass at making the definition based on the OID, if supported. The collector
     marks the raw database object as "processed" if we are able to match it to a Django model instance.
     """
@@ -13,6 +13,9 @@ def make(collector, *args, **kwargs):  # noqa: C901
 
     for number, row in enumerate(inspector.tables_and_views(collector.datastore)):
         schema_name = row.pop('table_schema')
+
+        if logger and schema_name != last_schema_name:
+            logger.info('Starting to process schema: %s', schema_name)
 
         if schema_name not in definition:
             schema_instance = collector.schemas.find_by_oid(row['schema_object_id'])
@@ -74,42 +77,42 @@ def make(collector, *args, **kwargs):  # noqa: C901
             'indexes': indexes,
         })
 
-        schema = definition[schema_name]['schema']
-
-        if not schema['instance']:
-            schema['instance'] = collector.schemas.search_unassigned(name=schema['name'])
-
-            if schema['instance']:
-                collector.schemas.mark_as_processed(schema['instance'].pk)
-
-        for table in definition[schema_name]['tables']:
-            if not table['instance'] and schema['instance']:
-                table['instance'] = collector.tables.search_unassigned(name=table['name'], schema_id=schema['instance'].pk)
-
-            if not table['instance']:
-                continue
-
-            collector.tables.mark_as_processed(table['instance'].pk)
-
-            for column in table['columns']:
-                if column['instance']:
-                    continue
-
-                column['instance'] = collector.columns.search_unassigned(name=column['name'], table_id=table['instance'].pk)
-
-                if column['instance']:
-                    collector.columns.mark_as_processed(column['instance'].pk)
-
-            for index in table['indexes']:
-                if index['instance']:
-                    continue
-
-                index['instance'] = collector.indexes.search_unassigned(name=index['name'], table_id=table['instance'].pk)
-
-                if index['instance']:
-                    collector.indexes.mark_as_processed(index['instance'].pk)
-
         if number > 0 and last_schema_name != schema_name:
+            schema = definition[last_schema_name]['schema']
+
+            if not schema['instance']:
+                schema['instance'] = collector.schemas.search_unassigned(name=schema['name'])
+
+                if schema['instance']:
+                    collector.schemas.mark_as_processed(schema['instance'].pk)
+
+            for table in definition[last_schema_name]['tables']:
+                if not table['instance'] and schema['instance']:
+                    table['instance'] = collector.tables.search_unassigned(name=table['name'], schema_id=schema['instance'].pk)
+
+                if not table['instance']:
+                    continue
+
+                collector.tables.mark_as_processed(table['instance'].pk)
+
+                for column in table['columns']:
+                    if column['instance']:
+                        continue
+
+                    column['instance'] = collector.columns.search_unassigned(name=column['name'], table_id=table['instance'].pk)
+
+                    if column['instance']:
+                        collector.columns.mark_as_processed(column['instance'].pk)
+
+                for index in table['indexes']:
+                    if index['instance']:
+                        continue
+
+                    index['instance'] = collector.indexes.search_unassigned(name=index['name'], table_id=table['instance'].pk)
+
+                    if index['instance']:
+                        collector.indexes.mark_as_processed(index['instance'].pk)
+
             yield (last_schema_name, definition.pop(last_schema_name))
 
         last_schema_name = schema_name

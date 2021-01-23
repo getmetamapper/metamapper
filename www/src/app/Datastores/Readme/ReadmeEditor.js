@@ -11,6 +11,8 @@ const ReadmeEditor = (props) => {
         value={props.value}
         onChange={props.onChange}
         placeholder="read"
+        lineWrapping={true}
+        lineNumbers={true}
       />
     </form>
   )

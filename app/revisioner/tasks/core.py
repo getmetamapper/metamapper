@@ -55,13 +55,13 @@ def start_revisioner_run(self, run_id, *arg, **kwargs):
     collector = DefinitionCollector(self._run.datastore)
     run_tasks = []
 
-    for schema, schema_definition in definition.make(collector):
-        self.log.info(f'Uploading schema: {schema}')
+    for schema, schema_definition in definition.make(collector, logger=self.log):
         storage_path = f'revisioner/{self._run.datastore_id}/run_id={self._run.id}/{schema}.json.gz'
         blob.put_object(storage_path, schema_definition)
         run_tasks.append(
             RunTask(run=self._run, storage_path=storage_path, status=RunTask.PENDING),
         )
+        self.log.info(f'Finished processing: {schema}')
 
     RunTask.objects.bulk_create(run_tasks, ignore_conflicts=True)
 

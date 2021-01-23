@@ -49,8 +49,6 @@ services:
      - metamapper
   webserver:
     << : *metamapper_defaults
-    build:
-      context: ./
     command: webserver
     ports:
       - 5050:5050
