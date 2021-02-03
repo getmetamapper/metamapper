@@ -13,7 +13,7 @@
     "apollo-upload-client": "^11.0.0",
     "codemirror": "^5.58.1",
     "craco-antd": "^1.18.1",
-    "elliptic": "^6.5.3",
+    "elliptic": "^6.5.4",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "highlight.js": "^10.3.1",
