@@ -33,7 +33,7 @@ django-graphql-jwt==0.3.1  # via -r requirements.in
 django-guardian==2.3.0    # via -r requirements.in
 django-ordered-model==3.4.1  # via -r requirements.in
 django-storages==1.9.1    # via -r requirements.in
-django==3.0.10            # via -r requirements.in, django-cacheops, django-cors-headers, django-dirtyfields, django-filter, django-graphql-jwt, django-guardian, django-storages, djangorestframework, graphene-django
+django==3.0.14            # via -r requirements.in, django-cacheops, django-cors-headers, django-dirtyfields, django-filter, django-graphql-jwt, django-guardian, django-storages, djangorestframework, graphene-django
 djangorestframework-jwt==1.11.0  # via -r requirements.in
 djangorestframework==3.11.0  # via -r requirements.in
 dnspython==1.16.0         # via -r requirements.in
