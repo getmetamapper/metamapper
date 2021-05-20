@@ -116,6 +116,8 @@ class TableCreateAction(GenericCreateAction):
         """Get the instance attributes from the Revision.
         """
         schema_id = revision.parent_instance_id
+        if schema_id is None:
+            return None
         defaults = {
             'workspace_id': self.workspace_id,
             'schema_id': schema_id,

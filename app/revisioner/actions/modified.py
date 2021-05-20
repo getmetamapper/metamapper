@@ -171,6 +171,7 @@ class IndexModifyAction(GenericModifyAction):
         collector = ObjectCollector(Column.objects.filter(table_id=index.table_id))
 
         index_columns = []
+
         for column_metadata in new_value:
             column = collector.find_by_name(column_metadata['column_name'])
             index_column = {
