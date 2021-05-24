@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from app.definitions.models import Schema, Table, Index, Column
 
 from app.revisioner.models import Revision
-from app.revisioner.collectors import ObjectCollector
+from app.revisioner.collectors import SingleValueLookupObjectCollector
 
 from utils.contenttypes import get_content_type_for_model
 from utils.postgres.paginators import RawQuerySetPaginator
@@ -165,8 +165,6 @@ class IndexCreateAction(GenericCreateAction):
         """
         metadata = revision.metadata.copy()
         table_id = revision.parent_instance_id
-        if table_id is None:
-            return None
         defaults = {
             'workspace_id': self.workspace_id,
             'table_id': table_id,
@@ -183,12 +181,14 @@ class IndexCreateAction(GenericCreateAction):
         column_cache = {}
         for revision in self.get_revisions():
             attributes, columns = self.get_attributes(revision)
+            if attributes['table_id'] is None:
+                continue
             instance = self.model_class(**attributes)
             resources.append(instance)
             column_cache[instance.name] = columns
 
         instances = self.model_class.objects.bulk_create(resources, batch_size=500)
-        collector = ObjectCollector(
+        collector = SingleValueLookupObjectCollector(
             Column.objects.filter(table__schema__datastore_id=self.datastore.id)
         )
 

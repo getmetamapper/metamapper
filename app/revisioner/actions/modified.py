@@ -2,7 +2,7 @@
 from app.definitions.models import Schema, Table, Column, Index, IndexColumn
 
 from app.revisioner.models import Revision
-from app.revisioner.collectors import ObjectCollector
+from app.revisioner.collectors import SingleValueLookupObjectCollector
 
 from utils.contenttypes import get_content_type_for_model
 from utils.postgres.paginators import RawQuerySetPaginator
@@ -90,7 +90,7 @@ class GenericModifyAction(object):
     def get_collector(self):
         """Get the object collector.
         """
-        return ObjectCollector(self.get_queryset())
+        return SingleValueLookupObjectCollector(self.get_queryset())
 
     def get_modify_function(self, field):
         """Check if this field has a special handler function, otherwise
@@ -168,7 +168,7 @@ class IndexModifyAction(GenericModifyAction):
     def modify_columns(self, index, field, new_value, *args, **kwargs):
         """If columns have been updated, we need to reflect that change.
         """
-        collector = ObjectCollector(Column.objects.filter(table_id=index.table_id))
+        collector = SingleValueLookupObjectCollector(Column.objects.filter(table_id=index.table_id))
 
         index_columns = []
 

@@ -80,7 +80,7 @@ class OmnisearchResults extends Component {
   }
 
   render() {
-    const { datastores, form } = this.props
+    const { datastores, form, results, elapsed } = this.props
     return (
       <Row>
         <Helmet>
@@ -120,7 +120,11 @@ class OmnisearchResults extends Component {
           </Card>
         </Col>
         <Col span={12} offset={1} className="omnisearch-results">
-          <SearchResults datastores={datastores} results={this.props.results} elapsed={this.props.elapsed} />
+          <SearchResults
+            datastores={datastores}
+            results={filter(results, (r) => r.searchResult !== null)}
+            elapsed={elapsed}
+          />
         </Col>
       </Row>
     )

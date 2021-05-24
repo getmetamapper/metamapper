@@ -31,11 +31,17 @@ build-docker:
 initdb:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0
 
+makemigrations:
+	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py makemigrations
+
 migrate:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py migrate
 
 reindex:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py reindex
+
+seeddata:
+	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py seeddata www/cypress/fixtures/*.spec.json
 
 resetdb:
 	@docker-compose -f docker-development.yml run --rm webserver bash www/cypress/cmd/resetdb.sh

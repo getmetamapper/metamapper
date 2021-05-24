@@ -8,7 +8,8 @@ import utils.logging as logging
 
 from metamapper.celery import app
 
-from app.revisioner import actions, definition
+from app.revisioner import actions
+from app.revisioner.definition import DefinitionProcessor
 from app.revisioner.collectors import DefinitionCollector
 from app.revisioner.models import Run, RunTask, RevisionerError
 from app.revisioner.tasks.version import check_for_version_update
@@ -53,9 +54,10 @@ def start_revisioner_run(self, run_id, *arg, **kwargs):
     self.log.with_fields(run=run_id, datastore=self._run.datastore.slug)
 
     collector = DefinitionCollector(self._run.datastore)
+    processor = DefinitionProcessor(collector, logger=self.log)
     run_tasks = []
 
-    for schema, schema_definition in definition.make(collector, logger=self.log):
+    for schema, schema_definition in processor.execute():
         storage_path = f'revisioner/{self._run.datastore_id}/run_id={self._run.id}/{schema}.json.gz'
         blob.put_object(storage_path, schema_definition)
         run_tasks.append(
@@ -81,10 +83,8 @@ def start_revisioner_run(self, run_id, *arg, **kwargs):
         self._run.upsert_staged_revisions(revisions)
 
     run_tasks = RunTask.objects.filter(run_id=self._run.id)
+
     for run_task in run_tasks:
-        self.log.info(
-            f'(task: {run_task.pk}) {run_task.storage_path}'
-        )
         revise_schema_definition.apply_async(args=[run_task.id])
 
     # If nothing is to be done, we should force mark this run as complete.
