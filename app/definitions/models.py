@@ -295,7 +295,7 @@ class Schema(AuditableModel,
         'tags',
     ]
 
-    object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
+    object_id = models.CharField(db_index=True, max_length=40, null=True, default=None)
 
     datastore = models.ForeignKey(
         to=Datastore,
@@ -348,7 +348,7 @@ class Table(AuditableModel,
 
     owners = GenericRelation(AssetOwner, related_query_name="table")
 
-    object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
+    object_id = models.CharField(db_index=True, max_length=40, null=True, default=None)
 
     schema = models.ForeignKey(
         to=Schema,
@@ -585,7 +585,7 @@ class Column(AuditableModel,
 class Index(RevisableModel, TimestampedModel):
     """Represents a index within a table.
     """
-    object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
+    object_id = models.CharField(db_index=True, max_length=40, null=True, default=None)
 
     table = models.ForeignKey(
         to=Table,

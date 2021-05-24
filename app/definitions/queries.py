@@ -148,6 +148,7 @@ class Query(graphene.ObjectType):
             'schema__datastore_id': shortcuts.from_global_id(datastore_id, True),
             'schema__name__iexact': schema_name,
             'workspace': info.context.workspace,
+            'deleted_at': None,
         }
         return shortcuts.get_object_or_404(models.Table, **get_kwargs)
 
@@ -162,6 +163,7 @@ class Query(graphene.ObjectType):
             'table__schema__name__iexact': schema_name,
             'table__name__iexact': table_name,
             'workspace': info.context.workspace,
+            'deleted_at': None,
         }
         return shortcuts.get_object_or_404(models.Column, **get_kwargs)
 
@@ -250,7 +252,7 @@ class Query(graphene.ObjectType):
         if not permissions.request_can_view_datastore(info, datastore):
             raise errors.PermissionDenied()
 
-        return sorted(datastore.schemas.values_list('name', flat=True))
+        return sorted(models.Schema.objects.filter(datastore=datastore).values_list('name', flat=True))
 
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
     def resolve_table_names_by_schema(self, info, datastore_id, schema_name, **kwargs):
@@ -267,7 +269,7 @@ class Query(graphene.ObjectType):
         if not permissions.request_can_view_datastore(info, schema.datastore):
             raise errors.PermissionDenied()
 
-        return sorted(schema.tables.values_list('name', flat=True))
+        return sorted(models.Table.objects.filter(schema=schema).values_list('name', flat=True))
 
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
     def resolve_table_last_commit_timestamp(self, info, datastore_id, schema_name, table_name, **kwargs):
