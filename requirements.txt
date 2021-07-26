@@ -93,7 +93,7 @@ snowflake-connector-python==2.2.8  # via -r requirements.in
 sqlparse==0.3.1           # via django
 sshtunnel==0.1.5          # via -r requirements.in
 unidecode==1.1.1          # via graphene-django
-urllib3==1.25.9           # via botocore, elasticsearch, requests, snowflake-connector-python
+urllib3==1.26.5           # via botocore, elasticsearch, requests, snowflake-connector-python
 vine==1.3.0               # via amqp, celery
 webencodings==0.5.1       # via bleach
 xmlsec==1.3.8             # via python3-saml
