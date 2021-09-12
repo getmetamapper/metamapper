@@ -90,7 +90,7 @@ s3transfer==0.3.3         # via boto3
 singledispatch==3.4.0.3   # via graphene-django
 six==1.15.0               # via azure-core, bcrypt, bleach, cryptography, django-cacheops, elasticsearch-dsl, google-api-core, google-auth, google-cloud-bigquery, google-resumable-media, graphene, graphene-django, graphql-core, graphql-relay, isodate, packaging, promise, protobuf, pynacl, pyopenssl, python-dateutil, singledispatch
 snowflake-connector-python==2.2.8  # via -r requirements.in
-sqlparse==0.3.1           # via django
+sqlparse==0.4.2           # via django
 sshtunnel==0.1.5          # via -r requirements.in
 unidecode==1.1.1          # via graphene-django
 urllib3==1.25.9           # via botocore, elasticsearch, requests, snowflake-connector-python
