@@ -21,7 +21,7 @@ celery[redis]==4.4.6      # via -r requirements.in
 certifi==2020.6.20        # via elasticsearch, msrest, requests, snowflake-connector-python
 cffi==1.14.0              # via bcrypt, cryptography, google-crc32c, pynacl, snowflake-connector-python
 chardet==3.0.4            # via requests
-cryptography==2.9.2       # via -r requirements.in, azure-storage-blob, paramiko, pyopenssl, snowflake-connector-python
+cryptography==3.2       # via -r requirements.in, azure-storage-blob, paramiko, pyopenssl, snowflake-connector-python
 cx-oracle==8.0.1          # via -r requirements.in
 cython==0.29.21           # via -r requirements.in
 defusedxml==0.6.0         # via python3-saml
