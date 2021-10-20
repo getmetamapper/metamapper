@@ -132,10 +132,18 @@ class TableModifyAction(GenericModifyAction):
         """If the schema has been renamed, we need to update it manually.
         """
         if not new_value:
-            schema = Schema.objects.get(
+            schema = Schema.objects.filter(
                 created_revision_id=revision.parent_resource_revision_id
-            )
-            new_value = schema.pk
+            ).first()
+
+            if not schema:
+                schema = Schema.objects.filter(
+                    datastore_id=self.datastore.id,
+                    name=revision.metadata.get('name'),
+                ).first()
+
+            if schema:
+                new_value = schema.pk
 
         if new_value != revision.metadata['new_value']:
             revision.metadata['new_value'] = new_value

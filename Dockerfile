@@ -61,7 +61,7 @@ ADD ./requirements-dev.in $BASE_DIR
 ADD ./requirements-dev.txt $BASE_DIR
 
 RUN pip install --upgrade pip
-RUN pip install 'pip-tools==5.3.1' --quiet
+RUN pip install pip-tools --quiet
 RUN pip-sync requirements.txt requirements-dev.txt --quiet
 RUN pip install --upgrade --force-reinstall --no-binary pymssql pymssql --quiet
 

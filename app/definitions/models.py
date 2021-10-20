@@ -497,6 +497,7 @@ class Column(AuditableModel,
     db_comment = models.TextField(null=True, blank=True)
     short_desc = models.TextField(null=True, blank=True)
     readme = models.TextField(null=True, blank=True)
+    tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
 
     class Meta:
         unique_together = ('table', 'name',)
