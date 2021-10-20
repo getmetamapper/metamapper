@@ -11,7 +11,7 @@ def heartbeat(self):
     """Update the heartbeat record.
     """
     self.log.info('Heart is beating.')
-    return Heartbeat.objects.beat()
+    Heartbeat.objects.beat()
 
 
 @app.task()
