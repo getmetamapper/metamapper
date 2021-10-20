@@ -7,16 +7,19 @@ from io import StringIO
 
 from app.definitions.models import Datastore
 
+# Ordering of import here matters. If we load Snowflake after
+# Hive, for example, the lib dependencies cause a segmentation fault on Linux.
+from app.inspector.engines import bigquery_inspector
+from app.inspector.engines import redshift_inspector
+from app.inspector.engines import snowflake_inspector
+
 from app.inspector.engines import aws_athena_inspector
 from app.inspector.engines import aws_glue_inspector
 from app.inspector.engines import azure_inspector
-from app.inspector.engines import bigquery_inspector
 from app.inspector.engines import hive_metastore_inspector
 from app.inspector.engines import mysql_inspector
 from app.inspector.engines import oracle_inspector
 from app.inspector.engines import postgresql_inspector
-from app.inspector.engines import redshift_inspector
-from app.inspector.engines import snowflake_inspector
 from app.inspector.engines import sqlserver_inspector
 
 
