@@ -63,14 +63,14 @@ def start_revisioner_run(self, run_id, *arg, **kwargs):
         run_tasks.append(
             RunTask(run=self._run, storage_path=storage_path, status=RunTask.PENDING),
         )
-        self.log.info(f'Finished processing: {schema}')
+        self.log.info(f'Processed: {schema}')
 
     RunTask.objects.bulk_create(run_tasks, ignore_conflicts=True)
 
     revisions = []
     for content_type, instances in collector.unassigned.items():
         self.log.info(
-            f'Processing {len(instances)} dropped {content_type} resources'
+            f'Handling {len(instances)} dropped {content_type} resources.'
         )
         for instance in instances:
             if hasattr(instance, 'is_deleted') and instance.is_deleted:
@@ -149,7 +149,7 @@ def revise_schema_definition(self, run_task_id, *args, **kwargs):
     self._run_task.mark_as_started(self.request.id)
 
     self.log.with_fields(run=self._run_task.run_id, task=self._run_task.id)
-    self.log.info(f'Processing {self._run_task.storage_path}')
+    self.log.info(f'Extracting revisions: {self._run_task.storage_path}')
 
     schema_definition = blob.get_object(self._run_task.storage_path)
     revisions = revisioners.extract_revisions(self._run_task.run.datastore, schema_definition)

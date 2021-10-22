@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Icon, Input, Form } from "antd"
+import Markdown from "react-markdown"
 
 const EditableContext = React.createContext()
 
@@ -48,10 +49,10 @@ export class EditableCell extends Component {
         })(
           <Input.TextArea
             ref={(node) => (this.input = node)}
+            rows={3}
             onPressEnter={this.save}
             onBlur={this.save}
             data-test="EditableCell.Input"
-            rows={3}
           />
         )}
       </Form.Item>
@@ -62,7 +63,7 @@ export class EditableCell extends Component {
             <Icon type={icon} />
           </span>
         )}
-        <>{children}</>
+        <Markdown>{children[2]}</Markdown>
       </div>
     )
   }
@@ -80,7 +81,9 @@ export class EditableCell extends Component {
     return (
       <td {...restProps}>
         {editable ? (
-          <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
+          <EditableContext.Consumer>
+            {this.renderCell}
+          </EditableContext.Consumer>
         ) : (
           children
         )}
@@ -96,7 +99,7 @@ EditableCell.defaultProps = {
 
 export const components = {
   body: {
-    row: EditableFormRow,
     cell: EditableCell,
+    row: EditableFormRow,
   },
 }

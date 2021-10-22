@@ -26,6 +26,21 @@ $color-dark: rgba(0, 0, 0, 0.65);
   display: none;
 }
 
+.editable-cell-value-wrap {
+  code {
+    background: #f8f8f8;
+    border: 1px solid #ddd;;
+    border-radius: 0.2rem;
+    color: #e01e5a;
+    font-size: .75rem;
+    padding: 2px 3px 1px;
+    white-space: normal;
+  }
+  p {
+    margin-bottom: 0;
+  }
+}
+
 .comments {
   .ant-card-body {
     padding: 0;
