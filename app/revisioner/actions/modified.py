@@ -77,6 +77,8 @@ class GenericModifyAction(object):
                 for metadata in revision.changes:
                     set_attr = self.get_modify_function(metadata['field'])
                     set_attr(resource, revision=revision, **metadata)
+                if hasattr(resource, 'is_deleted') and resource.is_deleted:
+                    resource.deleted_at = None
                 data.append(model_to_dict(resource, exclude=['columns']))
                 processed.add(revision.resource_id)
 

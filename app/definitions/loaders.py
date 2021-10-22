@@ -76,9 +76,14 @@ class TableSchemaLoader(DataLoader):
         """Function to process the batch load.
         """
         output = defaultdict(list)
-        queryset = Schema.objects.filter(id__in=schema_ids)
+        queryset = Schema.all_objects.filter(id__in=schema_ids)
 
         for schema_id in schema_ids:
-            output[schema_id] = next(filter(lambda q: q.id == schema_id, queryset), None)
+            schema = next(filter(lambda q: q.id == schema_id, queryset), None)
+
+            if schema and schema.is_deleted:
+                schema.revive()
+
+            output[schema_id] = schema
 
         return Promise.resolve([output.get(o) for o in schema_ids])

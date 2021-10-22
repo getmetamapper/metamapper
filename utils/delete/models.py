@@ -24,5 +24,9 @@ class SoftDeletionModel(models.Model):
         self.deleted_at = timezone.now()
         self.save()
 
+    def revive(self):
+        self.deleted_at = None
+        self.save()
+
     def hard_delete(self):
         return super(SoftDeletionModel, self).delete()

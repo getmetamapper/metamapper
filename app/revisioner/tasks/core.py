@@ -68,14 +68,16 @@ def start_revisioner_run(self, run_id, *arg, **kwargs):
     RunTask.objects.bulk_create(run_tasks, ignore_conflicts=True)
 
     revisions = []
-    for content_type, content_objects in collector.unassigned.items():
+    for content_type, instances in collector.unassigned.items():
         self.log.info(
-            f'Processing {len(content_objects)} dropped {content_type} resources'
+            f'Processing {len(instances)} dropped {content_type} resources'
         )
-        for content_object in content_objects:
+        for instance in instances:
+            if hasattr(instance, 'is_deleted') and instance.is_deleted:
+                continue
             revisioner = revisioners.get_revisioner(
-                instance=content_object,
-                parent_resource=content_object.parent_resource,
+                instance=instance,
+                parent_resource=instance.parent_resource,
             )
             revisions += revisioner.make_dropped()
 

@@ -35,7 +35,7 @@ def put_object(prefix, content, gzipped=True):
     content = json.dumps(content, cls=DjangoPartialModelJsonEncoder)
 
     logger.info(
-        'Loading prefix to S3 (gzip: {}): {}'.format(gzipped, prefix)
+        'Uploading file (gzip: {}): {}'.format(gzipped, prefix)
     )
 
     return default_storage.save(prefix, FileClass(content))
