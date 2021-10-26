@@ -34,7 +34,7 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install pip-tools==5.3.1 --quiet
+            pip install pip-tools --quiet
             pip-sync requirements.txt requirements-dev.txt
       - save_cache:
           key: v1-requirements-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
