@@ -136,11 +136,10 @@ class TableSchemaSelectorContainer extends Component {
     const {
       currentTable,
       datastore,
-      loading,
       datastoreSchemaNames,
+      loading,
     } = this.props
     const { search } = this.state
-
     const SidebarComponent = (search.length > 0) ? TableSchemaSelectorSearchComponent : TableSchemaSelectorBasicComponent
     return (
       <Fragment>

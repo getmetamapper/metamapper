@@ -6,7 +6,6 @@ import { withUserContext } from "context/UserContext"
 import { Col, Menu, Row } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import DatastoreLayout from "app/Datastores/DatastoreLayout"
-import TableSchemaSelector from "app/Datastores/DatastoreDefinition/TableSchemaSelector"
 import TableDefinitionDetails from "app/Datastores/DatastoreDefinition/TableDefinitionDetails"
 
 class DefinitionLayout extends Component {
@@ -107,7 +106,7 @@ class DefinitionLayout extends Component {
         title={`${lastCrumb} - ${table.schema.name}.${table.name} - ${datastore.slug} - Metamapper`}
       >
         <Row>
-          <Col span={20}>
+          <Col span={24}>
             <div>
               <TableDefinitionDetails
                 datastore={datastore}
@@ -127,9 +126,6 @@ class DefinitionLayout extends Component {
               </Menu>
             </div>
             <div className="datastore-definition-content">{children}</div>
-          </Col>
-          <Col span={4} className="table-schema-selector-wrapper">
-            <TableSchemaSelector datastore={datastore} currentTable={table} loading={loading} />
           </Col>
         </Row>
       </DatastoreLayout>

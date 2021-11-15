@@ -30,7 +30,7 @@
       height: 100%;
       > .table-schema-selector {
         height: 100%;
-        overflow-y: scroll;
+        /*overflow-y: scroll;*/
       }
     }
   }
@@ -63,8 +63,11 @@
   }
 }
 .datastores .datastores-content {
-  margin-top: 80px;
+  margin-top: 54px;
   margin-bottom: 40px;
+}
+.datastores .datastores-content .inner-datastore-layout {
+  margin-top: 28px;
 }
 .datastores .datastore-schemas {
   margin-top: 54px;
@@ -303,7 +306,7 @@
   width: 0px;
   background: transparent;
 }
-.table-schema-selector-clearfix{
+.table-schema-selector-clearfix {
   height: 120px;
 }
 .table-schema-search {

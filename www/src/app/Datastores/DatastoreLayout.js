@@ -8,10 +8,22 @@ import { Avatar, Col, Row, Icon, Layout, Menu, Tooltip } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import Breadcrumbs from "app/Navigation/Breadcrumbs"
 import DatastoreEngineIcon from "app/Datastores/DatastoreEngineIcon"
+import TableSchemaSelector from "app/Datastores/DatastoreDefinition/TableSchemaSelector"
 
-const InnerLayout = ({ children }) => <div>{children}</div>
-
-const InnerDatastoreLayout = withLargeLoader(InnerLayout)
+const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading }) => (
+  <Row>
+    <Col span={20}>
+      <div className="inner-datastore-layout">{children}</div>
+    </Col>
+    <Col span={4} className="table-schema-selector-wrapper">
+      <TableSchemaSelector
+        currentTable={{ name: "test" }}
+        datastore={datastore}
+        loading={loading}
+      />
+    </Col>
+  </Row>
+))
 
 class DatastoreLayout extends Component {
   getLinks() {
@@ -122,7 +134,11 @@ class DatastoreLayout extends Component {
                   <Breadcrumbs breadcrumbs={breadcrumbs(datastore)} />
                 </div>
                 <Layout.Content className={className}>
-                  <InnerDatastoreLayout children={children} loading={loading} />
+                  <InnerDatastoreLayout
+                    children={children}
+                    datastore={datastore}
+                    loading={loading}
+                  />
                 </Layout.Content>
               </Col>
             </Row>
