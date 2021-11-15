@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react"
 import { compose, graphql } from "react-apollo"
 import { Table, Form, Button, Checkbox } from "antd"
-import { coalesce } from "lib/utilities"
 import BooleanIndicator from "app/Common/BooleanIndicator"
 import RevokeDatastoreAccess from "app/Datastores/DatastoreAccess/RevokeDatastoreAccess"
 import UpdateDatastoreAccessPrivilegesMutation from "graphql/mutations/UpdateDatastoreAccessPrivileges"
@@ -48,7 +47,7 @@ class DatastoreAccessPrivilegesTable extends Component {
     const columns = [
       {
         title: "Name",
-        sorter: (a, b) => coalesce(b.name, b.name).charCodeAt(0),
+        sorter: (a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0),
         render: (record) => <span>{record.name}</span>,
       },
       {

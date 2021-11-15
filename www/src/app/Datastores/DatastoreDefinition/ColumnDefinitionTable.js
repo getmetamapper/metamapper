@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { compose, graphql } from "react-apollo"
 import { Card, Icon, Tooltip, Tag } from "antd"
-import { isEmpty, pick, map, some } from "lodash"
+import { isEmpty, pick, map, some, find } from "lodash"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { components } from "app/Common/EditableCell"
 import FormLabel from "app/Common/FormLabel"
@@ -49,18 +49,21 @@ class ColumnDefinitionTable extends Component {
         title: "Column",
         dataIndex: "name",
         key: "name",
+        sorter: (a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0),
         render: (name) => <span className="column-name">{name}</span>,
       },
       {
         title: "Data Type",
         dataIndex: "fullDataType",
         key: "fullDataType",
+        sorter: (a, b) => a.fullDataType.charCodeAt(0) - b.fullDataType.charCodeAt(0),
         render: (fullDataType) => <Tag>{fullDataType}</Tag>,
       },
       {
         title: "Nullable",
         dataIndex: "isNullable",
         align: "center",
+        sorter: (a, b) => Number(a.isNullable) - Number(b.isNullable),
         render: (isNullable) => <BooleanIndicator value={isNullable} />,
       },
       {
@@ -68,6 +71,12 @@ class ColumnDefinitionTable extends Component {
         dataIndex: "shortDesc",
         key: "shortDesc",
         editable: true,
+        sorter: (a, b) => {
+          if (!a.shortDesc) {
+            return -1;
+          }
+          return a.shortDesc.charCodeAt(0) - b.shortDesc.charCodeAt(0)
+        }
       },
     ]
 
@@ -106,6 +115,12 @@ class ColumnDefinitionTable extends Component {
         shortDesc: row.shortDesc,
       },
       successMessage: "Description was saved.",
+    }
+
+    const oldRow = find(this.props.dataSource, { id: row.id })
+
+    if (row.shortDesc === oldRow.shortDesc) {
+      return;
     }
 
     this.props.handleMutation(payload, ({ data }) => {

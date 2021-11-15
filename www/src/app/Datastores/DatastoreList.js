@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
-import { Table, Tag } from "antd"
+import { Table } from "antd"
 import { withUserContext } from "context/UserContext"
 import { withLargeLoader } from "hoc/withLoader"
 import moment from "moment"
@@ -23,16 +23,6 @@ class DatastoreList extends Component {
         align: "left",
         render: (text, row, index) => (
           <span className="datastore-name">{text}</span>
-        ),
-      },
-      {
-        title: "Status",
-        dataIndex: "isEnabled",
-        key: "isEnabled",
-        render: (isEnabled) => (
-          <Tag color={isEnabled ? "blue" : "volcano"}>
-            {isEnabled ? "Enabled" : "Disabled"}
-          </Tag>
         ),
       },
       {
