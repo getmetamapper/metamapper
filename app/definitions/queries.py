@@ -217,7 +217,7 @@ class Query(graphene.ObjectType):
         ]
 
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
-    def resolve_datastore_assets(self, info, slug, search=None, *args, **kwargs):
+    def resolve_datastore_assets(self, info, slug, search=None, first=None, *args, **kwargs):
         """Retrieve the assets for this datastore.
         """
         get_kwargs = {

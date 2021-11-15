@@ -15,7 +15,7 @@ const TableSchemaSelectorTables = ({ schemaTableNames, currentTable, datastore, 
     {map(schemaTableNames, (tableName) => (
       <Link
         className={`tablename ${
-          currentTable.name === tableName ? "active" : ""
+          currentTable && currentTable.name === tableName ? "active" : ""
         }`}
         key={tableName}
         title={tableName}
@@ -94,7 +94,7 @@ const TableSchemaSelectorSearchResults = ({
             <div className="search-result">
               <Link
                 className={`tablename ${
-                  currentTable.name === asset.name ? "active" : ""
+                  currentTable && currentTable.name === asset.name ? "active" : ""
                 }`}
                 key={`${asset.schema.name}.${asset.name}`}
                 title={`${asset.schema.name}.${asset.name}`}
@@ -154,8 +154,8 @@ class TableSchemaSelectorContainer extends Component {
         <SidebarComponent
           currentTable={currentTable}
           datastore={datastore}
-          schemas={datastoreSchemaNames}
           loading={loading}
+          schemas={datastoreSchemaNames}
           search={search}
         />
       </Fragment>

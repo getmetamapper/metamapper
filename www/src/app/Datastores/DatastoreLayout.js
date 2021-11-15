@@ -17,7 +17,7 @@ const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading }) 
     </Col>
     <Col span={4} className="table-schema-selector-wrapper">
       <TableSchemaSelector
-        currentTable={{ name: "test" }}
+        currentTable={{ name: null }}
         datastore={datastore}
         loading={loading}
       />
