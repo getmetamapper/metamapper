@@ -101,3 +101,4 @@ zipp==3.1.0               # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
+celery>=5.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
