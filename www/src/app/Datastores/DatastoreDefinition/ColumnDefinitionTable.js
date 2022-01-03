@@ -17,7 +17,7 @@ class ColumnDefinitionTable extends Component {
     this.columns = [
       {
         align: "center",
-        width: 60,
+        width: 40,
         render: (row) => (
           <div className={row.commentsCount > 0 || (row.readme && row.readme.length > 0) ? "has-comments" : ""}>
             <Tooltip title="View column details">
@@ -34,7 +34,7 @@ class ColumnDefinitionTable extends Component {
         key: "isPrimary",
         dataIndex: "isPrimary",
         align: "center",
-        width: 60,
+        width: 40,
         render: (isPrimary) => (
           <>
             {isPrimary && (
@@ -58,13 +58,6 @@ class ColumnDefinitionTable extends Component {
         key: "fullDataType",
         sorter: (a, b) => a.fullDataType.charCodeAt(0) - b.fullDataType.charCodeAt(0),
         render: (fullDataType) => <Tag>{fullDataType}</Tag>,
-      },
-      {
-        title: "Nullable",
-        dataIndex: "isNullable",
-        align: "center",
-        sorter: (a, b) => Number(a.isNullable) - Number(b.isNullable),
-        render: (isNullable) => <BooleanIndicator value={isNullable} />,
       },
       {
         title: "Description",
@@ -195,6 +188,7 @@ class ColumnDefinitionTable extends Component {
           pagination={false}
           expandedRowRender={this.renderExpandedRow}
           rowClassName={record => (this.shouldExpand(record) ? "editable-row" : "editable-row not-expandable")}
+          scroll={{ x: (window.innerWidth / 2) }}
         />
       </span>
     )

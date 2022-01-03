@@ -64,7 +64,7 @@ status:
 
 restart: stop start
 
-frontend:
+dev:
 	@npm run start --prefix www
 
 shell:
@@ -99,4 +99,4 @@ lint-js:
 	@echo "--> Linting JavaScript"
 	@npm run lint --prefix www
 
-.PHONY: frontend
+.PHONY: *
