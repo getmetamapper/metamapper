@@ -10,8 +10,14 @@ from app.comments.models import Comment
 class HardDeleteDatastoreTests(cases.UserFixtureMixin, cases.TestCase):
     """Test cases for background task to delete datastore.
     """
-    load_data = ['workspaces.json', 'datastore.json', 'users.json', 'comments.json']
     datastore_id = 's4N8p5g0wjiS'
+
+    load_data = [
+        'workspaces.json',
+        'datastore.json',
+        'users.json',
+        'comments.json',
+    ]
 
     def test_execution(self):
         """It should delete all the associated objects.

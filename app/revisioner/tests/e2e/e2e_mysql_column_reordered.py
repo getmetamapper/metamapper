@@ -70,14 +70,12 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     },
 ])
 
-inspected_indexes = mutate_inspected(inspected.indexes, [])
-
 test_cases = [
     {
         "model": "Table",
         "description": "The `app`.`products` table should have the same basic structure.",
         "filters": {
-            "object_id": "16488",
+            "object_id": "433ca2646ff2923a64d071e13b3495c6",
         },
         "assertions": [
             {
@@ -123,14 +121,14 @@ test_cases = [
             {
                 "summarized": "It should have the same Table identity.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": 7,
+                "pass_value": "433ca2646ff2923a64d071e13b3495c6",
             },
             # MySQL object IDs are calculated as: MD5(CONCAT(it.table_id, '/', c.column_name))
             # which means the object ID will not change in this case.
             {
                 "summarized": "It should have the same the `object_id` field.",
                 "evaluation": lambda datastore, column: column.object_id,
-                "pass_value": "16488/3",
+                "pass_value": "d191b46a8d8d7dbaac6f984d8408aeff",
             },
             {
                 "summarized": "It should update the `ordinal_position` field.",
@@ -161,7 +159,7 @@ test_cases = [
             {
                 "summarized": "It should have the same Table identity.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": 7,
+                "pass_value": "433ca2646ff2923a64d071e13b3495c6",
             },
             {
                 "summarized": "It should update the `ordinal_position` field.",

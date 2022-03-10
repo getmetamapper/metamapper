@@ -31,7 +31,7 @@ build-docker:
 initdb:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0
 
-makemigrations:
+upgradedb:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py makemigrations
 
 migrate:
@@ -40,13 +40,13 @@ migrate:
 reindex:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py reindex
 
-seeddata:
-	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py seeddata www/cypress/fixtures/*.spec.json
+seeddb:
+	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py seeddata www/cypress/fixtures/definitions.spec.json
 
 resetdb:
 	@docker-compose -f docker-development.yml run --rm webserver bash www/cypress/cmd/resetdb.sh
 
-rebuild-db: stop
+rebuilddb: stop
 	@docker-compose -f docker-development.yml start database
 	@docker-compose -f docker-development.yml exec database dropdb metamapper -U postgres
 	@docker-compose -f docker-development.yml exec database createdb metamapper -U postgres
@@ -83,7 +83,7 @@ test-cypress: cypress-resetdb
 test-py:
 	@echo "--> Running Python (webserver) tests"
 	@find . -name \*.pyc -delete
-	@docker-compose -f docker-development.yml --log-level ERROR run --rm webserver python manage.py test --exclude-tag=inspector
+	@docker-compose -f docker-development.yml --log-level ERROR run --rm webserver python manage.py test --exclude-tag=inspector app.revisioner
 
 test-js:
 	@echo "--> Running JavaScript (client) tests"

@@ -10,8 +10,8 @@ from utils import logging
 
 from app.definitions.models import Datastore
 
-from app.revisioner.models import Run, RunTask, RevisionerError
-from app.revisioner.tasks import core as coretasks
+from app.revisioner.models import Run
+from app.revisioner.tasks.v1 import core
 
 
 __all__ = ['create_runs', 'queue_runs']
@@ -79,38 +79,4 @@ def queue_runs(self, datastore_slug=None, *args, **kwargs):
         )
         # Revisioner run starts within 15 minutes of this task call. We introduce randomness
         # so that we don't have a thundering herd...
-        coretasks.start_revisioner_run.apply_async(args=[run.id], countdown=random.randint(0, (60 * 15)))
-
-
-@app.task(bind=True)
-@logging.task_logger(__name__)
-def detect_run_timeout(self, minutes=60 * 2, *args, **kwargs):
-    """Garbage collection. Clears out runs if they haven't finished running after 120 minutes.
-    """
-    date_from = timezone.now() - timedelta(minutes=minutes)
-    runs = Run.objects.filter(created_at__lte=date_from, finished_at=None)
-
-    for run in runs:
-        self.log.info(
-            f'(run: {run.id}) Marking run as timed out'
-        )
-
-        run.mark_as_finished()
-
-        RevisionerError.objects.create(
-            task=None,
-            run_id=run.id,
-            task_fcn='detect_run_timeout',
-            exc_type='RevisionerRunTimeout',
-            exc_message='The run timed out.',
-            exc_stacktrace=None,
-        )
-
-        unfinished_tasks = (
-            RunTask.objects.filter(run_id=run.id, status=RunTask.PENDING)
-        )
-
-        for task in unfinished_tasks:
-            app.control.revoke(task.meta_task_id)
-
-        unfinished_tasks.update(status=RunTask.REVOKED)
+        core.start_run.apply_async(args=[run.id], countdown=random.randint(0, (60 * 15)))

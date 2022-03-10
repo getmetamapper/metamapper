@@ -45,7 +45,7 @@ class DatastoreSetup extends Component {
         <Helmet>
           <title>Datastore Setup - {currentWorkspace.slug} - Metamapper</title>
         </Helmet>
-        <Col span={12} offset={6}>
+        <Col span={16} offset={4}>
           <DatastoreSetupForm
             form={form}
             hasPermission={hasPermission}

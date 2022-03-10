@@ -24,8 +24,6 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     },
 ])
 
-inspected_indexes = mutate_inspected(inspected.indexes, [])
-
 test_cases = [
     {
         "model": "Schema",

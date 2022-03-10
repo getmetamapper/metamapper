@@ -11,7 +11,6 @@ from ordered_model.models import OrderedModel
 from app.authentication.models import Workspace
 from app.comments.models import Comment
 from app.customfields.models import CustomPropertiesModel
-from app.revisioner.mixins import RevisableModel
 
 from utils.delete.models import SoftDeletionModel
 from utils.encrypt.fields import EncryptedCharField
@@ -19,7 +18,6 @@ from utils.managers import SearchManager
 from utils.mixins.models import (
     StringPrimaryKeyModel, TimestampedModel, AuditableModel
 )
-from utils.postgres.managers import PostgresManager
 from utils.shortcuts import generate_unique_slug
 
 
@@ -286,16 +284,19 @@ class Datastore(StringPrimaryKeyModel,
 
 
 class Schema(AuditableModel,
-             RevisableModel,
              SoftDeletionModel,
              TimestampedModel):
     """Represents a schema within a datastore.
     """
+    run_id = models.CharField(max_length=255, null=True)
+
     audited_fields = [
         'tags',
     ]
 
-    object_id = models.CharField(db_index=True, max_length=40, null=True, default=None)
+    object_id = models.CharField(db_index=True, max_length=128, unique=True)
+
+    object_ref = models.CharField(db_index=True, max_length=128, null=True)
 
     datastore = models.ForeignKey(
         to=Datastore,
@@ -325,7 +326,10 @@ class Schema(AuditableModel,
         return self.name
 
     class Meta:
-        unique_together = ('datastore', 'name',)
+        unique_together = [
+            ('datastore', 'name', 'deleted_at'),
+            ('datastore', 'object_id'),
+        ]
 
     def __str__(self):
         return self.name
@@ -333,7 +337,6 @@ class Schema(AuditableModel,
 
 class Table(AuditableModel,
             CustomPropertiesModel,
-            RevisableModel,
             SoftDeletionModel,
             TimestampedModel):
     """Represents a table within a schema.
@@ -344,16 +347,21 @@ class Table(AuditableModel,
         'tags',
     ]
 
+    run_id = models.CharField(max_length=255, null=True)
+
     comments = GenericRelation(Comment, related_query_name="table")
 
     owners = GenericRelation(AssetOwner, related_query_name="table")
 
-    object_id = models.CharField(db_index=True, max_length=40, null=True, default=None)
+    object_id = models.CharField(db_index=True, max_length=128, unique=True)
+
+    object_ref = models.CharField(db_index=True, max_length=128, null=True)
 
     schema = models.ForeignKey(
         to=Schema,
         on_delete=models.CASCADE,
         related_name='tables',
+        to_field='object_id',
     )
 
     workspace = models.ForeignKey(
@@ -374,7 +382,10 @@ class Table(AuditableModel,
     search_objects = SearchManager(fields=['name', 'schema__name', 'short_desc'])
 
     class Meta:
-        unique_together = ('schema', 'name',)
+        unique_together = [
+            ('schema', 'name', 'deleted_at'),
+            ('schema', 'object_id',),
+        ]
 
     def to_doc(self):
         return {
@@ -435,22 +446,9 @@ class Table(AuditableModel,
             'datastore_id': self.datastore_id,
         }
 
-    @property
-    def revisioner_pathname(self):
-        return '/datastores/%s/assets?schema=%s' % (
-            self.datastore_slug,
-            self.schema.name,
-        )
-
-    @property
-    def revisioner_parent_label(self):
-        """Decorator function for label in Revisioner output.
-        """
-        return self.schema.name
-
 
 class TableProperty(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+    id = models.CharField(max_length=255, primary_key=True)
     table = models.ForeignKey(Table, related_name='table_properties', on_delete=models.DO_NOTHING)
     value = models.TextField(db_column='property_value')
 
@@ -461,8 +459,7 @@ class TableProperty(models.Model):
 
 class Column(AuditableModel,
              TimestampedModel,
-             SoftDeletionModel,
-             RevisableModel):
+             SoftDeletionModel):
     """Represents a column within a table.
     """
     audited_fields = [
@@ -470,14 +467,19 @@ class Column(AuditableModel,
         'tags',
     ]
 
+    run_id = models.CharField(max_length=255, null=True)
+
     comments = GenericRelation(Comment, related_query_name="column")
 
-    object_id = models.CharField(db_index=True, max_length=256, null=True, default=None)
+    object_id = models.CharField(db_index=True, max_length=128, unique=True)
+
+    object_ref = models.CharField(db_index=True, max_length=128, null=True)
 
     table = models.ForeignKey(
         to=Table,
         on_delete=models.CASCADE,
         related_name='columns',
+        to_field='object_id',
     )
 
     workspace = models.ForeignKey(
@@ -500,7 +502,10 @@ class Column(AuditableModel,
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
 
     class Meta:
-        unique_together = ('table', 'name',)
+        unique_together = [
+            ('table', 'name', 'deleted_at'),
+            ('table', 'object_id'),
+        ]
 
     @property
     def parent_resource(self):
@@ -567,107 +572,3 @@ class Column(AuditableModel,
                 dtype = '{0}, {1}'.format(dtype, self.numeric_scale)
             dtype = dtype + ')'
         return dtype
-
-    @property
-    def revisioner_pathname(self):
-        return '/datastores/%s/definition/%s/%s/columns' % (
-            self.datastore_slug,
-            self.table.schema.name,
-            self.table.name,
-        )
-
-    @property
-    def revisioner_parent_label(self):
-        """Decorator function for label in Revisioner output.
-        """
-        return '%s.%s' % (self.table.schema.name, self.table.name)
-
-
-class Index(RevisableModel, TimestampedModel):
-    """Represents a index within a table.
-    """
-    object_id = models.CharField(db_index=True, max_length=40, null=True, default=None)
-
-    table = models.ForeignKey(
-        to=Table,
-        on_delete=models.CASCADE,
-        related_name='indexes',
-    )
-
-    workspace = models.ForeignKey(
-        to=Workspace,
-        on_delete=models.CASCADE,
-        related_name='+',
-    )
-
-    name = models.CharField(db_index=True, max_length=512)
-    kind = models.CharField(max_length=50)
-
-    is_primary = models.BooleanField(null=False, default=False)
-    is_unique = models.BooleanField(null=False, default=False)
-
-    sql = models.TextField(null=True)
-
-    columns = models.ManyToManyField(Column, through=u'IndexColumn')
-
-    objects = PostgresManager()
-
-    @property
-    def display_name(self):
-        """The displayable name of the object.
-        """
-        return self.name
-
-    @property
-    def parent_resource(self):
-        return self.table
-
-    @property
-    def datastore_id(self):
-        return self.table.datastore_id
-
-    @property
-    def datastore_slug(self):
-        return self.table.datastore_slug
-
-    @property
-    def revisioner_pathname(self):
-        return '/datastores/%s/definition/%s/%s/indexes' % (
-            self.datastore_slug,
-            self.table.schema.name,
-            self.table.name,
-        )
-
-    @property
-    def revisioner_parent_label(self):
-        """Decorator function for label in Revisioner output.
-        """
-        return '%s.%s' % (self.table.schema.name, self.table.name)
-
-    class Meta:
-        unique_together = ('table', 'name',)
-
-
-class IndexColumn(TimestampedModel):
-    """Relationship between an index and multiple existing columns.
-    """
-    workspace = models.ForeignKey(
-        to=Workspace,
-        on_delete=models.CASCADE,
-        related_name='+',
-    )
-
-    index = models.ForeignKey(
-        to=Index,
-        on_delete=models.CASCADE,
-        related_name='index_columns',
-    )
-
-    column = models.ForeignKey(to=Column, on_delete=models.CASCADE)
-
-    ordinal_position = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
-
-    objects = PostgresManager()
-
-    class Meta:
-        unique_together = ('index', 'column', 'workspace',)

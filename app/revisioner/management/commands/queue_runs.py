@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand
 
-from app.revisioner.tasks import scheduler
+from app.revisioner.tasks.v1 import scheduler
 
 
 class Command(BaseCommand):

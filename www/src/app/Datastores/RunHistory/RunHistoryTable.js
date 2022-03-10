@@ -44,20 +44,6 @@ class RunHistoryTable extends Component {
           </>
         ),
       },
-      {
-        title: "Changes Recorded",
-        render: (record) => (
-          <>
-            {record.finishedAt && record.status !== "FAILURE" && (
-              // eslint-disable-next-line
-              <a role="button" onClick={() => this.props.onSelect(record)}>
-                {record.revisionCount > 0 ? record.revisionCount : "no"}{" "}
-                change(s) detected
-              </a>
-            )}
-          </>
-        ),
-      },
     ]
   }
 

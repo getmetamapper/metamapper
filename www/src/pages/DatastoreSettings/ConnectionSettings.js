@@ -76,7 +76,7 @@ class ConnectionSettings extends Component {
         title={`Connection Settings - ${datastore.slug} - Metamapper`}
       >
         <Row>
-          <Col span={12} offset={6}>
+          <Col span={16} offset={4}>
             <Card>
               <h3>Connection Settings</h3>
               <Divider />

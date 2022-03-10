@@ -5,7 +5,7 @@ from django import test
 from django.utils import timezone
 
 import app.inspector.engines.redshift_inspector as engine
-import app.revisioner.tasks.core as coretasks
+import app.revisioner.tasks.v1.core as coretasks
 
 import testutils.factories as factories
 

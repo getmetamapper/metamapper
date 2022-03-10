@@ -7,14 +7,12 @@ from app.inspector import service as inspector
 from app.definitions.models import Datastore
 
 
-__all__ = [
-    'check_for_version_update',
-]
+__all__ = ['check_version']
 
 
 @app.task(bind=True)
 @logging.task_logger(__name__)
-def check_for_version_update(self, datastore_id):
+def check_version(self, datastore_id):
     """Check if the version of the datastore needs to be updated.
     """
     datastore = Datastore.objects.get(pk=datastore_id)

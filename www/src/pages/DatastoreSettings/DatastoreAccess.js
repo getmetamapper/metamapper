@@ -79,7 +79,7 @@ class DatastoreAccess extends Component {
         title={`Access - ${datastore.slug} - Metamapper`}
       >
         <Row>
-          <Col span={16} offset={4}>
+          <Col span={22} offset={1}>
             <Card className="datastore-access">
               <div className="datastore-access-header">
                 <h3>Datastore Access Settings</h3>

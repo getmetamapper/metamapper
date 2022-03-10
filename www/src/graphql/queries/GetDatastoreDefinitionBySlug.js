@@ -10,7 +10,6 @@ export default gql`
       tags
       version
       isEnabled
-      hasIndexes
       jdbcConnection {
         engine
       }

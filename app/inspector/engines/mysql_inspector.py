@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import re
-
-import app.inspector.engines.interface as interface
-
 import mysql.connector
 import mysql.connector.cursor as cursors
+
+import re
+import app.inspector.engines.interface as interface
 
 
 MYSQL_V5_REGEXP = re.compile(r'5\.[0-9]{1,3}\.[0-9]{1,3}')

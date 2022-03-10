@@ -10,8 +10,14 @@ from app.comments.models import Comment
 class HardDeleteWorkspaceTests(cases.UserFixtureMixin, cases.TestCase):
     """Test cases for background task to delete workspace.
     """
-    load_data = ['workspaces.json', 'datastore.json', 'users.json', 'comments.json']
     workspace_id = 'f4bb0aabc51d458a9eab58ed80fa2d6c'
+
+    load_data = [
+        'workspaces.json',
+        'datastore.json',
+        'users.json',
+        'comments.json',
+    ]
 
     def test_execution(self):
         """It should delete all the associated objects.

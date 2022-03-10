@@ -4,9 +4,7 @@ from collections import namedtuple
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
-from app.definitions.models import (
-    Datastore, Schema, Table, Column, Index, IndexColumn
-)
+from app.definitions.models import Datastore, Schema, Table, Column
 
 
 KLASS_MAP = {
@@ -14,8 +12,6 @@ KLASS_MAP = {
     'Schema': Schema,
     'Table': Table,
     'Column': Column,
-    'Index': Index,
-    'IndexColumn': IndexColumn,
 }
 
 

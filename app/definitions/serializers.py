@@ -5,7 +5,7 @@ import app.audit.decorators as audit
 import app.definitions.models as models
 
 import app.inspector.service as inspector
-import app.revisioner.tasks.core as coretasks
+import app.revisioner.tasks.v1.core as coretasks
 
 import utils.fields as fields
 import utils.shortcuts as shortcuts
@@ -346,7 +346,7 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
                     workspace_id=datastore.workspace_id,
                     started_at=timezone.now(),
                 )
-                coretasks.start_revisioner_run.apply_async(args=[run.id])
+                coretasks.start_run.apply_async(args=[run.id])
         return datastore
 
     @audit.capture_activity(

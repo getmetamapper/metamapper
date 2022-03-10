@@ -180,38 +180,29 @@ inspected_tables += [
     }
 ]
 
-inspected_indexes = mutate_inspected(inspected.indexes, [])
-
 test_cases = [
-    {
-        "description": "Expect revision logs to be created.",
-        "assertions": [
-            {
-                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='column').count(),
-                "pass_value": 0,
-            },
-            {
-                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='indexes').count(),
-                "pass_value": 0,
-            },
-            {
-                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=2, resource_type__model='column').count(),
-                "pass_value": 8,
-            },
-        ]
-    },
     {
         "model": "Table",
         "description": "Expect `employees.departments` table to be renamed.",
         "filters": {
             "schema__name": "employees",
-            "object_id": "16392",
+            "object_ref": "16392",
         },
         "assertions": [
             {
                 "evaluation": lambda datastore, table: table.name,
                 "pass_value": "depts",
-            }
+            },
+            # It has a new object identifier due to the name change.
+            {
+                "evaluation": lambda datastore, table: table.object_id,
+                "pass_value": "211cb58e693ee1eb0eb35cb80cb2e557",
+            },
+            # It retains associated metadata.
+            {
+                "evaluation": lambda datastore, table: table.tags,
+                "pass_value": ["one", "two"],
+            },
         ]
     },
     {
@@ -219,13 +210,17 @@ test_cases = [
         "description": "Expect `app.departments` table NOT be be renamed.",
         "filters": {
             "schema__name": "app",
-            "object_id": "16522",
+            "object_ref": "16522",
         },
         "assertions": [
             {
                 "evaluation": lambda datastore, table: table.name,
                 "pass_value": "departments",
-            }
+            },
+            {
+                "evaluation": lambda datastore, table: table.object_id,
+                "pass_value": "dbcfca725d1ddff7e4505c2f60d02311",
+            },
         ]
     },
     {
@@ -275,7 +270,7 @@ test_cases = [
         "filters": {
             "schema__name": "app",
             "name": "categories",
-            "object_id": "99999",
+            "object_ref": "99999",
         },
         "assertions": [
             {
@@ -293,7 +288,7 @@ test_cases = [
         "description": "The column `app`.`customers`.`postalcode` has a default_value change.",
         "filters": {
             "table__schema__name": "app",
-            "table__object_id": "16442",
+            "table__object_ref": "16442",
             "name": "postalcode",
         },
         "assertions": [
@@ -316,7 +311,7 @@ test_cases = [
         "description": "The column `app`.`orders`.`status` has a data type change.",
         "filters": {
             "table__schema__name": "app",
-            "table__object_id": "16465",
+            "table__object_ref": "16465",
             "name": "status",
         },
         "assertions": [
@@ -339,7 +334,7 @@ test_cases = [
         "description": "The column `app`.`orders`.`amount` has changed.",
         "filters": {
             "table__schema__name": "app",
-            "table__object_id": "16478",
+            "table__object_ref": "16478",
             "ordinal_position": 4,
         },
         "assertions": [
@@ -355,24 +350,6 @@ test_cases = [
                 "evaluation": lambda datastore, column: column.name,
                 "pass_value": "dollar_amount",
             },
-        ]
-    },
-    {
-        "model": "Index",
-        "description": "Expect `customers_pkey` index to be created.",
-        "filters": {
-            "table__schema__name": "app",
-            "name": "customers_pkey",
-        },
-        "assertions": [
-            {
-                "evaluation": lambda datastore, index: index.object_id,
-                "pass_value": "16449",
-            },
-            {
-                "evaluation": lambda datastore, index: index.columns.count() > 0,
-                "pass_value": True,
-            }
         ]
     },
 ]

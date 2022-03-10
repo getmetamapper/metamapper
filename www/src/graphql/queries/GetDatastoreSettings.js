@@ -12,7 +12,6 @@ export default gql`
       isEnabled
       objectPermissionsEnabled
       shortDesc
-      hasIndexes
       disabledDatastoreProperties
       disabledTableProperties
       jdbcConnection {

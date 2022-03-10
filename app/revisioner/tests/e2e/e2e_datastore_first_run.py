@@ -9,8 +9,6 @@ preload_fixtures = []
 
 inspected_tables = mutate_inspected(inspected.tables_and_views, [])
 
-inspected_indexes = mutate_inspected(inspected.indexes, [])
-
 test_cases = [
     {
         "description": "Expect new schemas to be created.",
@@ -21,16 +19,6 @@ test_cases = [
                     "app",
                     "employees",
                 },
-            },
-            {
-                "description": "Expect first time created columns to be dropped from the revision logs.",
-                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='column').count(),
-                "pass_value": 0,
-            },
-            {
-                "description": "Expect first time created indexes to be dropped from the revision logs.",
-                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='index').count(),
-                "pass_value": 0,
             },
         ]
     },
@@ -91,10 +79,6 @@ test_cases = [
                 "evaluation": lambda datastore, table: table.columns.count(),
                 "pass_value": 13,
             },
-            {
-                "evaluation": lambda datastore, table: table.indexes.count(),
-                "pass_value": 1,
-            }
         ]
     },
     {
@@ -114,12 +98,8 @@ test_cases = [
                 },
             },
             {
-                "evaluation": lambda datastore, table: table.indexes.count(),
-                "pass_value": 2,
-            },
-            {
                 "evaluation": lambda datastore, table: table.object_id,
-                "pass_value": "16392",
+                "pass_value": "381335ab07d2b67bfe43774716cf7376",
             }
         ]
     },
@@ -139,12 +119,8 @@ test_cases = [
                 },
             },
             {
-                "evaluation": lambda datastore, table: table.indexes.count(),
-                "pass_value": 2,
-            },
-            {
                 "evaluation": lambda datastore, table: table.object_id,
-                "pass_value": "16522",
+                "pass_value": "dbcfca725d1ddff7e4505c2f60d02311",
             }
         ]
     },
@@ -159,10 +135,6 @@ test_cases = [
             {
                 "evaluation": lambda datastore, table: table.columns.count(),
                 "pass_value": 6,
-            },
-            {
-                "evaluation": lambda datastore, table: table.indexes.count(),
-                "pass_value": 1,
             },
         ]
     },
@@ -181,7 +153,7 @@ test_cases = [
             },
             {
                 "evaluation": lambda datastore, column: column.object_id,
-                "pass_value": "16399/6",
+                "pass_value": "4378e434da68e999650c0beb424da5d4",
             },
             {
                 "evaluation": lambda datastore, column: column.default_value,

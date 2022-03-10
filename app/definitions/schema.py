@@ -19,36 +19,6 @@ from app.authorization.mixins import AuthNode
 from app.authorization.permissions import WorkspaceTeamMembersOnly
 
 
-class IndexColumnType(graphene.ObjectType):
-    """GraphQL representation of a IndexColumn.
-    """
-    name = graphene.String()
-    ordinal_position = graphene.Int()
-
-
-class IndexType(AuthNode, DjangoObjectType):
-    """GraphQL representation of a Index.
-    """
-    permission_classes = (WorkspaceTeamMembersOnly,)
-    scope_to_workspace = True
-
-    pk = graphene.Int()
-
-    columns = graphene.List(IndexColumnType)
-
-    class Meta:
-        model = models.Index
-        filter_fields = {}
-        interfaces = (relay.Node,)
-        connection_class = connections.DefaultConnection
-        exclude_fields = []
-
-    def resolve_columns(instance, info):
-        """Should return IndexColumn so we can access ordinal_position field.
-        """
-        return info.context.loaders.index_columns.load(instance.pk)
-
-
 class ColumnType(AuthNode, DjangoObjectType):
     """GraphQL representation of a Column.
     """
@@ -176,7 +146,7 @@ class TableType(AuthNode, DjangoObjectType):
     def resolve_columns(instance, info):
         """Should return the associated Columns.
         """
-        return info.context.loaders.table_columns.load(instance.pk)
+        return info.context.loaders.table_columns.load(instance.object_id)
 
     def resolve_schema(instance, info):
         return info.context.loaders.table_schemas.load(instance.schema_id)
@@ -214,7 +184,7 @@ class SchemaType(AuthNode, DjangoObjectType):
     def resolve_tables(instance, info, first=None):
         """Retrieve all of the Table objects associated with this Schema.
         """
-        return info.context.loaders.schema_tables.load(instance.pk)
+        return info.context.loaders.schema_tables.load(instance.object_id)
 
 
 class JdbcConnectionType(graphene.ObjectType):
@@ -251,9 +221,6 @@ class DatastoreType(AuthNode, DjangoObjectType):
     schemas = graphene.List(SchemaType, first=graphene.Int(required=False))
 
     latest_run = graphene.Field(RunType)
-
-    has_indexes = graphene.Boolean()
-    has_constraints = graphene.Boolean()
 
     first_run_is_pending = graphene.Boolean()
 
@@ -307,16 +274,6 @@ class DatastoreType(AuthNode, DjangoObjectType):
         """Retrieve the most recent run for the Schema.
         """
         return instance.last_committed_run
-
-    def resolve_has_indexes(instance, info):
-        """Some engines have indexes and others do not.
-        """
-        return get_inspector_class(instance.engine).has_indexes()
-
-    def resolve_has_constraints(instance, info):
-        """Some engines have constraints and others do not.
-        """
-        return get_inspector_class(instance.engine).has_indexes()
 
     def resolve_first_run_is_pending(instance, info):
         """Check if the datastore has a completed run.

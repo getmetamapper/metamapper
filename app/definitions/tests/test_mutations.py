@@ -85,7 +85,7 @@ class CreateDatastoreTests(cases.GraphQLTestCase):
         return attributes
 
     @mock.patch('app.definitions.serializers.JdbcConnectionSerializer.validate_connection')
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_without_ssh_details(self, start_run, validate_connection):
         """It should not require SSH information for creation.
@@ -117,7 +117,7 @@ class CreateDatastoreTests(cases.GraphQLTestCase):
         self.assertTrue(self.user.has_perm('view_datastore', datastore))
 
     @mock.patch('app.definitions.serializers.JdbcConnectionSerializer.validate_connection')
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @decorators.as_someone(['MEMBER', 'OWNER'])
     def test_with_ssh_details(self, start_run, validate_connection):
         """It should attach SSH information on creation.

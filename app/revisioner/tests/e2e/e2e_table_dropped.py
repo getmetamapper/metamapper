@@ -22,21 +22,12 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     },
 ])
 
-inspected_indexes = mutate_inspected(inspected.indexes, [
-    {
-        "type": "dropped",
-        "filters": (
-            lambda row: row['table_object_id'] == 16392
-        ),
-    },
-])
-
 test_cases = [
     {
         "model": "Table",
         "description": "The `employees`.`departments` table should not longer exist.",
         "filters": {
-            "object_id": "16392",
+            "object_id": "381335ab07d2b67bfe43774716cf7376",
         },
         "assertions": [
             {
@@ -90,20 +81,6 @@ test_cases = [
         ]
     },
     {
-        "model": "Index",
-        "description": "The `employees`.`departments` table should have no indexes.",
-        "filters": {
-            "table_id": 10,
-        },
-        "assertions": [
-            {
-                "summarized": "It should not find any indexes associated with this identity.",
-                "evaluation": lambda datastore, index: index is None,
-                "pass_value": True,
-            },
-        ]
-    },
-    {
         "model": "Table",
         "description": "The `app`.`departments` table should still exist.",
         "filters": {
@@ -119,7 +96,7 @@ test_cases = [
             {
                 "summarized": "It should have the expected `object_id` value.",
                 "evaluation": lambda datastore, table: table.object_id,
-                "pass_value": "16522",
+                "pass_value": "dbcfca725d1ddff7e4505c2f60d02311",
             },
             {
                 "summarized": "It should still have a table structure.",

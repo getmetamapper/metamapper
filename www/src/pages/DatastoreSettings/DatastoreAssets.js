@@ -85,7 +85,7 @@ class DatastoreAssets extends Component {
         title={`Datastore Assets - ${datastore.slug} - Metamapper`}
       >
         <Row>
-          <Col span={20} offset={2}>
+          <Col span={22} offset={1}>
             {datastore.firstRunIsPending ? (
               <FirstRunPending datastore={datastore} />
             ) : (

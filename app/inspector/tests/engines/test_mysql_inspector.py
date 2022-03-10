@@ -5,11 +5,11 @@ import unittest.mock as mock
 from django import test
 from django.utils import timezone
 
-import app.definitions.models as models
-import app.inspector.engines.mysql_inspector as engine
-import app.revisioner.tasks.core as coretasks
-
 import testutils.factories as factories
+
+import app.definitions.models as models
+import app.revisioner.tasks.v1.core as coretasks
+import app.inspector.engines.mysql_inspector as engine
 
 
 class MySQLInspectorInterfaceTests(test.TestCase):
@@ -221,7 +221,7 @@ class MySQLInspectorIntegrationTestMixin(object):
             started_at=timezone.now(),
         )
 
-        coretasks.start_revisioner_run(run.id)
+        coretasks.start_run(run.id)
 
         run.refresh_from_db()
 

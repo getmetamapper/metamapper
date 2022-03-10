@@ -4,11 +4,11 @@ import unittest.mock as mock
 from django import test
 from django.utils import timezone
 
-import app.definitions.models as models
-import app.inspector.engines.hive_metastore_inspector as engine
-import app.revisioner.tasks.core as coretasks
-
 import testutils.factories as factories
+
+import app.definitions.models as models
+import app.revisioner.tasks.v1.core as coretasks
+import app.inspector.engines.hive_metastore_inspector as engine
 
 
 class HiveMetastoreInspectorTests(test.TestCase):

@@ -90,7 +90,7 @@ class DatastoreSettings extends Component {
         title={`Datastore Settings - ${datastore.slug} - Metamapper`}
       >
         <Row>
-          <Col span={12} offset={6}>
+          <Col span={16} offset={4}>
             <Card className="datastore-settings">
               <div className="datastore-settings-header">
                 <h3>Datastore Settings</h3>

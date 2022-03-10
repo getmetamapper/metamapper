@@ -35,29 +35,6 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     },
 ])
 
-inspected_indexes = mutate_inspected(inspected.indexes, [
-    {
-        "type": "modified",
-        "filters": (
-            lambda row: row['schema_object_id'] == 16441
-        ),
-        "metadata": {
-            "field": "schema_name",
-            "new_value": "tng",
-        },
-    },
-    {
-        "type": "modified",
-        "filters": (
-            lambda row: row['schema_object_id'] == 16441
-        ),
-        "metadata": {
-            "field": "schema_object_id",
-            "new_value": 99999,
-        },
-    },
-])
-
 test_cases = [
     {
         "model": "Schema",
@@ -105,14 +82,9 @@ test_cases = [
         "model": "Table",
         "description": "Tests related to the `tng` tables.",
         "filters": {
-            "object_id": "16442",
+            "object_ref": "16442",
         },
         "assertions": [
-            {
-                "summarized": "The table should have the same indexes.",
-                "evaluation": lambda datastore, table: set(table.indexes.values_list("name", flat=True)),
-                "pass_value": {"customers_pkey"},
-            },
             {
                 "summarized": "The table should have the same name.",
                 "evaluation": lambda datastore, table: table.pk,
@@ -124,14 +96,9 @@ test_cases = [
         "model": "Table",
         "description": "Tests related to the `tng` tables.",
         "filters": {
-            "object_id": "16465",
+            "object_ref": "16465",
         },
         "assertions": [
-            {
-                "summarized": "The table should have the same indexes.",
-                "evaluation": lambda datastore, table: set(table.indexes.values_list("name", flat=True)),
-                "pass_value": {"orders_pkey"},
-            },
             {
                 "summarized": "The table should have the same name.",
                 "evaluation": lambda datastore, table: table.pk,
@@ -143,14 +110,9 @@ test_cases = [
         "model": "Table",
         "description": "Tests related to the `tng` tables.",
         "filters": {
-            "object_id": "16392",
+            "object_ref": "16392",
         },
         "assertions": [
-            {
-                "summarized": "The table should have the same indexes.",
-                "evaluation": lambda datastore, table: set(table.indexes.values_list("name", flat=True)),
-                "pass_value": {"employees_departments_pkey", "departments_dept_name_key"},
-            },
             {
                 "summarized": "The table should have the same name.",
                 "evaluation": lambda datastore, table: table.pk,

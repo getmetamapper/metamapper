@@ -93,7 +93,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         attributes.update(**overrides)
         return attributes
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_when_valid_hostname(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -105,7 +105,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         instance = serializer.save(workspace=self.workspace, creator=self.user)
         self.assertTrue(self.user.has_perm('view_datastore', instance))
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_when_valid_ip_address(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -117,7 +117,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         instance = serializer.save(workspace=self.workspace, creator=self.user)
         self.assertTrue(self.user.has_perm('view_datastore', instance))
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_when_name_invalid(self, verify_connection, mock_run):
         """It should be invalid if the name is null.
@@ -134,7 +134,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             }
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_when_host_invalid(self, verify_connection, mock_run):
         """It should be invalid if the host has spaces, etc.
@@ -151,7 +151,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             }
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_when_port_out_of_range(self, verify_connection, mock_run):
         """It should be invalid if the port is larger than 65535.
@@ -168,7 +168,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             }
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_when_port_negative(self, verify_connection, mock_run):
         """It should be invalid if the port is less than 1.
@@ -185,7 +185,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             }
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_when_duplicate_tags(self, verify_connection, mock_run):
         """It should automatically de-duplicate tags.
@@ -199,7 +199,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
 
         self.assertEqual(set(instance.tags), {'red', 'blue'})
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_invalid_ssh_information(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -223,7 +223,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             }
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_partial_ssh_information(self, verify_connection, mock_run):
         """If we need SSH information, we need all 3 fields.
@@ -246,7 +246,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             }
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_entire_ssh_information(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -269,7 +269,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertEqual(instance.ssh_user, extras['ssh_user'])
         self.assertEqual(instance.ssh_port, extras['ssh_port'])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_google_bigquery_valid(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -294,7 +294,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertEqual(list(instance.extras.keys()), ['credentials'])
         self.assertEqual(instance.extras['credentials'], extras['extras']['credentials'])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_google_bigquery_invalid(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -314,7 +314,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_aws_athena_valid(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -340,7 +340,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertEqual(instance.extras['role'], extras['extras']['role'])
         self.assertEqual(instance.extras['region'], extras['extras']['region'])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_aws_athena_invalid(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -360,7 +360,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
         ])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_hive_valid(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -383,7 +383,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertEqual(list(instance.extras.keys()), ['dialect'])
         self.assertEqual(instance.extras['dialect'], extras['extras']['dialect'])
 
-    @mock.patch('app.revisioner.tasks.core.start_revisioner_run.apply_async')
+    @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_hive_invalid_dialect(self, verify_connection, mock_run):
         """It should be able to create the resource.
@@ -1293,7 +1293,6 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         """It should shift around the positions.
         """
         content_object = factories.TableFactory(workspace=self.workspace)
-
         owners = []
         for user in factories.UserFactory.create_batch(5):
             self.workspace.grant_membership(user, 'MEMBER')

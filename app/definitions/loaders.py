@@ -13,7 +13,7 @@ class SchemaTableLoader(DataLoader):
     def batch_load_fn(self, schema_ids):
         """Function to process the batch load.
         """
-        schema = Schema.objects.filter(id=schema_ids[0]).only('datastore_id').first()
+        schema = Schema.objects.filter(object_id=schema_ids[0]).only('datastore_id').first()
 
         mapping = {s: [] for s in schema_ids}
         results = Table.objects.filter(schema__datastore_id=schema.datastore_id).order_by('name')
@@ -49,26 +49,6 @@ class TableColumnLoader(DataLoader):
         ])
 
 
-class IndexColumnLoader(DataLoader):
-    """Preload a collection of Column objects related to an Index.
-    """
-    def batch_load_fn(self, index_ids):
-        """Function to process the batch load.
-        """
-        mapping = {i: [] for i in index_ids}
-        results = Column.objects\
-                        .filter(indexcolumn__index_id__in=index_ids)\
-                        .annotate(index_id=F('indexcolumn__index_id'))\
-                        .order_by('indexcolumn__ordinal_position')
-
-        for column in results:
-            mapping[column.index_id].append(column)
-
-        return Promise.resolve([
-            list(set(mapping.get(s, []))) for s in index_ids
-        ])
-
-
 class TableSchemaLoader(DataLoader):
     """Preload schemas related to a group of tables.
     """
@@ -76,10 +56,10 @@ class TableSchemaLoader(DataLoader):
         """Function to process the batch load.
         """
         output = defaultdict(list)
-        queryset = Schema.all_objects.filter(id__in=schema_ids)
+        result = Schema.all_objects.filter(object_id__in=schema_ids)
 
         for schema_id in schema_ids:
-            schema = next(filter(lambda q: q.id == schema_id, queryset), None)
+            schema = next(filter(lambda q: q.object_id == schema_id, result), None)
 
             if schema and schema.is_deleted:
                 schema.revive()

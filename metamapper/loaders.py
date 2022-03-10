@@ -2,9 +2,8 @@
 from django.utils.functional import cached_property
 
 from app.authentication.loaders import UserLoader, WorkspaceLoader
-from app.definitions.loaders import SchemaTableLoader, TableColumnLoader, IndexColumnLoader, TableSchemaLoader
+from app.definitions.loaders import SchemaTableLoader, TableColumnLoader, TableSchemaLoader
 from app.comments.loaders import ColumnCommentCountLoader, ChildCommentLoader
-from app.revisioner.loaders import RelatedRevisionResourceLoader
 from app.omnisearch.loaders import OmnisearchResultLoader
 
 
@@ -28,10 +27,6 @@ class GlobalDataLoader(object):
         return UserLoader()
 
     @cached_property
-    def related_revision_resources(self):
-        return RelatedRevisionResourceLoader()
-
-    @cached_property
     def schema_tables(self):
         return SchemaTableLoader()
 
@@ -42,10 +37,6 @@ class GlobalDataLoader(object):
     @cached_property
     def table_columns(self):
         return TableColumnLoader()
-
-    @cached_property
-    def index_columns(self):
-        return IndexColumnLoader()
 
     @cached_property
     def column_comment_counts(self):

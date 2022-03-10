@@ -56,7 +56,7 @@ class End2EndRevisionerTests(TestCase):
         )
 
         try:
-            core.start_revisioner_run(run.id)
+            core.start_run(run.id)
         finally:
             clean_uploads_folder(datastore.id, run.id)
 
@@ -90,9 +90,8 @@ def create_test(fn, filename):
     """Helper function to create a e2e test based on the filename.
     """
     @mock.patch('app.inspector.service.tables_and_views')
-    @mock.patch('app.inspector.service.indexes')
     @mock.patch('app.inspector.service.version')
-    def do_test_expected(self, mock_version, mock_indexes, mock_tables):
+    def do_test_expected(self, mock_version, mock_tables):
         """Execute the internal test based on the provided file.
         """
         ns = {}
@@ -102,7 +101,6 @@ def create_test(fn, filename):
             eval(code, ns, ns)
 
         mock_tables.return_value = sorted(ns['inspected_tables'], key=lambda r: (r['table_schema'], r['table_name']))
-        mock_indexes.return_value = ns['inspected_indexes']
         mock_version.return_value = '1.0.0'
 
         if len(ns['inspected_tables']):

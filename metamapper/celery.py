@@ -28,21 +28,13 @@ app.conf.beat_schedule = {
         'task': 'app.healthchecks.tasks.heartbeat',
         'schedule': crontab(),
     },
-    'send-beacon': {
-        'task': 'metamapper.tasks.send_beacon',
-        'schedule': crontab(minute='0', hour='0'),
-    },
     'create-revisioner-runs': {
-        'task': 'app.revisioner.tasks.scheduler.create_runs',
+        'task': 'app.revisioner.tasks.v1.scheduler.create_runs',
         'schedule': crontab(minute='0', hour='*/1'),
     },
     'queue-revisioner-runs': {
-        'task': 'app.revisioner.tasks.scheduler.queue_runs',
+        'task': 'app.revisioner.tasks.v1.scheduler.queue_runs',
         'schedule': crontab(minute='15,45'),
-    },
-    'zombie-revisioner-runs': {
-        'task': 'app.revisioner.tasks.scheduler.detect_run_timeout',
-        'schedule': crontab(minute='*/20'),
     },
     'queue-domain-verification': {
         'task': 'app.sso.tasks.queue_domain_verifications',

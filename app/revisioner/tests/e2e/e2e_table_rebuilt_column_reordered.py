@@ -91,36 +91,6 @@ inspected_tables += [
     }
 ]
 
-inspected_indexes = mutate_inspected(inspected.indexes, [
-    {
-        "type": "dropped",
-        "filters": (
-            lambda row: row['table_object_id'] == 16522
-        ),
-    },
-])
-
-inspected_indexes += [
-    {
-        "schema_name": "app",
-        "schema_object_id": 16441,
-        "table_name": "departments",
-        "table_object_id": 26522,
-        "index_name": "departments_dept_name_key",
-        "index_object_id": 26528,
-        "is_unique": True,
-        "is_primary": False,
-        "definition": "CREATE UNIQUE INDEX departments_dept_name_key ON app.departments USING btree (dept_name)",
-        "columns": [
-            {
-                "column_name": "dept_name",
-                "ordinal_position": 1
-            }
-        ]
-    }
-]
-
-
 test_cases = [
     {
         "model": "Table",

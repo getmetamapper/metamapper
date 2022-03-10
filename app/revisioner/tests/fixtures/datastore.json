@@ -6,12 +6,13 @@
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.196431+00:00",
       "updated_at": "2020-02-27 17:25:55.196482+00:00",
-      "object_id": "16441",
+      "object_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "tags": [
         "one",
         "two",
         "three"
-      ]
+      ],
+      "object_ref": "16441"
     },
     "model": "definitions.schema",
     "pk": 1
@@ -19,18 +20,19 @@
   {
     "fields": {
       "name": "customers",
-      "schema_id": 1,
+      "schema_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.339009+00:00",
       "updated_at": "2020-02-27 17:25:55.339054+00:00",
-      "object_id": "16442",
+      "object_id": "6a05b990b1042996407a94cfdfdcca75",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
       "custom_properties": {
         "p0tqRz5QJ9yC": "Finance",
         "YjOTcEUsymIU": 3
-      }
+      },
+      "object_ref": "16442"
     },
     "model": "definitions.table",
     "pk": 1
@@ -58,18 +60,19 @@
   {
     "fields": {
       "name": "customernumber",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.774833+00:00",
       "updated_at": "2020-02-27 17:25:55.774867+00:00",
-      "object_id": "16442/1",
+      "object_id": "6021f2d660dd53e5bc5c80b1a569f523",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16442/1"
     },
     "model": "definitions.column",
     "pk": 1
@@ -77,18 +80,19 @@
   {
     "fields": {
       "name": "customername",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.774979+00:00",
       "updated_at": "2020-02-27 17:25:55.775008+00:00",
-      "object_id": "16442/2",
+      "object_id": "0b9480b980ca8178a13552bb2531de12",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16442/2"
     },
     "model": "definitions.column",
     "pk": 2
@@ -96,11 +100,11 @@
   {
     "fields": {
       "name": "contactlastname",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775118+00:00",
       "updated_at": "2020-02-27 17:25:55.775142+00:00",
-      "object_id": "16442/3",
+      "object_id": "ea738f6f2678e868ac9dd3ffcf634740",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
@@ -108,7 +112,8 @@
       "numeric_scale": null,
       "max_length": 50,
       "default_value": "",
-      "short_desc": "Related to the customer"
+      "short_desc": "Related to the customer",
+      "object_ref": "16442/3"
     },
     "model": "definitions.column",
     "pk": 3
@@ -116,18 +121,19 @@
   {
     "fields": {
       "name": "contactfirstname",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775216+00:00",
       "updated_at": "2020-02-27 17:25:55.775311+00:00",
-      "object_id": "16442/4",
+      "object_id": "62e938a670587c5ae0c5feab3b144d81",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16442/4"
     },
     "model": "definitions.column",
     "pk": 4
@@ -135,18 +141,19 @@
   {
     "fields": {
       "name": "phone",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775384+00:00",
       "updated_at": "2020-02-27 17:25:55.775406+00:00",
-      "object_id": "16442/5",
+      "object_id": "418e6980600de806dbbcd94c75df260d",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 5,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16442/5"
     },
     "model": "definitions.column",
     "pk": 5
@@ -154,18 +161,19 @@
   {
     "fields": {
       "name": "addressline1",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775477+00:00",
       "updated_at": "2020-02-27 17:25:55.775498+00:00",
-      "object_id": "16442/6",
+      "object_id": "f61fb71adc01fdb129cb7eaab16042cf",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 6,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16442/6"
     },
     "model": "definitions.column",
     "pk": 6
@@ -173,18 +181,19 @@
   {
     "fields": {
       "name": "addressline2",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775569+00:00",
       "updated_at": "2020-02-27 17:25:55.775591+00:00",
-      "object_id": "16442/7",
+      "object_id": "67f2a68b9824c0421a69635647b98112",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 7,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": "NULL::character varying"
+      "default_value": "NULL::character varying",
+      "object_ref": "16442/7"
     },
     "model": "definitions.column",
     "pk": 7
@@ -192,18 +201,19 @@
   {
     "fields": {
       "name": "city",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775662+00:00",
       "updated_at": "2020-02-27 17:25:55.775683+00:00",
-      "object_id": "16442/8",
+      "object_id": "9ca3290e666ee142fb2bd81865ca4892",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 8,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16442/8"
     },
     "model": "definitions.column",
     "pk": 8
@@ -211,18 +221,19 @@
   {
     "fields": {
       "name": "state",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775753+00:00",
       "updated_at": "2020-02-27 17:25:55.775775+00:00",
-      "object_id": "16442/9",
+      "object_id": "bf66081beb1fda619f49b0ef900fe40f",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 9,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": "NULL::character varying"
+      "default_value": "NULL::character varying",
+      "object_ref": "16442/9"
     },
     "model": "definitions.column",
     "pk": 9
@@ -230,18 +241,19 @@
   {
     "fields": {
       "name": "postalcode",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775845+00:00",
       "updated_at": "2020-02-27 17:25:55.775866+00:00",
-      "object_id": "16442/10",
+      "object_id": "6e661f55e00deb7b64b61e2372f6b4c3",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 10,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 15,
-      "default_value": "NULL::character varying"
+      "default_value": "NULL::character varying",
+      "object_ref": "16442/10"
     },
     "model": "definitions.column",
     "pk": 10
@@ -249,18 +261,19 @@
   {
     "fields": {
       "name": "country",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.775937+00:00",
       "updated_at": "2020-02-27 17:25:55.775958+00:00",
-      "object_id": "16442/11",
+      "object_id": "50cf86841a74400add3eb9fc07a0ff33",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 11,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16442/11"
     },
     "model": "definitions.column",
     "pk": 11
@@ -268,18 +281,19 @@
   {
     "fields": {
       "name": "salesrepemployeenumber",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776029+00:00",
       "updated_at": "2020-02-27 17:25:55.776050+00:00",
-      "object_id": "16442/12",
+      "object_id": "96d217e7dc5a57f2414663789ce329ec",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 12,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16442/12"
     },
     "model": "definitions.column",
     "pk": 12
@@ -287,61 +301,36 @@
   {
     "fields": {
       "name": "creditlimit",
-      "table_id": 1,
+      "table_id": "6a05b990b1042996407a94cfdfdcca75",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776121+00:00",
       "updated_at": "2020-02-27 17:25:55.776143+00:00",
-      "object_id": "16442/13",
+      "object_id": "08da8fbf3db699f3c7baca8fe34421bf",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 13,
       "data_type": "numeric",
       "numeric_scale": 2,
       "max_length": 10,
-      "default_value": "NULL::numeric"
+      "default_value": "NULL::numeric",
+      "object_ref": "16442/13"
     },
     "model": "definitions.column",
     "pk": 13
   },
   {
     "fields": {
-      "name": "customers_pkey",
-      "table_id": 1,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.867963+00:00",
-      "updated_at": "2020-02-27 17:25:55.867997+00:00",
-      "object_id": "16449",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX customers_pkey ON app.customers USING btree (customernumber)"
-    },
-    "model": "definitions.index",
-    "pk": 1
-  },
-  {
-    "fields": {
-      "index_id": 1,
-      "column_id": 1,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.877521+00:00",
-      "updated_at": "2020-02-27 17:25:55.877559+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 1
-  },
-  {
-    "fields": {
       "name": "departments",
-      "schema_id": 1,
+      "schema_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.339463+00:00",
       "updated_at": "2020-02-27 17:25:55.339642+00:00",
-      "object_id": "16522",
+      "object_id": "dbcfca725d1ddff7e4505c2f60d02311",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16522"
     },
     "model": "definitions.table",
     "pk": 2
@@ -349,18 +338,19 @@
   {
     "fields": {
       "name": "id",
-      "table_id": 2,
+      "table_id": "dbcfca725d1ddff7e4505c2f60d02311",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776213+00:00",
       "updated_at": "2020-02-27 17:25:55.776235+00:00",
-      "object_id": "16522/1",
+      "object_id": "1687878a6af215c81bbc550c45677916",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": "nextval('app.departments_id_seq'::regclass)"
+      "default_value": "nextval('app.departments_id_seq'::regclass)",
+      "object_ref": "16522/1"
     },
     "model": "definitions.column",
     "pk": 14
@@ -368,88 +358,36 @@
   {
     "fields": {
       "name": "dept_name",
-      "table_id": 2,
+      "table_id": "dbcfca725d1ddff7e4505c2f60d02311",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778933+00:00",
       "updated_at": "2020-02-27 17:25:55.778954+00:00",
-      "object_id": "16522/2",
+      "object_id": "e736e9c9159e9930a9a69e7c0ae0c58b",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 40,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16522/2"
     },
     "model": "definitions.column",
     "pk": 15
   },
   {
     "fields": {
-      "name": "departments_dept_name_key",
-      "table_id": 2,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868552+00:00",
-      "updated_at": "2020-02-27 17:25:55.868574+00:00",
-      "object_id": "16528",
-      "is_unique": true,
-      "is_primary": false,
-      "sql": "CREATE UNIQUE INDEX departments_dept_name_key ON app.departments USING btree (dept_name)"
-    },
-    "model": "definitions.index",
-    "pk": 2
-  },
-  {
-    "fields": {
-      "index_id": 2,
-      "column_id": 15,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.887063+00:00",
-      "updated_at": "2020-02-27 17:25:55.887090+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 9
-  },
-  {
-    "fields": {
-      "name": "departments_pkey",
-      "table_id": 2,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868632+00:00",
-      "updated_at": "2020-02-27 17:25:55.868653+00:00",
-      "object_id": "16526",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX departments_pkey ON app.departments USING btree (id)"
-    },
-    "model": "definitions.index",
-    "pk": 3
-  },
-  {
-    "fields": {
-      "index_id": 3,
-      "column_id": 14,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.888229+00:00",
-      "updated_at": "2020-02-27 17:25:55.888254+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 10
-  },
-  {
-    "fields": {
       "name": "orderdetails",
-      "schema_id": 1,
+      "schema_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.341915+00:00",
       "updated_at": "2020-02-27 17:25:55.341960+00:00",
-      "object_id": "16501",
+      "object_id": "82aa9bfb60f0a9ca0449aa5d383b9eb0",
       "kind": "base table",
       "tags": [],
       "short_desc": "Details about an order",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16501"
     },
     "model": "definitions.table",
     "pk": 3
@@ -457,18 +395,19 @@
   {
     "fields": {
       "name": "ordernumber",
-      "table_id": 3,
+      "table_id": "82aa9bfb60f0a9ca0449aa5d383b9eb0",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779025+00:00",
       "updated_at": "2020-02-27 17:25:55.779046+00:00",
-      "object_id": "16501/1",
+      "object_id": "95940563b4769eb5c74069f4af697ec4",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16501/1"
     },
     "model": "definitions.column",
     "pk": 16
@@ -476,18 +415,19 @@
   {
     "fields": {
       "name": "productcode",
-      "table_id": 3,
+      "table_id": "82aa9bfb60f0a9ca0449aa5d383b9eb0",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779117+00:00",
       "updated_at": "2020-02-27 17:25:55.779138+00:00",
-      "object_id": "16501/2",
+      "object_id": "4abc4d935951994b73cabbb7039330a4",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 2,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 15,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16501/2"
     },
     "model": "definitions.column",
     "pk": 17
@@ -495,18 +435,19 @@
   {
     "fields": {
       "name": "quantityordered",
-      "table_id": 3,
+      "table_id": "82aa9bfb60f0a9ca0449aa5d383b9eb0",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779208+00:00",
       "updated_at": "2020-02-27 17:25:55.779229+00:00",
-      "object_id": "16501/3",
+      "object_id": "ab66e76328cb46db97a560905c68b16f",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16501/3"
     },
     "model": "definitions.column",
     "pk": 18
@@ -514,18 +455,19 @@
   {
     "fields": {
       "name": "priceeach",
-      "table_id": 3,
+      "table_id": "82aa9bfb60f0a9ca0449aa5d383b9eb0",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779359+00:00",
       "updated_at": "2020-02-27 17:25:55.779382+00:00",
-      "object_id": "16501/4",
+      "object_id": "bc8380b6a9db3ac27b19b273d7933b52",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "numeric",
       "numeric_scale": 2,
       "max_length": 10,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16501/4"
     },
     "model": "definitions.column",
     "pk": 19
@@ -533,73 +475,36 @@
   {
     "fields": {
       "name": "orderlinenumber",
-      "table_id": 3,
+      "table_id": "82aa9bfb60f0a9ca0449aa5d383b9eb0",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779452+00:00",
       "updated_at": "2020-02-27 17:25:55.779474+00:00",
-      "object_id": "16501/5",
+      "object_id": "4d9fc199cf12665c61212d049552a099",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 5,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16501/5"
     },
     "model": "definitions.column",
     "pk": 20
   },
   {
     "fields": {
-      "name": "orderdetails_pkey",
-      "table_id": 3,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868712+00:00",
-      "updated_at": "2020-02-27 17:25:55.868733+00:00",
-      "object_id": "16504",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX orderdetails_pkey ON app.orderdetails USING btree (ordernumber, productcode)"
-    },
-    "model": "definitions.index",
-    "pk": 4
-  },
-  {
-    "fields": {
-      "index_id": 4,
-      "column_id": 16,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.889324+00:00",
-      "updated_at": "2020-02-27 17:25:55.889350+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 11
-  },
-  {
-    "fields": {
-      "index_id": 4,
-      "column_id": 17,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.890417+00:00",
-      "updated_at": "2020-02-27 17:25:55.890443+00:00",
-      "ordinal_position": 2
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 12
-  },
-  {
-    "fields": {
       "name": "orders",
-      "schema_id": 1,
+      "schema_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.342069+00:00",
       "updated_at": "2020-02-27 17:25:55.342097+00:00",
-      "object_id": "16465",
+      "object_id": "d947b55890d47bc1f0e04c07693f633c",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16465"
     },
     "model": "definitions.table",
     "pk": 4
@@ -607,18 +512,19 @@
   {
     "fields": {
       "name": "ordernumber",
-      "table_id": 4,
+      "table_id": "d947b55890d47bc1f0e04c07693f633c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779544+00:00",
       "updated_at": "2020-02-27 17:25:55.779566+00:00",
-      "object_id": "16465/1",
+      "object_id": "38dfb65125fe3f0520ebabdf71e803cc",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16465/1"
     },
     "model": "definitions.column",
     "pk": 21
@@ -626,18 +532,19 @@
   {
     "fields": {
       "name": "orderdate",
-      "table_id": 4,
+      "table_id": "d947b55890d47bc1f0e04c07693f633c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779637+00:00",
       "updated_at": "2020-02-27 17:25:55.779659+00:00",
-      "object_id": "16465/2",
+      "object_id": "061da73cdc937d4597754a8c4db145df",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16465/2"
     },
     "model": "definitions.column",
     "pk": 22
@@ -645,18 +552,19 @@
   {
     "fields": {
       "name": "requireddate",
-      "table_id": 4,
+      "table_id": "d947b55890d47bc1f0e04c07693f633c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779729+00:00",
       "updated_at": "2020-02-27 17:25:55.779751+00:00",
-      "object_id": "16465/3",
+      "object_id": "2198598fa193f1f2d95f4be5d8658847",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16465/3"
     },
     "model": "definitions.column",
     "pk": 23
@@ -664,18 +572,19 @@
   {
     "fields": {
       "name": "shippeddate",
-      "table_id": 4,
+      "table_id": "d947b55890d47bc1f0e04c07693f633c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779821+00:00",
       "updated_at": "2020-02-27 17:25:55.779842+00:00",
-      "object_id": "16465/4",
+      "object_id": "4d636f9bc835a30f53c02f5fa13eb0f0",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16465/4"
     },
     "model": "definitions.column",
     "pk": 24
@@ -683,18 +592,19 @@
   {
     "fields": {
       "name": "status",
-      "table_id": 4,
+      "table_id": "d947b55890d47bc1f0e04c07693f633c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.779913+00:00",
       "updated_at": "2020-02-27 17:25:55.779934+00:00",
-      "object_id": "16465/5",
+      "object_id": "fe1496f4af43ae387bb6a76d9bb6b213",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 5,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 15,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16465/5"
     },
     "model": "definitions.column",
     "pk": 25
@@ -702,18 +612,19 @@
   {
     "fields": {
       "name": "comments",
-      "table_id": 4,
+      "table_id": "d947b55890d47bc1f0e04c07693f633c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780005+00:00",
       "updated_at": "2020-02-27 17:25:55.780027+00:00",
-      "object_id": "16465/6",
+      "object_id": "7b0e549485493e2817b39a52f6421b7c",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 6,
       "data_type": "text",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16465/6"
     },
     "model": "definitions.column",
     "pk": 26
@@ -721,61 +632,36 @@
   {
     "fields": {
       "name": "customernumber",
-      "table_id": 4,
+      "table_id": "d947b55890d47bc1f0e04c07693f633c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780101+00:00",
       "updated_at": "2020-02-27 17:25:55.780123+00:00",
-      "object_id": "16465/7",
+      "object_id": "939da5a69b70510e94eef5f41cb904a7",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 7,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16465/7"
     },
     "model": "definitions.column",
     "pk": 27
   },
   {
     "fields": {
-      "name": "orders_pkey",
-      "table_id": 4,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868792+00:00",
-      "updated_at": "2020-02-27 17:25:55.868813+00:00",
-      "object_id": "16471",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX orders_pkey ON app.orders USING btree (ordernumber)"
-    },
-    "model": "definitions.index",
-    "pk": 5
-  },
-  {
-    "fields": {
-      "index_id": 5,
-      "column_id": 21,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.891503+00:00",
-      "updated_at": "2020-02-27 17:25:55.891530+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 13
-  },
-  {
-    "fields": {
       "name": "payments",
-      "schema_id": 1,
+      "schema_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.342324+00:00",
       "updated_at": "2020-02-27 17:25:55.342351+00:00",
-      "object_id": "16478",
+      "object_id": "225040e5452313825669bd81cfe0c665",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16478"
     },
     "model": "definitions.table",
     "pk": 5
@@ -783,18 +669,19 @@
   {
     "fields": {
       "name": "customernumber",
-      "table_id": 5,
+      "table_id": "225040e5452313825669bd81cfe0c665",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780193+00:00",
       "updated_at": "2020-02-27 17:25:55.780215+00:00",
-      "object_id": "16478/1",
+      "object_id": "d43eab7243bcc6cb62de6b5244eac4ae",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16478/1"
     },
     "model": "definitions.column",
     "pk": 28
@@ -802,18 +689,19 @@
   {
     "fields": {
       "name": "checknumber",
-      "table_id": 5,
+      "table_id": "225040e5452313825669bd81cfe0c665",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780347+00:00",
       "updated_at": "2020-02-27 17:25:55.780369+00:00",
-      "object_id": "16478/2",
+      "object_id": "76b01d271744f9d3eb59844a54f3cc21",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 2,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16478/2"
     },
     "model": "definitions.column",
     "pk": 29
@@ -821,18 +709,19 @@
   {
     "fields": {
       "name": "paymentdate",
-      "table_id": 5,
+      "table_id": "225040e5452313825669bd81cfe0c665",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780439+00:00",
       "updated_at": "2020-02-27 17:25:55.780461+00:00",
-      "object_id": "16478/3",
+      "object_id": "c99ef182ac4c8793770bf40c2fe25ce9",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16478/3"
     },
     "model": "definitions.column",
     "pk": 30
@@ -840,73 +729,36 @@
   {
     "fields": {
       "name": "amount",
-      "table_id": 5,
+      "table_id": "225040e5452313825669bd81cfe0c665",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780531+00:00",
       "updated_at": "2020-02-27 17:25:55.780553+00:00",
-      "object_id": "16478/4",
+      "object_id": "784c46d296cb47480e658021c6bafa4d",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "numeric",
       "numeric_scale": 2,
       "max_length": 10,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16478/4"
     },
     "model": "definitions.column",
     "pk": 31
   },
   {
     "fields": {
-      "name": "payments_pkey",
-      "table_id": 5,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868872+00:00",
-      "updated_at": "2020-02-27 17:25:55.868893+00:00",
-      "object_id": "16481",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX payments_pkey ON app.payments USING btree (customernumber, checknumber)"
-    },
-    "model": "definitions.index",
-    "pk": 6
-  },
-  {
-    "fields": {
-      "index_id": 6,
-      "column_id": 28,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.892547+00:00",
-      "updated_at": "2020-02-27 17:25:55.892574+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 14
-  },
-  {
-    "fields": {
-      "index_id": 6,
-      "column_id": 29,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.893608+00:00",
-      "updated_at": "2020-02-27 17:25:55.893637+00:00",
-      "ordinal_position": 2
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 15
-  },
-  {
-    "fields": {
       "name": "productlines",
-      "schema_id": 1,
+      "schema_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.342439+00:00",
       "updated_at": "2020-02-27 17:25:55.342466+00:00",
-      "object_id": "16456",
+      "object_id": "807f74dccf1ad903d378c81f8e86364d",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16456"
     },
     "model": "definitions.table",
     "pk": 6
@@ -914,11 +766,11 @@
   {
     "fields": {
       "name": "productline",
-      "table_id": 6,
+      "table_id": "807f74dccf1ad903d378c81f8e86364d",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780623+00:00",
       "updated_at": "2020-02-27 17:25:55.780645+00:00",
-      "object_id": "16456/1",
+      "object_id": "44ec8f02163a51a08b36e0661e0eb46c",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
@@ -926,7 +778,8 @@
       "numeric_scale": null,
       "max_length": 50,
       "default_value": "",
-      "short_desc": ""
+      "short_desc": "",
+      "object_ref": "16456/1"
     },
     "model": "definitions.column",
     "pk": 32
@@ -934,18 +787,19 @@
   {
     "fields": {
       "name": "textdescription",
-      "table_id": 6,
+      "table_id": "807f74dccf1ad903d378c81f8e86364d",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780715+00:00",
       "updated_at": "2020-02-27 17:25:55.780737+00:00",
-      "object_id": "16456/2",
+      "object_id": "587c0dfc7d22e79b4488e9cf9df64561",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 4000,
-      "default_value": "NULL::character varying"
+      "default_value": "NULL::character varying",
+      "object_ref": "16456/2"
     },
     "model": "definitions.column",
     "pk": 33
@@ -953,18 +807,19 @@
   {
     "fields": {
       "name": "htmldescription",
-      "table_id": 6,
+      "table_id": "807f74dccf1ad903d378c81f8e86364d",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780808+00:00",
       "updated_at": "2020-02-27 17:25:55.780830+00:00",
-      "object_id": "16456/3",
+      "object_id": "b618c862de36349e79078d7e74f975b5",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "text",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16456/3"
     },
     "model": "definitions.column",
     "pk": 34
@@ -972,61 +827,36 @@
   {
     "fields": {
       "name": "image",
-      "table_id": 6,
+      "table_id": "807f74dccf1ad903d378c81f8e86364d",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780900+00:00",
       "updated_at": "2020-02-27 17:25:55.780921+00:00",
-      "object_id": "16456/4",
+      "object_id": "1aaa04883460b45f25a083298c51ec82",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "bytea",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16456/4"
     },
     "model": "definitions.column",
     "pk": 35
   },
   {
     "fields": {
-      "name": "productlines_pkey",
-      "table_id": 6,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868951+00:00",
-      "updated_at": "2020-02-27 17:25:55.868973+00:00",
-      "object_id": "16463",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX productlines_pkey ON app.productlines USING btree (productline)"
-    },
-    "model": "definitions.index",
-    "pk": 7
-  },
-  {
-    "fields": {
-      "index_id": 7,
-      "column_id": 32,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.895068+00:00",
-      "updated_at": "2020-02-27 17:25:55.895099+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 16
-  },
-  {
-    "fields": {
       "name": "products",
-      "schema_id": 1,
+      "schema_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.342572+00:00",
       "updated_at": "2020-02-27 17:25:55.342600+00:00",
-      "object_id": "16488",
+      "object_id": "433ca2646ff2923a64d071e13b3495c6",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16488"
     },
     "model": "definitions.table",
     "pk": 7
@@ -1034,18 +864,19 @@
   {
     "fields": {
       "name": "productcode",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.780991+00:00",
       "updated_at": "2020-02-27 17:25:55.781013+00:00",
-      "object_id": "16488/1",
+      "object_id": "57428f50e156f15405f7ef11bfae238e",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 15,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16488/1"
     },
     "model": "definitions.column",
     "pk": 36
@@ -1053,18 +884,19 @@
   {
     "fields": {
       "name": "productname",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781083+00:00",
       "updated_at": "2020-02-27 17:25:55.781105+00:00",
-      "object_id": "16488/2",
+      "object_id": "626e5c74dd7e3e5f59df60ee74781ed4",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 70,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16488/2"
     },
     "model": "definitions.column",
     "pk": 37
@@ -1072,11 +904,11 @@
   {
     "fields": {
       "name": "productline",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781175+00:00",
       "updated_at": "2020-02-27 17:25:55.781197+00:00",
-      "object_id": "16488/3",
+      "object_id": "d191b46a8d8d7dbaac6f984d8408aeff",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
@@ -1084,7 +916,8 @@
       "numeric_scale": null,
       "max_length": 50,
       "default_value": "",
-      "short_desc": "Hello, world."
+      "short_desc": "Hello, world.",
+      "object_ref": "16488/3"
     },
     "model": "definitions.column",
     "pk": 38
@@ -1092,11 +925,11 @@
   {
     "fields": {
       "name": "productscale",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781328+00:00",
       "updated_at": "2020-02-27 17:25:55.781353+00:00",
-      "object_id": "16488/4",
+      "object_id": "533027f0219b0a7957a801976a8ee912",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 4,
@@ -1104,7 +937,8 @@
       "numeric_scale": null,
       "max_length": 10,
       "default_value": "",
-      "short_desc": "Goodbye, world."
+      "short_desc": "Goodbye, world.",
+      "object_ref": "16488/4"
     },
     "model": "definitions.column",
     "pk": 39
@@ -1112,18 +946,19 @@
   {
     "fields": {
       "name": "productvendor",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781424+00:00",
       "updated_at": "2020-02-27 17:25:55.781446+00:00",
-      "object_id": "16488/5",
+      "object_id": "332ca66d0179670c1b951c777fe7e496",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 5,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16488/5"
     },
     "model": "definitions.column",
     "pk": 40
@@ -1131,18 +966,19 @@
   {
     "fields": {
       "name": "productdescription",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781516+00:00",
       "updated_at": "2020-02-27 17:25:55.781538+00:00",
-      "object_id": "16488/6",
+      "object_id": "0707a4dd78805de512abd3cfb7945f4d",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 6,
       "data_type": "text",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16488/6"
     },
     "model": "definitions.column",
     "pk": 41
@@ -1150,18 +986,19 @@
   {
     "fields": {
       "name": "quantityinstock",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781608+00:00",
       "updated_at": "2020-02-27 17:25:55.781630+00:00",
-      "object_id": "16488/7",
+      "object_id": "05b23e3805ab21601d781a9b7473ea03",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 7,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16488/7"
     },
     "model": "definitions.column",
     "pk": 42
@@ -1169,18 +1006,19 @@
   {
     "fields": {
       "name": "buyprice",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781701+00:00",
       "updated_at": "2020-02-27 17:25:55.781722+00:00",
-      "object_id": "16488/8",
+      "object_id": "d8937a3be05dad08f94bf4fd9f2114a5",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 8,
       "data_type": "numeric",
       "numeric_scale": 2,
       "max_length": 10,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16488/8"
     },
     "model": "definitions.column",
     "pk": 43
@@ -1188,61 +1026,36 @@
   {
     "fields": {
       "name": "msrp",
-      "table_id": 7,
+      "table_id": "433ca2646ff2923a64d071e13b3495c6",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781793+00:00",
       "updated_at": "2020-02-27 17:25:55.781815+00:00",
-      "object_id": "16488/9",
+      "object_id": "2d46fa4eeb397d23de19d8b678b2f2dc",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 9,
       "data_type": "numeric",
       "numeric_scale": 2,
       "max_length": 10,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16488/9"
     },
     "model": "definitions.column",
     "pk": 44
   },
   {
     "fields": {
-      "name": "products_pkey",
-      "table_id": 7,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.869031+00:00",
-      "updated_at": "2020-02-27 17:25:55.869052+00:00",
-      "object_id": "16494",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX products_pkey ON app.products USING btree (productcode)"
-    },
-    "model": "definitions.index",
-    "pk": 8
-  },
-  {
-    "fields": {
-      "index_id": 8,
-      "column_id": 36,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.896395+00:00",
-      "updated_at": "2020-02-27 17:25:55.896421+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 17
-  },
-  {
-    "fields": {
       "name": "sales_representatives",
-      "schema_id": 1,
+      "schema_id": "f30f68d2909bcd340668d9a0cc8d7c57",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.342687+00:00",
       "updated_at": "2020-02-27 17:25:55.342714+00:00",
-      "object_id": "16516",
+      "object_id": "0b4b0fa1aa885cad3cd7b32bfc92477c",
       "kind": "view",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16516"
     },
     "model": "definitions.table",
     "pk": 8
@@ -1250,18 +1063,19 @@
   {
     "fields": {
       "name": "customernumber",
-      "table_id": 8,
+      "table_id": "0b4b0fa1aa885cad3cd7b32bfc92477c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781885+00:00",
       "updated_at": "2020-02-27 17:25:55.781906+00:00",
-      "object_id": "16516/1",
+      "object_id": "1c582cd01ed717eaaab9f6d29aeba240",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16516/1"
     },
     "model": "definitions.column",
     "pk": 45
@@ -1269,18 +1083,19 @@
   {
     "fields": {
       "name": "customername",
-      "table_id": 8,
+      "table_id": "0b4b0fa1aa885cad3cd7b32bfc92477c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.781977+00:00",
       "updated_at": "2020-02-27 17:25:55.781998+00:00",
-      "object_id": "16516/2",
+      "object_id": "372fada39812596de70ddf301e591157",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 50,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16516/2"
     },
     "model": "definitions.column",
     "pk": 46
@@ -1288,18 +1103,19 @@
   {
     "fields": {
       "name": "salesrepemployeenumber",
-      "table_id": 8,
+      "table_id": "0b4b0fa1aa885cad3cd7b32bfc92477c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.782072+00:00",
       "updated_at": "2020-02-27 17:25:55.782094+00:00",
-      "object_id": "16516/3",
+      "object_id": "d99fa02afbf627be58bf39a20a53e7ad",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16516/3"
     },
     "model": "definitions.column",
     "pk": 47
@@ -1307,18 +1123,19 @@
   {
     "fields": {
       "name": "emp_no",
-      "table_id": 8,
+      "table_id": "0b4b0fa1aa885cad3cd7b32bfc92477c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.782227+00:00",
       "updated_at": "2020-02-27 17:25:55.782249+00:00",
-      "object_id": "16516/4",
+      "object_id": "df74c442e938e5416a2dfa1393d28310",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16516/4"
     },
     "model": "definitions.column",
     "pk": 48
@@ -1326,18 +1143,19 @@
   {
     "fields": {
       "name": "name",
-      "table_id": 8,
+      "table_id": "0b4b0fa1aa885cad3cd7b32bfc92477c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.782320+00:00",
       "updated_at": "2020-02-27 17:25:55.782342+00:00",
-      "object_id": "16516/5",
+      "object_id": "9050df69748550317c6dbbfe5c8a45c9",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 5,
       "data_type": "text",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16516/5"
     },
     "model": "definitions.column",
     "pk": 49
@@ -1349,8 +1167,9 @@
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.196569+00:00",
       "updated_at": "2020-02-27 17:25:55.196588+00:00",
-      "object_id": "16386",
-      "tags": []
+      "object_id": "2532a4837aa0dca84578ed37bea9faca",
+      "tags": [],
+      "object_ref": "16386"
     },
     "model": "definitions.schema",
     "pk": 2
@@ -1358,15 +1177,16 @@
   {
     "fields": {
       "name": "current_dept_emp",
-      "schema_id": 2,
+      "schema_id": "2532a4837aa0dca84578ed37bea9faca",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.339860+00:00",
       "updated_at": "2020-02-27 17:25:55.339898+00:00",
-      "object_id": "16437",
+      "object_id": "7b15a2069e0abb9f7f7a781ea259e06c",
       "kind": "view",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16437"
     },
     "model": "definitions.table",
     "pk": 9
@@ -1374,18 +1194,19 @@
   {
     "fields": {
       "name": "emp_no",
-      "table_id": 9,
+      "table_id": "7b15a2069e0abb9f7f7a781ea259e06c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776370+00:00",
       "updated_at": "2020-02-27 17:25:55.776392+00:00",
-      "object_id": "16437/1",
+      "object_id": "891f0ee37773fb5ca3642c7b114b74c5",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16437/1"
     },
     "model": "definitions.column",
     "pk": 50
@@ -1393,18 +1214,19 @@
   {
     "fields": {
       "name": "dept_no",
-      "table_id": 9,
+      "table_id": "7b15a2069e0abb9f7f7a781ea259e06c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776480+00:00",
       "updated_at": "2020-02-27 17:25:55.776503+00:00",
-      "object_id": "16437/2",
+      "object_id": "2c1be403b3a5408aa83d953ec265ede1",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "character",
       "numeric_scale": null,
       "max_length": 4,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16437/2"
     },
     "model": "definitions.column",
     "pk": 51
@@ -1412,18 +1234,19 @@
   {
     "fields": {
       "name": "from_date",
-      "table_id": 9,
+      "table_id": "7b15a2069e0abb9f7f7a781ea259e06c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776574+00:00",
       "updated_at": "2020-02-27 17:25:55.776595+00:00",
-      "object_id": "16437/3",
+      "object_id": "96e1d26a0aebc7c7d2df77770c97617f",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16437/3"
     },
     "model": "definitions.column",
     "pk": 52
@@ -1431,18 +1254,19 @@
   {
     "fields": {
       "name": "to_date",
-      "table_id": 9,
+      "table_id": "7b15a2069e0abb9f7f7a781ea259e06c",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776665+00:00",
       "updated_at": "2020-02-27 17:25:55.776687+00:00",
-      "object_id": "16437/4",
+      "object_id": "b11caea5030083daae32ab8b16e5f61d",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16437/4"
     },
     "model": "definitions.column",
     "pk": 53
@@ -1450,15 +1274,16 @@
   {
     "fields": {
       "name": "departments",
-      "schema_id": 2,
+      "schema_id": "2532a4837aa0dca84578ed37bea9faca",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.339999+00:00",
       "updated_at": "2020-02-27 17:25:55.340027+00:00",
-      "object_id": "16392",
+      "object_id": "381335ab07d2b67bfe43774716cf7376",
       "kind": "base table",
-      "tags": [],
+      "tags": ["one", "two"],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16392"
     },
     "model": "definitions.table",
     "pk": 10
@@ -1466,18 +1291,19 @@
   {
     "fields": {
       "name": "dept_no",
-      "table_id": 10,
+      "table_id": "381335ab07d2b67bfe43774716cf7376",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776757+00:00",
       "updated_at": "2020-02-27 17:25:55.776779+00:00",
-      "object_id": "16392/1",
+      "object_id": "a653ee17c0eab9d4d1af0efd74a40baf",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "character",
       "numeric_scale": null,
       "max_length": 4,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16392/1"
     },
     "model": "definitions.column",
     "pk": 54
@@ -1485,18 +1311,19 @@
   {
     "fields": {
       "name": "dept_name",
-      "table_id": 10,
+      "table_id": "381335ab07d2b67bfe43774716cf7376",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776849+00:00",
       "updated_at": "2020-02-27 17:25:55.776870+00:00",
-      "object_id": "16392/2",
+      "object_id": "3fc5ae42556ee800909167b63d350759",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 40,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16392/2"
     },
     "model": "definitions.column",
     "pk": 55
@@ -1504,88 +1331,36 @@
   {
     "fields": {
       "name": "started_on",
-      "table_id": 10,
+      "table_id": "381335ab07d2b67bfe43774716cf7376",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.776940+00:00",
       "updated_at": "2020-02-27 17:25:55.776961+00:00",
-      "object_id": "16392/3",
+      "object_id": "01a85e80df2634d0e737c3654813da2e",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "timestamp without time zone",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16392/3"
     },
     "model": "definitions.column",
     "pk": 56
   },
   {
     "fields": {
-      "name": "departments_dept_name_key",
-      "table_id": 10,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868072+00:00",
-      "updated_at": "2020-02-27 17:25:55.868095+00:00",
-      "object_id": "16397",
-      "is_unique": true,
-      "is_primary": false,
-      "sql": "CREATE UNIQUE INDEX departments_dept_name_key ON employees.departments USING btree (dept_name)"
-    },
-    "model": "definitions.index",
-    "pk": 9
-  },
-  {
-    "fields": {
-      "index_id": 9,
-      "column_id": 55,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.879660+00:00",
-      "updated_at": "2020-02-27 17:25:55.879690+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 2
-  },
-  {
-    "fields": {
-      "name": "departments_pkey",
-      "table_id": 10,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868230+00:00",
-      "updated_at": "2020-02-27 17:25:55.868253+00:00",
-      "object_id": "16395",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX departments_pkey ON employees.departments USING btree (dept_no)"
-    },
-    "model": "definitions.index",
-    "pk": 10
-  },
-  {
-    "fields": {
-      "index_id": 10,
-      "column_id": 54,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.880746+00:00",
-      "updated_at": "2020-02-27 17:25:55.880776+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 3
-  },
-  {
-    "fields": {
       "name": "dept_emp",
-      "schema_id": 2,
+      "schema_id": "2532a4837aa0dca84578ed37bea9faca",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.340114+00:00",
       "updated_at": "2020-02-27 17:25:55.340482+00:00",
-      "object_id": "16418",
+      "object_id": "dabc2486a45113bc23aa424d99bbff8b",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16418"
     },
     "model": "definitions.table",
     "pk": 11
@@ -1593,18 +1368,19 @@
   {
     "fields": {
       "name": "emp_no",
-      "table_id": 11,
+      "table_id": "dabc2486a45113bc23aa424d99bbff8b",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777032+00:00",
       "updated_at": "2020-02-27 17:25:55.777053+00:00",
-      "object_id": "16418/1",
+      "object_id": "c00f88a50909f9c69d527c657cbc8bb6",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16418/1"
     },
     "model": "definitions.column",
     "pk": 57
@@ -1612,18 +1388,19 @@
   {
     "fields": {
       "name": "dept_no",
-      "table_id": 11,
+      "table_id": "dabc2486a45113bc23aa424d99bbff8b",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777123+00:00",
       "updated_at": "2020-02-27 17:25:55.777154+00:00",
-      "object_id": "16418/2",
+      "object_id": "a2806ba8813389ed2988a03384cfc1ff",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 2,
       "data_type": "character",
       "numeric_scale": null,
       "max_length": 4,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16418/2"
     },
     "model": "definitions.column",
     "pk": 58
@@ -1631,18 +1408,19 @@
   {
     "fields": {
       "name": "from_date",
-      "table_id": 11,
+      "table_id": "dabc2486a45113bc23aa424d99bbff8b",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777224+00:00",
       "updated_at": "2020-02-27 17:25:55.777306+00:00",
-      "object_id": "16418/3",
+      "object_id": "ab5a86da8b62ca82b5eda268a45604a8",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16418/3"
     },
     "model": "definitions.column",
     "pk": 59
@@ -1650,73 +1428,36 @@
   {
     "fields": {
       "name": "to_date",
-      "table_id": 11,
+      "table_id": "dabc2486a45113bc23aa424d99bbff8b",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777380+00:00",
       "updated_at": "2020-02-27 17:25:55.777401+00:00",
-      "object_id": "16418/4",
+      "object_id": "a0dddaff8eb5679603eeba8feb69e2c9",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16418/4"
     },
     "model": "definitions.column",
     "pk": 60
   },
   {
     "fields": {
-      "name": "dept_emp_pkey",
-      "table_id": 11,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868312+00:00",
-      "updated_at": "2020-02-27 17:25:55.868333+00:00",
-      "object_id": "16421",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX dept_emp_pkey ON employees.dept_emp USING btree (emp_no, dept_no)"
-    },
-    "model": "definitions.index",
-    "pk": 11
-  },
-  {
-    "fields": {
-      "index_id": 11,
-      "column_id": 57,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.881787+00:00",
-      "updated_at": "2020-02-27 17:25:55.881815+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 4
-  },
-  {
-    "fields": {
-      "index_id": 11,
-      "column_id": 58,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.882821+00:00",
-      "updated_at": "2020-02-27 17:25:55.882849+00:00",
-      "ordinal_position": 2
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 5
-  },
-  {
-    "fields": {
       "name": "dept_emp_latest_date",
-      "schema_id": 2,
+      "schema_id": "2532a4837aa0dca84578ed37bea9faca",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.340994+00:00",
       "updated_at": "2020-02-27 17:25:55.341032+00:00",
-      "object_id": "16433",
+      "object_id": "7dcf7065204f02a4f4c818ec5ad31134",
       "kind": "view",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16433"
     },
     "model": "definitions.table",
     "pk": 12
@@ -1724,18 +1465,19 @@
   {
     "fields": {
       "name": "emp_no",
-      "table_id": 12,
+      "table_id": "7dcf7065204f02a4f4c818ec5ad31134",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777472+00:00",
       "updated_at": "2020-02-27 17:25:55.777493+00:00",
-      "object_id": "16433/1",
+      "object_id": "d7b48fafe7075eb024b91e9645ff24e3",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16433/1"
     },
     "model": "definitions.column",
     "pk": 61
@@ -1743,18 +1485,19 @@
   {
     "fields": {
       "name": "from_date",
-      "table_id": 12,
+      "table_id": "7dcf7065204f02a4f4c818ec5ad31134",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777564+00:00",
       "updated_at": "2020-02-27 17:25:55.777585+00:00",
-      "object_id": "16433/2",
+      "object_id": "c9ac60809c2f0f72ac7bcb6053b98a7b",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16433/2"
     },
     "model": "definitions.column",
     "pk": 62
@@ -1762,18 +1505,19 @@
   {
     "fields": {
       "name": "to_date",
-      "table_id": 12,
+      "table_id": "7dcf7065204f02a4f4c818ec5ad31134",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777656+00:00",
       "updated_at": "2020-02-27 17:25:55.777677+00:00",
-      "object_id": "16433/3",
+      "object_id": "5f4f5d0be660b09f783ec38e019a5362",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16433/3"
     },
     "model": "definitions.column",
     "pk": 63
@@ -1781,15 +1525,16 @@
   {
     "fields": {
       "name": "dept_manager",
-      "schema_id": 2,
+      "schema_id": "2532a4837aa0dca84578ed37bea9faca",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.341341+00:00",
       "updated_at": "2020-02-27 17:25:55.341387+00:00",
-      "object_id": "16399",
+      "object_id": "1126189066df10aba8b6bb21c6a19892",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16399"
     },
     "model": "definitions.table",
     "pk": 13
@@ -1797,18 +1542,19 @@
   {
     "fields": {
       "name": "dept_no",
-      "table_id": 13,
+      "table_id": "1126189066df10aba8b6bb21c6a19892",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777747+00:00",
       "updated_at": "2020-02-27 17:25:55.777768+00:00",
-      "object_id": "16399/1",
+      "object_id": "5ef2f78e13171e4d1f34a5f7041332a1",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "character",
       "numeric_scale": null,
       "max_length": 4,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16399/1"
     },
     "model": "definitions.column",
     "pk": 64
@@ -1816,18 +1562,19 @@
   {
     "fields": {
       "name": "emp_no",
-      "table_id": 13,
+      "table_id": "1126189066df10aba8b6bb21c6a19892",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777839+00:00",
       "updated_at": "2020-02-27 17:25:55.777861+00:00",
-      "object_id": "16399/2",
+      "object_id": "2de18e69a85a2ccb1758dd7fb0de7cc8",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 2,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16399/2"
     },
     "model": "definitions.column",
     "pk": 65
@@ -1835,18 +1582,19 @@
   {
     "fields": {
       "name": "from_date",
-      "table_id": 13,
+      "table_id": "1126189066df10aba8b6bb21c6a19892",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.777934+00:00",
       "updated_at": "2020-02-27 17:25:55.777962+00:00",
-      "object_id": "16399/3",
+      "object_id": "dbf08adb59a8f5cbddb5721b6fa58b33",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16399/3"
     },
     "model": "definitions.column",
     "pk": 66
@@ -1854,18 +1602,19 @@
   {
     "fields": {
       "name": "to_date",
-      "table_id": 13,
+      "table_id": "1126189066df10aba8b6bb21c6a19892",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778035+00:00",
       "updated_at": "2020-02-27 17:25:55.778057+00:00",
-      "object_id": "16399/4",
+      "object_id": "e82e2e3863334686b0747c87251f4b5f",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16399/4"
     },
     "model": "definitions.column",
     "pk": 67
@@ -1873,18 +1622,19 @@
   {
     "fields": {
       "name": "extras",
-      "table_id": 13,
+      "table_id": "1126189066df10aba8b6bb21c6a19892",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778132+00:00",
       "updated_at": "2020-02-27 17:25:55.778153+00:00",
-      "object_id": "16399/5",
+      "object_id": "e878fe442a35cb7e188042d123e3664b",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 5,
       "data_type": "text",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16399/5"
     },
     "model": "definitions.column",
     "pk": 68
@@ -1892,73 +1642,36 @@
   {
     "fields": {
       "name": "rating",
-      "table_id": 13,
+      "table_id": "1126189066df10aba8b6bb21c6a19892",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778224+00:00",
       "updated_at": "2020-02-27 17:25:55.778311+00:00",
-      "object_id": "16399/6",
+      "object_id": "4378e434da68e999650c0beb424da5d4",
       "is_nullable": true,
       "is_primary": false,
       "ordinal_position": 6,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": "5"
+      "default_value": "5",
+      "object_ref": "16399/6"
     },
     "model": "definitions.column",
     "pk": 69
   },
   {
     "fields": {
-      "name": "dept_manager_pkey",
-      "table_id": 13,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868392+00:00",
-      "updated_at": "2020-02-27 17:25:55.868413+00:00",
-      "object_id": "16406",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX dept_manager_pkey ON employees.dept_manager USING btree (emp_no, dept_no)"
-    },
-    "model": "definitions.index",
-    "pk": 12
-  },
-  {
-    "fields": {
-      "index_id": 12,
-      "column_id": 65,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.883914+00:00",
-      "updated_at": "2020-02-27 17:25:55.883942+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 6
-  },
-  {
-    "fields": {
-      "index_id": 12,
-      "column_id": 64,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.885001+00:00",
-      "updated_at": "2020-02-27 17:25:55.885028+00:00",
-      "ordinal_position": 2
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 7
-  },
-  {
-    "fields": {
       "name": "employees",
-      "schema_id": 2,
+      "schema_id": "2532a4837aa0dca84578ed37bea9faca",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.341550+00:00",
       "updated_at": "2020-02-27 17:25:55.341584+00:00",
-      "object_id": "16387",
+      "object_id": "3bc200031ef464b9137170c4ae2d2536",
       "kind": "base table",
       "tags": [],
       "short_desc": "",
-      "properties": {}
+      "properties": {},
+      "object_ref": "16387"
     },
     "model": "definitions.table",
     "pk": 14
@@ -1966,18 +1679,19 @@
   {
     "fields": {
       "name": "emp_no",
-      "table_id": 14,
+      "table_id": "3bc200031ef464b9137170c4ae2d2536",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778383+00:00",
       "updated_at": "2020-02-27 17:25:55.778405+00:00",
-      "object_id": "16387/1",
+      "object_id": "154b039b7c4b4a25b9b243e8dd9a8e28",
       "is_nullable": false,
       "is_primary": true,
       "ordinal_position": 1,
       "data_type": "integer",
       "numeric_scale": 0,
       "max_length": 32,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16387/1"
     },
     "model": "definitions.column",
     "pk": 70
@@ -1985,18 +1699,19 @@
   {
     "fields": {
       "name": "birth_date",
-      "table_id": 14,
+      "table_id": "3bc200031ef464b9137170c4ae2d2536",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778475+00:00",
       "updated_at": "2020-02-27 17:25:55.778496+00:00",
-      "object_id": "16387/2",
+      "object_id": "19aa1db176357b8a3dfc6a3b24a6b53a",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 2,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16387/2"
     },
     "model": "definitions.column",
     "pk": 71
@@ -2004,18 +1719,19 @@
   {
     "fields": {
       "name": "first_name",
-      "table_id": 14,
+      "table_id": "3bc200031ef464b9137170c4ae2d2536",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778567+00:00",
       "updated_at": "2020-02-27 17:25:55.778588+00:00",
-      "object_id": "16387/3",
+      "object_id": "eccdae20e29838a8b7e490ff5cda98e7",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 3,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 14,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16387/3"
     },
     "model": "definitions.column",
     "pk": 72
@@ -2023,18 +1739,19 @@
   {
     "fields": {
       "name": "last_name",
-      "table_id": 14,
+      "table_id": "3bc200031ef464b9137170c4ae2d2536",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778659+00:00",
       "updated_at": "2020-02-27 17:25:55.778680+00:00",
-      "object_id": "16387/4",
+      "object_id": "58f176fdbb1466d7bb3b1e3b84730dad",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 4,
       "data_type": "character varying",
       "numeric_scale": null,
       "max_length": 16,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16387/4"
     },
     "model": "definitions.column",
     "pk": 73
@@ -2042,18 +1759,19 @@
   {
     "fields": {
       "name": "hire_date",
-      "table_id": 14,
+      "table_id": "3bc200031ef464b9137170c4ae2d2536",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778750+00:00",
       "updated_at": "2020-02-27 17:25:55.778772+00:00",
-      "object_id": "16387/5",
+      "object_id": "f150ffd8a20657d7c9893f7e288d652e",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 5,
       "data_type": "date",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16387/5"
     },
     "model": "definitions.column",
     "pk": 74
@@ -2061,47 +1779,21 @@
   {
     "fields": {
       "name": "created_at",
-      "table_id": 14,
+      "table_id": "3bc200031ef464b9137170c4ae2d2536",
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "created_at": "2020-02-27 17:25:55.778842+00:00",
       "updated_at": "2020-02-27 17:25:55.778863+00:00",
-      "object_id": "16387/6",
+      "object_id": "2806f9a79c9be98ff4f2fd17062b5413",
       "is_nullable": false,
       "is_primary": false,
       "ordinal_position": 6,
       "data_type": "timestamp without time zone",
       "numeric_scale": null,
       "max_length": null,
-      "default_value": ""
+      "default_value": "",
+      "object_ref": "16387/6"
     },
     "model": "definitions.column",
     "pk": 75
-  },
-  {
-    "fields": {
-      "name": "employees_pkey",
-      "table_id": 14,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.868472+00:00",
-      "updated_at": "2020-02-27 17:25:55.868494+00:00",
-      "object_id": "16390",
-      "is_unique": true,
-      "is_primary": true,
-      "sql": "CREATE UNIQUE INDEX employees_pkey ON employees.employees USING btree (emp_no)"
-    },
-    "model": "definitions.index",
-    "pk": 13
-  },
-  {
-    "fields": {
-      "index_id": 13,
-      "column_id": 70,
-      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
-      "created_at": "2020-02-27 17:25:55.886012+00:00",
-      "updated_at": "2020-02-27 17:25:55.886039+00:00",
-      "ordinal_position": 1
-    },
-    "model": "definitions.indexcolumn",
-    "pk": 8
   }
 ]

@@ -19,7 +19,7 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     {
         "type": "dropped",
         "filters": (
-            lambda row: row['table_object_id'] == 16522
+            lambda row: row['table_object_id'] == "381335ab07d2b67bfe43774716cf7376"
         ),
     },
 ])
@@ -61,54 +61,12 @@ inspected_tables += [
     }
 ]
 
-inspected_indexes = mutate_inspected(inspected.indexes, [
-    {
-        "type": "dropped",
-        "filters": (
-            lambda row: row['table_object_id'] == 16522
-        ),
-    },
-])
-
-inspected_indexes += [
-    {
-        "schema_name": "app",
-        "schema_object_id": 16441,
-        "table_name": "departments",
-        "table_object_id": 26522,
-        "index_name": "departments_dept_name_key",
-        "index_object_id": 26528,
-        "is_unique": True,
-        "is_primary": False,
-        "definition": "CREATE UNIQUE INDEX departments_dept_name_key ON app.departments USING btree (dept_name)",
-        "columns": [
-            {
-                "column_name": "dept_name",
-                "ordinal_position": 1
-            }
-        ]
-    }
-]
-
 test_cases = [
     {
         "model": "Table",
         "description": "The `app.departments` table should no longer have the old `object_id`.",
         "filters": {
             "object_id": "16522",
-        },
-        "assertions": [
-            {
-                "evaluation": lambda datastore, table: table is None,
-                "pass_value": True,
-            },
-        ]
-    },
-    {
-        "model": "Index",
-        "description": "The `app.departments` index should no longer have the old `object_id`.",
-        "filters": {
-            "object_id": "16528",
         },
         "assertions": [
             {
@@ -166,52 +124,6 @@ test_cases = [
                 "summarized": "It should retain the same Table identifier.",
                 "evaluation": lambda datastore, column: column.table_id,
                 "pass_value": 2,
-            },
-        ]
-    },
-    {
-        "model": "Index",
-        "description": "The `departments_dept_name_key` index should not have the old `object_id`.",
-        "filters": {
-            "object_id": "16528",
-        },
-        "assertions": [
-            {
-                "evaluation": lambda datastore, index: index is None,
-                "pass_value": True,
-            },
-        ]
-    },
-    {
-        "model": "Index",
-        "description": "The `departments_dept_name_key` index should still exist.",
-        "filters": {
-            "object_id": "26528",
-        },
-        "assertions": [
-            {
-                "summarized": "It should retain the same Index identifier.",
-                "evaluation": lambda datastore, index: index.pk,
-                "pass_value": 2,
-            },
-        ]
-    },
-    {
-        "model": "IndexColumn",
-        "description": "The `departments_dept_name_key` index should still exist.",
-        "filters": {
-            "index_id": 2,
-        },
-        "assertions": [
-            {
-                "summarized": "It should retain the same IndexColumn.",
-                "evaluation": lambda datastore, index_column: index_column.pk,
-                "pass_value": 9,
-            },
-            {
-                "summarized": "It should retain the same IndexColumn.column_id.",
-                "evaluation": lambda datastore, index_column: index_column.column_id,
-                "pass_value": 15,
             },
         ]
     },

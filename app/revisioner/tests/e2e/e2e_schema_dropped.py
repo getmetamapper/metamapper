@@ -22,15 +22,6 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     },
 ])
 
-inspected_indexes = mutate_inspected(inspected.indexes, [
-    {
-        "type": "dropped",
-        "filters": (
-            lambda row: row['table_object_id'] == 16441
-        ),
-    },
-])
-
 test_cases = [
     {
         "model": "Schema",
@@ -98,34 +89,6 @@ test_cases = [
             {
                 "summarized": "It should not be found via `schema__name` value.",
                 "evaluation": lambda datastore, table: table is None,
-                "pass_value": True,
-            },
-        ]
-    },
-    {
-        "model": "Index",
-        "description": "The `app` schema should have no indexes.",
-        "filters": {
-            "table__schema_id": 1,
-        },
-        "assertions": [
-            {
-                "summarized": "It should not be found via `schema_id` value.",
-                "evaluation": lambda datastore, index: index is None,
-                "pass_value": True,
-            },
-        ]
-    },
-    {
-        "model": "Index",
-        "description": "The `app` schema should have no indexes.",
-        "filters": {
-            "table__schema__name": "app",
-        },
-        "assertions": [
-            {
-                "summarized": "It should not be found via `schema__name` value.",
-                "evaluation": lambda datastore, index: index is None,
                 "pass_value": True,
             },
         ]

@@ -7,7 +7,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0004_remove_workspace_email'),
+        ('authentication', '0001_initial'),
+        ('authorization', '0001_initial'),
     ]
 
     operations = [
@@ -27,6 +28,20 @@ class Migration(migrations.Migration):
         ),
         migrations.RunSQL('ALTER TABLE auth_group DROP CONSTRAINT auth_group_name_key;'),
         migrations.RunSQL('ALTER TABLE auth_group ADD CONSTRAINT auth_group_name_key UNIQUE(name, workspace_id);'),
+        migrations.AddField(
+            model_name='group',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True),
+        ),
+        migrations.AddField(
+            model_name='group',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True),
+        ),
+        migrations.AlterUniqueTogether(
+            name='group',
+            unique_together=('workspace_id', 'name',)
+        ),
     ]
 
     def mutate_state(self, project_state, preserve=True):

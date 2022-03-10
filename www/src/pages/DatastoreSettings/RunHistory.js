@@ -5,7 +5,6 @@ import { withLargeLoader } from "hoc/withLoader"
 import moment from "moment"
 import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import RunHistoryTable from "app/Datastores/RunHistory/RunHistoryTable"
-import RunRevisionLog from "app/Datastores/RunHistory/RunRevisionLog"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGetDatastoreRunHistory from "graphql/withGetDatastoreRunHistory"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
@@ -21,20 +20,6 @@ class RunHistory extends Component {
     super(props)
 
     this.breadcrumbs = this.breadcrumbs.bind(this)
-    this.handleSelect = this.handleSelect.bind(this)
-
-    this.state = {
-      selectedRun: null,
-      runDetailsVisible: false,
-    }
-  }
-
-  handleSelect = (selectedRun) => {
-    this.setState({ selectedRun, runDetailsVisible: true })
-  }
-
-  handleClose = () => {
-    this.setState({ runDetailsVisible: false })
   }
 
   breadcrumbs(datastore) {
@@ -69,7 +54,6 @@ class RunHistory extends Component {
   }
 
   render() {
-    const { selectedRun, runDetailsVisible } = this.state
     const { datastore, runHistory, loading } = this.props
     return (
       <DatastoreLayout
@@ -80,16 +64,9 @@ class RunHistory extends Component {
       >
         <Row>
           <Col span={16} offset={4}>
-            <RunHistoryTable runs={runHistory} onSelect={this.handleSelect} />
+            <RunHistoryTable runs={runHistory} />
           </Col>
         </Row>
-        <RunRevisionLog
-          title={this.renderTitle(selectedRun)}
-          run={selectedRun}
-          visible={runDetailsVisible}
-          onClose={this.handleClose}
-          {...defaultDrawerProps}
-        />
       </DatastoreLayout>
     )
   }

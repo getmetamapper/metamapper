@@ -31,6 +31,8 @@ services:
       context: ./
       args:
         POSTGRES_VERSION: "10.13"
+    ports:
+      - 6033:5432
     << : *postgresql_defaults
   postgresql-11.8:
     build:

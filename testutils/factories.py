@@ -2,6 +2,7 @@
 import datetime as dt
 import factory
 import random
+import hashlib
 
 from django.utils import timezone
 from django.utils.text import slugify
@@ -118,6 +119,10 @@ def randomContentType(instance):
     ]))
 
 
+def hash(*args):
+    return hashlib.md5(''.join(map(str, args)).encode()).hexdigest()
+
+
 class UserFactory(factory.django.DjangoModelFactory):
     fname = factory.Faker('first_name')
     lname = factory.Faker('last_name')
@@ -175,6 +180,8 @@ class SchemaFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(underscoreObject)
     tags = factory.LazyAttribute(allTags)
 
+    object_id = factory.LazyAttribute(lambda i: hash(i.datastore.id, i.name))
+
     class Meta:
         model = definition_models.Schema
 
@@ -187,6 +194,7 @@ class TableFactory(factory.django.DjangoModelFactory):
 
     name = factory.LazyAttribute(underscoreObject)
     tags = factory.LazyAttribute(allTags)
+    object_id = factory.LazyAttribute(lambda i: hash(i.schema.object_id, i.name))
 
     class Meta:
         model = definition_models.Table
@@ -206,21 +214,10 @@ class ColumnFactory(factory.django.DjangoModelFactory):
     default_value = ''
     db_comment = factory.Faker('sentence')
 
+    object_id = factory.LazyAttribute(lambda i: hash(i.table.object_id, i.name))
+
     class Meta:
         model = definition_models.Column
-
-
-class IndexFactory(factory.django.DjangoModelFactory):
-    table = factory.LazyAttribute(lambda i: TableFactory())
-    workspace = factory.LazyAttribute(lambda i: i.table.workspace)
-
-    kind = 'btree'
-    name = factory.LazyAttribute(underscoreObject)
-    is_primary = False
-    is_unique = False
-
-    class Meta:
-        model = definition_models.Index
 
 
 class RevisionerRunFactory(factory.django.DjangoModelFactory):

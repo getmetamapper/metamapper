@@ -1,5 +1,5 @@
 """
-Create a schema with some tables and indexes.
+Create a schema with some tables.
 
 Example SQL:
 
@@ -176,111 +176,6 @@ inspected_tables += [
     },
 ]
 
-inspected_indexes = mutate_inspected(inspected.indexes, [
-    {
-        "type": "dropped",
-        "filters": (
-            lambda row: row['table_object_id'] == 16441
-        ),
-    },
-])
-
-inspected_indexes += [
-    {
-        "schema_name": "public",
-        "schema_object_id": 2200,
-        "table_name": "groups",
-        "table_object_id": 24725,
-        "index_name": "groups_group_name_key",
-        "index_object_id": 24732,
-        "is_unique": True,
-        "is_primary": False,
-        "definition": "CREATE UNIQUE INDEX groups_group_name_key ON public.groups USING btree (group_name)",
-        "columns": [
-            {
-                "column_name": "group_name",
-                "ordinal_position": 1
-            }
-        ]
-    },
-    {
-        "schema_name": "public",
-        "schema_object_id": 2200,
-        "table_name": "groups",
-        "table_object_id": 24725,
-        "index_name": "groups_pkey",
-        "index_object_id": 24730,
-        "is_unique": True,
-        "is_primary": True,
-        "definition": "CREATE UNIQUE INDEX groups_pkey ON public.groups USING btree (id)",
-        "columns": [
-            {
-                "column_name": "id",
-                "ordinal_position": 1
-            }
-        ]
-    },
-    {
-        "schema_name": "public",
-        "schema_object_id": 2200,
-        "table_name": "permissions",
-        "table_object_id": 24737,
-        "index_name": "permissions_user_id_group_id_role_key",
-        "index_object_id": 24742,
-        "is_unique": True,
-        "is_primary": False,
-        "definition": "CREATE UNIQUE INDEX permissions_user_id_group_id_role_key ON public.permissions USING btree (user_id, group_id, role)",
-        "columns": [
-            {
-                "column_name": "user_id",
-                "ordinal_position": 1
-            },
-            {
-                "column_name": "group_id",
-                "ordinal_position": 2
-            },
-            {
-                "column_name": "role",
-                "ordinal_position": 3
-            }
-        ]
-    },
-    {
-        "schema_name": "public",
-        "schema_object_id": 2200,
-        "table_name": "users",
-        "table_object_id": 24714,
-        "index_name": "users_email_key",
-        "index_object_id": 24721,
-        "is_unique": True,
-        "is_primary": False,
-        "definition": "CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email)",
-        "columns": [
-            {
-                "column_name": "email",
-                "ordinal_position": 1
-            }
-        ]
-    },
-    {
-        "schema_name": "public",
-        "schema_object_id": 2200,
-        "table_name": "users",
-        "table_object_id": 24714,
-        "index_name": "users_pkey",
-        "index_object_id": 24719,
-        "is_unique": True,
-        "is_primary": True,
-        "definition": "CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id)",
-        "columns": [
-            {
-                "column_name": "id",
-                "ordinal_position": 1
-            }
-        ]
-    }
-]
-
 column_fields = [
     "name",
     "object_id",
@@ -291,14 +186,6 @@ column_fields = [
     "is_nullable",
     "is_primary",
     "default_value",
-]
-
-index_fields = [
-    "table__name",
-    "name",
-    "object_id",
-    "is_unique",
-    "is_primary",
 ]
 
 test_cases = [
@@ -332,21 +219,6 @@ test_cases = [
                 "summarized": "It should create the three schemas mentioned.",
                 "evaluation": lambda datastore, schema: set(schema.tables.values_list("name", flat=True)),
                 "pass_value": {"users", "permissions", "groups"},
-            },
-        ]
-    },
-    {
-        "model": "Index",
-        "description": "The `public`.`permissions_user_id_group_id_role_key` index should be created.",
-        "filters": {
-            "table__schema__name": "public",
-            "object_id": "24742",
-        },
-        "assertions": [
-            {
-                "summarized": "It should have the correct index name.",
-                "evaluation": lambda datastore, index: index.name,
-                "pass_value": "permissions_user_id_group_id_role_key",
             },
         ]
     },
@@ -404,28 +276,6 @@ test_cases = [
                     }
                 ],
             },
-            {
-                "summarized": "It should have the correct `object_id` value.",
-                "evaluation": (
-                    lambda d, table: list(table.indexes.order_by('object_id').values(*index_fields))
-                ),
-                "pass_value": [
-                    {
-                        "table__name": "users",
-                        "name": "users_pkey",
-                        "object_id": "24719",
-                        "is_unique": True,
-                        "is_primary": True,
-                    },
-                    {
-                        "table__name": "users",
-                        "name": "users_email_key",
-                        "object_id": "24721",
-                        "is_unique": True,
-                        "is_primary": False,
-                    },
-                ],
-            },
         ]
     },
     {
@@ -480,28 +330,6 @@ test_cases = [
                         "is_primary": False,
                         "default_value": "CURRENT_TIMESTAMP"
                     }
-                ],
-            },
-            {
-                "summarized": "It should have the correct `object_id` value.",
-                "evaluation": (
-                    lambda d, table: list(table.indexes.order_by('object_id').values(*index_fields))
-                ),
-                "pass_value": [
-                    {
-                        "table__name": "groups",
-                        "name": "groups_pkey",
-                        "object_id": "24730",
-                        "is_unique": True,
-                        "is_primary": True,
-                    },
-                    {
-                        "table__name": "groups",
-                        "name": "groups_group_name_key",
-                        "object_id": "24732",
-                        "is_unique": True,
-                        "is_primary": False,
-                    },
                 ],
             },
         ]

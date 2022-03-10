@@ -38,16 +38,6 @@ class DefinitionLayout extends Component {
         label: "Columns",
         isDisplayed: true,
       },
-      {
-        to: `${baseUri}/indexes`,
-        label: "Indexes",
-        isDisplayed: datastore.hasIndexes,
-      },
-      {
-        to: `${baseUri}/history`,
-        label: "History",
-        isDisplayed: true,
-      },
     ]
 
     this.links = filter(this.links, { isDisplayed: true })

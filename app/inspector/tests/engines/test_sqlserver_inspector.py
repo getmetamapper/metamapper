@@ -6,7 +6,7 @@ from django.utils import timezone
 
 import app.definitions.models as models
 import app.inspector.engines.sqlserver_inspector as engine
-import app.revisioner.tasks.core as coretasks
+import app.revisioner.tasks.v1.core as coretasks
 
 import testutils.factories as factories
 
