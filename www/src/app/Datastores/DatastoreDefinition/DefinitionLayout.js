@@ -13,7 +13,6 @@ class DefinitionLayout extends Component {
     super(props)
 
     const {
-      datastore,
       currentWorkspace: { slug },
       match: { params },
     } = props
@@ -29,8 +28,8 @@ class DefinitionLayout extends Component {
         isDisplayed: true,
       },
       {
-        to: `${baseUri}/discussions`,
-        label: "Discussion",
+        to: `${baseUri}/notes`,
+        label: "Notes",
         isDisplayed: true,
       },
       {

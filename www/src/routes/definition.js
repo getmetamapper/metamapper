@@ -1,4 +1,3 @@
-import DefinitionIndexes from "pages/DatastoreDefinition/DefinitionIndexes"
 import DefinitionColumns from "pages/DatastoreDefinition/DefinitionColumns"
 import DefinitionOverview from "pages/DatastoreDefinition/DefinitionOverview"
 import DefinitionDiscussions from "pages/DatastoreDefinition/DefinitionDiscussions"
@@ -19,12 +18,6 @@ export default [
     namespace: "datastores",
   },
   {
-    component: DefinitionIndexes,
-    path:
-      "/:workspaceSlug/datastores/:datastoreSlug/definition/:schemaName/:tableName/indexes",
-    namespace: "datastores",
-  },
-  {
     component: DefinitionColumns,
     path:
       "/:workspaceSlug/datastores/:datastoreSlug/definition/:schemaName/:tableName/columns",
@@ -33,7 +26,7 @@ export default [
   {
     component: DefinitionDiscussions,
     path:
-      "/:workspaceSlug/datastores/:datastoreSlug/definition/:schemaName/:tableName/discussions",
+      "/:workspaceSlug/datastores/:datastoreSlug/definition/:schemaName/:tableName/notes",
     namespace: "datastores",
   },
   {

@@ -10,12 +10,6 @@ import DatastoreSettings from "pages/DatastoreSettings/DatastoreSettings"
 export default [
   {
     component: Datastores,
-    path: "/:workspaceSlug/",
-    exact: true,
-    namespace: "datastores",
-  },
-  {
-    component: Datastores,
     path: "/:workspaceSlug/datastores",
     exact: true,
     namespace: "datastores",

@@ -1,3 +1,4 @@
+import Home from "pages/Home"
 import Workspaces from "pages/Workspaces/Workspaces"
 import General from "pages/WorkspaceSettings/General"
 import Users from "pages/WorkspaceSettings/Users"
@@ -13,6 +14,12 @@ import GroupProfile from "pages/WorkspaceSettings/GroupProfile"
 import CustomFields from "pages/WorkspaceSettings/CustomFields"
 
 export default [
+  {
+    component: Home,
+    path: "/:workspaceSlug/",
+    exact: true,
+    namespace: "home",
+  },
   {
     component: Users,
     path: "/:workspaceSlug/settings/users",

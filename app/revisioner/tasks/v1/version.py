@@ -16,7 +16,11 @@ def check_version(self, datastore_id):
     """Check if the version of the datastore needs to be updated.
     """
     datastore = Datastore.objects.get(pk=datastore_id)
-    dbversion = inspector.version(datastore)
+
+    try:
+        dbversion = inspector.version(datastore)
+    except inspector.operational_error:
+        return
 
     if dbversion != datastore.version:
         datastore.version = dbversion

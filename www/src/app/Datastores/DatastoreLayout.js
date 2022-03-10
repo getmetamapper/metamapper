@@ -26,6 +26,19 @@ const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading }) 
 ))
 
 class DatastoreLayout extends Component {
+  constructor(props) {
+    super(props);
+
+    const {
+      config,
+      match: {
+        params: { datastoreSlug },
+      },
+    } = props
+
+    config.setDatastoreSlug(datastoreSlug)
+  }
+
   getLinks() {
     const {
       currentWorkspace: { slug },

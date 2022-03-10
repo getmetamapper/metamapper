@@ -79,7 +79,7 @@ export default (
         !currentWorkspace &&
         !href.includes("workspaces")
       ) {
-        this.props.history.push("/workspaces")
+        window.location.href = "/workspaces"
       }
     }
 

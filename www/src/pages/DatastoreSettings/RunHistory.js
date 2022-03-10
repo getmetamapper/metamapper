@@ -9,11 +9,6 @@ import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGetDatastoreRunHistory from "graphql/withGetDatastoreRunHistory"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
-const defaultDrawerProps = {
-  className: "run-change-log",
-  placement: "right",
-  width: "85%",
-}
 
 class RunHistory extends Component {
   constructor(props) {

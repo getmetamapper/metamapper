@@ -13,6 +13,12 @@ import DatastoreListSearch from "app/Datastores/DatastoreListSearch"
 import withGetDatastoresWithSearch from "graphql/withGetDatastoresWithSearch"
 
 class Datastores extends Component {
+  constructor(props) {
+    super(props);
+
+    props.config.removeDatastoreSlug()
+  }
+
   handleSearchSubmit = (evt) => {
     evt.preventDefault()
 

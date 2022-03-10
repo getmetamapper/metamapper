@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import { graphql, compose } from "react-apollo"
 import { withRouter } from "react-router-dom"
 import { Form, Modal } from "antd"
-import { withLargeLoader } from "hoc/withLoader"
 import { withUserContext } from "context/UserContext"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 import withGetBeaconActivatedStatus from "graphql/withGetBeaconActivatedStatus"
@@ -63,7 +62,6 @@ const enhance = compose(
   withRouter,
   withUserContext,
   withGetBeaconActivatedStatus,
-  withLargeLoader,
   graphql(CreateWorkspaceMutation),
   withGraphQLMutation
 )

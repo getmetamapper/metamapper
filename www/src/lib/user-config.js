@@ -20,6 +20,21 @@ export class UserConfiguration {
     this.storage.remove("currentWorkspace")
     return null
   }
+
+  getDatastoreSlug() {
+    return this.storage.get("lastDatastore")
+  }
+
+  setDatastoreSlug(datastoreSlug) {
+    this.storage.set("lastDatastore", datastoreSlug)
+    return datastoreSlug
+  }
+
+  removeDatastoreSlug() {
+    this.storage.remove("lastDatastore")
+    return null
+  }
+
 }
 
 export default UserConfiguration

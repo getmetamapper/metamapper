@@ -38,7 +38,7 @@ class WorkspaceLayout extends Component {
       },
       {
         icon: "tool",
-        label: "Custom Properties",
+        label: "Properties",
         to: `/${slug}/settings/customproperties`,
       },
     ]

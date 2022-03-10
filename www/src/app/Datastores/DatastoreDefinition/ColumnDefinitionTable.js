@@ -6,7 +6,6 @@ import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { components } from "app/Common/EditableCell"
 import FormLabel from "app/Common/FormLabel"
 import ExportableTable from "app/Common/ExportableTable"
-import BooleanIndicator from "app/Common/BooleanIndicator"
 import UpdateColumnMetadata from "graphql/mutations/UpdateColumnMetadata"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
 

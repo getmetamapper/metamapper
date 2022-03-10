@@ -1,14 +1,20 @@
 import React, { Component } from "react"
 import { Helmet } from "react-helmet"
+import { compose } from "react-apollo"
 import { Button, Col, Row, message } from "antd"
+import { withLargeLoader } from "hoc/withLoader"
 import { withRouter } from "react-router-dom"
 import WorkspaceList from "app/Workspaces/WorkspaceList"
 import WorkspaceSetup from "app/Workspaces/WorkspaceSetup"
 import qs from "query-string"
 
 class Workspaces extends Component {
+  static defaultProps = {
+    loading: true,
+  }
+
   constructor(props) {
-    super(props)
+    super(props);
 
     const {
       deleted
@@ -69,4 +75,8 @@ class Workspaces extends Component {
   }
 }
 
-export default withRouter(Workspaces)
+
+export default compose(
+  withRouter,
+  withLargeLoader,
+)(Workspaces)

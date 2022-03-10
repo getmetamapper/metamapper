@@ -23,7 +23,7 @@ class DefinitionDiscussions extends Component {
     return (
       <Layout
         datastore={datastore}
-        lastCrumb="Discussion"
+        lastCrumb="Notes"
         loading={loading}
         table={tableDefinition}
       >
