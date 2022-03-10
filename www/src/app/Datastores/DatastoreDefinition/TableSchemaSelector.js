@@ -126,10 +126,14 @@ class TableSchemaSelectorContainer extends Component {
     }
   }
 
-  handleSearch = (evt) => {
-    this.setState({
-      search: evt.target.value,
-    })
+  handleSearch = (search) => {
+    this.setState({ search })
+  }
+
+  handleEmpty = (evt) => {
+    if (!evt.target.value || evt.target.value.length === 0) {
+      this.handleSearch("")
+    }
   }
 
   render() {
@@ -145,10 +149,11 @@ class TableSchemaSelectorContainer extends Component {
       <Fragment>
         <div className="table-schema-search">
           <Input.Search
+            data-test="TableSchemaSearch.Input"
             type="text"
             placeholder="Search datastore tables"
-            onChange={this.handleSearch}
-            data-test="TableSchemaSearch.Input"
+            onSearch={this.handleSearch}
+            onChange={this.handleEmpty}
           />
         </div>
         <SidebarComponent
