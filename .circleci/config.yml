@@ -87,26 +87,26 @@ jobs:
           paths:
             - ./www/node_modules
       - run: make test-js
-  frontend-e2e-tests:
-    environment:
-      COMPOSE_FILE: .circleci/docker-compose.cypress.yml
-      COMPOSE_PROJECT_NAME: cypress
-    docker:
-      - image: circleci/node:12
-    steps:
-      - setup_remote_docker:
-          version: 19.03.13
-      - checkout
-      - run: docker-compose up -d
-      - run: |
-            docker-compose run --rm worker \
-              timeout 60 bash \
-                -c 'until $(curl -Isf -o /dev/null http://webserver:5050/); do printf '.'; sleep 0.5; done'
-      - run: docker-compose run --rm webserver bash www/cypress/cmd/resetdb.sh
-      - run: docker-compose run --rm cypress npx cypress run --spec "www/cypress/integration/*.spec.js" --browser chrome --headless
-      - store_artifacts:
-          path: .circleci/screenshots
-          destination: artifact-file
+  # frontend-e2e-tests:
+  #   environment:
+  #     COMPOSE_FILE: .circleci/docker-compose.cypress.yml
+  #     COMPOSE_PROJECT_NAME: cypress
+  #   docker:
+  #     - image: circleci/node:12
+  #   steps:
+  #     - setup_remote_docker:
+  #         version: 19.03.13
+  #     - checkout
+  #     - run: docker-compose up -d
+  #     - run: |
+  #           docker-compose run --rm worker \
+  #             timeout 60 bash \
+  #               -c 'until $(curl -Isf -o /dev/null http://webserver:5050/); do printf '.'; sleep 0.5; done'
+  #     - run: docker-compose run --rm webserver bash www/cypress/cmd/resetdb.sh
+  #     - run: docker-compose run --rm cypress npx cypress run --spec "www/cypress/integration/*.spec.js" --browser chrome --headless
+  #     - store_artifacts:
+  #         path: .circleci/screenshots
+  #         destination: artifact-file
   build-preview-docker-image:
     docker:
       - image: circleci/node:12
