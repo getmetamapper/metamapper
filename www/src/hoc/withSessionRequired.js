@@ -52,7 +52,7 @@ export default (
           config.setCurrentWorkspace(workspace)
         }
 
-        if (!currentWorkspace && !workspace) {
+        if (!currentWorkspace && !workspace && !href.includes("workspaces")) {
           this.props.history.push("/workspaces")
         }
 

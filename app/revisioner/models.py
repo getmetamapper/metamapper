@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import contextlib
+import sys
 import time
 
 from django.db import models
@@ -13,6 +15,11 @@ from utils.mixins.models import UUIDModel
 class Run(UUIDModel):
     """Represents scan and refresh of a datastore via Revisioner.
     """
+    SUCCESS = 'SUCCESS'
+    FAILURE = 'FAILURE'
+    PENDING = 'PENDING'
+    PARTIAL = 'PARTIAL'
+
     workspace = models.ForeignKey(
         to=Workspace,
         on_delete=models.CASCADE,
@@ -42,11 +49,18 @@ class Run(UUIDModel):
         help_text="Timestamp for when run finished calculating all revisions.",
     )
 
+    tasks_count = models.IntegerField(default=0)
+    fails_count = models.IntegerField(default=0)
+
     @property
     def status(self):
-        if self.finished_at is not None:
-            return RunTask.SUCCESS
-        return RunTask.PENDING
+        if self.finished_at is None:
+            return Run.PENDING
+        elif self.tasks_count == 1:
+            return Run.FAILURE
+        elif self.fails_count > 0:
+            return Run.PARTIAL
+        return Run.SUCCESS
 
     @property
     def epoch(self):
@@ -76,7 +90,10 @@ class Run(UUIDModel):
     def mark_as_finished(self, save=True):
         """Mark the run as finished.
         """
+        self.tasks_count = self.tasks.count()
+        self.fails_count = self.tasks.filter(status=RunTask.FAILURE).count()
         self.finished_at = timezone.now()
+
         if save:
             self.save()
 
@@ -130,7 +147,7 @@ class RunTask(models.Model):
         help_text="Timestamp for when the task finished",
     )
 
-    storage_path = models.CharField(max_length=512, unique=True)
+    path = models.CharField(max_length=512, unique=True)
 
     @property
     def finished(self):
@@ -139,12 +156,13 @@ class RunTask(models.Model):
     def waiting(self):
         return self.meta_task_id is None
 
-    def mark_as_started(self, meta_task_id=None):
+    def mark_as_started(self, meta_task_id=None, save=True):
         """Mark the task as started and provide the meta task ID if relevant.
         """
         self.started_at = timezone.now()
         self.meta_task_id = meta_task_id
-        self.save()
+        if save:
+            self.save()
 
     def mark_as_succeeded(self):
         """Mark the task as finished.
@@ -160,3 +178,20 @@ class RunTask(models.Model):
         self.error = message
         self.finished_at = timezone.now()
         self.save()
+
+    @contextlib.contextmanager
+    def task_context(self, meta_task_id, on_failure=None):
+        """Run some code as a task.
+        """
+        self.mark_as_started(meta_task_id, save=False)
+
+        try:
+            yield self
+        except Exception as error:
+            self.mark_as_failed(str(error))
+            if on_failure and callable(on_failure):
+                on_failure(error)
+            if len(sys.argv) > 1 and sys.argv[1] == 'test':
+                raise
+        else:
+            self.mark_as_succeeded()

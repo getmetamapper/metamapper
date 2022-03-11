@@ -19,6 +19,11 @@ class SchemaDefinitionCollector(object):
         """
         return md5(''.join(map(str, args)).encode()).hexdigest()
 
+    def verify_connection(self):
+        """Verify datastore can be connected to.
+        """
+        return inspector.verify_connection(self.datastore)
+
     def execute(self, run):
         """Process and create the definition for the datastore.
         """

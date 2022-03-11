@@ -108,7 +108,7 @@ test_cases = [
             {
                 "summarized": "It should have an updated `object_id` value.",
                 "evaluation": lambda datastore, table: table.object_id,
-                "pass_value": "26522",
+                "pass_value": "dbcfca725d1ddff7e4505c2f60d02311",
             },
             {
                 "summarized": "It should have the expected columns.",
@@ -124,9 +124,9 @@ test_cases = [
     },
     {
         "model": "Column",
-        "description": "tbd.",
+        "description": "The related columns should be preserved.",
         "filters": {
-            "table_id": 2,
+            "table_id": "dbcfca725d1ddff7e4505c2f60d02311",
             "name": "dept_name",
         },
         "assertions": [
@@ -136,24 +136,32 @@ test_cases = [
                 "pass_value": 15,
             },
             {
+                "summarized": "It should have the same Column position.",
+                "evaluation": lambda datastore, column: column.ordinal_position,
+                "pass_value": 3,
+            },
+            {
                 "summarized": "It should have the same Column identity.",
                 "evaluation": lambda datastore, column: column.object_id,
-                "pass_value": "26522/3",
+                "pass_value": "e736e9c9159e9930a9a69e7c0ae0c58b",
             },
         ]
     },
     {
         "model": "Column",
-        "description": "tbd.",
         "filters": {
-            "table_id": 2,
-            "object_id": "26522/2",
+            "object_id": "1274389cceee476f21e0763bbb606856",
         },
         "assertions": [
             {
                 "summarized": "It should have the same Column identity.",
                 "evaluation": lambda datastore, column: column.name,
                 "pass_value": "category",
+            },
+            {
+                "summarized": "It should have the same Table relationship.",
+                "evaluation": lambda datastore, column: column.table_id,
+                "pass_value": "dbcfca725d1ddff7e4505c2f60d02311",
             },
         ]
     },

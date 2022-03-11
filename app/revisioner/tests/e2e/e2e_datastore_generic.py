@@ -343,12 +343,12 @@ test_cases = [
                 "pass_value": "numeric(10, 2)",
             },
             {
-                "evaluation": lambda datastore, column: column.is_nullable,
-                "pass_value": True,
-            },
-            {
                 "evaluation": lambda datastore, column: column.name,
                 "pass_value": "dollar_amount",
+            },
+            {
+                "evaluation": lambda datastore, column: column.is_nullable,
+                "pass_value": True,
             },
         ]
     },

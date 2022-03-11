@@ -68,43 +68,43 @@ test_cases = [
         "model": "Table",
         "description": "The `app`.`orderdetails` table should be modified.",
         "filters": {
-            "object_id": "16501",
+            "object_ref": "16501",
         },
         "assertions": [
             {
-                "summarized": "It should rename `orderdetails` to `order_details`",
+                "summarized": "It should rename `orderdetails` to `order_details`.",
                 "evaluation": lambda datastore, table: table.name,
                 "pass_value": "order_details",
             },
             {
-                "summarized": "It should have the same Table identity.",
-                "evaluation": lambda datastore, table: table.pk,
-                "pass_value": 3,
+                "summarized": "It should update the Table object ID.",
+                "evaluation": lambda datastore, table: table.object_id,
+                "pass_value": "d3b1a0e8bebc6de5627c7ab7d4361d2e",
             },
             {
                 "summarized": "It should not modify metadata about the Table.",
                 "evaluation": lambda datastore, table: table.short_desc,
                 "pass_value": "Details about an order",
-            }
+            },
         ]
     },
     {
         "model": "Column",
         "description": "The `app`.`orderdetails`.`priceeach` column should be modified.",
         "filters": {
-            "table__object_id": "16501",
-            "name": "price_each",
+            "table__object_ref": "16501",
+            "name": "price_each"
         },
         "assertions": [
             {
                 "summarized": "It should retain the same Table identity.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": 3,
+                "pass_value": "d3b1a0e8bebc6de5627c7ab7d4361d2e",
             },
             {
                 "summarized": "It should retain the `object_id` value.",
                 "evaluation": lambda datastore, column: column.object_id,
-                "pass_value": "16501/4",
+                "pass_value": "78930268e8c817373da24d5bc90a7b32",
             },
             {
                 "summarized": "It should update `is_nullable` value.",
@@ -112,9 +112,9 @@ test_cases = [
                 "pass_value": True,
             },
             {
-                "summarized": "It should have the same Column identity.",
-                "evaluation": lambda datastore, column: column.pk,
-                "pass_value": 19,
+                "summarized": "It should have the same Column metadata.",
+                "evaluation": lambda datastore, column: column.short_desc,
+                "pass_value": "The price of each item.",
             },
             {
                 "summarized": "It should have modified the `numeric_scale` value.",

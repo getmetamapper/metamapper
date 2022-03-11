@@ -11,6 +11,7 @@ class RunHistoryTable extends Component {
       SUCCESS: "green",
       PENDING: "orange",
       FAILURE: "red",
+      PARTIAL: "volcano",
     }
 
     this.columns = [
@@ -18,15 +19,7 @@ class RunHistoryTable extends Component {
         title: "Status",
         dataIndex: "status",
         render: (status, { error }) => (
-          <>
-            {status === "FAILURE" ? (
-              <Popover content={<code>{error.excMessage}</code>} title="The following error was encountered:">
-                <Tag color={this.statusColors[status]}>{status}</Tag>
-              </Popover>
-            ) : (
-              <Tag color={this.statusColors[status]}>{status}</Tag>
-            )}
-          </>
+          <Tag color={this.statusColors[status]}>{status}</Tag>
         ),
       },
       {

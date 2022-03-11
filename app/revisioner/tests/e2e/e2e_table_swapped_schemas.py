@@ -42,18 +42,23 @@ test_cases = [
         "model": "Table",
         "description": "The `app`.`customers` table should move to the `employees` schema.",
         "filters": {
-            "object_id": "16442",
+            "object_ref": "16442",
         },
         "assertions": [
             {
-                "summarized": "It should retain the same primary key.",
-                "evaluation": lambda datastore, table: table.pk,
-                "pass_value": 1,
+                "summarized": "It should retain the same name.",
+                "evaluation": lambda datastore, table: table.name,
+                "pass_value": "customers",
+            },
+            {
+                "summarized": "It should retain the same description.",
+                "evaluation": lambda datastore, table: table.short_desc,
+                "pass_value": "Table with customer information.",
             },
             {
                 "summarized": "It should reference the `employees` Schema instance by ID.",
                 "evaluation": lambda datastore, table: table.schema_id,
-                "pass_value": 2,
+                "pass_value": "2532a4837aa0dca84578ed37bea9faca",
             },
             {
                 "summarized": "It should reference the `employees` Schema instance by name.",

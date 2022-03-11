@@ -59,7 +59,7 @@ test_cases = [
         "assertions": [
             {
                 "summarized": "The `tng` schema has different identity as the `app` schema.",
-                "evaluation": lambda datastore, schema: schema.pk == "tThdqoa6Huxs",
+                "evaluation": lambda datastore, schema: schema.id == "tThdqoa6Huxs",
                 "pass_value": False,
             },
             {
@@ -87,8 +87,8 @@ test_cases = [
         "assertions": [
             {
                 "summarized": "The table should have the same name.",
-                "evaluation": lambda datastore, table: table.pk,
-                "pass_value": 1,
+                "evaluation": lambda datastore, table: table.name,
+                "pass_value": "customers",
             },
         ]
     },
@@ -101,8 +101,8 @@ test_cases = [
         "assertions": [
             {
                 "summarized": "The table should have the same name.",
-                "evaluation": lambda datastore, table: table.pk,
-                "pass_value": 4,
+                "evaluation": lambda datastore, table: table.name,
+                "pass_value": "orders",
             },
         ]
     },
@@ -115,8 +115,13 @@ test_cases = [
         "assertions": [
             {
                 "summarized": "The table should have the same name.",
-                "evaluation": lambda datastore, table: table.pk,
-                "pass_value": 10,
+                "evaluation": lambda datastore, table: table.name,
+                "pass_value": "departments",
+            },
+            {
+                "summarized": "The table should have the same metadata.",
+                "evaluation": lambda datastore, table: table.tags,
+                "pass_value": ["one", "two"],
             },
         ]
     },

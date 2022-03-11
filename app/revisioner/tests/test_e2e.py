@@ -74,7 +74,7 @@ class End2EndRevisionerTests(TestCase):
             for assertion in case['assertions']:
                 message = '\n'.join([
                     filename,
-                    case['description'],
+                    case.get('description', 'No description provided.'),
                     assertion.get('summarized', ''),
                 ])
 
@@ -177,10 +177,10 @@ def mutate_inspected(records, rules):
     return output
 
 
-# for filepath in glob.glob(cmd_folder + '/e2e_*.py'):
-#     fname, ext = os.path.splitext(filepath)
-#     setattr(
-#         End2EndRevisionerTests,
-#         'test_%s' % fname,
-#         create_test(filepath, fname),
-#     )
+for filepath in glob.glob(cmd_folder + '/e2e_*.py'):
+    fname, ext = os.path.splitext(filepath)
+    setattr(
+        End2EndRevisionerTests,
+        'test_%s' % fname,
+        create_test(filepath, fname),
+    )

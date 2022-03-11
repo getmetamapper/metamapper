@@ -15,12 +15,6 @@ import CustomFields from "pages/WorkspaceSettings/CustomFields"
 
 export default [
   {
-    component: Home,
-    path: "/:workspaceSlug/",
-    exact: true,
-    namespace: "home",
-  },
-  {
     component: Users,
     path: "/:workspaceSlug/settings/users",
     namespace: "workspace-users",
@@ -89,5 +83,11 @@ export default [
     exact: true,
     namespace: "workspaces",
     shouldRefreshUser: true,
+  },
+  {
+    component: Home,
+    path: "/:workspaceSlug/",
+    exact: true,
+    namespace: "home",
   },
 ]

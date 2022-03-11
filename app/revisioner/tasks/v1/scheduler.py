@@ -63,7 +63,7 @@ def create_runs(self, datastore_slug=None, hours=1, *args, **kwargs):
 
 @app.task(bind=True)
 @logging.task_logger(__name__)
-def queue_runs(self, datastore_slug=None, *args, **kwargs):
+def queue_runs(self, datastore_slug=None, countdown_in_minutes=15, *args, **kwargs):
     """Scheduled task to queue an unprocessed run. Runs every 10 minutes.
     """
     runs = Run.objects.filter(started_at=None, finished_at=None)
@@ -79,4 +79,4 @@ def queue_runs(self, datastore_slug=None, *args, **kwargs):
         )
         # Revisioner run starts within 15 minutes of this task call. We introduce randomness
         # so that we don't have a thundering herd...
-        core.start_run.apply_async(args=[run.id], countdown=random.randint(0, (60 * 15)))
+        core.start_run.apply_async(args=[run.id], countdown=random.randint(0, (60 * countdown_in_minutes)))

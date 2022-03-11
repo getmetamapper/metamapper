@@ -13,13 +13,13 @@ from app.revisioner.tests.e2e import inspected
 from app.revisioner.tests.test_e2e import mutate_inspected
 
 
-preload_fixtures = ['datastore']
+preload_fixtures = ["datastore"]
 
 inspected_tables = mutate_inspected(inspected.tables_and_views, [
     {
         "type": "dropped",
         "filters": (
-            lambda row: row['table_object_id'] == "381335ab07d2b67bfe43774716cf7376"
+            lambda row: row["table_object_id"] == "381335ab07d2b67bfe43774716cf7376"
         ),
     },
 ])
@@ -66,7 +66,7 @@ test_cases = [
         "model": "Table",
         "description": "The `app.departments` table should no longer have the old `object_id`.",
         "filters": {
-            "object_id": "16522",
+            "object_ref": "16522",
         },
         "assertions": [
             {
@@ -79,7 +79,7 @@ test_cases = [
         "model": "Table",
         "description": "The `app.departments` table should still exist.",
         "filters": {
-            "object_id": "26522",
+            "object_ref": "26522",
         },
         "assertions": [
             {
@@ -93,7 +93,7 @@ test_cases = [
         "model": "Column",
         "description": "The `app.departments` should have the same Column objects.",
         "filters": {
-            "object_id": "26522/1",
+            "object_ref": "26522/1",
         },
         "assertions": [
             {
@@ -102,9 +102,9 @@ test_cases = [
                 "pass_value": 14,
             },
             {
-                "summarized": "It should retain the same Table identifier.",
+                "summarized": "It should retain the same Table relationship.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": 2,
+                "pass_value": "dbcfca725d1ddff7e4505c2f60d02311",
             },
         ]
     },
@@ -112,7 +112,7 @@ test_cases = [
         "model": "Column",
         "description": "The `app.departments` should have the same Column objects.",
         "filters": {
-            "object_id": "26522/2",
+            "object_ref": "26522/2",
         },
         "assertions": [
             {
@@ -123,7 +123,7 @@ test_cases = [
             {
                 "summarized": "It should retain the same Table identifier.",
                 "evaluation": lambda datastore, column: column.table_id,
-                "pass_value": 2,
+                "pass_value": "dbcfca725d1ddff7e4505c2f60d02311",
             },
         ]
     },

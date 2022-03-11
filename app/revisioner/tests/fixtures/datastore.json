@@ -27,7 +27,7 @@
       "object_id": "6a05b990b1042996407a94cfdfdcca75",
       "kind": "base table",
       "tags": [],
-      "short_desc": "",
+      "short_desc": "Table with customer information.",
       "custom_properties": {
         "p0tqRz5QJ9yC": "Finance",
         "YjOTcEUsymIU": 3
@@ -467,7 +467,8 @@
       "numeric_scale": 2,
       "max_length": 10,
       "default_value": "",
-      "object_ref": "16501/4"
+      "object_ref": "16501/4",
+      "short_desc": "The price of each item."
     },
     "model": "definitions.column",
     "pk": 19

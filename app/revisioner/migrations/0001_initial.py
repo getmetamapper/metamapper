@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('error', models.TextField(null=True)),
                 ('started_at', models.DateTimeField(default=None, help_text='Timestamp for when the task started', null=True)),
                 ('finished_at', models.DateTimeField(default=None, help_text='Timestamp for when the task finished', null=True)),
-                ('storage_path', models.CharField(max_length=512, unique=True)),
+                ('path', models.CharField(max_length=512, unique=True)),
                 ('run', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tasks', to='revisioner.Run')),
             ],
         ),

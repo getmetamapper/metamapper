@@ -30,7 +30,7 @@ test_cases = [
         "description": "Expect the `app` schema to be renamed to `public`.",
         "filters": {
             "name": "public",
-            "object_id": "16441",
+            "object_ref": "16441",
         },
         "assertions": [
             {

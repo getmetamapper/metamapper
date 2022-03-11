@@ -13,7 +13,9 @@ class Home extends Component {
 
     const datastoreSlug = config.getDatastoreSlug()
 
-    if (datastoreSlug) {
+    if (!currentWorkspace) {
+      this.props.history.push("/workspaces")
+    } else if (currentWorkspace && datastoreSlug) {
       this.props.history.push(`/${currentWorkspace.slug}/datastores/${datastoreSlug}`)
     } else {
       this.props.history.push(`/${currentWorkspace.slug}/datastores`)

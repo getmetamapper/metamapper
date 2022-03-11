@@ -190,15 +190,6 @@ column_fields = [
 
 test_cases = [
     {
-        "description": "Expect first time created columns to be dropped from the revision logs.",
-        "assertions": [
-            {
-                "evaluation": lambda datastore, nulled: datastore.most_recent_run.revisions.filter(action=1, resource_type__model='column').count(),
-                "pass_value": 0,
-            },
-        ]
-    },
-    {
         "model": "Schema",
         "description": "The `public` schema should be created.",
         "filters": {
@@ -213,7 +204,7 @@ test_cases = [
             {
                 "summarized": "It should retain the `object_id` value.",
                 "evaluation": lambda datastore, schema: schema.object_id,
-                "pass_value": "2200",
+                "pass_value": "9b95c7796bd5c23ce3a172a00fd60707",
             },
             {
                 "summarized": "It should create the three schemas mentioned.",
@@ -233,7 +224,7 @@ test_cases = [
             {
                 "summarized": "It should have the correct `object_id` value.",
                 "evaluation": lambda datastore, table: table.object_id,
-                "pass_value": "24714",
+                "pass_value": "949138153e11a3611bc3d8ee92629e9a",
             },
             {
                 "summarized": "It should have the correct `object_id` value.",
@@ -243,7 +234,7 @@ test_cases = [
                 "pass_value": [
                     {
                         "name": "id",
-                        "object_id": "24714/1",
+                        "object_id": "5eb32786958bd9bcf8008ccdbc0db41a",
                         "ordinal_position": 1,
                         "data_type": "integer",
                         "max_length": 32,
@@ -254,7 +245,7 @@ test_cases = [
                     },
                     {
                         "name": "email",
-                        "object_id": "24714/2",
+                        "object_id": "dbc64c2bab77c65feb60b22f7b81297b",
                         "ordinal_position": 2,
                         "data_type": "character varying",
                         "max_length": 255,
@@ -265,7 +256,7 @@ test_cases = [
                     },
                     {
                         "name": "created_at",
-                        "object_id": "24714/3",
+                        "object_id": "3f498c30f3c665703f41c4330e3bdc0c",
                         "ordinal_position": 3,
                         "data_type": "timestamp without time zone",
                         "max_length": None,
@@ -289,7 +280,7 @@ test_cases = [
             {
                 "summarized": "It should have the correct `object_id` value.",
                 "evaluation": lambda d, table: table.object_id,
-                "pass_value": "24725",
+                "pass_value": "ff56661592264f856d5f842401580754",
             },
             {
                 "summarized": "It should have the correct `object_id` value.",
@@ -299,7 +290,7 @@ test_cases = [
                 "pass_value": [
                     {
                         "name": "id",
-                        "object_id": "24725/1",
+                        "object_id": "445d354c10062ef3a3127ffcc4a9c0f3",
                         "ordinal_position": 1,
                         "data_type": "integer",
                         "max_length": 32,
@@ -310,7 +301,7 @@ test_cases = [
                     },
                     {
                         "name": "group_name",
-                        "object_id": "24725/2",
+                        "object_id": "9b7836e849011860148ddd6fcb901b2d",
                         "ordinal_position": 2,
                         "data_type": "character varying",
                         "max_length": 255,
@@ -321,7 +312,7 @@ test_cases = [
                     },
                     {
                         "name": "created_at",
-                        "object_id": "24725/3",
+                        "object_id": "f1199884276ee46972359dd652992f42",
                         "ordinal_position": 3,
                         "data_type": "timestamp without time zone",
                         "max_length": None,

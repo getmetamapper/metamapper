@@ -25,4 +25,4 @@ class Command(BaseCommand):
         runs = scheduler.create_runs(**options)
 
         if len(runs):
-            scheduler.queue_runs(options['datastore_slug'])
+            scheduler.queue_runs(options['datastore_slug'], countdown_in_minutes=0)
