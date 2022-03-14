@@ -1,0 +1,58 @@
+[
+  {
+    "fields": {
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 14,
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "Here is some random text.",
+      "text": "Here is some random text.",
+      "author_id": 1,
+      "content_type": ["definitions", "column"]
+    },
+    "model": "comments.comment",
+    "pk": "aYmeD5xa91me"
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 15,
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "Here is some information about the department name.",
+      "text": "Here is some information about the department name.",
+      "author_id": 1,
+      "content_type": ["definitions", "column"]
+    },
+    "model": "comments.comment",
+    "pk": "bYmeD5xa91me"
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 16,
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "Here is some information about the order number.",
+      "text": "Here is some information about the order number.",
+      "author_id": 1,
+      "content_type": ["definitions", "column"]
+    },
+    "model": "comments.comment",
+    "pk": "cYmeD5xa91me"
+  },
+  {
+    "fields": {
+      "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
+      "object_id": 3,
+      "created_at": "2020-02-27 17:25:55.339009+00:00",
+      "updated_at": "2020-02-27 17:25:55.339054+00:00",
+      "html": "Lorem ispum.",
+      "text": "Lorem ispum.",
+      "author_id": 1,
+      "content_type": ["definitions", "table"]
+    },
+    "model": "comments.comment",
+    "pk": "dYmeD5xa91me"
+  }
+]

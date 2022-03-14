@@ -359,7 +359,7 @@ class Table(AuditableModel,
 
     schema = models.ForeignKey(
         to=Schema,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='tables',
         to_field='object_id',
     )
@@ -477,7 +477,7 @@ class Column(AuditableModel,
 
     table = models.ForeignKey(
         to=Table,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='columns',
         to_field='object_id',
     )

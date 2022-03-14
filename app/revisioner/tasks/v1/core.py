@@ -43,6 +43,12 @@ def upsert_schemas(schemas, on_conflict=None):
           .bulk_insert(dedupe_by_keys(schemas, on_conflict))
 
 
+def delete_schemas(ids):
+    """Perform deletion based on provided IDs.
+    """
+    Schema.all_objects.filter(id__in=ids).hard_delete()
+
+
 def upsert_tables(tables, on_conflict=None):
     """Perform an upsert of a batch of table objects.
     """
@@ -62,6 +68,12 @@ def upsert_tables(tables, on_conflict=None):
          .bulk_insert(dedupe_by_keys(data, on_conflict))
 
 
+def delete_tables(ids):
+    """Perform deletion based on provided IDs.
+    """
+    Table.all_objects.filter(id__in=ids).hard_delete()
+
+
 def upsert_columns(columns, run_id, on_conflict=None):
     """Perform an upsert of a batch of column objects.
     """
@@ -76,6 +88,12 @@ def upsert_columns(columns, run_id, on_conflict=None):
           .bulk_insert(dedupe_by_keys(columns, on_conflict))
 
     Column.objects.filter(table_id=columns[0]['table_id']).exclude(run_id=run_id).delete()
+
+
+def delete_columns(ids):
+    """Perform deletion based on provided IDs.
+    """
+    Column.all_objects.filter(id__in=ids).hard_delete()
 
 
 def delete_objects_from_past_runs(run):
@@ -117,12 +135,12 @@ def apply_corrections_to_schema(run):
 
     results = []
     columns = [
-        'id',
         'object_id',
         'name',
         'deleted_at',
     ]
 
+    deleted = []
     exclude = columns.copy()
     exclude += [
         'recent_%s' % f for f in exclude
@@ -135,9 +153,12 @@ def apply_corrections_to_schema(run):
         for f in columns:
             data[f] = getattr(item, 'recent_%s' % f, None)
 
+        deleted.append(item.recent_id)
         results.append(data)
 
-    upsert_schemas(results, on_conflict=['id'])
+    with transaction.atomic():
+        delete_schemas(deleted)
+        upsert_schemas(results, on_conflict=['id'])
 
 
 def apply_corrections_to_table(run):
@@ -145,7 +166,7 @@ def apply_corrections_to_table(run):
     """
     items = Table.objects.raw("""
     SELECT
-        t2.id as recent_id,
+        t2.id AS recent_id,
         t2.object_id AS recent_object_id,
         t2.schema_id AS recent_schema_id,
         t2.name as recent_name,
@@ -165,7 +186,6 @@ def apply_corrections_to_table(run):
 
     results = []
     columns = [
-        'id',
         'object_id',
         'name',
         'schema_id',
@@ -177,6 +197,7 @@ def apply_corrections_to_table(run):
         'db_comment',
     ]
 
+    deleted = []
     exclude = columns.copy()
     exclude += [
         'recent_%s' % f for f in exclude
@@ -186,12 +207,16 @@ def apply_corrections_to_table(run):
         data = model_to_dict(item, exclude=exclude)
         data['run_id'] = run.id
 
+        # Replace old fields with recent fields.
         for f in columns:
             data[f] = getattr(item, 'recent_%s' % f, None)
 
+        deleted.append(item.recent_id)
         results.append(data)
 
-    upsert_tables(results, on_conflict=['id'])
+    with transaction.atomic():
+        delete_tables(deleted)
+        upsert_tables(results, on_conflict=['id'])
 
 
 def apply_corrections_to_columns(run):
@@ -226,7 +251,6 @@ def apply_corrections_to_columns(run):
 
     results = []
     columns = [
-        'id',
         'object_id',
         'name',
         'table_id',
@@ -243,6 +267,7 @@ def apply_corrections_to_columns(run):
         'db_comment',
     ]
 
+    deleted = []
     exclude = columns.copy()
     exclude += [
         'recent_%s' % f for f in exclude
@@ -255,9 +280,12 @@ def apply_corrections_to_columns(run):
         for f in columns:
             data[f] = getattr(item, 'recent_%s' % f, None)
 
+        deleted.append(item.recent_id)
         results.append(data)
 
-    upsert_columns(results, run.id, on_conflict=['id'])
+    with transaction.atomic():
+        delete_columns(deleted)
+        upsert_columns(results, run.id, on_conflict=['id'])
 
 
 @app.task(bind=True)
@@ -339,9 +367,9 @@ def complete_run(self, run_id, **kwargs):
 
     steps = (
         delete_objects_from_past_runs,
-        apply_corrections_to_schema,
-        apply_corrections_to_table,
         apply_corrections_to_columns,
+        apply_corrections_to_table,
+        apply_corrections_to_schema,
     )
 
     with task.task_context(self.request.id):

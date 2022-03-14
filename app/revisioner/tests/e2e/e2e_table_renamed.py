@@ -9,7 +9,7 @@ from app.revisioner.tests.e2e import inspected
 from app.revisioner.tests.test_e2e import mutate_inspected
 
 
-preload_fixtures = ['datastore']
+preload_fixtures = ["datastore", "relationships"]
 
 inspected_tables = mutate_inspected(inspected.tables_and_views, [
     {
@@ -77,14 +77,64 @@ test_cases = [
                 "pass_value": "order_details",
             },
             {
+                "summarized": "It should not modify metadata about the Table.",
+                "evaluation": lambda datastore, table: table.short_desc,
+                "pass_value": "Details about an order",
+            },
+            {
                 "summarized": "It should update the Table object ID.",
                 "evaluation": lambda datastore, table: table.object_id,
                 "pass_value": "d3b1a0e8bebc6de5627c7ab7d4361d2e",
             },
+            # TODO(scruwys): This fails.
             {
-                "summarized": "It should not modify metadata about the Table.",
-                "evaluation": lambda datastore, table: table.short_desc,
-                "pass_value": "Details about an order",
+                "summarized": "It should not update the Table primary key.",
+                "evaluation": lambda datastore, table: table.id,
+                "pass_value": 3,
+            },
+            {
+                "summarized": "It should not modify notes about the Table.",
+                "evaluation": lambda datastore, table: table.comments.count() > 0,
+                "pass_value": True,
+            },
+        ]
+    },
+    {
+        "model": "Column",
+        "description": "The `app`.`orderdetails` table should have the same columns.",
+        "filters": {
+            "table_id": "d3b1a0e8bebc6de5627c7ab7d4361d2e",
+        },
+        "assertions": [
+            {
+                "summarized": "It should update the foreign relationship.",
+                "evaluation": lambda datastore, column: column.table_id,
+                "pass_value": "d3b1a0e8bebc6de5627c7ab7d4361d2e",
+            },
+            {
+                "summarized": "It should retain the same column name.",
+                "evaluation": lambda datastore, column: column.name,
+                "pass_value": "ordernumber",
+            },
+            {
+                "summarized": "It should retain the Column metadata.",
+                "evaluation": lambda datastore, column: column.short_desc,
+                "pass_value": "The primary key of the table.",
+            },
+            {
+                "summarized": "It should update the Column object ID.",
+                "evaluation": lambda datastore, column: column.object_id,
+                "pass_value": "2f2ea275fecb310ab4a47ba25b9ecc78",
+            },
+            {
+                "summarized": "It should not update the primary key of the Column.",
+                "evaluation": lambda datastore, column: column.id,
+                "pass_value": 16,
+            },
+            {
+                "summarized": "It should retain the related notes.",
+                "evaluation": lambda datastore, column: column.comments.count() > 0,
+                "pass_value": True,
             },
         ]
     },

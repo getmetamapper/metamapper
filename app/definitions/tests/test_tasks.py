@@ -29,6 +29,6 @@ class HardDeleteDatastoreTests(cases.UserFixtureMixin, cases.TestCase):
         tasks.hard_delete_datastore(self.datastore_id)
 
         self.assertTrue(Datastore.objects.filter(id=self.datastore_id).first() is None)
-        self.assertTrue(Comment.objects.count() < comments_count)
         self.assertTrue(Table.objects.count() < tables_count)
         self.assertTrue(AssetOwner.objects.count() < owners_count)
+        self.assertTrue(Comment.objects.count() < comments_count)

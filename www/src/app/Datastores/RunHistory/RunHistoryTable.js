@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Table, Tag, Popover } from "antd"
+import { Table, Tag } from "antd"
 import moment from "moment"
 import prettyMs from "pretty-ms"
 

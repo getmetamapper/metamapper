@@ -146,7 +146,7 @@ class Migration(migrations.Migration):
                 ('short_desc', models.TextField(blank=True, null=True)),
                 ('properties', django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
                 ('readme', models.TextField(blank=True, null=True)),
-                ('schema', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tables', to='definitions.Schema', to_field='object_id')),
+                ('schema', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='tables', to='definitions.Schema', to_field='object_id')),
                 ('workspace', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='authentication.Workspace')),
             ],
             options={
@@ -162,7 +162,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='column',
             name='table',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='columns', to='definitions.Table', to_field='object_id'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='columns', to='definitions.Table', to_field='object_id'),
         ),
         migrations.AddField(
             model_name='column',
