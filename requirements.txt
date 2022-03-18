@@ -65,7 +65,7 @@ mysql-connector-python==8.0.20  # via -r requirements.in
 oauthlib==3.1.0           # via requests-oauthlib
 oscrypto==1.2.0           # via snowflake-connector-python
 packaging==20.4           # via bleach
-paramiko==2.7.1           # via sshtunnel
+paramiko==2.10.1           # via sshtunnel
 promise==2.3              # via graphene-django, graphql-core, graphql-relay
 protobuf==3.12.2          # via google-api-core, googleapis-common-protos, mysql-connector-python
 psycopg2-binary==2.8.5    # via -r requirements.in
