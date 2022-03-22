@@ -340,7 +340,7 @@ def process_schema(self, run_task_id):
         definition = blob.get_object(task.path)
 
         self.log.info(
-            'Processing schema definition: {0}'.format(definition['schema'])
+            'Processing schema definition: {0}'.format(definition['schema']['name'])
         )
 
         with transaction.atomic():
