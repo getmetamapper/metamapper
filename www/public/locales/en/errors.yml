@@ -137,3 +137,6 @@ errors:
     domain:
       unique: Domain has already been claimed.
       invalid: Domain is not valid.
+  ApiToken:
+    name:
+      exists: API token with that name already exists.

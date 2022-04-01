@@ -4,13 +4,15 @@ import factory
 import random
 import hashlib
 
-from django.utils import timezone
-from django.utils.text import slugify
 from django.contrib.auth.hashers import make_password
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
+from django.utils.crypto import get_random_string
+from django.utils.text import slugify
 
 import app.authentication.models as authentication_models
 import app.authorization.models as authorization_models
+import app.api.models as api_models
 import app.comments.models as comment_models
 import app.sso.models as sso_models
 import app.customfields.models as customfields_models
@@ -296,3 +298,12 @@ class SSODomainFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = sso_models.SSODomain
+
+
+class ApiTokenFactory(factory.django.DjangoModelFactory):
+    name = factory.Faker('company')
+    workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
+    token = factory.LazyAttribute(lambda i: get_random_string(32).lower())
+
+    class Meta:
+        model = api_models.ApiToken

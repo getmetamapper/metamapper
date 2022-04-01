@@ -13,7 +13,6 @@ from graphene_django import DjangoObjectType
 from graphene.types.generic import GenericScalar
 
 from app.revisioner.schema import RunType
-from app.inspector.service import get_inspector_class
 
 from app.authorization.mixins import AuthNode
 from app.authorization.permissions import WorkspaceTeamMembersOnly

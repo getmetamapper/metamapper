@@ -14,7 +14,6 @@ import app.omnisearch.tasks as omnisearch
 import utils.graphql.scalars as utils_scalars
 import utils.errors as errors
 import utils.mixins.mutations as mixins
-import utils.shortcuts as shortcuts
 
 
 class CreateDatastore(mixins.CreateMutationMixin, relay.ClientIDMutation):

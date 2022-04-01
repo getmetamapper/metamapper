@@ -36,11 +36,6 @@ class DatastoreAssetsTable extends Component {
         ),
       },
       {
-        title: "Asset Type",
-        dataIndex: "kind",
-        key: "kind",
-      },
-      {
         title: "Description",
         dataIndex: "shortDesc",
         key: "shortDesc",

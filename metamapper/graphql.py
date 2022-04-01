@@ -4,6 +4,7 @@ import graphene_django.debug as debug
 
 import app.authentication.graphql as authentication
 import app.authorization.graphql as authorization
+import app.api.graphql as api
 import app.audit.graphql as audit
 import app.comments.graphql as comments
 import app.customfields.graphql as customfields
@@ -26,6 +27,7 @@ class HealthCheck(graphene.Mutation):
 
 class Query(authentication.Query,
             authorization.Query,
+            api.Query,
             audit.Query,
             comments.Query,
             customfields.Query,
@@ -49,6 +51,7 @@ class Query(authentication.Query,
 
 class Mutation(authentication.Mutation,
                authorization.Mutation,
+               api.Mutation,
                comments.Mutation,
                customfields.Mutation,
                definitions.Mutation,

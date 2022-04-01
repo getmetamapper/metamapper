@@ -3,6 +3,7 @@ import Workspaces from "pages/Workspaces/Workspaces"
 import General from "pages/WorkspaceSettings/General"
 import Users from "pages/WorkspaceSettings/Users"
 import UserProfile from "pages/WorkspaceSettings/UserProfile"
+import Api from "pages/WorkspaceSettings/Api"
 import Authentication from "pages/WorkspaceSettings/Authentication"
 import AuthenticationEditSaml from "pages/WorkspaceSettings/AuthenticationEditSaml"
 import AuthenticationSetupOAuth2Github from "pages/WorkspaceSettings/AuthenticationSetupOAuth2Github"
@@ -53,6 +54,11 @@ export default [
   {
     component: Authentication,
     path: "/:workspaceSlug/settings/authentication",
+    namespace: "workspace",
+  },
+  {
+    component: Api,
+    path: "/:workspaceSlug/settings/api",
     namespace: "workspace",
   },
   {

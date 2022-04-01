@@ -87,6 +87,7 @@ VENDOR_APPS = [
 METAMAPPER_APPS = [
     'app.authentication.apps.Config',
     'app.authorization.apps.Config',
+    'app.api.apps.Config',
     'app.definitions.apps.Config',
     'app.comments.apps.Config',
     'app.customfields.apps.Config',
