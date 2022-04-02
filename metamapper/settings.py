@@ -395,12 +395,22 @@ GOOGLE_ENABLED = GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 #
 CACHEOPS_REDIS = os.getenv('METAMAPPER_CACHEOPS_REDIS_URL')
 
+API_THROTTLE_BACKEND = os.getenv(
+    'METAMAPPER_API_THROTTLE_BACKEND',
+    'django.core.cache.backends.dummy.DummyCache',
+)
+
+API_THROTTLE_LOCATION = os.getenv('METAMAPPER_API_THROTTLE_LOCATION')
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'django_db_cache',
-    }
+    },
+    'api_throttle': {
+        'BACKEND': API_THROTTLE_BACKEND,
+        'LOCATION': API_THROTTLE_LOCATION,
+    },
 }
 
 # If the CACHEOPS_REDIS variable isn't set, we assume you don't want
