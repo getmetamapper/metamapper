@@ -14,10 +14,43 @@ from app.api.v1.permissions import IsAuthenticated
 from app.api.v1.throttling import ApiTokenThrottle
 
 
+class QueryParam(object):
+    def __init__(self, name, required=False, choices=None):
+        self.name = name
+        self.choices = choices
+        self.required = required
+
+    def __str__(self):
+        return self.name
+
+    def is_valid(self, value):
+        if self.required and not value:
+            return False
+        if self.required and self.choices and value not in self.choices:
+            return False
+        if self.choices and value not in self.choices:
+            return False
+        return True
+
+
 class BaseView(object):
     """Scope ViewSet requests to the provided Workspace.
     """
+    allowed_query_params = []
+
     throttle_classes = [ApiTokenThrottle]
+
+    def parse_query_params(self, request):
+        output = {}
+        for param in self.allowed_query_params:
+            value = request.query_params.get(param.name)
+            if not param.is_valid(value):
+                raise ParameterValidationFailed()
+            output[param.name] = value
+        return output
+
+    def format_response(self, data, *args, **kwargs):
+        return Response(data, *args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         """Set the request context before moving forward.
@@ -49,7 +82,7 @@ class BaseView(object):
 
         try:
             token_parts = b64decode(secret.encode()).decode().split(':')
-        except Error:
+        except (Error, UnicodeDecodeError):
             return None
 
         if len(token_parts) != 2:
@@ -65,13 +98,15 @@ class BaseView(object):
             return api_token
 
 
-class DetailAPIView(BaseView, views.APIView):
+class BaseAPIView(BaseView, views.APIView):
+    """Base API view.
+    """
+
+
+class DetailAPIView(BaseAPIView):
     """Base API view for detail requests.
     """
     permission_classes = [IsAuthenticated]
-
-    def format_response(self, data, *args, **kwargs):
-        return Response(data, *args, **kwargs)
 
     def get(self, request, pk, format=None):
         instance = self.get_object(pk)
@@ -90,27 +125,14 @@ class DetailAPIView(BaseView, views.APIView):
         return self.format_response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ListAPIView(BaseView, generics.ListAPIView):
-    """Base API view for list requests.
-    """
-    pagination_class = CursorSetPagination
-    permission_classes = [IsAuthenticated]
-
-
-class FindAPIView(BaseView, views.APIView):
+class FindAPIView(BaseAPIView):
     """Base API view for find requests.
     """
     permission_classes = [IsAuthenticated]
-    required_query_params = ['name']
 
-    def parse_query_params(self, request):
-        output = {}
-        for query_param in self.required_query_params:
-            value = request.query_params.get(query_param)
-            if not value:
-                raise ParameterValidationFailed()
-            output[query_param] = value
-        return output
+    allowed_query_params = [
+        QueryParam('name', required=True),
+    ]
 
     def get(self, request, *args, **kwargs):
         instance = self.find_object(
@@ -120,4 +142,11 @@ class FindAPIView(BaseView, views.APIView):
         if not instance:
             raise NotFound()
         serializer = self.serializer_class(instance)
-        return Response(serializer.data)
+        return self.format_response(serializer.data)
+
+
+class ListAPIView(BaseView, generics.ListAPIView):
+    """Base API view for list requests.
+    """
+    pagination_class = CursorSetPagination
+    permission_classes = [IsAuthenticated]

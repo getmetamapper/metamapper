@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import collections
 
-import app.api.models as models
 import app.api.serializers as serializers
 
 import testutils.cases as cases

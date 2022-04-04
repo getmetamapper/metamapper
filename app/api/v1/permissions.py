@@ -10,7 +10,10 @@ class IsAuthenticated(permissions.BasePermission):
     def has_permission(self, request, view):
         """Check if the request is authenticated.
         """
-        if not request.workspace or not request.api_token:
+        if not request.workspace:
+            raise PermissionDenied()
+
+        if not request.api_token or not request.api_token.is_enabled:
             raise PermissionDenied()
 
         return True

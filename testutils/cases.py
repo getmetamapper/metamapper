@@ -8,10 +8,11 @@ from django.test import TestCase
 from django.utils.crypto import get_random_string
 
 from app.authentication.models import User, Workspace
+from app.api.models import ApiToken
 
 from utils.regexp import jwt_regex
 
-from testutils.helpers import api_client
+from testutils.helpers import api_client, graphql_client
 from testutils.assertions import EmailAssertionsMixin, InstanceAssertionsMixin
 
 
@@ -144,14 +145,17 @@ class GraphQLTestCase(UserFixtureMixin,
 
     def setUp(self):
         super(GraphQLTestCase, self).setUp()
-        self.set_api_client(
+        self.set_graphql_client(
             user=self.users['OWNER'],
             workspace=self.workspace,
             authenticated=self.authenticated
         )
 
-    def set_api_client(self, user, workspace=None, authenticated=True):
-        self._client = api_client(user, uuid=(workspace.id if workspace else None), authenticated=authenticated)
+    def set_graphql_client(self, user, workspace=None, authenticated=True):
+        self._client = graphql_client(
+            user,
+            uuid=(workspace.id if workspace else None),
+            authenticated=authenticated)
 
     def execute(self, query=None, operation=None, variables=None):
         """
@@ -205,3 +209,36 @@ class GraphQLTestCase(UserFixtureMixin,
         """Assert that the token provided is a valid JSON web token.
         """
         self.assertTrue(jwt_regex.match(token))
+
+
+class ApiTestCase(UserFixtureMixin, TestCase):
+    """Mixin for API test cases.
+    """
+    authenticated = True
+
+    def setUp(self):
+        super(ApiTestCase, self).setUp()
+        self.api_token = ApiToken.objects.create(
+            name='test-api-token',
+            workspace=self.workspace,
+            is_enabled=True,
+            token=get_random_string(32).lower(),
+        )
+        self.api_token_secret = self.api_token.get_secret()
+        self.set_api_client(
+            token_secret=self.api_token_secret,
+            workspace=self.workspace,
+            authenticated=self.authenticated
+        )
+
+    def set_api_client(self, token_secret, workspace=None, authenticated=True):
+        self.client = api_client(
+            token_secret,
+            uuid=(workspace.id if workspace else None),
+            authenticated=authenticated)
+
+    def assertOk(self, response):
+        self.assertStatus(response, 200)
+
+    def assertStatus(self, response, status_code):
+        self.assertEqual(response.status_code, status_code)

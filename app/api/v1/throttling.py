@@ -20,4 +20,4 @@ class ApiTokenThrottle(throttling.SimpleRateThrottle):
         }
 
     def get_rate(self):
-        return '1/min'
+        return '100/min'

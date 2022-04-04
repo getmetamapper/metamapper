@@ -125,7 +125,7 @@ class CustomPropertiesModel(models.Model):
             return self.workspace.groups.filter(id=group_id).first()
         return next(filter(lambda g: g.id == group_id, queryset), None)
 
-    def get_custom_properties(self):
+    def get_custom_properties(self, as_list=False):
         """Retrieve all custom properties associated with a model.
         """
         custom_fields = self.get_custom_fields().order_by('created_at')

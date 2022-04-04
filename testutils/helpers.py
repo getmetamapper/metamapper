@@ -27,21 +27,36 @@ def get_jwt(opts):
     return jwt.encode(payload, secret, algorithm='HS256').decode()
 
 
-def auth_headers(user, uuid=None):
-    opts = {
-        'email': user.email,
+def graphql_headers(user, uuid=None):
+    headers = {
+        'HTTP_AUTHORIZATION': 'Bearer ' + get_jwt(opts={'email': user.email}),
     }
-    authorization = 'Bearer ' + get_jwt(opts=opts)
-    headers = {'HTTP_AUTHORIZATION': authorization}
     if uuid:
         headers['HTTP_X_WORKSPACE_ID'] = uuid
     return headers
 
 
-def api_client(user, uuid=None, authenticated=True):
+def graphql_client(user, uuid=None, authenticated=True):
     client = APIClient()
     if user and authenticated:
-        headers = auth_headers(user, uuid)
+        headers = graphql_headers(user, uuid)
+        client.credentials(**headers)
+    return client
+
+
+def api_headers(secret, uuid=None):
+    headers = {
+        'HTTP_AUTHORIZATION': 'Bearer %s' % secret,
+    }
+    if uuid:
+        headers['HTTP_X_WORKSPACE_ID'] = uuid
+    return headers
+
+
+def api_client(secret, uuid=None, authenticated=True):
+    client = APIClient()
+    if secret and authenticated:
+        headers = api_headers(secret, uuid)
         client.credentials(**headers)
     return client
 
