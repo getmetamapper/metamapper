@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
+from django.contrib.contenttypes.models import ContentType
 
-from rest_framework import serializers
+from rest_framework import serializers, status
 
-from app.api.v1.exceptions import NotFound
-from app.api.v1.serializers import ApiSerializer, AssetOwnersMixin, CustomPropertiesMixin
+from app.api.v1.exceptions import NotFound, ParameterValidationFailed
+from app.api.v1.serializers import ApiSerializer
+from app.api.v1.serializers import AssetOwnerSerializer, CustomPropertiesSerializer
+from app.api.v1.serializers import AssetOwnersMixin, CustomPropertiesMixin
 from app.api.v1.views import (
     BaseAPIView,
+    CustomPropertyView,
     DetailAPIView,
     FindAPIView,
     ListAPIView,
     QueryParam,
 )
 
-from app.definitions.models import Table
+from app.definitions.models import AssetOwner, Table
 
 from utils.fields import SortedListField
 from utils.shortcuts import clean_html, omit
@@ -146,24 +150,63 @@ class TableFind(FindAPIView):
         return Table.objects.filter(**filter_kwargs).first()
 
 
-class TableOwners(GetTableMixin, BaseAPIView):
-    serializer_class = TableSerializer
-
-    def create(self, request, table_id, format=None):
-        pass
-
-    def destroy(self, request, table_id, format=None):
-        pass
+class TableProperties(GetTableMixin, CustomPropertyView):
+    serializer_class = CustomPropertiesSerializer
 
 
-class TableProperties(GetTableMixin, BaseAPIView):
-    serializer_class = TableSerializer
+class TableOwner(GetTableMixin, BaseAPIView):
+    serializer_class = AssetOwnerSerializer
 
-    def create(self, request, table_id, format=None):
-        pass
+    def get_asset_owner(self, owner, content_object, *args, **kwargs):
+        get_kwargs = {
+            'object_id': content_object.id,
+            'content_type': ContentType.objects.get_for_model(content_object),
+            'owner_id': owner.id,
+            'owner_type': ContentType.objects.get_for_model(owner),
+            'workspace': self.request.workspace,
+        }
+        try:
+            return AssetOwner.objects.get(**get_kwargs)
+        except AssetOwner.DoesNotExist:
+            raise NotFound()
 
-    def destroy(self, request, table_id, format=None):
-        pass
+    def get_data(self, table_id):
+        """Parse required data from the Request.
+        """
+        request_data = self.request.data
+
+        if 'owner_id' not in request_data or 'owner_type' not in request_data:
+            raise ParameterValidationFailed()
+
+        owner = None
+        table = self.get_object(table_id)
+
+        owner_id = request_data['owner_id']
+        owner_type = request_data['owner_type'].upper()
+
+        if owner_type == 'USER':
+            owner = table.get_related_user(owner_id)
+        elif owner_type == 'GROUP':
+            owner = table.get_related_group(owner_id)
+
+        if not owner:
+            raise NotFound()
+
+        return {'content_object': table, 'owner': owner}
+
+    def post(self, request, pk):
+        serializer = self.serializer_class(
+            data=self.get_data(pk),
+            context={'request': self.request})
+        if serializer.is_valid():
+            serializer.save(workspace=self.request.workspace)
+            return self.format_response({'success': True})
+        return self.format_errors(serializer.errors)
+
+    def delete(self, request, pk, format=None):
+        instance = self.get_asset_owner(**self.get_data(pk))
+        instance.delete()
+        return self.format_response({'success': True})
 
 
 urlpatterns = [
@@ -184,11 +227,11 @@ urlpatterns = [
         TableDetail.as_view(),
     ),
     url(
-        r'^tables/(?P<table_id>[a-f0-9]{32})/owners/?$',
-        TableOwners.as_view(http_method_names=['get', 'post']),
+        r'^tables/(?P<pk>[a-f0-9]{32})/owners/?$',
+        TableOwner.as_view(http_method_names=['post', 'delete']),
     ),
     url(
-        r'^tables/(?P<table_id>[a-f0-9]{32})/properties/?$',
-        TableProperties.as_view(http_method_names=['get', 'post']),
+        r'^tables/(?P<pk>[a-f0-9]{32})/properties/?$',
+        TableProperties.as_view(http_method_names=['patch', 'delete']),
     ),
 ]

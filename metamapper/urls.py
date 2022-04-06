@@ -56,11 +56,11 @@ urls = [
             ],
         ),
     ),
-    url(r'^health/?$', healthcheck, name="healthcheck"),
+    url(r'^health/?$', healthcheck, name='healthcheck'),
 ]
 
 api_urls = [
-    url(r'^api/v1/', include("app.api.v1.urls")),
+    url(r'^api/v1/', include('app.api.v1.urls')),
 ]
 
 react_urls = [

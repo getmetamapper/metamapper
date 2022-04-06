@@ -242,3 +242,33 @@ class ApiTestCase(UserFixtureMixin, TestCase):
 
     def assertStatus(self, response, status_code):
         self.assertEqual(response.status_code, status_code)
+
+    def assertPermissionDenied(self, response):
+        self.assertStatus(response, 403)
+        self.assertEqual(response.json(), {
+            'success': False,
+            'error': {
+                'code': 403,
+                'message': 'You do not have permission to perform this action.',
+            },
+        })
+
+    def assertParameterValidationFailed(self, response):
+        self.assertStatus(response, 400)
+        self.assertEqual(response.json(), {
+            'success': False,
+            'error': {
+                'code': 400,
+                'message': 'Parameter validation failed.',
+            },
+        })
+
+    def assertNotFound(self, response):
+        self.assertStatus(response, 404)
+        self.assertEqual(response.json(), {
+            'success': False,
+            'error': {
+                'code': 404,
+                'message': 'Resource could not be found.',
+            },
+        })

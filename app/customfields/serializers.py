@@ -144,16 +144,22 @@ class CustomPropertiesSerializer(MetamapperSerializer, serializers.Serializer):
         """Perform property-level validation.
         """
         validators = {
-            models.CustomField.USER: self.validate_user,
-            models.CustomField.TEXT: self.validate_text,
             models.CustomField.ENUM: self.validate_enum,
             models.CustomField.GROUP: self.validate_group,
+            models.CustomField.TEXT: self.validate_text,
+            models.CustomField.USER: self.validate_user,
         }
 
         custom_fields = {
             field.pk: field
             for field in self.instance.get_custom_fields()
         }
+
+        for field_pk in custom_fields.keys():
+            properties[field_pk] = properties.get(
+                field_pk,
+                self.instance.custom_properties.get(field_pk),
+            )
 
         errors = {}
         for field_pk, value in properties.items():
@@ -165,8 +171,10 @@ class CustomPropertiesSerializer(MetamapperSerializer, serializers.Serializer):
                 error = validators[field.field_type](value, field)
             if error:
                 errors[field_pk] = error
+
         if len(errors):
             raise serializers.ValidationError('One of the properties is invalid.')
+
         return properties
 
     @audit.capture_activity(

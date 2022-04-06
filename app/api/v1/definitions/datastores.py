@@ -4,8 +4,9 @@ from django.conf.urls import url
 from rest_framework import serializers
 
 from app.api.v1.exceptions import NotFound
-from app.api.v1.serializers import ApiSerializer, AssetOwnersMixin, CustomPropertiesMixin
-from app.api.v1.views import BaseAPIView, DetailAPIView, ListAPIView
+from app.api.v1.serializers import ApiSerializer, CustomPropertiesSerializer
+from app.api.v1.serializers import CustomPropertiesMixin
+from app.api.v1.views import CustomPropertyView, DetailAPIView, ListAPIView
 
 from app.definitions.models import Datastore
 
@@ -100,14 +101,8 @@ class DatastoreDetail(GetDatastoreMixin, DetailAPIView):
     serializer_class = DatastoreDetailSerializer
 
 
-class DatastoreProperties(GetDatastoreMixin, BaseAPIView):
-    serializer_class = DatastoreSerializer
-
-    def create(self, request, datastore_id, format=None):
-        pass
-
-    def destroy(self, request, datastore_id, format=None):
-        pass
+class DatastoreProperties(GetDatastoreMixin, CustomPropertyView):
+    serializer_class = CustomPropertiesSerializer
 
 
 urlpatterns = [
@@ -120,7 +115,7 @@ urlpatterns = [
         DatastoreDetail.as_view(),
     ),
     url(
-        r'^datastores/(?P<datastore_id>[0-9a-zA-Z]{12})/properties/?$',
-        DatastoreProperties.as_view(http_method_names=['get', 'post']),
+        r'^datastores/(?P<pk>[0-9a-zA-Z]{12})/properties/?$',
+        DatastoreProperties.as_view(http_method_names=['patch', 'delete']),
     ),
 ]

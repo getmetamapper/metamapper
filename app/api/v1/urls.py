@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
+from django.http import JsonResponse
 
 from rest_framework.decorators import api_view
 
@@ -23,6 +24,7 @@ def not_found(request, format=None):
 baseurls = [
     url(r'', not_found)
 ]
+
 
 urlpatterns = [
     *datastores.urlpatterns,

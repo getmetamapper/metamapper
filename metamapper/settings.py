@@ -231,6 +231,10 @@ GRAPHQL_JWT = {
     'JWT_EXPIRATION_DELTA': dt.timedelta(hours=24),
     'JWT_REFRESH_EXPIRATION_DELTA': dt.timedelta(days=3),
 }
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'app.api.v1.exceptions.exception_handler'
+}
 #
 # Static files (CSS, JavaScript, Images)
 #

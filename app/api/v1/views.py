@@ -49,8 +49,19 @@ class BaseView(object):
             output[param.name] = value
         return output
 
-    def format_response(self, data, *args, **kwargs):
-        return Response(data, *args, **kwargs)
+    def format_response(self, data, **kwargs):
+        return Response(data, **kwargs)
+
+    def format_errors(self, errors, status=status.HTTP_400_BAD_REQUEST, **kwargs):
+        errors = {
+            'success': False,
+            'error': {
+                'errors': errors,
+                'code': status,
+                'message': 'Input validation failed.',
+            },
+        }
+        return self.format_response(errors, status=status, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         """Set the request context before moving forward.
@@ -122,7 +133,7 @@ class DetailAPIView(BaseAPIView):
         if serializer.is_valid():
             serializer.save()
             return self.format_response(serializer.data)
-        return self.format_response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.format_errors(serializer.errors)
 
 
 class FindAPIView(BaseAPIView):
@@ -150,3 +161,35 @@ class ListAPIView(BaseView, generics.ListAPIView):
     """
     pagination_class = CursorSetPagination
     permission_classes = [IsAuthenticated]
+
+
+class CustomPropertyView(BaseAPIView):
+    """Base API view for custom property requests.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, pk):
+        instance = self.get_object(pk)
+        serializer = self.serializer_class(
+            instance,
+            data=request.data,
+            partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return self.format_response({'success': True})
+        return self.format_errors(serializer.errors)
+
+    def delete(self, request, pk):
+        instance = self.get_object(pk)
+        properties = [
+            {'id': i, 'value': None}
+            for i in request.data.get('properties', [])
+        ]
+        serializer = self.serializer_class(
+            instance,
+            data={'properties': properties},
+            partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return self.format_response({'success': True})
+        return self.format_errors(serializer.errors)

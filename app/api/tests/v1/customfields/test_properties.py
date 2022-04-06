@@ -62,20 +62,14 @@ class TestCustomFieldList(CustomFieldTestCase):
         """
         params = {'page_size': 5}
         result = self.client.get('/api/v1/properties', params)
-        result_json = result.json()
-
-        self.assertStatus(result, 400)
-        self.assertEqual(result_json, {'detail': 'Parameter validation failed.'})
+        self.assertParameterValidationFailed(result)
 
     def test_list_with_invalid_type(self):
         """It should return a 400 error response.
         """
         params = {'page_size': 5, 'related_type': 'assets'}
         result = self.client.get('/api/v1/properties', params)
-        result_json = result.json()
-
-        self.assertStatus(result, 400)
-        self.assertEqual(result_json, {'detail': 'Parameter validation failed.'})
+        self.assertParameterValidationFailed(result)
 
 
 class TestCustomFieldDetail(CustomFieldTestCase):

@@ -128,10 +128,18 @@ class TestSchemaDetail(SchemaTestCase):
 
         self.assertStatus(result, 400)
         self.assertEqual(result_json, {
-            'tags': {
-                '0': [
-                    'Ensure this field has no more than 30 characters.',
+            'success': False,
+            'error': {
+                'errors': [
+                    {
+                        'reason': 'max_length',
+                        'message': 'Ensure this field has no more than 30 characters.',
+                        'location_type': 'field',
+                        'location': 'tags',
+                    },
                 ],
+                'code': 400,
+                'message': 'Input validation failed.',
             },
         })
 
@@ -158,20 +166,14 @@ class TestSchemaFind(SchemaTestCase):
         """
         params = {'name': 'does_not_exist'}
         result = self.client.get(f'/api/v1/datastores/{self.datastore.id}/schemas/find', params)
-        result_json = result.json()
-
-        self.assertStatus(result, 404)
-        self.assertEqual(result_json, {'detail': 'Resource could not be found.'})
+        self.assertNotFound(result)
 
     def test_incorrect_parameters(self):
         """It should return a "400 - Invalid Request" error.
         """
         params = {'schema_name': 'public'}
         result = self.client.get(f'/api/v1/datastores/{self.datastore.id}/schemas/find', params)
-        result_json = result.json()
-
-        self.assertStatus(result, 400)
-        self.assertEqual(result_json, {'detail': 'Parameter validation failed.'})
+        self.assertParameterValidationFailed(result)
 
     def test_post(self):
         """It should not be able to make a POST request.

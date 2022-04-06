@@ -32,22 +32,22 @@ class TestV1ApiAuthentication(cases.ApiTestCase):
         client = self.get_api_client()
         result = client.get('/api/v1/datastores')
 
-        self.assertEqual(result.status_code, 403)
+        self.assertPermissionDenied(result)
 
     def test_without_headers(self):
         client = self.get_api_client(authenticated=False)
         result = client.get('/api/v1/datastores')
 
-        self.assertEqual(result.status_code, 403)
+        self.assertPermissionDenied(result)
 
     def test_invalid_token(self):
         client = self.get_api_client(secret='meowmeowmeow')
         result = client.get('/api/v1/datastores')
 
-        self.assertEqual(result.status_code, 403)
+        self.assertPermissionDenied(result)
 
     def test_invalid_workspace(self):
         client = self.get_api_client(workspace=factories.WorkspaceFactory())
         result = client.get('/api/v1/datastores')
 
-        self.assertEqual(result.status_code, 403)
+        self.assertPermissionDenied(result)

@@ -258,15 +258,31 @@ class TestTableDetail(TableTestCase):
     def test_patch_invalid(self):
         """It should return an error response when invalid.
         """
-        params = {'short_desc': get_random_string(200), 'tags': ['one']}
+        params = {'short_desc': get_random_string(200), 'tags': [str(i) for i in range(20)]}
         result = self.client.patch(f'/api/v1/tables/{self.table.object_id}', params)
         result_json = result.json()
 
         self.assertStatus(result, 400)
         self.assertEqual(result_json, {
-            'short_desc': [
-                'Ensure this field has no more than 140 characters.',
-            ],
+            'success': False,
+            'error': {
+                'errors': [
+                    {
+                        'reason': 'max_length',
+                        'message': 'Ensure this field has no more than 140 characters.',
+                        'location_type': 'field',
+                        'location': 'short_desc',
+                    },
+                    {
+                        'reason': 'max_length',
+                        'message': 'Ensure this field has no more than 10 elements.',
+                        'location_type': 'field',
+                        'location': 'tags',
+                    },
+                ],
+                'code': 400,
+                'message': 'Input validation failed.',
+            },
         })
 
 
@@ -328,20 +344,14 @@ class TestTableFind(TableTestCase):
         """
         params = {'schema': 'app', 'name': 'does_not_exist'}
         result = self.client.get(f'/api/v1/datastores/{self.datastore.id}/tables/find', params)
-        result_json = result.json()
-
-        self.assertStatus(result, 404)
-        self.assertEqual(result_json, {'detail': 'Resource could not be found.'})
+        self.assertNotFound(result)
 
     def test_incorrect_parameters(self):
         """It should return a "400 - Invalid Request" error.
         """
         params = {'schema': 'app'}
         result = self.client.get(f'/api/v1/datastores/{self.datastore.id}/tables/find', params)
-        result_json = result.json()
-
-        self.assertStatus(result, 400)
-        self.assertEqual(result_json, {'detail': 'Parameter validation failed.'})
+        self.assertParameterValidationFailed(result)
 
     def test_post(self):
         """It should not be able to make a POST request.
@@ -362,9 +372,173 @@ class TestTableFind(TableTestCase):
         self.assertStatus(result, 405)
 
 
-# class TestTableOwners(TableTestCase):
-#     pass
+class TestTableProperties(TableTestCase):
+    def test_patch_valid(self):
+        """It should update the table properties.
+        """
+        params = {'properties': [{'id': 'zI5j91vH0cfI', 'value': 'Daily'}, {'id': 'YjOTcEUsymIU', 'value': 3}]}
+        result = self.client.patch(f'/api/v1/tables/{self.table.object_id}/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json, {'success': True})
+
+        result = self.client.get(f'/api/v1/tables/{self.table.object_id}')
+        result_json = result.json()
+
+        self.assertEqual(result_json['properties'], [
+            {'id': 'YjOTcEUsymIU', 'label': 'Data Steward', 'value': {'id': 3, 'name': 'Dwight Schrute', 'type': 'USER'}},
+            {'id': 'p0tqRz5QJ9yC', 'label': 'Product Area', 'value': 'Finance'},
+            {'id': 'zI5j91vH0cfI', 'label': 'Update Cadence', 'value': 'Daily'},
+        ])
+
+    def test_patch_removal(self):
+        """It should update the table properties.
+        """
+        params = {'properties': [{'id': 'zI5j91vH0cfI', 'value': None}, {'id': 'YjOTcEUsymIU', 'value': None}]}
+        result = self.client.patch(f'/api/v1/tables/{self.table.object_id}/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json, {'success': True})
+
+        result = self.client.get(f'/api/v1/tables/{self.table.object_id}')
+        result_json = result.json()
+
+        self.assertEqual(result_json['properties'], [
+            {'id': 'p0tqRz5QJ9yC', 'label': 'Product Area', 'value': 'Finance'},
+        ])
+
+    def test_patch_invalid(self):
+        """It should throw a 400 error.
+        """
+        params = {'properties': [{'id': 'meowmeowmeow', 'value': 'Marketing'}]}
+        result = self.client.patch(f'/api/v1/tables/{self.table.object_id}/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertStatus(result, 400)
+        self.assertEqual(result_json, {
+            'success': False,
+            'error': {
+                'errors': [
+                    {
+                        'reason': 'invalid',
+                        'message': 'This custom property does not exist.',
+                        'location_type': 'property',
+                        'location': 'meowmeowmeow',
+                    },
+                ],
+                'code': 400,
+                'message': 'Input validation failed.',
+            },
+        })
+
+    def test_delete_valid(self):
+        """It should remove the provided table properties.
+        """
+        params = {'properties': ['zI5j91vH0cfI']}
+        result = self.client.delete(f'/api/v1/tables/{self.table.object_id}/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json, {'success': True})
+
+        result = self.client.get(f'/api/v1/tables/{self.table.object_id}')
+        result_json = result.json()
+
+        self.assertEqual(result_json['properties'], [
+            {'id': 'YjOTcEUsymIU', 'label': 'Data Steward', 'value': {'id': 1, 'name': 'Sam Crust', 'type': 'USER'}},
+            {'id': 'p0tqRz5QJ9yC', 'label': 'Product Area', 'value': 'Finance'},
+        ])
+
+    def test_delete_invalid(self):
+        """It should throw a 400 error.
+        """
+        params = {'properties': ['meowmeowmeow']}
+        result = self.client.delete(f'/api/v1/tables/{self.table.object_id}/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertStatus(result, 400)
+        self.assertEqual(result_json, {
+            'success': False,
+            'error': {
+                'errors': [
+                    {
+                        'reason': 'invalid',
+                        'message': 'This custom property does not exist.',
+                        'location_type': 'property',
+                        'location': 'meowmeowmeow',
+                    },
+                ],
+                'code': 400,
+                'message': 'Input validation failed.',
+            },
+        })
 
 
-# class TestTableProperties(TableTestCase):
-#     pass
+class TestTableOwner(TableTestCase):
+    def test_post_valid(self):
+        """It should add the table owner.
+        """
+        params = {'owner_id': 3, 'owner_type': 'USER'}
+        result = self.client.post(f'/api/v1/tables/{self.table.object_id}/owners', params, format='json')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json, {'success': True})
+
+        result = self.client.get(f'/api/v1/tables/{self.table.object_id}')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json['owners'], [
+            {'id': 4, 'name': 'David Wallace', 'type': 'USER'},
+            {'id': 3, 'name': 'Dwight Schrute', 'type': 'USER'},
+            {'id': 12412, 'name': 'New York', 'type': 'GROUP'},
+        ])
+
+    def test_post_invalid_instance(self):
+        """It should throw a validation error.
+        """
+        params = {'owner_id': 45000, 'owner_type': 'USER'}
+        result = self.client.post(f'/api/v1/tables/{self.table.object_id}/owners', params, format='json')
+        self.assertNotFound(result)
+
+    def test_post_invalid_parameter(self):
+        """It should throw a validation error.
+        """
+        params = {'owner_id': 45000}
+        result = self.client.post(f'/api/v1/tables/{self.table.object_id}/owners', params, format='json')
+        self.assertParameterValidationFailed(result)
+
+    def test_delete_valid(self):
+        """It should remove the table owner.
+        """
+        params = {'owner_id': 4, 'owner_type': 'USER'}
+        result = self.client.delete(f'/api/v1/tables/{self.table.object_id}/owners', params, format='json')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json, {'success': True})
+
+        result = self.client.get(f'/api/v1/tables/{self.table.object_id}')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json['owners'], [
+            {'id': 12412, 'name': 'New York', 'type': 'GROUP'},
+        ])
+
+    def test_delete_invalid_instance(self):
+        """It should throw a validation error.
+        """
+        params = {'owner_id': 45000, 'owner_type': 'USER'}
+        result = self.client.delete(f'/api/v1/tables/{self.table.object_id}/owners', params, format='json')
+        self.assertNotFound(result)
+
+    def test_delete_invalid_parameter(self):
+        """It should throw a validation error.
+        """
+        params = {'owner_id': 45000}
+        result = self.client.delete(f'/api/v1/tables/{self.table.object_id}/owners', params, format='json')
+        self.assertParameterValidationFailed(result)

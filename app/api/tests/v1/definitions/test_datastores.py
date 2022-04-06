@@ -159,11 +159,133 @@ class TestDatastoreDetail(DatastoreTestCase):
 
         self.assertStatus(result, 400)
         self.assertEqual(result_json, {
-            'short_desc': [
-                'Ensure this field has no more than 140 characters.',
-            ],
+            'success': False,
+            'error': {
+                'errors': [
+                    {
+                        'reason': 'max_length',
+                        'message': 'Ensure this field has no more than 140 characters.',
+                        'location_type': 'field',
+                        'location': 'short_desc',
+                    },
+                ],
+                'code': 400,
+                'message': 'Input validation failed.',
+            },
         })
 
 
 class TestDatastoreProperties(DatastoreTestCase):
-    pass
+    def test_patch_valid(self):
+        """It should update the datastore properties.
+        """
+        params = {'properties': [{'id': 'ow5W0kw0CK0i', 'value': 'Marketing'}]}
+        result = self.client.patch('/api/v1/datastores/s4N8p5g0wjiS/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json, {'success': True})
+
+        result = self.client.get('/api/v1/datastores/s4N8p5g0wjiS')
+        result_json = result.json()
+
+        self.assertEqual(result_json['properties'], [
+            {'id': 'ow5W0kw0CK0i', 'label': 'Ownership', 'value': 'Marketing'},
+            {'id': 'iPOhV1HazLW6', 'label': 'Purpose', 'value': 'Business Intelligence'},
+        ])
+
+    def test_patch_removal(self):
+        """It should update the datastore properties.
+        """
+        params = {'properties': [{'id': 'ow5W0kw0CK0i', 'value': None}]}
+        result = self.client.patch('/api/v1/datastores/s4N8p5g0wjiS/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json, {'success': True})
+
+        result = self.client.get('/api/v1/datastores/s4N8p5g0wjiS')
+        result_json = result.json()
+
+        self.assertEqual(result_json['properties'], [
+            {
+                'id': 'iPOhV1HazLW6',
+                'label': 'Purpose',
+                'value': 'Business Intelligence',
+            },
+        ])
+
+    def test_patch_invalid(self):
+        """It should throw a 400 error.
+        """
+        params = {'properties': [{'id': 'meow', 'value': 'Test'}, {'id': 'ow5W0kw0CK0i', 'value': 'Investigations'}]}
+        result = self.client.patch('/api/v1/datastores/s4N8p5g0wjiS/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertStatus(result, 400)
+        self.assertEqual(result_json, {
+            'success': False,
+            'error': {
+                'errors': [
+                    {
+                        'reason': 'invalid',
+                        'message': 'This custom property does not exist.',
+                        'location_type': 'property',
+                        'location': 'meow',
+                    },
+                    {
+                        'reason': 'invalid',
+                        'message': 'The provided value is invalid.',
+                        'location_type': 'property',
+                        'location': 'ow5W0kw0CK0i',
+                    },
+                ],
+                'code': 400,
+                'message': 'Input validation failed.',
+            },
+        })
+
+    def test_delete_valid(self):
+        """It should remove the provided datastore properties.
+        """
+        params = {'properties': ['ow5W0kw0CK0i']}
+        result = self.client.delete('/api/v1/datastores/s4N8p5g0wjiS/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertOk(result)
+        self.assertEqual(result_json, {'success': True})
+
+        result = self.client.get('/api/v1/datastores/s4N8p5g0wjiS')
+        result_json = result.json()
+
+        self.assertEqual(result_json['properties'], [
+            {
+                'id': 'iPOhV1HazLW6',
+                'label': 'Purpose',
+                'value': 'Business Intelligence',
+            },
+        ])
+
+    def test_delete_invalid(self):
+        """It should throw a 400 error.
+        """
+        params = {'properties': ['meowmeowmeow']}
+        result = self.client.delete('/api/v1/datastores/s4N8p5g0wjiS/properties', params, format='json')
+        result_json = result.json()
+
+        self.assertStatus(result, 400)
+        self.assertEqual(result_json, {
+            'success': False,
+            'error': {
+                'errors': [
+                    {
+                        'reason': 'invalid',
+                        'message': 'This custom property does not exist.',
+                        'location_type': 'property',
+                        'location': 'meowmeowmeow',
+                    },
+                ],
+                'code': 400,
+                'message': 'Input validation failed.',
+            },
+        })
