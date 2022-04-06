@@ -238,3 +238,18 @@
 .workspace-saml-setup, .workspace-saml-editing {
   margin-top: 40px;
 }
+.api-token-setup-secret {
+  margin-bottom: 20px;
+}
+.api-token-setup-secret-inner {
+  padding: 12px 6px;
+}
+.api-token-setup-btn {
+  margin-bottom: 20px;
+}
+.api-tokens-table {
+  .ant-table {
+    border: 1px solid #e8e8e8;
+    border-bottom: 0;
+  }
+}

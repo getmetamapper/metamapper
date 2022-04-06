@@ -110,6 +110,10 @@ class CustomPropertiesModel(models.Model):
     def get_related_user(self, user_id, queryset=None):
         """Retrieve the workspace team member.
         """
+        try:
+            user_id = int(user_id)
+        except (AttributeError, TypeError):
+            pass
         if not isinstance(user_id, int):
             return None
         if not queryset:
@@ -125,7 +129,7 @@ class CustomPropertiesModel(models.Model):
             return self.workspace.groups.filter(id=group_id).first()
         return next(filter(lambda g: g.id == group_id, queryset), None)
 
-    def get_custom_properties(self):
+    def get_custom_properties(self, allow_null=True):
         """Retrieve all custom properties associated with a model.
         """
         custom_fields = self.get_custom_fields().order_by('created_at')
@@ -146,6 +150,8 @@ class CustomPropertiesModel(models.Model):
                 value = self.get_related_group(value, group_queryset)
             elif f.is_enum_type and value not in f.choices:
                 value = None
+            if not allow_null and value is None:
+                continue
             custom_output[f.pk] = {
                 'label': f.field_name,
                 'value': value,

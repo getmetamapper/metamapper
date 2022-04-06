@@ -75,7 +75,6 @@ class Workspaces extends Component {
   }
 }
 
-
 export default compose(
   withRouter,
   withLargeLoader,

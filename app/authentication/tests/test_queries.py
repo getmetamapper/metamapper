@@ -209,7 +209,7 @@ class TestGetCurrentUser(cases.GraphQLTestCase):
         })
 
     def test_query_when_has_no_memberships(self):
-        self.set_api_client(self.users['OWNER'], None, True)
+        self.set_graphql_client(self.users['OWNER'], None, True)
 
         results = self.execute(self.statement)
         results = results['data'][self.operation]

@@ -13,9 +13,9 @@ def as_someone(user_types):
             for user_type in user_types:
                 view.user_type = user_type
                 view.user = view.users[user_type]
-                view._client = helpers.api_client(view.user, uuid=view.workspace.id)
+                view._client = helpers.graphql_client(view.user, uuid=view.workspace.id)
                 func(view, *args, **kwargs)
             view.user = cached_user
-            view._client = helpers.api_client(view.user)
+            view._client = helpers.graphql_client(view.user)
         return func_wrapper
     return the_decorator

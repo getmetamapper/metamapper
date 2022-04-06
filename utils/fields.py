@@ -99,3 +99,12 @@ class RelatedObjectField(drf_fields.Field):
             self.fail('null', value=value)
 
         return value
+
+
+class SortedListField(drf_fields.ListField):
+    """Sorted version of the Django REST ListField object.
+    """
+    def to_representation(self, data):
+        """List of object instances -> List of dicts of primitive datatypes.
+        """
+        return sorted(super().to_representation(data))

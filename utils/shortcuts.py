@@ -123,6 +123,10 @@ def camel_case(st):
     return output[0].lower() + output[1:]
 
 
+def omit(items, to_remove):
+    return [i for i in items if i not in to_remove]
+
+
 def from_global_id(global_id, id_only=False):
     type_, id_ = _from_global_id(global_id)
 

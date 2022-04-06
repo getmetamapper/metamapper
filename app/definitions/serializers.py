@@ -727,7 +727,7 @@ class AssetOwnerSerializer(MetamapperSerializer, serializers.Serializer):
         hydrater=get_asset_owner_audit_kwargs,
     )
     def create(self, validated_data):
-        """Create a brand new Datastore instance.
+        """Create a brand new AssetOwner instance.
         """
         position = validated_data.pop('order', None)
         instance = models.AssetOwner.objects.create(**validated_data)
@@ -736,7 +736,7 @@ class AssetOwnerSerializer(MetamapperSerializer, serializers.Serializer):
         return instance
 
     def update(self, instance, validated_data):
-        """Update the provided Table instance.
+        """Update the provided AssetOwner instance.
         """
         position = validated_data.pop('order', None)
         if position:

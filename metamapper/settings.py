@@ -87,6 +87,7 @@ VENDOR_APPS = [
 METAMAPPER_APPS = [
     'app.authentication.apps.Config',
     'app.authorization.apps.Config',
+    'app.api.apps.Config',
     'app.definitions.apps.Config',
     'app.comments.apps.Config',
     'app.customfields.apps.Config',
@@ -229,6 +230,10 @@ GRAPHQL_JWT = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
     'JWT_EXPIRATION_DELTA': dt.timedelta(hours=24),
     'JWT_REFRESH_EXPIRATION_DELTA': dt.timedelta(days=3),
+}
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'app.api.v1.exceptions.exception_handler'
 }
 #
 # Static files (CSS, JavaScript, Images)
@@ -394,12 +399,22 @@ GOOGLE_ENABLED = GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 #
 CACHEOPS_REDIS = os.getenv('METAMAPPER_CACHEOPS_REDIS_URL')
 
+API_THROTTLE_BACKEND = os.getenv(
+    'METAMAPPER_API_THROTTLE_BACKEND',
+    'django.core.cache.backends.dummy.DummyCache',
+)
+
+API_THROTTLE_LOCATION = os.getenv('METAMAPPER_API_THROTTLE_LOCATION')
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'django_db_cache',
-    }
+    },
+    'api_throttle': {
+        'BACKEND': API_THROTTLE_BACKEND,
+        'LOCATION': API_THROTTLE_LOCATION,
+    },
 }
 
 # If the CACHEOPS_REDIS variable isn't set, we assume you don't want
