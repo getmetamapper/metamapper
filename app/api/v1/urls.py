@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
-from django.http import JsonResponse
+from django.urls import include
 
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from app.api.v1.exceptions import NotFound
 
@@ -21,16 +22,28 @@ def not_found(request, format=None):
     raise NotFound()
 
 
+@api_view(['GET'])
+def healthcheck(request):
+    """Check to see if API is healthy.
+    """
+    return Response({'success': True})
+
+
 baseurls = [
+    url(r'health/?^', healthcheck),
     url(r'', not_found)
 ]
 
-
-urlpatterns = [
+api = [
     *datastores.urlpatterns,
     *schemas.urlpatterns,
     *tables.urlpatterns,
     *columns.urlpatterns,
     *properties.urlpatterns,
     *baseurls,
+]
+
+
+urlpatterns = [
+    url(r'^api/v1/', include(api)),
 ]

@@ -103,6 +103,11 @@ METAMAPPER_APPS = [
 
 INSTALLED_APPS = VENDOR_APPS + METAMAPPER_APPS
 
+URLPATTERNS = [
+    'app.api.v1.urls',
+    'metamapper.core.urls',
+]
+
 AUTHENTICATION_MIDDLEWARE = os.getenv(
     'METAMAPPER_AUTHENTICATION_MIDDLEWARE',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

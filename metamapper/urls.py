@@ -1,70 +1,24 @@
 """metamapper URL Configuration
 """
 from django.conf.urls import url
-from django.urls import include, re_path
+from django.conf import settings
+from django.urls import include
 
-from metamapper.views import (
-    MetamapperGraphQLView,
-    ReactAppView,
-    StaticAssetView,
-)
-
-from app.healthchecks.views import healthcheck
-
-from app.sso.providers.oauth2.github.views import OAuth2GithubView
-from app.sso.providers.oauth2.google.views import OAuth2GoogleView
-from app.sso.providers.saml2.views import SAML2AcceptACSView
-
-try:
-    from metamapper.contrib.urls import urls as cloud_urls
-except ImportError:
-    cloud_urls = []
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
-urls = [
-    re_path(
-        r'^assets/(?P<filepath>.*)$',
-        StaticAssetView.as_view(),
-    ),
-    url(r'^graphql/?$', MetamapperGraphQLView.as_view(graphiql=True)),
-    url(
-        r'^oauth2/',
-        include(
-            [
-                url(
-                    r'^github/callback/?$',
-                    OAuth2GithubView.as_view(),
-                    name='sso-oauth2-github',
-                ),
-                url(
-                    r'^google/callback/?$',
-                    OAuth2GoogleView.as_view(),
-                    name='sso-oauth2-google',
-                ),
-            ],
-        ),
-    ),
-    url(
-        r'^saml2/',
-        include(
-            [
-                url(
-                    r'^acs/callback/?$',
-                    SAML2AcceptACSView.as_view(),
-                    name='sso-saml-acs',
-                ),
-            ],
-        ),
-    ),
-    url(r'^health/?$', healthcheck, name='healthcheck'),
+@api_view(['GET'])
+def not_found(request):
+    """Default "404 - not found" response for when routes are not defined.
+    """
+    return Response('404 - not found')
+
+
+urlpatterns = [
+    url(r'^', include(urlpattern)) for urlpattern in settings.URLPATTERNS
 ]
 
-api_urls = [
-    url(r'^api/v1/', include('app.api.v1.urls')),
+urlpatterns += [
+    url(r'', not_found)
 ]
-
-react_urls = [
-    url(r'^', ReactAppView.as_view()),
-]
-
-urlpatterns = urls + api_urls + cloud_urls + react_urls
