@@ -74,7 +74,7 @@ class BaseView(object):
     def get_workspace(self, request):
         """Retrieve the Workspace from the headers.
         """
-        workspace_id = request.META.get('HTTP_X_WORKSPACE_ID')
+        workspace_id = request.META.get('HTTP_X_APPLICATION_KEY')
 
         if not workspace_id:
             return None

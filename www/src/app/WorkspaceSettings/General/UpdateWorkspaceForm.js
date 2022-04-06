@@ -27,22 +27,48 @@ const UpdateWorkspaceForm = ({
               {getFieldDecorator("name", {
                 initialValue: workspace.name,
                 rules: [{ required: true, message: "This field is required." }],
-              })(<Input type="text" disabled={!hasPermission} data-test="UpdateWorkspaceForm.Name" />)}
+              })(
+                <Input
+                  type="text"
+                  disabled={!hasPermission}
+                  data-test="UpdateWorkspaceForm.Name"
+                />
+              )}
             </Form.Item>
             <Form.Item>
               <FormLabel
                 required
-                label="Slug"
+                label="Workspace Slug"
                 helpText="A unique ID used to identify this workspace."
               />
               {getFieldDecorator("slug", {
                 initialValue: workspace.slug,
                 rules: [{ required: true, message: "This field is required." }],
-              })(<Input type="text" disabled={!hasPermission} data-test="UpdateWorkspaceForm.Slug" />)}
+              })(
+                <Input
+                  type="text"
+                  disabled={!hasPermission}
+                  data-test="UpdateWorkspaceForm.Slug"
+                />
+              )}
             </Form.Item>
             <Form.Item className="hidden">
               {getFieldDecorator("id", { initialValue: workspace.id })(
                 <Input type="text" hidden />
+              )}
+            </Form.Item>
+            <Form.Item>
+              <FormLabel
+                label="Application Key"
+                helpText="Used for authentication against the API."
+                required
+              />
+              {getFieldDecorator("id", { initialValue: workspace.pk })(
+                <Input
+                  type="text"
+                  disabled
+                  data-test="UpdateWorkspaceForm.ID"
+                />
               )}
             </Form.Item>
             {hasBeaconActivated && (

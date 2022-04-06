@@ -89,6 +89,8 @@ class CustomPropertiesSerializer(serializers.Serializer):
     def errors(self):
         output = []
         for errors in super().errors.values():
+            if isinstance(errors, (list,)) and len(errors) > 0:
+                errors = {'properties': next(iter(errors))}
             output += [
                 {
                     'reason': error.code,

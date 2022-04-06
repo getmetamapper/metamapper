@@ -34,12 +34,12 @@ urls = [
                 url(
                     r'^github/callback/?$',
                     OAuth2GithubView.as_view(),
-                    name="sso-oauth2-github",
+                    name='sso-oauth2-github',
                 ),
                 url(
                     r'^google/callback/?$',
                     OAuth2GoogleView.as_view(),
-                    name="sso-oauth2-google",
+                    name='sso-oauth2-google',
                 ),
             ],
         ),
@@ -51,7 +51,7 @@ urls = [
                 url(
                     r'^acs/callback/?$',
                     SAML2AcceptACSView.as_view(),
-                    name="sso-saml-acs",
+                    name='sso-saml-acs',
                 ),
             ],
         ),

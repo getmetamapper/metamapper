@@ -49,7 +49,7 @@ def api_headers(secret, uuid=None):
         'HTTP_AUTHORIZATION': 'Bearer %s' % secret,
     }
     if uuid:
-        headers['HTTP_X_WORKSPACE_ID'] = uuid
+        headers['HTTP_X_APPLICATION_KEY'] = uuid
     return headers
 
 

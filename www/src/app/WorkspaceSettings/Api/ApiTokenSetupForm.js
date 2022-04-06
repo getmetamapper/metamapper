@@ -26,7 +26,7 @@ const ApiTokenSetupForm = ({
         htmlType="submit"
         data-test="ApiTokenSetupForm.Submit"
       >
-        {isSubmitting ? "Creating..." : "Create API Token"}
+        {isSubmitting ? "Creating..." : "Create Access Token"}
       </Button>
     </Form.Item>
   </Form>

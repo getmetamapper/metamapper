@@ -17,7 +17,7 @@ class ApiTokenSetup extends Component {
 
       const payload = {
         variables,
-        successMessage: "API token has been created.",
+        successMessage: "Access token has been created.",
         refetchQueries: [
           {
             query: GetApiTokens,
@@ -42,7 +42,7 @@ class ApiTokenSetup extends Component {
     const { form, submitting, visible, onCancel } = this.props
     return (
       <Modal
-        title="Create API Token"
+        title="Create Access Token"
         visible={visible}
         onCancel={onCancel}
         footer={null}

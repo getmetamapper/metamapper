@@ -1,15 +1,15 @@
 import React, { Component } from "react"
-import { Alert, Button, Divider } from "antd"
+import { Button, Divider } from "antd"
 import { compose } from "react-apollo"
 import { withSuperUserAccess } from "hoc/withPermissionsRequired"
 import WorkspaceLayout from "app/WorkspaceSettings/WorkspaceLayout"
 import ApiTokensTable from "app/WorkspaceSettings/Api/ApiTokensTable"
 import ApiTokenSetup from "app/WorkspaceSettings/Api/ApiTokenSetup"
+import ApiTokenPreview from "app/WorkspaceSettings/Api/ApiTokenPreview"
 import withGetWorkspaceBySlug from "graphql/withGetWorkspaceBySlug"
 import withGetApiTokens from "graphql/withGetApiTokens"
 import { withLargeLoader } from "hoc/withLoader"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
-import CopyInput from "app/Common/CopyInput"
 
 const breadcrumbs = ({ slug }) => {
   return [
@@ -79,27 +79,20 @@ class Api extends Component {
         <Divider />
         <div className="api-tokens">
           {tokenSecret && (
-            <div className="api-token-setup-secret">
-              <Alert
-                type="success"
-                closable
-                message={<span>API token <b>{tokenName}</b> has been created.</span>}
-                description={
-                  <div className="api-token-setup-secret-inner">
-                    <p>
-                      Make sure to copy the access token now. You won’t be able to see it again!
-                    </p>
-                    <CopyInput value={tokenSecret} />
-                   </div>
-                }
-                onClose={() => this.setState({ tokenName: null, tokenSecret: null })}
-              />
-            </div>
+            <ApiTokenPreview
+              tokenName={tokenName}
+              tokenSecret={tokenSecret}
+              onClose={() => this.setState({ tokenName: null, tokenSecret: null })}
+            />
           )}
+          <h3>Access Tokens</h3>
+          <p>
+            Access tokens allow for authentication when using the Metamapper API.
+          </p>
           {hasPermission && (
             <div className="api-token-setup-btn">
               <Button type="primary" onClick={this.onOpenSetupForm}>
-                Create API Token
+                Create Access Token
               </Button>
             </div>
           )}
