@@ -30,7 +30,7 @@ def healthcheck(request):
 
 
 baseurls = [
-    url(r'health/?^', healthcheck),
+    url(r'^health/?$', healthcheck),
     url(r'', not_found)
 ]
 
