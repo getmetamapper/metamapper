@@ -40,6 +40,6 @@ def is_docker():
     return "METAMAPPER_VERSION" in environ or "METAMAPPER_IMAGE" in environ
 
 
-__version__ = '0.3.1'
+__version__ = '0.4.0'
 
 __all__ = ('app',)
