@@ -160,7 +160,6 @@ class HiveMetastoreInspectorIntegrationTestMixin(object):
         run.refresh_from_db()
 
         self.assertTrue(run.finished_at is not None)
-        self.assertEqual(run.errors.count(), 0)
         self.assertEqual(datastore.schemas.count(), self.schema_count)
 
         column = models.Column.objects.get(name='c_birth_country', table__name='customer', table__schema__name='tpcds')

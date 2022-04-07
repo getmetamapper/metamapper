@@ -1,5 +1,5 @@
-boto3
 bleach>=3.3.0
+boto3
 celery[redis]
 cryptography
 cx-oracle

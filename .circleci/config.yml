@@ -2,17 +2,17 @@ version: 2.1
 jobs:
   backend-lint:
     docker:
-      - image: circleci/python:3.7.0
+      - image: cimg/python:3.7.10
     steps:
       - checkout
-      - run: sudo pip install flake8 --quiet
+      - run: pip install flake8 --quiet
       - run: make lint-py
   backend-tests:
     docker:
-      - image: circleci/python:3.7.0
+      - image: cimg/python:3.7.10
         environment:
           METAMAPPER_CELERY_RESULT_BACKEND: "amqp"
-      - image: circleci/postgres:9.6
+      - image: cimg/postgres:12.9
         name: database
         environment:
           POSTGRES_USER: postgres
@@ -21,9 +21,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
-      - restore_cache:
-          key: v1-requirements-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+      - run:
+          name: Update directory permissions
+          command: sudo chown -R circleci:circleci /usr/local/bin
       - run:
           name: Install Linux dependencies
           command: |
@@ -34,11 +34,8 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -r requirements.txt -r requirements-dev.txt
-      - save_cache:
-          key: v1-requirements-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
-          paths:
-            - "venv"
+            pip install --upgrade pip --quiet
+            pip install -r requirements.txt -r requirements-dev.txt --quiet
       - run:
           name: Wait for database
           command: dockerize -wait tcp://database:5432 -timeout 1m
@@ -52,27 +49,6 @@ jobs:
           command: |
             . venv/bin/activate
             python manage.py test --parallel=4 --exclude-tag=inspector
-  backend-inspector-tests:
-    environment:
-      COMPOSE_PROJECT_NAME: metamapper
-    docker:
-      - image: circleci/node:12
-    steps:
-      - setup_remote_docker:
-          version: 19.03.13
-      - checkout
-      - run:
-          name: Run MySQL inspector tests
-          command: COMPOSE_FILE="dev/datastores/mysql/docker-compose.yml" bash .circleci/test-inspector.sh mysql
-      - run:
-          name: Run PostgreSQL inspector tests
-          command: COMPOSE_FILE="dev/datastores/postgresql/docker-compose.yml" bash .circleci/test-inspector.sh postgresql
-      - run:
-          name: Run Redshift inspector tests
-          command: COMPOSE_FILE="dev/datastores/redshift/docker-compose.yml" bash .circleci/test-inspector.sh redshift
-      - run:
-          name: Run SQL Server inspector tests
-          command: COMPOSE_FILE="dev/datastores/sqlserver/docker-compose.yml" bash .circleci/test-inspector.sh sqlserver
   frontend-tests:
     docker:
       - image: circleci/node:12
@@ -88,7 +64,7 @@ jobs:
       - run: make test-js
   build-preview-docker-image:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:12.22.12
     steps:
       - setup_remote_docker:
           version: 19.03.13
@@ -103,11 +79,6 @@ workflows:
       - backend-tests:
           requires:
             - backend-lint
-      - backend-inspector-tests:
-          context: dockerhub
-          requires:
-            - backend-tests
-            - frontend-tests
       - frontend-tests:
           requires:
             - backend-lint
@@ -115,7 +86,6 @@ workflows:
           context: dockerhub
           requires:
             - backend-tests
-            - backend-inspector-tests
             - frontend-tests
           filters:
             branches:

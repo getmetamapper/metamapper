@@ -190,12 +190,11 @@ class RedshiftInspectorIntegrationTestMixin(object):
             started_at=timezone.now(),
         )
 
-        coretasks.start_revisioner_run(run.id)
+        coretasks.start_run(run.id)
 
         run.refresh_from_db()
 
         self.assertTrue(run.finished_at is not None)
-        self.assertEqual(run.errors.count(), 0)
         self.assertEqual(datastore.schemas.count(), self.schema_count)
 
 

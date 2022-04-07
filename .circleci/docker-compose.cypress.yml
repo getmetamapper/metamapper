@@ -14,7 +14,7 @@ services:
     image: redis:3.0-alpine
     restart: unless-stopped
   database:
-    image: postgres:9.6-alpine
+    image: postgres:12.3
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

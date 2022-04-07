@@ -5,7 +5,7 @@ x-postgresql-defaults: &postgresql_defaults
     POSTGRES_PASSWORD: example
 services:
   database:
-    image: postgres:9.6
+    image: postgres:12.3
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
