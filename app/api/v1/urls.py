@@ -30,8 +30,8 @@ def healthcheck(request):
 
 
 baseurls = [
-    url(r'^health/?$', healthcheck),
-    url(r'', not_found),
+    url(r'health/?^', healthcheck),
+    url(r'', not_found)
 ]
 
 api = [
@@ -42,6 +42,7 @@ api = [
     *properties.urlpatterns,
     *baseurls,
 ]
+
 
 urlpatterns = [
     url(r'^api/v1/', include(api)),
