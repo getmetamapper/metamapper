@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import ip_address_validators
+from django.db.models import JSONField
 
 from django.utils.ipv6 import clean_ipv6_address
 from django.utils.translation import gettext_lazy as _
 
+from graphene import String
+from graphene_django.converter import convert_django_field
+
 from rest_framework import fields as drf_fields
 from utils.regexp import host_regex
+
+
+@convert_django_field.register(JSONField)
+def convert_json_field_to_string(field, registry=None):
+    return String()
 
 
 class HostnameField(drf_fields.CharField):

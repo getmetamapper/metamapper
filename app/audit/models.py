@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import JSONField
+
 from django.db import models
 from django.utils.timesince import timesince as djtimesince
 from django.utils.timezone import now
@@ -87,13 +87,13 @@ class Activity(models.Model):
 
     verb = models.CharField(max_length=255, db_index=True)
 
-    extras = JSONField(
+    extras = models.JSONField(
         default=dict,
         help_text="Additional metadata related to the change",
     )
 
-    old_values = JSONField(default=dict)
-    new_values = JSONField(default=dict)
+    old_values = models.JSONField(default=dict)
+    new_values = models.JSONField(default=dict)
 
     timestamp = models.DateTimeField(default=now, db_index=True)
 

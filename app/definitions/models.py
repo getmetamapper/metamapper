@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.contrib.contenttypes.fields import ContentType, GenericRelation
 from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 
@@ -148,7 +149,7 @@ class Datastore(StringPrimaryKeyModel,
     password = EncryptedCharField(max_length=128, null=False, blank=False)
     database = models.CharField(max_length=128, null=False, blank=False)
     port = models.PositiveIntegerField(null=False, blank=False, validators=[MaxValueValidator(65535)])
-    extras = JSONField(default=dict)
+    extras = models.JSONField(default=dict)
 
     ssh_enabled = models.BooleanField(default=False)
     ssh_host = models.CharField(max_length=128, null=True, blank=False)
@@ -376,7 +377,7 @@ class Table(AuditableModel,
 
     db_comment = models.TextField(null=True, blank=True)
     short_desc = models.TextField(null=True, blank=True)
-    properties = JSONField(default=dict)
+    properties = models.JSONField(default=dict)
     readme = models.TextField(null=True, blank=True)
 
     search_objects = SearchManager(fields=['name', 'schema__name', 'short_desc'])

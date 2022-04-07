@@ -135,15 +135,21 @@ class PostgresUpdateQuery(sql.UpdateQuery):
 class PostgresOrSearchQuery(SearchQuery):
     """Extension of SearchQuery to perform OR instead of AND operator.
     """
-    def as_sql(self, compiler, connection):
-        params = [self.value]
-        function = self.SEARCH_TYPES[self.search_type]
-        if self.config:
+    def as_sql(self, compiler, connection, function=None, template=None):
+        """Override `.as_sql` to add extended OR search capabilities.
+        """
+        sql, params = super().as_sql(compiler, connection, function, template)
+
+        if not self.config:
+            fcn = function or self.function
+            sql = "replace({}(%s)::text, '&', '|')::tsquery".format(fcn)
+        else:
             config_sql, config_params = compiler.compile(self.config)
             template = '{}({}::regconfig, %s)'.format(function, config_sql)
-            params = config_params + [self.value]
-        else:
-            template = "replace({}(%s)::text, '&', '|')::tsquery".format(function)
+            sql = template % sql
+            params = config_params + params
+
         if self.invert:
-            template = '!!({})'.format(template)
-        return template, params
+            sql = '!!(%s)' % sql
+
+        return sql, params

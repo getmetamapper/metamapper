@@ -123,6 +123,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 ROOT_URLCONF = 'metamapper.urls'
 
 TEMPLATES = [
@@ -402,8 +404,6 @@ GOOGLE_ENABLED = GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 # django-cacheops (https://github.com/Suor/django-cacheops). It uses redis
 # as backend for ORM cache to speed up your queries.
 #
-CACHEOPS_REDIS = os.getenv('METAMAPPER_CACHEOPS_REDIS_URL')
-
 API_THROTTLE_BACKEND = os.getenv(
     'METAMAPPER_API_THROTTLE_BACKEND',
     'django.core.cache.backends.dummy.DummyCache',
@@ -422,26 +422,6 @@ CACHES = {
     },
 }
 
-# If the CACHEOPS_REDIS variable isn't set, we assume you don't want
-# the cache, so we disable it.
-if CACHEOPS_REDIS:
-    CACHEOPS = {
-        'authentication.user': {
-            'ops': 'get', 'timeout': 60 * 15,
-        },
-        'authentication.workspace': {
-            'ops': 'get', 'timeout': 60 * 15,
-        },
-        'definitions.*': {
-            'ops': {'fetch', 'get'}, 'timeout': 60 * 30,
-        },
-        'revisioner.*': {
-            'ops': {'fetch', 'get'}, 'timeout': 60 * 15,
-        },
-        'comments.comment': {
-            'ops': {'fetch', 'get'}, 'timeout': 60 * 15,
-        },
-    }
 #
 # Search
 #

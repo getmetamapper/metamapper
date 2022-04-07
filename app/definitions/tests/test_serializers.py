@@ -230,7 +230,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         """
         extras = {
             'ssh_enabled': True,
-            'ssh_host': '54.32.11.00',
+            'ssh_host': '54.32.11.12',
             'ssh_user': 'scott',
         }
 
@@ -253,7 +253,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         """
         extras = {
             'ssh_enabled': True,
-            'ssh_host': '54.32.11.00',
+            'ssh_host': '54.32.11.11',
             'ssh_user': 'scott',
             'ssh_port': 22,
         }

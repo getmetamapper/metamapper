@@ -1,6 +1,5 @@
 -c requirements.txt
-factory-boy
-flower
-freezegun
-python-semantic-release==4.6.0
+factory-boy==2.12.0
+faker==4.1.1
+freezegun==0.3.15
 tblib

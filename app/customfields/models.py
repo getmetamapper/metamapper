@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from app.authentication.models import Workspace
@@ -44,7 +43,7 @@ class CustomField(StringPrimaryKeyModel, AuditableModel, TimestampedModel):
 
     field_name = models.CharField(max_length=30)
     field_type = models.CharField(max_length=30, choices=FIELD_TYPE_CHOICES)
-    validators = JSONField(default=dict)
+    validators = models.JSONField(default=dict)
     short_desc = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
@@ -86,7 +85,7 @@ class CustomField(StringPrimaryKeyModel, AuditableModel, TimestampedModel):
 class CustomPropertiesModel(models.Model):
     """Mixin for adding custom properties field.
     """
-    custom_properties = JSONField(default=dict)
+    custom_properties = models.JSONField(default=dict)
 
     class Meta:
         abstract = True
