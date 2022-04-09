@@ -24,7 +24,7 @@
     "js-yaml": "^3.14.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "pretty-ms": "^5.0.0",
     "query-string": "^6.12.1",
     "quill-emoji": "^0.1.8",
