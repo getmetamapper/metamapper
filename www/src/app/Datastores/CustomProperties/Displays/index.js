@@ -1,5 +1,6 @@
 import React from "react"
 import EnumDisplay from "./EnumDisplay"
+import MultiSelectDisplay from "./MultiSelectDisplay"
 import TextDisplay from "./TextDisplay"
 import UserDisplay from "./UserDisplay"
 import GroupDisplay from "./GroupDisplay"
@@ -10,6 +11,7 @@ export const renderDisplay = (customField, fieldValue) => {
   const switchBoard = {
     TEXT: TextDisplay,
     ENUM: EnumDisplay,
+    MULTI: MultiSelectDisplay,
     USER: UserDisplay,
     GROUP: GroupDisplay,
   }

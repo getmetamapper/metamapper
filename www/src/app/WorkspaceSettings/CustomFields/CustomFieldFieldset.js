@@ -4,7 +4,7 @@ import { map, get } from "lodash"
 import FormLabel from "app/Common/FormLabel"
 import TagsInput from "app/Common/TagsInput"
 
-const EnumTypeFieldset = ({ form, validators }) => (
+const ChoiceTypeFieldset = ({ form, validators }) => (
   <Form.Item>
     <FormLabel
       required
@@ -23,15 +23,24 @@ const EnumTypeFieldset = ({ form, validators }) => (
   </Form.Item>
 )
 
-EnumTypeFieldset.defaultProps = {
+ChoiceTypeFieldset.defaultProps = {
   validators: {},
 }
 
 const fieldsetMapping = {
-  ENUM: EnumTypeFieldset,
   TEXT: null,
-  USER: null,
   GROUP: null,
+  USER: null,
+  ENUM: ChoiceTypeFieldset,
+  MULTI: ChoiceTypeFieldset,
+}
+
+export const fieldToNameMapping = {
+  TEXT: 'Text',
+  GROUP: 'Group',
+  USER: 'User',
+  ENUM: 'Single Select',
+  MULTI: 'Multiple Select',
 }
 
 const CustomFieldFieldset = ({
@@ -88,9 +97,9 @@ const CustomFieldFieldset = ({
           ],
         })(
           <Select disabled={fieldType !== undefined} data-test="CustomFieldFieldset.Type">
-            {map(Object.keys(fieldsetMapping), (type) => (
+            {map(Object.keys(fieldToNameMapping), (type) => (
               <Select.Option key={type} value={type}>
-                {type}
+                {fieldToNameMapping[type]}
               </Select.Option>
             ))}
           </Select>

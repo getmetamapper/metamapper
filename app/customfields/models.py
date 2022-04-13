@@ -16,12 +16,14 @@ class CustomField(StringPrimaryKeyModel, AuditableModel, TimestampedModel):
     TEXT = 'TEXT'
     ENUM = 'ENUM'
     GROUP = 'GROUP'
+    MULTI = 'MULTI'
 
     FIELD_TYPE_CHOICES = (
         (USER, 'User'),
         (TEXT, 'Text'),
         (ENUM, 'Enum'),
         (GROUP, 'Group'),
+        (MULTI, 'Multiselect'),
     )
 
     SUPPORTED_MODELS = [

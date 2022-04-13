@@ -25,8 +25,8 @@ def get_audit_kwargs(instance):
     }
 
 
-class EnumFieldTypeValidator(serializers.Serializer):
-    """Extra validation parameters for ENUM fieldtype.
+class ChoiceFieldTypeValidator(serializers.Serializer):
+    """Extra validation parameters for field type with choices.
     """
     choices = serializers.ListField(child=serializers.CharField(), allow_empty=False)
 
@@ -35,7 +35,7 @@ class CustomFieldSerializer(MetamapperSerializer, serializers.ModelSerializer):
     """Manage a custom field instance.
     """
     field_name = serializers.CharField(required=True, max_length=30)
-    field_type = serializers.ChoiceField(required=True, choices=models.CustomField.FIELD_TYPE_CHOICES)
+    field_type = serializers.ChoiceField(required=True, choices=[c[0] for c in models.CustomField.FIELD_TYPE_CHOICES])
     validators = serializers.JSONField(required=False)
     short_desc = serializers.CharField(
         required=False,
@@ -69,7 +69,7 @@ class CustomFieldSerializer(MetamapperSerializer, serializers.ModelSerializer):
     def validate_enum(self, data):
         """Validators for ENUM type.
         """
-        validator = EnumFieldTypeValidator(data=data)
+        validator = ChoiceFieldTypeValidator(data=data)
         validator.is_valid(raise_exception=True)
         return validator.data
 
@@ -77,6 +77,13 @@ class CustomFieldSerializer(MetamapperSerializer, serializers.ModelSerializer):
         """Validators for GROUP type.
         """
         return {}
+
+    def validate_multi(self, data):
+        """Validators for MULTI type.
+        """
+        validator = ChoiceFieldTypeValidator(data=data)
+        validator.is_valid(raise_exception=True)
+        return validator.data
 
     def validate(self, data):
         """Handle custom validation based on the field_type value.
@@ -87,6 +94,7 @@ class CustomFieldSerializer(MetamapperSerializer, serializers.ModelSerializer):
             models.CustomField.TEXT: self.validate_text,
             models.CustomField.ENUM: self.validate_enum,
             models.CustomField.GROUP: self.validate_group,
+            models.CustomField.MULTI: self.validate_multi,
         }
         data['validators'] = validators[field_type](data.get('validators', {}))
         return data
@@ -129,7 +137,8 @@ class CustomPropertiesSerializer(MetamapperSerializer, serializers.Serializer):
     def validate_enum(self, value, customfield):
         """Validators for ENUM type.
         """
-        if value and value not in customfield.validators.get('choices', []):
+        choices = customfield.validators.get('choices', [])
+        if value and value not in choices:
             return 'The provided value is invalid.'
         return None
 
@@ -140,6 +149,16 @@ class CustomPropertiesSerializer(MetamapperSerializer, serializers.Serializer):
             return 'The provided group does not exist.'
         return None
 
+    def validate_multi(self, value, customfield):
+        """Validators for MULTI type.
+        """
+        choices = customfield.validators.get('choices', [])
+        if value is not None and not isinstance(value, list):
+            return 'The provided value must be a list.'
+        if value is not None and not all(v in choices for v in value):
+            return 'The provided value is invalid.'
+        return None
+
     def validate_properties(self, properties):
         """Perform property-level validation.
         """
@@ -148,6 +167,7 @@ class CustomPropertiesSerializer(MetamapperSerializer, serializers.Serializer):
             models.CustomField.GROUP: self.validate_group,
             models.CustomField.TEXT: self.validate_text,
             models.CustomField.USER: self.validate_user,
+            models.CustomField.MULTI: self.validate_multi,
         }
 
         custom_fields = {

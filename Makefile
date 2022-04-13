@@ -28,10 +28,10 @@ build-assets:
 build-docker:
 	@docker-compose -f docker-development.yml build --build-arg env=development
 
-initdb:
+init_db:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0
 
-upgradedb:
+migrations:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py makemigrations
 
 migrate:
@@ -40,13 +40,13 @@ migrate:
 reindex:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py reindex
 
-seeddb:
+seed_db:
 	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py seeddata www/cypress/fixtures/definitions.spec.json
 
-resetdb:
+reset_db:
 	@docker-compose -f docker-development.yml run --rm webserver bash www/cypress/cmd/resetdb.sh
 
-rebuilddb: stop
+rebuild_db: stop
 	@docker-compose -f docker-development.yml start database
 	@docker-compose -f docker-development.yml exec database dropdb metamapper -U postgres
 	@docker-compose -f docker-development.yml exec database createdb metamapper -U postgres
