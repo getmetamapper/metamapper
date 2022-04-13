@@ -85,10 +85,14 @@ class UpdateCustomProperties extends Component {
     )
   }
 
+  arrayEmpty(v) {
+    return v.hasOwnProperty("length") && v.length <= 0
+  }
+
   isEmpty() {
     return filter(
       this.props.customProperties,
-      ({ fieldValue }) => fieldValue !== null && fieldValue !== ""
+      ({ fieldValue }) => fieldValue !== null && fieldValue !== "" && !this.arrayEmpty(fieldValue)
     ).length === 0
   }
 
@@ -125,7 +129,7 @@ class UpdateCustomProperties extends Component {
               {map(customProperties, ({ fieldId, fieldLabel, fieldValue }) => {
                 const field = fields[fieldId]
                 if (!field) return null
-                if (!isEditing && !fieldValue) return null
+                if (!isEditing && (!fieldValue || this.arrayEmpty(fieldValue))) return null
                 const InputComponent = getInputComponent(field)
                 const inputProps = {
                   form,
@@ -136,7 +140,7 @@ class UpdateCustomProperties extends Component {
                   inputProps.choices = users
                 } else if (fields[fieldId].fieldType === "GROUP") {
                   inputProps.choices = groups
-                } else if (fields[fieldId].fieldType === "ENUM") {
+                } else if (["ENUM", "MULTI"].indexOf(fields[fieldId].fieldType) > -1) {
                   inputProps.choices = field.validators.choices
                 }
                 return (

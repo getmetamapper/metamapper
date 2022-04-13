@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react"
 import { Table, Tag } from "antd"
+import { fieldToNameMapping } from "./CustomFieldFieldset"
 import withGetCustomFields from "graphql/withGetCustomFields"
 
 class CustomFieldsTable extends Component {
@@ -16,7 +17,7 @@ class CustomFieldsTable extends Component {
         title: "Type",
         dataIndex: "fieldType",
         key: "fieldType",
-        render: (fieldType) => <Tag>{fieldType}</Tag>,
+        render: (fieldType) => <Tag>{fieldToNameMapping[fieldType]}</Tag>,
       },
       {
         title: "Description",
