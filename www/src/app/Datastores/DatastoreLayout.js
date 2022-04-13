@@ -103,7 +103,7 @@ class DatastoreLayout extends Component {
         <Col span={24}>
           <div className="datastores-inner">
             <Row>
-              <Col span={4} className="fixed">
+              <Col span={1} className="fixed">
                 <div className="datastore-sidebar-header-wrapper">
                   {loading ? (
                     <>
@@ -122,9 +122,6 @@ class DatastoreLayout extends Component {
                   ) : (
                     <>
                       <DatastoreEngineIcon datastore={datastore} noTooltip />
-                      <div className="datastore-sidebar-header-name">
-                        <Tooltip title={datastore.name}>{datastore.name}</Tooltip>
-                      </div>
                     </>
                   )}
                 </div>
@@ -135,14 +132,16 @@ class DatastoreLayout extends Component {
                 >
                   {map(this.getLinks(), (link) => (
                     <Menu.Item key={link.to}>
-                      <Link to={link.to}>
-                        <Icon type={link.icon} /> {link.label}
-                      </Link>
+                      <Tooltip title={link.label} placement="right">
+                        <Link to={link.to}>
+                          <Icon type={link.icon} />
+                        </Link>
+                      </Tooltip>
                     </Menu.Item>
                   ))}
                 </Menu>
               </Col>
-              <Col span={20} className="pull-right">
+              <Col span={23} className="pull-right">
                 <div className="breadcrumbs-wrapper fixed" data-test="DatastoreLayout.Breadcrumbs">
                   <Breadcrumbs breadcrumbs={breadcrumbs(datastore)} />
                 </div>
