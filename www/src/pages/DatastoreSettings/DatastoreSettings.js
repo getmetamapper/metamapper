@@ -7,6 +7,7 @@ import { withLargeLoader } from "hoc/withLoader"
 import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import DeleteDatastore from "app/Datastores/DeleteDatastore"
 import DatastoreSettingsForm from "app/Datastores/DatastoreSettings/DatastoreSettingsForm"
+import DatastoreNotificationSettings from "app/Datastores/DatastoreSettings/DatastoreNotificationSettings"
 import AllowedCustomPropertySettings from "app/Datastores/DatastoreSettings/AllowedCustomPropertySettings"
 import UpdateDatastoreMetadataMutation from "graphql/mutations/UpdateDatastoreMetadata"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
@@ -89,7 +90,7 @@ class DatastoreSettings extends Component {
         loading={loading}
         title={`Datastore Settings - ${datastore.slug} - Metamapper`}
       >
-        <Row>
+        <Row className="datastore-settings-container">
           <Col span={16} offset={4}>
             <Card className="datastore-settings">
               <div className="datastore-settings-header">
@@ -109,6 +110,18 @@ class DatastoreSettings extends Component {
                 </div>
               )}
             </Card>
+            {hasPermission && (
+              <Card className="datastore-notification-settings">
+                <div className="datastore-notification-settings-header">
+                  <h3>Datastore Alerts</h3>
+                  <Divider />
+                </div>
+                <DatastoreNotificationSettings
+                  form={form}
+                  hasPermission={hasPermission}
+                />
+              </Card>
+            )}
             <Card className="custom-properties-settings">
               <div className="custom-properties-settings-header">
                 <h3>Allowed Custom Properties</h3>

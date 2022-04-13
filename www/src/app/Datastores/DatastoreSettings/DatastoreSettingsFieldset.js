@@ -42,9 +42,9 @@ const DatastoreSettingsFieldset = ({
         <Card className="datastore-crawling-enabled">
           <Row>
             <Col span={18}>
-              <span className="label">Enable Crawling</span>
+              <span className="label">Enable Syncing</span>
               <small>
-                No definitions will be updated when crawling is disabled.
+                No definitions will be updated when syncing is disabled.
               </small>
             </Col>
             <Col span={6}>

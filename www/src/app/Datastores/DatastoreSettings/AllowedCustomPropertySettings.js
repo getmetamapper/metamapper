@@ -12,8 +12,7 @@ import withGraphQLMutation from "hoc/withGraphQLMutation"
 
 class AllowedCustomPropertySettings extends Component {
   constructor(props) {
-    super(props)
-
+    super(props);
 
     this.state = {
       availableDatastoreProperties: map(props.customDatastoreFields, "pk"),
