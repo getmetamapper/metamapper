@@ -2,7 +2,9 @@
 import utils.blob as blob
 import utils.logging as logging
 
-from app.definitions.models import Schema, Table, Column
+import app.definitions.emails as emails
+
+from app.definitions.models import Datastore, Schema, Table, Column
 from app.revisioner.models import Run, RunTask
 from app.revisioner.tasks.v1.collector import SchemaDefinitionCollector
 from app.revisioner.tasks.v1.version import check_version
@@ -301,7 +303,7 @@ def start_run(self, run_id):
 
     collector = SchemaDefinitionCollector(run.datastore)
 
-    with task.task_context(self.request.id, lambda e: run.mark_as_finished()):
+    with task.task_context(self.request.id, on_failure=lambda e: run.mark_as_finished()):
         for schema, definition in collector.execute(run):
             path = f"revisioner/{run.datastore_id}/run_id={run.id}/{schema}.json.gz"
 
@@ -327,6 +329,9 @@ def start_run(self, run_id):
         chord(tasks)(complete_run.si(run_id))
 
     check_version.apply_async(args=[run.datastore_id])
+
+    if run.failed:
+        alert_incident_contacts.apply_async(args=[run.datastore_id, run.status])
 
 
 @app.task(bind=True)
@@ -363,8 +368,7 @@ def complete_run(self, run_id, **kwargs):
     """
     run = Run.objects.get(id=run_id)
 
-    task = run.tasks.create(path=f"complete_run/{run.id}", status=RunTask.PENDING)
-
+    ftask = run.tasks.create(path=f"complete_run/{run.id}", status=RunTask.PENDING)
     steps = (
         delete_objects_from_past_runs,
         apply_corrections_to_columns,
@@ -372,9 +376,26 @@ def complete_run(self, run_id, **kwargs):
         apply_corrections_to_schema,
     )
 
-    with task.task_context(self.request.id):
+    with ftask.task_context(self.request.id):
         for step in steps:
             step(run)
 
-    self.log.info('Run has completed')
     run.mark_as_finished()
+
+    if run.failed:
+        alert_incident_contacts.apply_async(args=[run.datastore_id, run.status])
+
+
+@app.task(bind=True)
+@logging.task_logger(__name__)
+def alert_incident_contacts(self, datastore_id, status):
+    """Alert incident contacts of failed run when relevant.
+    """
+    datastore = Datastore.objects.get(id=datastore_id)
+    workspace = datastore.workspace
+
+    for incident_contact in datastore.incident_contacts:
+        emails.datastore_sync_failure(
+            incident_contact,
+            workspace,
+            datastore)

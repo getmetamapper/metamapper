@@ -286,6 +286,13 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         required=False,
     )
 
+    incident_contacts = serializers.ListField(
+        child=serializers.EmailField(),
+        allow_empty=True,
+        allow_null=True,
+        required=False,
+    )
+
     ssh_enabled = serializers.BooleanField(required=False, default=False, allow_null=True)
 
     class Meta:
@@ -296,6 +303,7 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
             'tags',
             'is_enabled',
             'short_desc',
+            'incident_contacts',
             'engine',
             'username',
             'password',
@@ -323,6 +331,11 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         """
         return list(set(tags)) if isinstance(tags, (list,)) else []
 
+    def validate_incident_contacts(self, emails):
+        """We should remove any duplicate contacts that exist.
+        """
+        return list(set(emails)) if isinstance(emails, (list,)) else []
+
     def validate(self, data):
         """Run some validation checks against the payload as a whole.
         """
@@ -339,13 +352,14 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         """
         creator = validated_data.pop('creator')
         with transaction.atomic():
-            datastore = models.Datastore.objects.create(**validated_data)
+            datastore = models.Datastore.objects.create(
+                incident_contacts=[creator.email],
+                **validated_data)
             if datastore.pk:
                 datastore.assign_all_perms(creator)
                 run = datastore.run_history.create(
                     workspace_id=datastore.workspace_id,
-                    started_at=timezone.now(),
-                )
+                    started_at=timezone.now())
                 coretasks.start_run.apply_async(args=[run.id])
         return datastore
 
@@ -361,6 +375,7 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         instance.tags = validated_data.get('tags', instance.tags)
         instance.is_enabled = validated_data.get('is_enabled', instance.is_enabled)
         instance.short_desc = validated_data.get('short_desc', instance.short_desc)
+        instance.incident_contacts = validated_data.get('incident_contacts', instance.incident_contacts)
 
         instance.username = validated_data.get('username', instance.username)
         instance.password = validated_data.get('password', instance.password)

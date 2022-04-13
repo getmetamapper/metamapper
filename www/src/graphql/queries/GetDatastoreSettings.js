@@ -14,6 +14,7 @@ export default gql`
       shortDesc
       disabledDatastoreProperties
       disabledTableProperties
+      incidentContacts
       jdbcConnection {
         engine
         host

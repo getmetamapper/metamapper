@@ -18,6 +18,9 @@
   .ant-menu-item:first-child {
     margin-top: 0 !important;
   }
+  .ant-menu-item {
+    text-align: center;
+  }
 }
 .datastores .datastore-definition {
   height: 100%;
@@ -41,8 +44,12 @@
   display: flex;
   height: 54px;
   overflow: hidden;
-  padding: 12px;
+  padding: 12px 0;
   white-space: nowrap;
+
+  .datastore-engine-icon {
+    margin: 0 auto;
+  }
 }
 .datastore-sidebar-header-name {
   display: inline-block;
@@ -202,9 +209,6 @@
       font-weight: 700;
     }
   }
-}
-.ant-card.datastore-notification-settings {
-  margin-top: 24px;
 }
 .datastore-run-history {
   background: #FFFFFF;

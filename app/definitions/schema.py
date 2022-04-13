@@ -241,6 +241,7 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'object_permissions_enabled',
             'disabled_datastore_properties',
             'disabled_table_properties',
+            'incident_contacts',
             'created_at',
             'updated_at',
         )

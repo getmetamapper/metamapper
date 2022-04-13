@@ -168,6 +168,8 @@ class Datastore(StringPrimaryKeyModel,
     # and its objects. Permissions default to the workspace level.
     object_permissions_enabled = models.BooleanField(default=True)
 
+    incident_contacts = ArrayField(models.EmailField(), default=list)
+
     search_objects = SearchManager(fields=['name', 'engine', 'tags'])
 
     class Meta:
