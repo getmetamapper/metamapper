@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getWorkspaceGroupUsers($groupId: ID!) {
+  query GetWorkspaceGroupUsers($groupId: ID!) {
     workspaceGroupUsers(groupId: $groupId) {
       edges {
         node {

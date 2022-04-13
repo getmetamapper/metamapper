@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import boto3
 import contextlib
+import pandas as pd
+import numpy as np
 import hashlib
 import sys
+
+from app.inspector.errors import OutOfMemoryError
 
 
 class EngineInterface(object):
@@ -73,6 +77,14 @@ class EngineInterface(object):
     @property
     def operational_error(self):
         return self.connector.OperationalError
+
+    @property
+    def programming_error(self):
+        return self.connector.ProgrammingError
+
+    @property
+    def catchable_errors(self):
+        return (self.operational_error, self.programming_error, OutOfMemoryError)
 
     @classmethod
     def has_indexes(self):
@@ -193,6 +205,28 @@ class EngineInterface(object):
                     yield r
                 if done:
                     return
+
+    def get_dataframe(self, sql, byte_limit=None, record_limit=None, parameters=None):
+        """Executes the sql and returns a set of records.
+        """
+        data = []
+        with self.execute_query(sql, parameters) as cursor:
+            dataframe = pd.DataFrame(columns=[i[0] for i in cursor.description])
+            while True:
+                done = True
+                for r in cursor.fetchmany(self.records_per_batch):
+                    done = False
+                    data.append(r)
+                    if record_limit and len(data) >= record_limit:
+                        break
+                    if byte_limit and sys.getsizeof(data) >= byte_limit:
+                        raise OutOfMemoryError()
+                if done:
+                    break
+        dataframe = dataframe.append(data, ignore_index=True, sort=False)
+        dataframe = dataframe.replace({np.nan: None})
+        dataframe.columns = dataframe.columns.str.lower()
+        return dataframe
 
     def get_records(self, sql, parameters=None):
         """Executes the sql and returns a set of records.

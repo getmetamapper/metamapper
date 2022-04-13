@@ -66,10 +66,10 @@ class GenericMutationMixin(AuthMutation):
     def get_serializer_kwargs(cls, root, info, **data):
         instance = None
         return {
-            "instance": instance,
-            "data": data,
-            "context": {
-                "request": info.context,
+            'instance': instance,
+            'data': data,
+            'context': {
+                'request': info.context,
             },
         }
 
@@ -189,11 +189,11 @@ class UpdateMutationMixin(GenericMutationMixin):
         }
 
         return {
-            "instance": instance,
-            "data": data,
-            "partial": True,
-            "context": {
-                "request": info.context,
+            'instance': instance,
+            'data': data,
+            'partial': True,
+            'context': {
+                'request': info.context,
             },
         }
 

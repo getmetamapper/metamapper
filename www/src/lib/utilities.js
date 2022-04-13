@@ -60,11 +60,27 @@ export const humanize = (str) => {
     })
 }
 
+export const ellipsis = (value, length = 40) => {
+  if (value.length <= length) {
+    return value
+  }
+
+  return `${value.substring(0, length - 1)}...`
+}
+
 export const coalesce = (one, two) => {
   if (typeof one === "string") {
     one = one.trim()
   }
   return one || two
+}
+
+export const b64encode = (message) => {
+  try {
+    return window.btoa(message)
+  } catch (e) {
+    return ""
+  }
 }
 
 export const b64decode = (encodedMessage) => {

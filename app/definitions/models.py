@@ -182,6 +182,7 @@ class Datastore(StringPrimaryKeyModel,
             ('change_datastore_settings', 'Change datastore settings'),
             ('change_datastore_connection', 'Change datastore connection'),
             ('change_datastore_access', 'Change datastore access'),
+            ('change_datastore_checks', 'Change datastore checks'),
             ('comment_on_datastore', 'Comment on datastore'),
         )
 

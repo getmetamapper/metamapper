@@ -13,7 +13,7 @@ class TestGetCustomFieldsByContentType(cases.GraphQLTestCase):
     factory = factories.CustomFieldFactory
     operation = 'customFields'
     statement = '''
-    query getCustomFields {
+    query GetCustomFields {
       customFields(contentType: "DATASTORE") {
         edges {
           node {

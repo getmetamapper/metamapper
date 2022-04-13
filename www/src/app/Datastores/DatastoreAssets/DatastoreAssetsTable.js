@@ -54,7 +54,6 @@ class DatastoreAssetsTable extends Component {
         document.documentElement.scrollTop + document.documentElement.offsetHeight
         >= (document.documentElement.scrollHeight * 0.985)
       ) {
-        console.log('hit next page!')
         this.fetchNextPage()
       }
     }, 100);

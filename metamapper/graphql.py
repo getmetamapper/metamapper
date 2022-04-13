@@ -6,6 +6,7 @@ import app.authentication.graphql as authentication
 import app.authorization.graphql as authorization
 import app.api.graphql as api
 import app.audit.graphql as audit
+import app.checks.graphql as checks
 import app.comments.graphql as comments
 import app.customfields.graphql as customfields
 import app.definitions.graphql as definitions
@@ -29,6 +30,7 @@ class Query(authentication.Query,
             authorization.Query,
             api.Query,
             audit.Query,
+            checks.Query,
             comments.Query,
             customfields.Query,
             definitions.Query,
@@ -52,6 +54,7 @@ class Query(authentication.Query,
 class Mutation(authentication.Mutation,
                authorization.Mutation,
                api.Mutation,
+               checks.Mutation,
                comments.Mutation,
                customfields.Mutation,
                definitions.Mutation,

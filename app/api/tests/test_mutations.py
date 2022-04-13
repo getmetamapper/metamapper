@@ -154,7 +154,7 @@ class UpdateApiTokenTests(cases.GraphQLTestCase):
                 'name': resource.name,
                 'isEnabled': False,
             },
-            'errors': None
+            'errors': None,
         })
 
         self.assertInstanceUpdated(

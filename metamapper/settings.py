@@ -89,6 +89,7 @@ METAMAPPER_APPS = [
     'app.authorization.apps.Config',
     'app.api.apps.Config',
     'app.definitions.apps.Config',
+    'app.checks.apps.Config',
     'app.comments.apps.Config',
     'app.customfields.apps.Config',
     'app.inspector.apps.Config',

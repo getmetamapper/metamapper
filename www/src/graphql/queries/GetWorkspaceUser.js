@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query workspaceUser($userId: ID!) {
+  query GeWorkspaceUser($userId: ID!) {
     workspaceUser(id: $userId) {
       pk
       userId

@@ -10,18 +10,20 @@ import Breadcrumbs from "app/Navigation/Breadcrumbs"
 import DatastoreEngineIcon from "app/Datastores/DatastoreEngineIcon"
 import TableSchemaSelector from "app/Datastores/DatastoreDefinition/TableSchemaSelector"
 
-const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading }) => (
+const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading, hideSchemaSelector }) => (
   <Row>
-    <Col span={20}>
+    <Col span={hideSchemaSelector ? 24 : 20}>
       <div className="inner-datastore-layout">{children}</div>
     </Col>
-    <Col span={4} className="table-schema-selector-wrapper">
-      <TableSchemaSelector
-        currentTable={{ name: null }}
-        datastore={datastore}
-        loading={loading}
-      />
-    </Col>
+    {!hideSchemaSelector && (
+      <Col span={4} className="table-schema-selector-wrapper">
+        <TableSchemaSelector
+          currentTable={{ name: null }}
+          datastore={datastore}
+          loading={loading}
+        />
+      </Col>
+    )}
   </Row>
 ))
 
@@ -39,7 +41,7 @@ class DatastoreLayout extends Component {
     config.setDatastoreSlug(datastoreSlug)
   }
 
-  getLinks() {
+  getBaseUri() {
     const {
       currentWorkspace: { slug },
       match: {
@@ -47,7 +49,11 @@ class DatastoreLayout extends Component {
       },
     } = this.props
 
-    const baseUri = `/${slug}/datastores/${datastoreSlug}`
+    return `/${slug}/datastores/${datastoreSlug}`
+  }
+
+  getLinks() {
+    const baseUri = this.getBaseUri()
 
     return [
       {
@@ -59,6 +65,11 @@ class DatastoreLayout extends Component {
         icon: "read",
         label: "Assets",
         to: `${baseUri}/assets`,
+      },
+      {
+        icon: "check-circle",
+        label: "Checks",
+        to: `${baseUri}/checks`,
       },
       {
         icon: "sync",
@@ -91,6 +102,7 @@ class DatastoreLayout extends Component {
       datastore,
       loading,
       title,
+      hideSchemaSelector,
     } = this.props
     const {
       location: { pathname },
@@ -120,9 +132,9 @@ class DatastoreLayout extends Component {
                       </div>
                     </>
                   ) : (
-                    <>
+                    <Link to={this.getBaseUri()}>
                       <DatastoreEngineIcon datastore={datastore} noTooltip />
-                    </>
+                    </Link>
                   )}
                 </div>
                 <Menu
@@ -150,6 +162,7 @@ class DatastoreLayout extends Component {
                     children={children}
                     datastore={datastore}
                     loading={loading}
+                    hideSchemaSelector={hideSchemaSelector}
                   />
                 </Layout.Content>
               </Col>
@@ -163,8 +176,7 @@ class DatastoreLayout extends Component {
 
 DatastoreLayout.defaultProps = {
   className: "datastores-content",
+  hideSchemaSelector: false,
 }
 
-const enhance = compose(withRouter, withUserContext)
-
-export default enhance(DatastoreLayout)
+export default compose(withRouter, withUserContext)(DatastoreLayout)

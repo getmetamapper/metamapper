@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getCustomProperties($objectId: ID!) {
+  query GetCustomProperties($objectId: ID!) {
     customProperties(objectId: $objectId)
   }
 `

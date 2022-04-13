@@ -103,7 +103,7 @@ class ApiTokenSerializerUpdateTests(cases.SerializerTestCase):
         return attributes
 
     def test_when_valid(self):
-        """It should be able to create the resource.
+        """It should be able to update the resource.
         """
         attributes = {
             'name': 'Bad Dog',

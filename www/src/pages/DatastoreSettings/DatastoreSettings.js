@@ -126,14 +126,12 @@ class DatastoreSettings extends Component {
   }
 }
 
-const withForm = Form.create()
-
 const withNotFound = withNotFoundHandler(({ datastore }) => {
   return !datastore || !datastore.hasOwnProperty("id")
 })
 
 const enhance = compose(
-  withForm,
+  Form.create(),
   withRouter,
   withWriteAccess,
   withGetDatastoreSettings,

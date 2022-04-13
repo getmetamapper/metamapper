@@ -38,7 +38,7 @@ class ColumnType(AuthNode, DjangoObjectType):
 
     @classmethod
     def get_node(cls, info, id):
-        """We should only return tables related to the current workspace.
+        """We should only return columns related to the current workspace.
         """
         return models.Column.objects.filter(
             workspace=info.context.workspace,

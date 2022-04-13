@@ -20,6 +20,7 @@ app.conf.task_default_queue = 'default'
 
 app.conf.task_queues = (
     Queue('default', Exchange('default'), routing_key='default'),
+    Queue('checks', Exchange('checks'), routing_key='checks'),
     Queue('revisioner', Exchange('revisioner'), routing_key='revisioner'),
 )
 
@@ -36,6 +37,10 @@ app.conf.beat_schedule = {
         'task': 'app.revisioner.tasks.v1.scheduler.queue_runs',
         'schedule': crontab(minute='15,45'),
     },
+    'create-check-executions': {
+        'task': 'app.checks.tasks.scheduler.create_executions',
+        'schedule': crontab(minute='*/1'),
+    },
     'queue-domain-verification': {
         'task': 'app.sso.tasks.queue_domain_verifications',
         'schedule': crontab(minute='*/20'),
@@ -47,5 +52,6 @@ app.conf.beat_schedule = {
 }
 
 app.conf.task_routes = {
-    'app.revisioner.tasks.core.*': {'queue': 'revisioner'},
+    'app.checks.tasks.*': {'queue': 'checks'},
+    'app.revisioner.tasks.*': {'queue': 'revisioner'},
 }

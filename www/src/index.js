@@ -19,8 +19,9 @@ import "react-quill/dist/quill.snow.css"
 import "quill-emoji/dist/quill-emoji.css"
 import "highlight.js/styles/solarized-light.css"
 import "codemirror/lib/codemirror.css"
-import "codemirror/theme/monokai.css"
+import "codemirror/theme/base16-light.css"
 import "codemirror/mode/markdown/markdown"
+import "codemirror/mode/sql/sql"
 import "./index.scss"
 
 // eslint-disable-next-line

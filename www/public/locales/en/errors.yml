@@ -140,3 +140,13 @@ errors:
   ApiToken:
     name:
       exists: API token with that name already exists.
+  Check:
+    expectations:
+      empty: Check must have at least one expectations.
+  CheckQuery:
+    sql_text:
+      select_only: The query you provided cannot be executed.
+  CheckAlertRule:
+    emails:
+      item_invalid: One of the provided email addresses is invalid.
+      empty: You must provide at least one email.

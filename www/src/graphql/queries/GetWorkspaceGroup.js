@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query workspaceGroup($groupId: ID!) {
+  query GetWorkspaceGroup($groupId: ID!) {
     workspaceGroup(id: $groupId) {
       id
       pk

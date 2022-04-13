@@ -9,7 +9,6 @@ import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGetDatastoreRunHistory from "graphql/withGetDatastoreRunHistory"
 import withNotFoundHandler from 'hoc/withNotFoundHandler'
 
-
 class RunHistory extends Component {
   constructor(props) {
     super(props)

@@ -2,6 +2,7 @@ import Datastores from "pages/Datastores/Datastores"
 import DatastoreSetup from "pages/Datastores/DatastoreSetup"
 import Overview from "pages/DatastoreSettings/DatastoreOverview"
 import Assets from "pages/DatastoreSettings/DatastoreAssets"
+import Checks from "pages/DatastoreSettings/DatastoreChecks"
 import RunHistory from "pages/DatastoreSettings/RunHistory"
 import ConnectionSettings from "pages/DatastoreSettings/ConnectionSettings"
 import Access from "pages/DatastoreSettings/DatastoreAccess"
@@ -38,6 +39,11 @@ export default [
   {
     component: RunHistory,
     path: "/:workspaceSlug/datastores/:datastoreSlug/runs",
+    namespace: "datastores",
+  },
+  {
+    component: Checks,
+    path: "/:workspaceSlug/datastores/:datastoreSlug/checks",
     namespace: "datastores",
   },
   {

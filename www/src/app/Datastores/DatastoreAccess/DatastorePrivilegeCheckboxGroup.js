@@ -52,6 +52,16 @@ const DatastorePrivilegeCheckboxGroup = ({ form, rules, dataTest }) => (
             </Checkbox>
           </Col>
           <Col>
+            <Checkbox value="change_datastore_checks">
+              <div className="checkbox-content">
+                <span className="datastore-permission-lvl">Manage Checks</span>
+                <p className="datastore-permission-desc">
+                  Can manage data quality checkas associated with the datastore.
+                </p>
+              </div>
+            </Checkbox>
+          </Col>
+          <Col>
             <Checkbox value="comment_on_datastore">
               <div className="checkbox-content">
                 <span className="datastore-permission-lvl">Comment on Datastore</span>

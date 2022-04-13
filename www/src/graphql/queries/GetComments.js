@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getComments($objectId: ID!) {
+  query GetComments($objectId: ID!) {
     comments(objectId: $objectId) {
       edges {
         node {

@@ -4,13 +4,13 @@ import { Icon, Popover } from "antd"
 
 import "./index.css"
 
-const FormLabel = ({ label, required, helpText }) => {
+const FormLabel = ({ label, required, helpText, helpPlacement }) => {
   let helpTextComponent = ""
 
   if (helpText !== "") {
     helpTextComponent = (
       <span className="popover">
-        <Popover content={helpText}>
+        <Popover content={helpText} placement={helpPlacement}>
           <Icon type="question-circle" theme="filled" />
         </Popover>
       </span>
@@ -39,6 +39,7 @@ FormLabel.propTypes = {
 FormLabel.defaultProps = {
   required: false,
   helpText: "",
+  helpPlacement: "top"
 }
 
 export default FormLabel

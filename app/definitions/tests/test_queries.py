@@ -14,7 +14,7 @@ class TestGetDatastores(cases.GraphQLTestCase):
     factory = factories.DatastoreFactory
     operation = 'datastores'
     statement = '''
-    query getDatastores {
+    query GetDatastores {
       datastores {
         edges {
           node {
@@ -707,6 +707,7 @@ class TestGetDatastoreUserAccessPrivileges(cases.GraphQLTestCase):
                     'add_datastore',
                     'change_datastore',
                     'change_datastore_access',
+                    'change_datastore_checks',
                     'change_datastore_connection',
                     'change_datastore_metadata',
                     'change_datastore_settings',
@@ -736,6 +737,7 @@ class TestGetDatastoreUserAccessPrivileges(cases.GraphQLTestCase):
                     'add_datastore',
                     'change_datastore',
                     'change_datastore_access',
+                    'change_datastore_checks',
                     'change_datastore_connection',
                     'change_datastore_metadata',
                     'change_datastore_settings',
@@ -830,6 +832,7 @@ class TestGetDatastoreGroupAccessPrivileges(cases.GraphQLTestCase):
                     'add_datastore',
                     'change_datastore',
                     'change_datastore_access',
+                    'change_datastore_checks',
                     'change_datastore_connection',
                     'change_datastore_metadata',
                     'change_datastore_settings',
@@ -860,6 +863,7 @@ class TestGetDatastoreGroupAccessPrivileges(cases.GraphQLTestCase):
                     'add_datastore',
                     'change_datastore',
                     'change_datastore_access',
+                    'change_datastore_checks',
                     'change_datastore_connection',
                     'change_datastore_metadata',
                     'change_datastore_settings',

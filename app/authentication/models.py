@@ -69,7 +69,7 @@ class User(AbstractBaseUser, TimestampedModel):
         null=True,
         blank=False,
         default=uuid.uuid4,
-        help_text="One-time token used for SSO flows",
+        help_text='One-time token used for SSO flows',
     )
     sso_access_token_issued_at = models.DateTimeField(null=True, default=None)
 

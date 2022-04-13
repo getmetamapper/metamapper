@@ -18,12 +18,21 @@ class MetamapperSerializer(object):
             if isinstance(errors, (dict,)) and len(errors) > 0:
                 errors = errors[next(iter(errors))]
                 prefix = "item_"
-            output += [
-                {
-                    "resource": model_name,
-                    "field": field,
-                    "code": prefix + ("nulled" if error.code == "null" else error.code),
-                }
-                for error in errors
-            ]
+            for error in errors:
+                if not isinstance(error, (dict,)):
+                    error_out = {
+                        "resource": model_name,
+                        "field": field,
+                        "code": prefix + ("nulled" if error.code == "null" else error.code),
+                    }
+                    output.append(error_out)
+                else:
+                    for sub_field, sub_errors in error.items():
+                        sub_error = next(iter(sub_errors))
+                        error_out = {
+                            "resource": model_name,
+                            "field": ".".join([field, sub_field]),
+                            "code": ("nulled" if sub_error.code == "null" else sub_error.code)
+                        }
+                        output.append(error_out)
         return output

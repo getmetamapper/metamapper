@@ -41,6 +41,20 @@ const DatastoreSettingsFieldset = ({
     {datastore && datastore.hasOwnProperty("isEnabled") && (
       <Form.Item>
         <FormLabel
+          label="Unique Key"
+          helpText="Unique reference of this datastore. Useful for API interactions."
+        />
+        <Input
+          type="text"
+          disabled={true}
+          value={datastore.pk}
+          data-test="DatastoreSettingsFieldset.DatastoreId"
+        />
+      </Form.Item>
+    )}
+    {datastore && datastore.hasOwnProperty("isEnabled") && (
+      <Form.Item>
+        <FormLabel
           label="Incident Contacts"
           helpText="We will notify these people when an issue occurs, such as your datastore is not syncing properly."
         />

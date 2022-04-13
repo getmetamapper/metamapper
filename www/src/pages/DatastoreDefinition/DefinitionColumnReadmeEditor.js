@@ -9,7 +9,7 @@ import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetColumnDefinition from "graphql/withGetColumnDefinition"
 import PermissionDenied from "app/Errors/PermissionDenied"
-import ReadmeMirrorEditor from "app/Datastores/Readme/ReadmeMirrorEditor"
+import ReadmeEditor from "app/Datastores/Readme/ReadmeEditor"
 import UpdateColumnReadmeMutation from "graphql/mutations/UpdateColumnReadme"
 
 class DefinitionColumnReadmeEditor extends Component {
@@ -115,7 +115,7 @@ class DefinitionColumnReadmeEditor extends Component {
           message="You have unsaved changes. Are you sure you want to leave?"
           when={this.state.current !== this.state.previous}
         />
-        <ReadmeMirrorEditor
+        <ReadmeEditor
           title={this.getTitle()}
           markdown={this.state.current}
           loading={loading}

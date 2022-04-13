@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import sshtunnel
+import sys
+import pandas as pd
 import paramiko
 
 from functools import wraps
@@ -48,7 +50,7 @@ def with_ssh_tunnel():
             """Execution function.
             """
             if not datastore.ssh_enabled:
-                return func(datastore)
+                return func(datastore, *args, **kwargs)
             ssh_pkey = datastore.workspace.ssh_private_key
             with sshtunnel.SSHTunnelForwarder(
                 (datastore.ssh_host, datastore.ssh_port),
@@ -56,7 +58,12 @@ def with_ssh_tunnel():
                 ssh_pkey=paramiko.RSAKey.from_private_key(StringIO(ssh_pkey)),
                 remote_bind_address=(datastore.host, datastore.port),
             ) as server:
-                return func(datastore, server.local_bind_host, server.local_bind_port)
+                return func(
+                    datastore,
+                    *args,
+                    override_host=server.local_bind_host,
+                    override_port=server.local_bind_port,
+                    **kwargs)
         return wrapper
     return decorator
 
@@ -119,3 +126,10 @@ def verify_connection(datastore, override_host=None, override_port=None):
     """Verify the ability to connect to the datastore.
     """
     return get_engine(datastore, override_host, override_port).verify_connection()
+
+
+@with_ssh_tunnel()
+def get_dataframe(datastore, sql, byte_limit=(1000000 * 100), record_limit=None, override_host=None, override_port=None):
+    """Execute a query and return the results as a list of dicts.
+    """
+    return get_engine(datastore, override_host, override_port).get_dataframe(sql, byte_limit, record_limit)

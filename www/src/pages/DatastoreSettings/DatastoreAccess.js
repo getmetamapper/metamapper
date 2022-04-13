@@ -10,7 +10,6 @@ import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withNotFoundHandler from "hoc/withNotFoundHandler"
 
-
 class DatastoreAccess extends Component {
   constructor(props) {
     super(props)

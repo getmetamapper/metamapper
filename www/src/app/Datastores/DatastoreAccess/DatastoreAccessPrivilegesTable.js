@@ -91,6 +91,16 @@ class DatastoreAccessPrivilegesTable extends Component {
         ),
       },
       {
+        title: 'Checks',
+        dataIndex: 'privileges',
+        align: 'center',
+        editable: true,
+        permission: 'change_datastore_checks',
+        render: (privileges) => (
+          <BooleanIndicator value={privileges.indexOf('change_datastore_checks') > -1} />
+        ),
+      },
+      {
         title: 'Comment',
         dataIndex: 'privileges',
         align: 'center',

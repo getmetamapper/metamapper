@@ -95,7 +95,6 @@ const withGraphQLMutation = (WrappedComponent) => {
 
     render() {
       const { submitting } = this.state
-
       return (
         <WrappedComponent
           handleMutation={this.handleMutation}
