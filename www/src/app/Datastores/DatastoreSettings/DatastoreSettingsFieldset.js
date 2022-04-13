@@ -1,5 +1,6 @@
 import React from "react"
 import { Card, Col, Form, Input, Row, Switch } from "antd"
+import { arrayOfEmailsValidator } from "lib/validators"
 import FormLabel from "app/Common/FormLabel"
 import TagsInput from "app/Common/TagsInput"
 
@@ -34,6 +35,24 @@ const DatastoreSettingsFieldset = ({
           className="full-width"
           disabled={!hasPermission}
           data-test="DatastoreSettingsFieldset.Tags"
+        />
+      )}
+    </Form.Item>
+    <Form.Item>
+      <FormLabel
+        label="Incident Contacts"
+        helpText="We will notify these people when an issue occurs, such as your datastore is not syncing properly."
+      />
+      {getFieldDecorator("incidentContacts", {
+        initialValue: datastore.incidentContacts,
+        rules: [
+          { validator: arrayOfEmailsValidator },
+        ],
+      })(
+        <TagsInput
+          className="full-width"
+          disabled={!hasPermission}
+          data-test="DatastoreSettingsFieldset.IncidentContacts"
         />
       )}
     </Form.Item>

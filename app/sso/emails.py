@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import utils.email as email
+import app.notifications.tasks as email
 
 
 def domain_verification_succeeded(to_email, domain):
-    """TBD
+    """Email to be sent when domain verification succeeds.
     """
     mailer_kwargs = {
         'namespace': 'sso',
@@ -15,11 +15,15 @@ def domain_verification_succeeded(to_email, domain):
         }
     }
 
+    email.log.info(
+        'Attempting to deliver email({template}) to {to_email}'.format(**mailer_kwargs)
+    )
+
     email.deliver.delay(**mailer_kwargs)
 
 
 def domain_verification_failed(to_email, domain):
-    """TBD
+    """Email to be sent when domain verification fails.
     """
     mailer_kwargs = {
         'namespace': 'sso',
@@ -30,5 +34,9 @@ def domain_verification_failed(to_email, domain):
             'domain': domain,
         }
     }
+
+    email.log.info(
+        'Attempting to deliver email({template}) to {to_email}'.format(**mailer_kwargs)
+    )
 
     email.deliver.delay(**mailer_kwargs)

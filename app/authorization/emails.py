@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
-
 import app.authentication.models as models
 import app.notifications.tasks as email
-
-
-logger = logging.getLogger(__name__)
 
 
 def membership_granted(to_email, workspace, permissions):
@@ -27,7 +22,7 @@ def membership_granted(to_email, workspace, permissions):
         }
     }
 
-    logger.info(
+    email.log.info(
         'Attempting to deliver email({template}) to {to_email}'.format(**mailer_kwargs)
     )
 
@@ -48,7 +43,7 @@ def membership_revoked(to_email, workspace):
         }
     }
 
-    logger.info(
+    email.log.info(
         'Attempting to deliver email({template}) to {to_email}'.format(**mailer_kwargs)
     )
 

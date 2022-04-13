@@ -106,6 +106,7 @@ class UpdateDatastoreMetadata(mixins.UpdateMutationMixin, relay.ClientIDMutation
 
         name = graphene.String(required=False)
         tags = graphene.List(graphene.String, required=False)
+        incident_contacts = graphene.List(graphene.String, required=False)
 
     class Meta:
         serializer_class = serializers.DatastoreSerializer

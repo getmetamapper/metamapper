@@ -1,0 +1,3 @@
+We noticed that your {{ datastore_name }} datastore is failing to sync in the workspace {{ workspace_slug }}.
+
+To fix this error, <a href="{{ domain }}/{{ workspace_slug }}/datastores/{{ datastore_slug }}/runs">please log in to Metamapper</a> to view this datastore's run history and error logs.

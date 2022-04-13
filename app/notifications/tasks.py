@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from logging import getLogger
 
 from app.notifications.email import Mailer
 from metamapper.celery import app
+
+
+log = getLogger('metamapper.emails')
 
 
 @app.task(bind=True)

@@ -1,0 +1,6 @@
+{% extends 'common/base.html' %}
+{% block content %}
+<p>We noticed that your <b>{{ datastore_name }}</b> datastore is failing to sync in the workspace <b>{{ workspace_slug }}</b>.</p>
+
+<p>To fix this error, <a href="{{ domain }}/{{ workspace_slug }}/datastores/{{ datastore_slug }}/runs">please log in to Metamapper</a> to view this datastore's run history and error logs.</p>
+{% endblock %}

@@ -104,6 +104,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertTrue(serializer.is_valid())
         instance = serializer.save(workspace=self.workspace, creator=self.user)
         self.assertTrue(self.user.has_perm('view_datastore', instance))
+        self.assertTrue(instance.incident_contacts == [self.user.email])
 
     @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
@@ -508,6 +509,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             'name': 'Data Warehouse',
             'username': 'scott',
             'port': 1234,
+            'incident_contacts': [],
         }
 
         serializer = self.serializer_class(
@@ -618,7 +620,9 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
 
         self.assertEqual(instance.database, attributes['database'])
         self.assertEqual(list(instance.extras.keys()), ['credentials'])
-        self.assertEqual(instance.extras['credentials']['project_id'], attributes['extras']['credentials']['project_id'])
+        self.assertEqual(
+            instance.extras['credentials']['project_id'],
+            attributes['extras']['credentials']['project_id'])
 
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_google_bigquery_invalid(self, verify_connection):
@@ -769,6 +773,28 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
         ])
 
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_validate_incident_contacts(self, verify_connection):
+        """It should update the provided attributes.
+        """
+        attributes = {
+            'incident_contacts': [
+                'test1@metamapper.io',
+                'test2@metamapper.io',
+                'test3@metamapper.io',
+            ],
+        }
+
+        serializer = self.serializer_class(
+            instance=self.instance,
+            data=attributes,
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+        self.assertInstanceUpdated(self.instance, **attributes)
+
     def test_drf_validation_rules(self):
         """It should return error messages when DRF validation fails.
         """
@@ -828,6 +854,15 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
                 {
                     'code': 'max_length',
                     'value': [str(i) for i in range(15)],
+                },
+            ],
+            'incident_contacts': [
+                {
+                    'code': 'item_invalid',
+                    'value': [
+                        'bugs.bunny@acmecorp.com',
+                        'not-an-email',
+                    ],
                 },
             ],
         }
