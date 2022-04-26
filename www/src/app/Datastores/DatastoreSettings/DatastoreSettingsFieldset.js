@@ -38,24 +38,26 @@ const DatastoreSettingsFieldset = ({
         />
       )}
     </Form.Item>
-    <Form.Item>
-      <FormLabel
-        label="Incident Contacts"
-        helpText="We will notify these people when an issue occurs, such as your datastore is not syncing properly."
-      />
-      {getFieldDecorator("incidentContacts", {
-        initialValue: datastore.incidentContacts,
-        rules: [
-          { validator: arrayOfEmailsValidator },
-        ],
-      })(
-        <TagsInput
-          className="full-width"
-          disabled={!hasPermission}
-          data-test="DatastoreSettingsFieldset.IncidentContacts"
+    {datastore && datastore.hasOwnProperty("isEnabled") && (
+      <Form.Item>
+        <FormLabel
+          label="Incident Contacts"
+          helpText="We will notify these people when an issue occurs, such as your datastore is not syncing properly."
         />
-      )}
-    </Form.Item>
+        {getFieldDecorator("incidentContacts", {
+          initialValue: datastore.incidentContacts,
+          rules: [
+            { validator: arrayOfEmailsValidator },
+          ],
+        })(
+          <TagsInput
+            className="full-width"
+            disabled={!hasPermission}
+            data-test="DatastoreSettingsFieldset.IncidentContacts"
+          />
+        )}
+      </Form.Item>
+    )}
     {datastore && datastore.hasOwnProperty("isEnabled") && (
       <Form.Item>
         <Card className="datastore-crawling-enabled">
