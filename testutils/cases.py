@@ -48,6 +48,7 @@ class UserFixtureMixin(object):
         cls.user = cls.users[cls.user_type]
         cls.staff = cls.users['MEMBER']
         cls.owner = cls.users['OWNER']
+        cls.team_list = [cls.staff, cls.owner]
 
 
 class ModelTestCase(TestCase):

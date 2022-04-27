@@ -7,6 +7,9 @@ from rest_framework.response import Response
 
 from app.api.v1.exceptions import NotFound
 
+from app.api.v1.authorization import groups
+from app.api.v1.authorization import users
+
 from app.api.v1.customfields import properties
 
 from app.api.v1.definitions import datastores
@@ -35,6 +38,8 @@ baseurls = [
 ]
 
 api = [
+    *groups.urlpatterns,
+    *users.urlpatterns,
     *datastores.urlpatterns,
     *schemas.urlpatterns,
     *tables.urlpatterns,

@@ -92,6 +92,12 @@ def allDataTypes(instance):
     return random.choice(choices)
 
 
+def uniqueName(instance):
+    """Generate a unique name.
+    """
+    return factory.Faker('company').generate() + str(random.randint(5, 1500))
+
+
 def underscoreObject(instance):
     """Create an underscore domain_word version.
     """
@@ -146,8 +152,7 @@ class WorkspaceFactory(factory.django.DjangoModelFactory):
 
 class GroupFactory(factory.django.DjangoModelFactory):
     workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
-
-    name = factory.Faker('company')
+    name = factory.LazyAttribute(uniqueName)
     description = factory.Faker('text', max_nb_chars=25)
 
     class Meta:

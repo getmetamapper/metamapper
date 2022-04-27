@@ -137,13 +137,15 @@ class GroupMembershipMixin(mixins.UpdateMutationMixin):
         if not instance:
             raise errors.PermissionDenied()
 
+        user = shortcuts.from_global_id(data['user_id'], id_only=True)
+
         return {
-            "instance": instance,
-            "data": {
-                "user": shortcuts.from_global_id(data['user_id'], id_only=True),
+            'instance': instance,
+            'data': {
+                'user': user,
             },
-            "context": {
-                "request": info.context,
+            'context': {
+                'request': info.context,
             },
         }
 

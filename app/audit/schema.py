@@ -7,11 +7,19 @@ import app.audit.models as models
 import utils.connections as connections
 import utils.shortcuts as shortcuts
 
+from django.db.models import JSONField
+
 from graphene_django import DjangoObjectType
+from graphene_django.converter import convert_django_field
 from graphene.types.generic import GenericScalar
 
 from app.authorization.mixins import AuthNode
 from app.authorization.permissions import WorkspaceTeamMembersOnly
+
+
+@convert_django_field.register(JSONField)
+def convert_json_field_to_string(field, registry=None):
+    return graphene.String()
 
 
 class AuditActivityActionObjectType(graphene.ObjectType):
