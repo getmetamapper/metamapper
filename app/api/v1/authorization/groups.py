@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
 
-from rest_framework import serializers
-
 from app.api.v1.authorization.users import UserSerializer
 from app.api.v1.exceptions import NotFound
 from app.api.v1.serializers import ApiSerializer

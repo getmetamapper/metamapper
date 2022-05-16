@@ -28,6 +28,7 @@ class TestCheckExpectationHandlers(cases.GraphQLTestCase):
       }
     }
     '''
+
     def test_execute(self):
         results = self.execute(self.statement)
         results = results['data'][self.operation]
@@ -52,6 +53,7 @@ class TestCheckIntervalOptions(cases.GraphQLTestCase):
       }
     }
     '''
+
     def test_execute(self):
         results = self.execute(self.statement)
         results = results['data'][self.operation]
@@ -82,6 +84,7 @@ class TestCheckAlertChannels(cases.GraphQLTestCase):
       }
     }
     '''
+
     def test_execute(self):
         results = self.execute(self.statement)
         results = results['data'][self.operation]
@@ -118,6 +121,7 @@ class TestGetChecks(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -219,6 +223,7 @@ class TestGetCheck(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -309,6 +314,7 @@ class TestGetCheckExpectations(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -407,6 +413,7 @@ class TestGetCheckExecutions(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -507,6 +514,7 @@ class TestGetCheckExecution(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -573,6 +581,7 @@ class TestGetCheckAlertRules(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -669,6 +678,7 @@ class TestGetCheckAlertRule(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -681,7 +691,10 @@ class TestGetCheckAlertRule(cases.GraphQLTestCase):
             started_at=datetime(2022, 1, 24, 1, 1, 1).astimezone(timezone.utc),
         )
         self.check_execution_id = helpers.to_global_id('CheckExecutionType', self.check_execution.id)
-        self.alert_rule = factories.CheckAlertRuleFactory(job=self.check, name='Test Alert', last_failure=self.check_execution)
+        self.alert_rule = factories.CheckAlertRuleFactory(
+            job=self.check,
+            name='Test Alert',
+            last_failure=self.check_execution)
         self.alert_rule_id = helpers.to_global_id('CheckAlertRuleType', self.alert_rule.id)
 
     def assertExpectedResults(self, results):

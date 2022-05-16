@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import collections
 import datetime as dt
-import factory
 
-import app.checks.models as models
 import app.checks.serializers as serializers
 
 import utils.shortcuts as shortcuts
@@ -319,8 +317,6 @@ class CheckExpectationSerializerTests(cases.SerializerTestCase):
         }
 
         self.assertDjangoRestFrameworkRules(test_case_dict)
-
-
 
 
 class CheckAlertRuleSerializerTests(cases.SerializerTestCase):

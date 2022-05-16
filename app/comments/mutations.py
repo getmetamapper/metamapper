@@ -11,7 +11,6 @@ import app.omnisearch.tasks as omnisearch
 
 import utils.errors as errors
 import utils.mixins.mutations as mixins
-import utils.shortcuts as shortcuts
 
 
 class CreateComment(mixins.CreateMutationMixin, relay.ClientIDMutation):

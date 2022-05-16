@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import importlib
+import os
 
 from django.conf import settings
 from utils.shortcuts import load_class

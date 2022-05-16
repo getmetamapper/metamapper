@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import bleach
-import functools
 import importlib
 import os
 
@@ -36,10 +35,10 @@ def humanize_timedelta(delta):
     for start in range(len(dhms)):
         if not dhms[start].startswith('0'):
             break
-    for end in range(len(dhms)-1, -1, -1):
+    for end in range(len(dhms) - 1, -1, -1):
         if not dhms[end].startswith('0'):
             break
-    return ', '.join(dhms[start:end+1])
+    return ', '.join(dhms[start:end + 1])
 
 
 def load_class(module_name, class_name):

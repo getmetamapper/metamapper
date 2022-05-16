@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import sshtunnel
-import sys
-import pandas as pd
 import paramiko
 
 from functools import wraps

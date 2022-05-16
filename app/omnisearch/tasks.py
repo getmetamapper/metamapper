@@ -2,7 +2,6 @@
 import app.comments.models as comment_models
 import app.definitions.models as definition_models
 import app.omnisearch.backends.elastic_backend as elastic_backend
-import app.omnisearch.constants as omnisearch_constants
 
 import utils.logging as logging
 

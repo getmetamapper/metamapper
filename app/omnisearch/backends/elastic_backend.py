@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import collections
 import time
 
 from django.conf import settings
@@ -13,8 +12,6 @@ from elasticsearch_dsl import Search, A
 
 import app.definitions.permissions as definition_permissions
 import app.definitions.models as definition_models
-
-from django.utils.functional import cached_property
 
 
 class ElasticBackend(base.BaseSearchBackend):

@@ -2,7 +2,7 @@
 from django.conf.urls import url
 from django.contrib.contenttypes.models import ContentType
 
-from rest_framework import serializers, status
+from rest_framework import serializers
 
 from app.api.v1.exceptions import NotFound, ParameterValidationFailed
 from app.api.v1.serializers import ApiSerializer

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import graphene
-import graphene.relay as relay
 
 import app.definitions.permissions as permissions
 
@@ -15,7 +14,6 @@ import app.checks.tasks.pass_values as pass_values
 from app.authorization.fields import AuthConnectionField
 from app.authorization import permissions as auth_perms
 from app.definitions.models import Datastore
-from graphene.types.generic import GenericScalar
 
 
 class Query(graphene.ObjectType):

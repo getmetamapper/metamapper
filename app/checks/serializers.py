@@ -10,9 +10,7 @@ from app.checks.models import Check, CheckAlertRule, CheckExpectation, CheckQuer
 from app.checks.tasks import expectations, pass_values
 from app.checks.tasks.context import CheckContext
 
-from app.definitions.models import Datastore
 from app.inspector import service as inspector
-from app.inspector.errors import OutOfMemoryError
 
 from utils.mixins.serializers import MetamapperSerializer
 from utils.shortcuts import epoch_now, from_global_id

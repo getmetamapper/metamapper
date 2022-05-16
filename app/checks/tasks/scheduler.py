@@ -23,9 +23,11 @@ def create_executions(self, countdown_in_minutes=0):
     expression = ExpressionWrapper(Now() - F('interval'), output_field=DateTimeField())
 
     checks = (
-        Check.objects.annotate(last_run_ts=Max('executions__created_at'))
-                        .filter(is_enabled=True)
-                        .filter(Q(last_run_ts__lte=expression) | Q(last_run_ts__isnull=True))
+        Check
+        .objects
+        .annotate(last_run_ts=Max('executions__created_at'))
+        .filter(is_enabled=True)
+        .filter(Q(last_run_ts__lte=expression) | Q(last_run_ts__isnull=True))
     )
 
     self.log.info(

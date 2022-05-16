@@ -8,12 +8,9 @@ import app.definitions.permissions as definition_permissions
 
 import app.checks.schema as schema
 import app.checks.serializers as serializers
-import app.checks.models as models
 
-import utils.errors as errors
 import utils.graphql.scalars as scalars
 import utils.mixins.mutations as mixins
-import utils.shortcuts as shortcuts
 
 
 class CreateCheck(mixins.CreateMutationMixin, relay.ClientIDMutation):

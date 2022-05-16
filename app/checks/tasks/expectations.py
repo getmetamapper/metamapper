@@ -75,7 +75,7 @@ class AssertColumnToBe(BaseExpectation):
 
     def get_observed_value(self):
         col = self.inputs['column']
-        if not col in self.dataframe.columns or self.dataframe.empty:
+        if col not in self.dataframe.columns or self.dataframe.empty:
             return None
         return self._get_observed_value(col)
 
@@ -162,4 +162,3 @@ class AssertMinValueOfColumnToBe(AssertColumnToBe):
 
     def _get_observed_value(self, column):
         return self.dataframe[column].min(skipna=self.inputs['skipna'])
-

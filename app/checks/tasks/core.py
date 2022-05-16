@@ -5,7 +5,7 @@ from django.db.models.functions import Now
 
 from app.checks.emails import EmailAlert
 from app.checks.models import Check, CheckAlertRule
-from app.checks.models import CheckExpectationResult, CheckExecution
+from app.checks.models import CheckExecution
 from app.checks.tasks.context import CheckContext
 from app.checks.tasks.executor import CheckExecutor
 
@@ -56,9 +56,10 @@ def dispatch_alerts(self, check_id, epoch):
 
     expressions = ExpressionWrapper(Now() - F('interval'), output_field=DateTimeField())
     alert_rules = (
-        CheckAlertRule.objects
-            .filter(job_id=check_id)
-            .filter(Q(last_failure__isnull=True) | Q(last_failure__created_at__lte=expressions))
+        CheckAlertRule
+        .objects
+        .filter(job_id=check_id)
+        .filter(Q(last_failure__isnull=True) | Q(last_failure__created_at__lte=expressions))
     )
 
     # If no alert rules are found, then we do not need to send alerts.
@@ -81,4 +82,3 @@ def dispatch_alerts(self, check_id, epoch):
         alert.deliver()
 
     check.alert_rules.update(last_failure=check_execution)
-

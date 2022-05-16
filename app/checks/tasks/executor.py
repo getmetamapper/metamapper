@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 
-from django.conf import settings
-
 import app.checks.models as models
 import app.inspector.service as inspector
 
@@ -85,9 +83,8 @@ class CheckExecutor(object):
         except self.engine.catchable_errors as exc:
             error = str(exc)
         except Exception as exc:
-            logger.error(str(exc))
-        except:
             error = 'An unexpected error has occurred.'
+            logger.error(str(exc))
 
         self.check_execution.error = error
         self.check_execution.mark_as_finished(fails_count=fails)

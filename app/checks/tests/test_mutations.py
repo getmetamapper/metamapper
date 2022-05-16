@@ -63,6 +63,7 @@ class CreateCheckTests(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -357,6 +358,7 @@ class PreviewCheckQueryTests(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -497,6 +499,7 @@ class CreateCheckExpectationTests(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -564,6 +567,7 @@ class DeleteCheckExpectationTests(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -644,6 +648,7 @@ class CreateCheckAlertRuleTests(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -677,7 +682,6 @@ class CreateCheckAlertRuleTests(cases.GraphQLTestCase):
             'alertRule': {'name': variables['name']},
             'errors': None,
         })
-
 
     @decorators.as_someone(['OWNER'])
     def test_invalid_channel_config(self):
@@ -754,6 +758,7 @@ class UpdateCheckAlertRuleTests(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 
@@ -847,6 +852,7 @@ class DeleteCheckAlertRuleTests(cases.GraphQLTestCase):
       }
     }
     '''
+
     def setUp(self):
         super().setUp()
 

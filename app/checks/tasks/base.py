@@ -25,7 +25,7 @@ class InputFieldsMixin(object):
         for k, v in cls.Input.__dict__.items():
             if isinstance(v, Field):
                 d[k] = v
-        return [(k,v) for k, v in d.items()]
+        return [(k, v) for k, v in d.items()]
 
     @property
     @functools.lru_cache(maxsize=None)

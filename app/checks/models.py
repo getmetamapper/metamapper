@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 from datetime import timedelta
 from jinja2 import Template
 
@@ -11,7 +10,7 @@ from app.authentication.models import Workspace, User
 from app.definitions.models import Datastore
 
 from utils.delete.models import SoftDeletionModel
-from utils.shortcuts import epoch_now, load_class
+from utils.shortcuts import epoch_now
 from utils.mixins.models import StringPrimaryKeyModel, TimestampedModel
 
 

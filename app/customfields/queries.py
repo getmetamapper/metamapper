@@ -2,8 +2,6 @@
 import graphene
 import graphene.relay as relay
 
-import utils.shortcuts as shortcuts
-
 from app.customfields.models import CustomField
 from app.customfields.schema import CustomFieldType
 from app.customfields.scalars import CustomPropScalar
