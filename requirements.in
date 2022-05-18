@@ -15,8 +15,8 @@ django==3.2.12
 djangorestframework
 djangorestframework-jwt
 dnspython
-elasticsearch
-elasticsearch-dsl
+elasticsearch==7.9.1
+elasticsearch-dsl==7.3.0
 google-cloud-bigquery
 graphene-django>=2.9.0
 gunicorn
