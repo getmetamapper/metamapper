@@ -37,6 +37,10 @@ app.conf.beat_schedule = {
         'task': 'app.revisioner.tasks.v1.scheduler.queue_runs',
         'schedule': crontab(minute='15,45'),
     },
+    'detect-revisioner-run-timeouts': {
+        'task': 'app.revisioner.tasks.v1.scheduler.detect_run_timeouts',
+        'schedule': crontab(minute='0', hour='*/1'),
+    },
     'create-check-executions': {
         'task': 'app.checks.tasks.scheduler.create_executions',
         'schedule': crontab(minute='*/1'),

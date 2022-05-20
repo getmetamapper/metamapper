@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
+import datetime as dt
 import random
 
 from django.db.models import Q, F, Max
 from django.db.models import DateTimeField, ExpressionWrapper
 from django.db.models.functions import Now
+from django.utils import timezone
 
 from metamapper.celery import app
 from utils import logging
 
 from app.definitions.models import Datastore
 
-from app.revisioner.models import Run
+from app.revisioner.models import Run, RunTask
 from app.revisioner.tasks.v1 import core
 
 
@@ -82,3 +84,27 @@ def queue_runs(self, datastore_slug=None, countdown_in_minutes=15, *args, **kwar
         # Revisioner run starts within 15 minutes of this task call. We introduce randomness
         # so that we don't have a thundering herd...
         core.start_run.apply_async(args=[run.id], countdown=random.randint(0, (60 * countdown_in_minutes)))
+
+
+@app.task(bind=True)
+@logging.task_logger(__name__)
+def detect_run_timeouts(self, minutes=60, *args, **kwargs):
+    """Garbage collection. Clears out runs if they haven't finished running after 60 minutes.
+    """
+    date_from = timezone.now() - dt.timedelta(minutes=minutes)
+    runs = Run.objects.filter(created_at__lte=date_from, finished_at=None)
+
+    for run in runs:
+        unfinished_tasks = (
+            RunTask.objects.filter(run_id=run.id, status=RunTask.PENDING)
+        )
+
+        for task in unfinished_tasks:
+            app.control.revoke(task.meta_task_id)
+
+        unfinished_tasks.update(status=RunTask.REVOKED)
+
+        run.mark_as_finished()
+
+        if run.failed:
+            core.alert_incident_contacts.apply_async(args=[run.datastore_id, run.status])
