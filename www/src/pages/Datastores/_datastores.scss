@@ -320,19 +320,8 @@
 .asset-owner-delete:hover {
   cursor: pointer;
 }
-.table-revision {
-  border-bottom: 1px solid #e8e8e8;
-  padding: 12px;
-}
-.modified-table-revision {
-  .ant-tag-red {
-    text-decoration: line-through;
-  }
-}
-.revisions {
-  .ant-drawer-body {
-    padding: 0;
-  }
+.queue-revisioner-run {
+  margin-bottom: 24px;
 }
 .ssh-tunnel-enabled > .ant-card-body {
   line-height: 24px;

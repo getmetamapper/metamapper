@@ -150,3 +150,6 @@ errors:
     emails:
       item_invalid: One of the provided email addresses is invalid.
       empty: You must provide at least one email.
+  Run:
+    finished:
+      invalid: Cannot while another run is in progress.

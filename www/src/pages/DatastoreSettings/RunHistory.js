@@ -7,7 +7,8 @@ import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import RunHistoryTable from "app/Datastores/RunHistory/RunHistoryTable"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGetDatastoreRunHistory from "graphql/withGetDatastoreRunHistory"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
+import QueueRevisionerRun from "app/Datastores/RunHistory/QueueRevisionerRun"
 
 class RunHistory extends Component {
   constructor(props) {
@@ -58,6 +59,7 @@ class RunHistory extends Component {
       >
         <Row>
           <Col span={16} offset={4}>
+            <QueueRevisionerRun datastore={datastore} />
             <RunHistoryTable runs={runHistory} />
           </Col>
         </Row>

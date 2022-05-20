@@ -59,6 +59,7 @@ class Mutation(authentication.Mutation,
                customfields.Mutation,
                definitions.Mutation,
                sso.Mutation,
+               revisioner.Mutation,
                graphene.ObjectType):
     """Global Mutation accessor.
     """
