@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import random
 
-from datetime import timedelta
-from django.db.models import F, Max
-from django.utils import timezone
+from django.db.models import Q, F, Max
+from django.db.models import DateTimeField, ExpressionWrapper
+from django.db.models.functions import Now
 
 from metamapper.celery import app
 from utils import logging
@@ -19,21 +19,23 @@ __all__ = ['create_runs', 'queue_runs']
 
 @app.task(bind=True)
 @logging.task_logger(__name__)
-def create_runs(self, datastore_slug=None, hours=1, *args, **kwargs):
+def create_runs(self, datastore_slug=None, *args, **kwargs):
     """Scheduled task to create a record for each new run. Runs every 30 minutes.
     """
-    date_from = timezone.now() - timedelta(hours=hours)
-
+    expression = ExpressionWrapper(Now() - F('interval'), output_field=DateTimeField())
     runs_cache = []
     datastores = (
-        Datastore.objects.annotate(last_run_ts=Max('run_history__created_at'))
-                         .filter(run_history__created_at=F('last_run_ts'))
-                         .filter(last_run_ts__lte=date_from)
-                         .filter(is_enabled=True)
+        Datastore
+        .objects
+        .annotate(last_run_ts=Max('run_history__created_at'))
+        .filter(is_enabled=True)
     )
 
+    # If we are singling out a datastore, then we do not care about run history.
     if datastore_slug:
         datastores = datastores.filter(slug__iexact=datastore_slug)
+    else:
+        datastores = datastores.filter(Q(last_run_ts__lte=expression) | Q(last_run_ts__isnull=True))
 
     self.log.info(
         'Found {0} datastore(s)'.format(len(datastores))

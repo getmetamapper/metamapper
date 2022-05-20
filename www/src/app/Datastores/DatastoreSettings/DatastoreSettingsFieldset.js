@@ -1,11 +1,13 @@
 import React from "react"
-import { Card, Col, Form, Input, Row, Switch } from "antd"
+import { Card, Col, Form, Input, Row, Select, Switch } from "antd"
 import { arrayOfEmailsValidator } from "lib/validators"
 import FormLabel from "app/Common/FormLabel"
 import TagsInput from "app/Common/TagsInput"
 
 const DatastoreSettingsFieldset = ({
   datastore,
+  datastoreIntervalOptions,
+  intervalOptions,
   form: { getFieldDecorator },
   hasPermission,
 }) => (
@@ -41,7 +43,7 @@ const DatastoreSettingsFieldset = ({
     {datastore && datastore.hasOwnProperty("isEnabled") && (
       <Form.Item>
         <FormLabel
-          label="Unique Key"
+          label="Datastore ID"
           helpText="Unique reference of this datastore. Useful for API interactions."
         />
         <Input
@@ -69,6 +71,30 @@ const DatastoreSettingsFieldset = ({
             disabled={!hasPermission}
             data-test="DatastoreSettingsFieldset.IncidentContacts"
           />
+        )}
+      </Form.Item>
+    )}
+    {datastore && datastore.hasOwnProperty("isEnabled") && (
+      <Form.Item>
+        <FormLabel
+          label="Schedule Interval"
+          helpText="How often we will sync this datastore."
+        />
+        {getFieldDecorator("interval", {
+          initialValue: datastore.interval.value,
+          rules: [],
+        })(
+          <Select
+            type="text"
+            disabled={!hasPermission}
+            data-test="DatastoreSettingsFieldset.ScheduleInterval"
+          >
+            {datastoreIntervalOptions.map(({ label, value }) => (
+              <Select.Option key={value}>
+                {label}
+              </Select.Option>
+            ))}
+          </Select>
         )}
       </Form.Item>
     )}
@@ -105,6 +131,7 @@ const DatastoreSettingsFieldset = ({
 
 DatastoreSettingsFieldset.defaultProps = {
   datastore: {},
+  datastoreIntervalOptions: [],
 }
 
 export default DatastoreSettingsFieldset

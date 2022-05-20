@@ -453,6 +453,9 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             'is_enabled': [
                 {'code': 'nulled', 'value': None},
             ],
+            'interval': [
+                {'code': 'invalid', 'value': '01:30:00'},
+            ],
             'short_desc': [
                 {
                     'code': 'max_length',
@@ -839,6 +842,9 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             ],
             'is_enabled': [
                 {'code': 'nulled', 'value': None},
+            ],
+            'interval': [
+                {'code': 'invalid', 'value': '01:30:00'},
             ],
             'short_desc': [
                 {

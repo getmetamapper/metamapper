@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
+
 from django.contrib.contenttypes.fields import ContentType, GenericRelation
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.postgres.fields import ArrayField
-
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 
@@ -102,6 +103,15 @@ class Datastore(StringPrimaryKeyModel,
         (HIVE, 'Hive Metastore'),
     )
 
+    INTERVAL_CHOICES = [
+        timedelta(hours=1),
+        timedelta(hours=2),
+        timedelta(hours=3),
+        timedelta(hours=6),
+        timedelta(hours=12),
+        timedelta(hours=24),
+    ]
+
     SUPPORTED_HIVE_EXTERNAL_METASTORES = [
         MYSQL,
         POSTGRESQL,
@@ -142,6 +152,7 @@ class Datastore(StringPrimaryKeyModel,
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
     is_enabled = models.BooleanField(default=True)
     version = models.CharField(max_length=255, null=True, blank=False)
+    interval = models.DurationField(default=timedelta(hours=24))
 
     engine = models.CharField(max_length=16, choices=ENGINE_CHOICES, null=False, blank=False)
     host = models.CharField(max_length=255, null=False, blank=False)

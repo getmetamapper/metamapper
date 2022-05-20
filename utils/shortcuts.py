@@ -38,7 +38,8 @@ def humanize_timedelta(delta):
     for end in range(len(dhms) - 1, -1, -1):
         if not dhms[end].startswith('0'):
             break
-    return ', '.join(dhms[start:end + 1])
+    r = ', '.join(dhms[start:end + 1])
+    return '24 hours' if r == '1 day' else r
 
 
 def load_class(module_name, class_name):

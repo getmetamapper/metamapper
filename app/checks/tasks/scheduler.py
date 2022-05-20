@@ -26,8 +26,8 @@ def create_executions(self, countdown_in_minutes=0):
         Check
         .objects
         .annotate(last_run_ts=Max('executions__created_at'))
-        .filter(is_enabled=True)
         .filter(Q(last_run_ts__lte=expression) | Q(last_run_ts__isnull=True))
+        .filter(is_enabled=True)
     )
 
     self.log.info(

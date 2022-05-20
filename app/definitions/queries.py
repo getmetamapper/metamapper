@@ -21,6 +21,8 @@ from app.authorization import permissions as auth_perms
 class Query(graphene.ObjectType):
     """Queries related to the definitions models.
     """
+    datastore_interval_options = graphene.List(schema.DatastoreIntervalType)
+
     datastores = AuthConnectionField(
         type=schema.DatastoreType,
         search=graphene.String(required=False),
@@ -87,6 +89,12 @@ class Query(graphene.ObjectType):
         schema_name=graphene.String(required=True),
         table_name=graphene.String(required=True),
     )
+
+    @auth_perms.login_required
+    def resolve_datastore_interval_options(self, info):
+        """Retrieve the datastore interval options.
+        """
+        return models.Datastore.INTERVAL_CHOICES
 
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
     def resolve_datastores(self, info, search=None, *args, **kwargs):

@@ -8,6 +8,33 @@ import testutils.factories as factories
 import testutils.helpers as helpers
 
 
+class TestDatastoreIntervalOptions(cases.GraphQLTestCase):
+    """Test retrieval of the check interval options.
+    """
+    operation = 'datastoreIntervalOptions'
+    statement = '''
+    query GetDatastoreIntervalOptions {
+      datastoreIntervalOptions {
+        label
+        value
+      }
+    }
+    '''
+
+    def test_execute(self):
+        results = self.execute(self.statement)
+        results = results['data'][self.operation]
+
+        self.assertEqual(results, [
+            {'label': '1 hour', 'value': '1:00:00'},
+            {'label': '2 hours', 'value': '2:00:00'},
+            {'label': '3 hours', 'value': '3:00:00'},
+            {'label': '6 hours', 'value': '6:00:00'},
+            {'label': '12 hours', 'value': '12:00:00'},
+            {'label': '24 hours', 'value': '1 day, 0:00:00'},
+        ])
+
+
 class TestGetDatastores(cases.GraphQLTestCase):
     """Test cases for listing all datastores in a workspace.
     """

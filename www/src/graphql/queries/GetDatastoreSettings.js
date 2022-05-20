@@ -10,6 +10,10 @@ export default gql`
       tags
       version
       isEnabled
+      interval {
+        label
+        value
+      }
       objectPermissionsEnabled
       shortDesc
       disabledDatastoreProperties

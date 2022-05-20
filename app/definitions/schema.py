@@ -207,6 +207,19 @@ class SSHTunnelConfigType(graphene.ObjectType):
     public_key = graphene.String()
 
 
+class DatastoreIntervalType(graphene.ObjectType):
+    """GraphQL representation of a Datastore interval.
+    """
+    label = graphene.String()
+    value = graphene.String()
+
+    def resolve_label(value, info):
+        return shortcuts.humanize_timedelta(value)
+
+    def resolve_value(value, info):
+        return value
+
+
 class DatastoreType(AuthNode, DjangoObjectType):
     """GraphQL representation of a Datastore.
     """
@@ -218,6 +231,8 @@ class DatastoreType(AuthNode, DjangoObjectType):
     ssh_config = graphene.Field(SSHTunnelConfigType)
 
     schemas = graphene.List(SchemaType, first=graphene.Int(required=False))
+
+    interval = graphene.Field(DatastoreIntervalType)
 
     latest_run = graphene.Field(RunType)
 
@@ -235,6 +250,7 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'slug',
             'is_enabled',
             'version',
+            'interval',
             'short_desc',
             'tags',
             'jdbc_connection',
@@ -299,7 +315,7 @@ class DatastoreUserGranteeType(graphene.ObjectType):
     def resolve_type(instance, info):
         """The class type of the object.
         """
-        return "user"
+        return 'user'
 
     def resolve_privileges(instance, info):
         return sorted(instance['privileges'])

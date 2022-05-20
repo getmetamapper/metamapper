@@ -65,7 +65,7 @@ class TestCheckIntervalOptions(cases.GraphQLTestCase):
             {'label': '4 hours', 'value': '4:00:00'},
             {'label': '6 hours', 'value': '6:00:00'},
             {'label': '12 hours', 'value': '12:00:00'},
-            {'label': '1 day', 'value': '1 day, 0:00:00'},
+            {'label': '24 hours', 'value': '1 day, 0:00:00'},
             {'label': '3 days', 'value': '3 days, 0:00:00'},
             {'label': '7 days', 'value': '7 days, 0:00:00'},
             {'label': '30 days', 'value': '30 days, 0:00:00'},

@@ -131,6 +131,7 @@ class AuditableModel(DirtyModel):
         """Get all of the current values for a list of fields.
         """
         fields = fields or self.dirty_fields()
+        fields = [f for f in fields if f in self.audited_fields]
         return {
             f: getattr(self, f) for f in fields
         }

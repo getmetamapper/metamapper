@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime as dt
 import rest_framework.serializers as serializers
 
 import app.audit.decorators as audit
@@ -277,6 +278,8 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         required=False,
     )
 
+    interval = serializers.DurationField(default=dt.timedelta(hours=24))
+
     is_enabled = serializers.BooleanField(default=True)
     short_desc = serializers.CharField(
         max_length=140,
@@ -303,6 +306,7 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
             'tags',
             'is_enabled',
             'short_desc',
+            'interval',
             'incident_contacts',
             'engine',
             'username',
@@ -335,6 +339,13 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         """We should remove any duplicate contacts that exist.
         """
         return list(set(emails)) if isinstance(emails, (list,)) else []
+
+    def validate_interval(self, interval):
+        """We should confirm that the interval is acceptable.
+        """
+        if interval not in models.Datastore.INTERVAL_CHOICES:
+            raise serializers.ValidationError('Interval is not valid.')
+        return interval
 
     def validate(self, data):
         """Run some validation checks against the payload as a whole.
@@ -375,6 +386,7 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         instance.tags = validated_data.get('tags', instance.tags)
         instance.is_enabled = validated_data.get('is_enabled', instance.is_enabled)
         instance.short_desc = validated_data.get('short_desc', instance.short_desc)
+        instance.interval = validated_data.get('interval', instance.interval)
         instance.incident_contacts = validated_data.get('incident_contacts', instance.incident_contacts)
 
         instance.username = validated_data.get('username', instance.username)
