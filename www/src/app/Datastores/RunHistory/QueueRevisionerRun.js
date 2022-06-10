@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react"
 import { graphql, compose } from "react-apollo"
-import { Alert, Card } from "antd"
+import { Alert } from "antd"
 import { withOwnersOnly } from "hoc/withPermissionsRequired"
 import RestrictedButton from "app/Common/RestrictedButton"
 import QueueRevisionerRunMutation from "graphql/mutations/QueueRevisionerRun"

@@ -3,9 +3,10 @@ import app.notifications.tasks as email
 
 
 class EmailAlert(object):
-    def __init__(self, alert_rule, check, datastore, workspace):
+    def __init__(self, alert_rule, check, error, datastore, workspace):
         self.alert_rule = alert_rule
         self.check = check
+        self.error = error
         self.datastore = datastore
         self.workspace = workspace
 
@@ -38,8 +39,13 @@ class EmailAlert(object):
             mailer_kwargs = {
                 'namespace': 'checks',
                 'template': 'check_failed',
-                'subject': f'Metamapper check failed: {self.check_name} [{self.check_timestamp}]',
+                'subject': f'Metamapper check failed: {self.check_name} <{self.check_timestamp}>',
                 'to_email': to_email,
-                'template_dict': {},
+                'template_dict': {
+                    'check_id': self.check.id,
+                    'datastore_slug': self.datastore.slug,
+                    'workspace_slug': self.workspace.slug,
+                    'error': self.error,
+                },
             }
             email.deliver.delay(**mailer_kwargs)

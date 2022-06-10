@@ -70,9 +70,11 @@ def dispatch_alerts(self, check_id, epoch):
         'Alerting on check: %s/%s' % (check_id, epoch)
     )
 
+    error = '%s out of %s expectations were not met.' % (len(failed_expectations), len(expectation_results))
     check = Check.objects.get(id=check_id)
     check_alert_kwargs = {
         'check': check,
+        'error': check_execution.error or error,
         'datastore': check.datastore,
         'workspace': check.workspace,
     }
