@@ -43,6 +43,7 @@ class EmailAlert(object):
                 'to_email': to_email,
                 'template_dict': {
                     'check_id': self.check.id,
+                    'check_name': self.check_name,
                     'datastore_slug': self.datastore.slug,
                     'workspace_slug': self.workspace.slug,
                     'error': self.error,
