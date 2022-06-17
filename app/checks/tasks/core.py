@@ -74,7 +74,8 @@ def dispatch_alerts(self, check_id, epoch):
     check = Check.objects.get(id=check_id)
     check_alert_kwargs = {
         'check': check,
-        'error': check_execution.error or error,
+        'check_execution': check_execution,
+        'check_error': check_execution.error or error,
         'datastore': check.datastore,
         'workspace': check.workspace,
     }

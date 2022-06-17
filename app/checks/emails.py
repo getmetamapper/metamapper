@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import app.notifications.tasks as email
+import utils.shortcuts as shortcuts
 
 
 class EmailAlert(object):
-    def __init__(self, alert_rule, check, error, datastore, workspace):
+    def __init__(self, alert_rule, check, check_execution, check_error, datastore, workspace):
         self.alert_rule = alert_rule
         self.check = check
-        self.error = error
+        self.check_execution = check_execution
+        self.check_error = check_error
         self.datastore = datastore
         self.workspace = workspace
 
@@ -17,6 +19,10 @@ class EmailAlert(object):
     @property
     def check_timestamp(self):
         return self.check.created_at.strftime('%Y-%m-%dT%H:%M:%S')
+
+    @property
+    def selected_execution(self):
+        return shortcuts.to_global_id('CheckExecutionType', self.check_execution.id)
 
     @property
     def recipient_emails(self):
@@ -42,11 +48,12 @@ class EmailAlert(object):
                 'subject': f'Metamapper check failed: {self.check_name} <{self.check_timestamp}>',
                 'to_email': to_email,
                 'template_dict': {
+                    'check_error': self.check_error,
                     'check_id': self.check.id,
                     'check_name': self.check_name,
                     'datastore_slug': self.datastore.slug,
+                    'selected_execution': self.selected_execution,
                     'workspace_slug': self.workspace.slug,
-                    'error': self.error,
                 },
             }
             email.deliver.delay(**mailer_kwargs)

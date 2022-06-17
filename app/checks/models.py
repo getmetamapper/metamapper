@@ -162,7 +162,7 @@ class CheckExpectation(SoftDeletionModel, TimestampedModel):
         """Load handler and evaluate if the expectation is met.
         """
         pass_value_class = self.get_pass_value_class()
-        pass_value = pass_value_class(**self.pass_value_input)
+        pass_value = pass_value_class(self, **self.pass_value_input)
         handler_class = self.get_handler_class()
         handler = handler_class(dataframe, pass_value, **self.handler_input)
         handler.do_check()
@@ -281,7 +281,7 @@ class CheckExpectationResult(models.Model):
     expectation = models.ForeignKey(
         to=CheckExpectation,
         on_delete=models.CASCADE,
-        related_name='+',
+        related_name='past_results',
     )
 
     passed = models.BooleanField()

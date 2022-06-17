@@ -44,6 +44,23 @@ export const ColumnField = ({ form, name, options, queryColumns }) => (
   </Fragment>
 )
 
+
+export const ColumnsField = ({ form, name, options, queryColumns }) => (
+  <Fragment>
+    {form.getFieldDecorator(name, {
+      rules: [{ required: true, message: "This field is required." }],
+    })(
+      <Select mode="multiple">
+        {map(queryColumns, (choice) => (
+          <Select.Option value={choice}>
+            {choice}
+          </Select.Option>
+        ))}
+      </Select>
+    )}
+  </Fragment>
+)
+
 export const IntegerField = ({ form, name, options, queryColumns }) => (
   <Fragment>
     {form.getFieldDecorator(name, {
@@ -76,5 +93,6 @@ export default {
   'CharField': CharField,
   'ChoiceField': ChoiceField,
   'ColumnField': ColumnField,
+  'ColumnsField': ColumnsField,
   'IntegerField': IntegerField,
 }

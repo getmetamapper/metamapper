@@ -2,7 +2,7 @@
 {% block content %}
 <p>Detected the following error for the <b>{{ check_name }}</b> check in the workspace <b>{{ workspace_slug }}</b>:
 
-<p style="padding: 12px; background-color: #f8f9fa; font-style: italic;">{{ error }}</p>
+<p style="padding: 12px; background-color: #f8f9fa; font-style: italic;">{{ check_error }}</p>
 
-<p>To debug this error, <a href="{{ domain }}/{{ workspace_slug }}/datastores/{{ datastore_slug }}/checks/{{ check_id }}">log in to Metamapper</a> to view the check status page.</p>
+<p>To debug this error, <a href="{{ domain }}/{{ workspace_slug }}/datastores/{{ datastore_slug }}/checks/{{ check_id }}?selectedExecution={{ selected_execution }}">log in to Metamapper</a> to view the check status page.</p>
 {% endblock %}

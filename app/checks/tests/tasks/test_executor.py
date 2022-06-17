@@ -78,6 +78,7 @@ class CheckExecutorTests(assertions.InstanceAssertionsMixin, test.TestCase):
         executor = CheckExecutor(execution, upload_archive=False)
         executor.execute(context=self.context)
 
+        self.assertTrue(mock_get_dataframe.called)
         self.assertEqual(
             len(self.EXPECTATIONS_FIXTURES),
             execution.expectation_results.filter(passed=False).count())

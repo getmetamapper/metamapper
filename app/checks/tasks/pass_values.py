@@ -1,11 +1,24 @@
 # -*- coding: utf-8 -*-
+from django.db.models import Avg, Count, Max, Min, Sum
+
 from app.checks.tasks.base import PassValue
 from app.checks.tasks import fields
 
-from utils.shortcuts import get_module_class_validator, load_class
+from utils.shortcuts import epoch_now, get_module_class_validator, load_class
 
 
-__all__ = ['Constant']
+__all__ = ['Constant', 'Rollup']
+
+
+AGGREGATOR_MAPPING = {
+    'average': Avg,
+    'count': Count,
+    'maximum': Max,
+    'minimum': Min,
+    'sum': Sum,
+}
+
+AGGREGATOR_CHOICES = [k for k in AGGREGATOR_MAPPING.keys()]
 
 
 validator = get_module_class_validator(__name__, __all__)
@@ -49,3 +62,30 @@ class Constant(PassValue):
 
     def get(self):
         return self.inputs['value']
+
+
+class Rollup(PassValue):
+    """Pass with an aggregation of past run outputs.
+    """
+    class Input:
+        interval = fields.IntegerField(
+            label='Interval',
+            help_text='Time (in seconds) of past observed values to consider.')
+        aggregator = fields.ChoiceField(
+            label='Aggregator',
+            choices=AGGREGATOR_CHOICES,
+            help_text='Defines how observed values are aggregated within a given time interval.')
+
+    class Meta:
+        info = 'a rollup of previously observed values'
+        desc = '{{ aggregator }} observed value over the past {{ interval }} seconds'
+
+    @property
+    def aggregator(self):
+        return AGGREGATOR_MAPPING[self.inputs['aggregator']]
+
+    def get(self):
+        within = epoch_now() - self.inputs['interval']
+        result = self.expectation.past_results.filter(epoch__gte=within)
+        result = result.aggregate(result=self.aggregator('observed_value'))
+        return result['result']

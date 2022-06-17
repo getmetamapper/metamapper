@@ -22,6 +22,11 @@ class ColumnField(CharField):
         return None
 
 
+class ColumnsField(serializers.ListField):
+    def get_options(self):
+        return None
+
+
 class BooleanField(serializers.BooleanField):
     def get_options(self):
         return None

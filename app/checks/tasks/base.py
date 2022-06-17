@@ -48,7 +48,8 @@ class InputFieldsMixin(object):
 class PassValue(InputFieldsMixin):
     """Base class for `pass_value` attributes.
     """
-    def __init__(self, **input_data):
+    def __init__(self, expectation, **input_data):
+        self.expectation = expectation
         self.input_data = input_data
 
     def get(self):
@@ -107,4 +108,6 @@ class BaseExpectation(InputFieldsMixin):
         """Execute the check against the provided dataframe.
         """
         self._observed_value = self.get_observed_value()
-        self._passed = self.evaluate(self.observed_value, self.expected_value)
+        self._passed = True
+        if self.expected_value is not None:
+            self._passed = self.evaluate(self.observed_value, self.expected_value)

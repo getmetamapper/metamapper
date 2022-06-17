@@ -102,7 +102,7 @@ class CheckSetupForm extends Component {
 
     if (!errors && query) {
       this.props.form.setFieldsValue({ queryId: query.id })
-      this.setState({ query, queryResults })
+      this.setState({ query, queryResults, sqlException: null })
     }
 
     if (sqlException) {

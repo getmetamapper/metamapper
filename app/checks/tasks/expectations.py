@@ -9,6 +9,7 @@ from utils.shortcuts import get_module_class_validator, load_class
 
 __all__ = [
     'AssertRowCountToBe',
+    'AssertCountOfDuplicateValuesOfColumnToBe',
     'AssertFirstValueOfColumnToBe',
     'AssertAvgValueOfColumnToBe',
     'AssertMinValueOfColumnToBe',
@@ -162,3 +163,46 @@ class AssertMinValueOfColumnToBe(AssertColumnToBe):
 
     def _get_observed_value(self, column):
         return self.dataframe[column].min(skipna=self.inputs['skipna'])
+
+
+class AssertCountOfDuplicateValuesOfColumnToBe(AssertColumnToBe):
+    """Compare against the count of duplicate values in a column.
+    """
+    class Input:
+        columns = fields.ColumnsField(
+            label='Columns',
+            child=fields.ColumnField(max_length=255),
+            help_text='The query column name to use in the expectation.')
+        op = fields.ChoiceField(
+            label='Operation',
+            choices=OPERATOR_CHOICES,
+            help_text='The operation to use when comparing the outputted and expected values.')
+        skipna = fields.BooleanField(
+            label='Skip NULLs',
+            default=True,
+            help_text='Remove NULL values from result prior to testing.')
+
+    class Meta:
+        name = 'Duplicate Rows'
+        info = 'Compare against the count of unique duplicate rows'
+        desc = 'Expect the count of unique duplicate values of the `{{ columns | join(",") }}` column(s) to be {{ op }}'
+
+    def get_observed_value(self):
+        columns = self.inputs['columns']
+        if self.dataframe.empty:
+            return None
+        if any(col not in self.dataframe.columns for col in columns):
+            return None
+        return self._get_observed_value(columns)
+
+    def evaluate(self, observed_value, expected_value):
+        if observed_value is None and expected_value is not None:
+            return False
+        return OPERATOR_MAPPING[self.inputs['op']](observed_value, expected_value)
+
+    def _get_observed_value(self, columns):
+        df = self.dataframe[columns]
+        if self.inputs['skipna']:
+            df = df.dropna()
+        df = df.value_counts()
+        return df[df > 1].shape[0]
