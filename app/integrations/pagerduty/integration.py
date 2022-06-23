@@ -11,6 +11,7 @@ class PagerDutyIntegrationValidator(serializers.Serializer):
     integration_key = fields.CharField(
         label="Integration Key",
         max_length=32,
+        allow_blank=False,
         help_text="The 32 character key for an integration on a service.")
 
     service = fields.CharField(

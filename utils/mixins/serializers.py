@@ -13,6 +13,8 @@ class MetamapperSerializer(object):
             model_class = getattr(serializer_meta, "model", None)
             if model_class:
                 model_name = str(model_class.__name__)
+            else:
+                model_name = getattr(serializer_meta, "model_name", None)
         for field, errors in super().errors.items():
             prefix = ""
             if isinstance(errors, (dict,)) and len(errors) > 0:

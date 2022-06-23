@@ -62,7 +62,7 @@ class DeleteCheckAlertRule extends Component {
         >
           <Form>
             <p>
-              Once you delete a alert rule, you will lose all data related to it.
+              Once you delete an alert rule, you will lose all data related to it.
             </p>
             <p>
               To continue with deletion, please type <b>delete me</b> in the box

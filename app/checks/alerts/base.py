@@ -34,9 +34,7 @@ class Alert(abc.ABC):
     @property
     def check_url(self):
         parts = [
-            settings.WEBSERVER_ORIGIN,
-            '/',
-            self.workspace.slug,
+            self.workspace_url,
             '/datastores/',
             self.datastore.slug,
             '/checks/',
@@ -47,14 +45,17 @@ class Alert(abc.ABC):
         return "".join(parts)
 
     @property
-    def selected_execution(self):
-        return shortcuts.to_global_id('CheckExecutionType', self.check_execution.id)
+    def workspace_url(self):
+        parts = [
+            settings.WEBSERVER_ORIGIN,
+            '/',
+            self.workspace.slug,
+        ]
+        return "".join(parts)
 
     @property
-    def recipient_emails(self):
-        """list<str>: Emails to deliver notification to.
-        """
-        return self.alert_rule.channel_config.get('emails', [])
+    def selected_execution(self):
+        return shortcuts.to_global_id('CheckExecutionType', self.check_execution.id)
 
     @classmethod
     def get_fields(cls):

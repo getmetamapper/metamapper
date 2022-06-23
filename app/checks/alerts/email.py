@@ -22,6 +22,12 @@ class EmailAlert(Alert):
         integration = "EMAIL"
         validator = EmailAlertConfigValidator
 
+    @property
+    def recipient_emails(self):
+        """list<str>: Emails to deliver notification to.
+        """
+        return self.alert_rule.channel_config.get('emails', [])
+
     def send(self):
         """void: Send alert via Email channel.
         """

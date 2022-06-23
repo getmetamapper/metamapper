@@ -39,6 +39,7 @@ class IntegrationConfigSerializer(MetamapperSerializer, serializers.ModelSeriali
 
         data['displayable'] = integration.handler.displayable_in(displayable)
         data['meta'] = meta
+
         return data
 
     def create(self, validated_data):

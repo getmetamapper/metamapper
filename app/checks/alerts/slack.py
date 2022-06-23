@@ -91,12 +91,12 @@ class SlackAlert(Alert):
                     "text": self.check_error,
                     "fields": [
                         {
-                            "title": "datastore",
+                            "title": "Datastore",
                             "value": self.datastore.name,
                             "short": False
                         },
                         {
-                            "title": "severity",
+                            "title": "Severity",
                             "value": self.severity,
                             "short": False
                         },

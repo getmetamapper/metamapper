@@ -375,10 +375,11 @@ class CheckAlertRuleFactory(factory.django.DjangoModelFactory):
 
 class IntegrationConfigFactory(factory.django.DjangoModelFactory):
     workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
+    user = factory.LazyAttribute(lambda i: UserFactory())
     integration = "SLACK"
-    displayable = "Metamapper (Internal)"
+    displayable = factory.LazyAttribute(uniqueName)
 
-    meta = {"bot_name": "RoboAlert"}
+    meta = factory.LazyAttribute(lambda i: {"bot_name": "RoboAlert", "workspace": i.displayable})
     auth = make_password("meowmeowmeow")
 
     class Meta:

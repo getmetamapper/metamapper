@@ -32,7 +32,7 @@ init-db:
 	@docker-compose -f docker-development.yml run --rm webserver python manage.py initdb --noinput --verbosity 0
 
 migrations:
-	@docker-compose -f docker-development.yml run --rm webserver python manage.py makemigrations integrations
+	@docker-compose -f docker-development.yml run --rm webserver python manage.py makemigrations
 
 migrate:
 	@docker-compose -f docker-development.yml run --rm webserver python manage.py migrate

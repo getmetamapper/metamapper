@@ -53,7 +53,5 @@ class IntegrationField(FieldMixin, serializers.CharField):
         ).values('id', 'displayable')
         options = []
         for integration in integrations:
-            print(integration)
-            print(integration['id'])
             options.append({'label': integration['displayable'], 'value': integration['id']})
         return options
