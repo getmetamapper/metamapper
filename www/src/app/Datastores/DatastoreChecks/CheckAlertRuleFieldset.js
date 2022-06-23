@@ -45,9 +45,9 @@ const CheckAlertRuleFieldset = ({
           disabled={!hasPermission || isEditMode}
           data-test="CheckAlertRuleFieldset.Channel"
         >
-          {channelOptions.map(({ label, value }) => (
-            <Select.Option key={value}>
-              {label}
+          {channelOptions.map(({ name, handler }) => (
+            <Select.Option key={handler}>
+              {name}
             </Select.Option>
           ))}
         </Select>

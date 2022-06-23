@@ -26,24 +26,25 @@ class CheckExpectation(graphene.InputObjectType):
     pass_value_input = scalars.JSONObject(required=True)
 
 
-class CheckExpectationHandlerFieldType(graphene.ObjectType):
-    """GraphQL representation of the fields on an Expectation handler class.
+class CheckConfigurationFieldType(graphene.ObjectType):
+    """GraphQL representation of the fields on a dynamic option class.
     """
     label = graphene.String()
     name = graphene.String()
     type = graphene.String()
     options = GenericScalar()
     help_text = graphene.String()
+    is_required = graphene.Boolean()
 
 
-class CheckExpectationHandlerType(graphene.ObjectType):
-    """GraphQL representation of an Expectation handler class.
+class CheckConfigurationType(graphene.ObjectType):
+    """GraphQL representation of an dynamic option class.
     """
     name = graphene.String()
     info = graphene.String()
 
     handler = graphene.String()
-    details = graphene.List(CheckExpectationHandlerFieldType)
+    details = graphene.List(CheckConfigurationFieldType)
 
 
 class CheckIntervalType(graphene.ObjectType):

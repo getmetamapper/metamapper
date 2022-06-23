@@ -216,12 +216,6 @@ class CheckSerializer(MetamapperSerializer, serializers.ModelSerializer):
         return instance
 
 
-class EmailAlertConfigValidator(serializers.Serializer):
-    """Validate the configuration struct for an email alert channel.
-    """
-    emails = serializers.ListField(child=serializers.EmailField(), allow_empty=False)
-
-
 class CheckAlertRuleSerializer(MetamapperSerializer, serializers.ModelSerializer):
     name = serializers.CharField(max_length=50, trim_whitespace=True)
     interval = serializers.DurationField(min_value=timedelta(minutes=30))
@@ -237,21 +231,16 @@ class CheckAlertRuleSerializer(MetamapperSerializer, serializers.ModelSerializer
             raise serializers.ValidationError('Interval is not valid.')
         return interval
 
-    def validate_email(self, data):
-        """Validators for EMAIL type.
-        """
-        validator = EmailAlertConfigValidator(data=data)
-        validator.is_valid(raise_exception=True)
-        return validator.data
-
     def validate(self, data):
         """Handle custom validation based on the `channel_config` value.
         """
-        field_type = self.instance.channel if self.instance else data['channel']
-        validators = {
-            CheckAlertRule.EMAIL: self.validate_email,
-        }
-        data['channel_config'] = validators[field_type](data.get('channel_config', {}))
+        channel = self.instance.channel if self.instance else data['channel']
+        channel_class = CheckAlertRule.CHANNEL_TO_ALERT_CLASS_MAPPING[channel]
+        validator = channel_class.Meta.validator(
+            data=data.get('channel_config', {}),
+            context=self.context)
+        validator.is_valid(raise_exception=True)
+        data['channel_config'] = validator.data
         return data
 
     def create(self, validated_data):

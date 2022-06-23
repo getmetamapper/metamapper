@@ -6,6 +6,7 @@ import app.definitions.permissions as permissions
 import utils.errors as errors
 import utils.shortcuts as shortcuts
 
+import app.checks.alerts as alerts
 import app.checks.schema as schema
 import app.checks.models as models
 import app.checks.tasks.expectations as expectations
@@ -21,11 +22,11 @@ class Query(graphene.ObjectType):
     """
     check_interval_options = graphene.List(schema.CheckIntervalType)
 
-    check_expectation_handlers = graphene.List(schema.CheckExpectationHandlerType)
+    check_expectation_handlers = graphene.List(schema.CheckConfigurationType)
 
-    check_pass_value_handlers = graphene.List(schema.CheckExpectationHandlerType)
+    check_pass_value_handlers = graphene.List(schema.CheckConfigurationType)
 
-    check_alert_channels = graphene.List(schema.CheckAlertChannelType)
+    check_alert_channels = graphene.List(schema.CheckConfigurationType)
 
     check = graphene.Field(schema.CheckType, id=graphene.ID(required=True))
     checks = AuthConnectionField(
@@ -72,13 +73,7 @@ class Query(graphene.ObjectType):
     def resolve_check_alert_channels(self, info):
         """Retrieve available alert channels.
         """
-        return [
-            {
-                'label': label,
-                'value': value,
-            }
-            for value, label in models.CheckAlertRule.CHANNEL_CHOICES
-        ]
+        return alerts.get_alert_configuration_options(info.context.workspace)
 
     @permissions.can_view_datastore_objects(lambda instance: instance.datastore)
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))

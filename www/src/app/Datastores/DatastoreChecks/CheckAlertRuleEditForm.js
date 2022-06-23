@@ -1,6 +1,7 @@
 import React from "react"
 import { Button, Divider, Form } from "antd"
-import CheckAlertRuleConfiguration from "app/Datastores/DatastoreChecks/CheckAlertRuleConfiguration"
+import { find } from "lodash"
+import CheckAlertRuleConfiguration from "app/Common/DynamicFieldset"
 import CheckAlertRuleFieldset from "app/Datastores/DatastoreChecks/CheckAlertRuleFieldset"
 import Link from "app/Navigation/Link"
 import RestrictedButton from "app/Common/RestrictedButton"
@@ -38,7 +39,9 @@ const CheckAlertRuleEditForm = ({
       <Divider />
       <CheckAlertRuleConfiguration
         form={form}
-        rule={checkAlertRule}
+        field="channelConfig"
+        data={checkAlertRule.channelConfig}
+        handler={find(channelOptions, (r => r.handler === checkAlertRule.channel))}
         hasPermission={hasPermission}
       />
     </div>

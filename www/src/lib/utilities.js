@@ -91,6 +91,14 @@ export const b64decode = (encodedMessage) => {
   }
 }
 
+export const tryGetValue = (data, key) => {
+  try {
+    return data[key]
+  } catch (e) {
+    return null;
+  }
+}
+
 export const copyToClipboard = (str) => {
   const el = document.createElement("textarea")
   el.value = str

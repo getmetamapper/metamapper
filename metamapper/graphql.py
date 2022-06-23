@@ -10,6 +10,7 @@ import app.checks.graphql as checks
 import app.comments.graphql as comments
 import app.customfields.graphql as customfields
 import app.definitions.graphql as definitions
+import app.integrations.graphql as integrations
 import app.omnisearch.graphql as omnisearch
 import app.sso.graphql as sso
 import app.revisioner.graphql as revisioner
@@ -34,6 +35,7 @@ class Query(authentication.Query,
             comments.Query,
             customfields.Query,
             definitions.Query,
+            integrations.Query,
             omnisearch.Query,
             sso.Query,
             revisioner.Query,
@@ -58,6 +60,7 @@ class Mutation(authentication.Mutation,
                comments.Mutation,
                customfields.Mutation,
                definitions.Mutation,
+               integrations.Mutation,
                sso.Mutation,
                revisioner.Mutation,
                graphene.ObjectType):

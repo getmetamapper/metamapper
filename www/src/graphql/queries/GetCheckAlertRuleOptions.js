@@ -7,8 +7,16 @@ query GetCheckAlertRuleOptions {
     value
   }
   channelOptions: checkAlertChannels {
-    label
-    value
+    name
+    handler
+    details {
+      name
+      type
+      label
+      options
+      helpText
+      isRequired
+    }
   }
 }
 `

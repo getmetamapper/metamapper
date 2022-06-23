@@ -2,7 +2,7 @@ import React from "react"
 import { Card, Form } from "antd"
 import { map } from "lodash"
 import FormLabel from "app/Common/FormLabel"
-import fieldMapping from "./CheckSetupFields"
+import fieldMapping from "app/Common/FormFields"
 
 const CheckSetupHandlerFieldset = ({ form, field, queryColumns, handler }) => (
   <Card className="mb-16">

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import operator
+import metamapper.fields as fields
 
 from app.checks.tasks.base import BaseExpectation
-from app.checks.tasks import fields
 
 from utils.shortcuts import get_module_class_validator, load_class
 

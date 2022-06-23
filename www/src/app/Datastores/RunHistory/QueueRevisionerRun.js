@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { graphql, compose } from "react-apollo"
 import { Alert } from "antd"
-import { withOwnersOnly } from "hoc/withPermissionsRequired"
+import { withSuperUserAccess } from "hoc/withPermissionsRequired"
 import RestrictedButton from "app/Common/RestrictedButton"
 import QueueRevisionerRunMutation from "graphql/mutations/QueueRevisionerRun"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
@@ -57,5 +57,5 @@ class QueueRevisionerRun extends Component {
 export default compose(
   graphql(QueueRevisionerRunMutation),
   withGraphQLMutation,
-  withOwnersOnly,
+  withSuperUserAccess,
 )(QueueRevisionerRun)

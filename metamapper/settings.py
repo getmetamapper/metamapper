@@ -95,6 +95,7 @@ METAMAPPER_APPS = [
     'app.inspector.apps.Config',
     'app.healthchecks.apps.Config',
     'app.notifications.apps.Config',
+    'app.integrations.apps.Config',
     'app.omnisearch.apps.Config',
     'app.revisioner.apps.Config',
     'app.sso.apps.Config',

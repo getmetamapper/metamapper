@@ -6,12 +6,17 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils import timezone
 
+from app.checks import alerts
+
 from app.authentication.models import Workspace, User
 from app.definitions.models import Datastore
 
 from utils.delete.models import SoftDeletionModel
 from utils.shortcuts import epoch_now
 from utils.mixins.models import StringPrimaryKeyModel, TimestampedModel
+
+
+ALERT_CLASSES = alerts.get_alert_classes()
 
 
 class CheckQuery(models.Model):
@@ -296,11 +301,15 @@ class CheckExpectationResult(models.Model):
 class CheckAlertRule(TimestampedModel):
     """Represents an alert that should be sent upon failure.
     """
-    EMAIL = 'EMAIL'
+    CHANNEL_TO_ALERT_CLASS_MAPPING = {
+        alert_class.Meta.integration: alert_class
+        for alert_class in ALERT_CLASSES
+    }
 
-    CHANNEL_CHOICES = (
-        (EMAIL, 'Email'),
-    )
+    CHANNEL_CHOICES = [
+        (alert_class.Meta.integration, alert_class.Meta.name)
+        for alert_class in ALERT_CLASSES
+    ]
 
     workspace = models.ForeignKey(
         to=Workspace,
@@ -331,3 +340,15 @@ class CheckAlertRule(TimestampedModel):
 
     def __str__(self):
         return "%s/%s" % (self.job_id, self.channel)
+
+    @property
+    def alert_class(self):
+        return self.CHANNEL_TO_ALERT_CLASS_MAPPING[self.channel]
+
+    def get_alert(self, check, check_execution, check_error):
+        alert_kwargs = {
+            'check': check,
+            'check_execution': check_execution,
+            'check_error': check_error,
+        }
+        return self.alert_class(self, **alert_kwargs)

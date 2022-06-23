@@ -17,6 +17,7 @@ import app.checks.models as check_models
 import app.comments.models as comment_models
 import app.customfields.models as customfields_models
 import app.definitions.models as definition_models
+import app.integrations.models as integration_models
 import app.revisioner.models as revisioner_models
 import app.sso.models as sso_models
 import app.votes.models as vote_models
@@ -365,8 +366,20 @@ class CheckAlertRuleFactory(factory.django.DjangoModelFactory):
     job = factory.LazyAttribute(lambda i: CheckFactory())
     workspace = factory.LazyAttribute(lambda i: i.job.workspace)
     name = factory.LazyAttribute(uniqueName)
-    channel = check_models.CheckAlertRule.EMAIL
+    channel = "EMAIL"
     channel_config = {"emails": ["test@metamapper.io"]}
 
     class Meta:
         model = check_models.CheckAlertRule
+
+
+class IntegrationConfigFactory(factory.django.DjangoModelFactory):
+    workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
+    integration = "SLACK"
+    displayable = "Metamapper (Internal)"
+
+    meta = {"bot_name": "RoboAlert"}
+    auth = make_password("meowmeowmeow")
+
+    class Meta:
+        model = integration_models.IntegrationConfig

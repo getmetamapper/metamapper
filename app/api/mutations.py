@@ -22,15 +22,13 @@ class CreateApiToken(mixins.CreateMutationMixin, relay.ClientIDMutation):
     class Meta:
         serializer_class = serializers.ApiTokenSerializer
 
-    token = graphene.Field(graphene.String)
+    api_token = graphene.Field(schema.ApiTokenType)
+
+    secret = graphene.Field(graphene.String)
 
     @classmethod
     def perform_save(cls, serializer, info):
         return serializer.save(workspace=info.context.workspace)
-
-    api_token = graphene.Field(schema.ApiTokenType)
-
-    secret = graphene.Field(graphene.String)
 
     @classmethod
     def prepare_response(cls, instance, errors, **data):

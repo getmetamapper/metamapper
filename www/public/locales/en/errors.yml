@@ -150,6 +150,12 @@ errors:
     emails:
       item_invalid: One of the provided email addresses is invalid.
       empty: You must provide at least one email.
+    integration_id:
+      invalid: The select integration does not exist.
+      required: Please select a valid integration.
   Run:
     finished:
       invalid: Cannot while another run is in progress.
+  IntegrationConfig:
+    none:
+      unique: Cannot use the same alias twice.

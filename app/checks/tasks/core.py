@@ -3,7 +3,6 @@ from django.db.models import Q, F
 from django.db.models import DateTimeField, ExpressionWrapper
 from django.db.models.functions import Now
 
-from app.checks.emails import EmailAlert
 from app.checks.models import Check, CheckAlertRule
 from app.checks.models import CheckExecution
 from app.checks.tasks.context import CheckContext
@@ -76,12 +75,10 @@ def dispatch_alerts(self, check_id, epoch):
         'check': check,
         'check_execution': check_execution,
         'check_error': check_execution.error or error,
-        'datastore': check.datastore,
-        'workspace': check.workspace,
     }
 
     for alert_rule in alert_rules:
-        alert = EmailAlert(alert_rule, **check_alert_kwargs)
+        alert = alert_rule.get_alert(**check_alert_kwargs)
         alert.deliver()
 
-    check.alert_rules.update(last_failure=check_execution)
+    alert_rules.update(last_failure=check_execution)

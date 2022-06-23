@@ -97,3 +97,89 @@ $color-dark: rgba(0, 0, 0, 0.65);
     }
   }
 }
+.integrations-table {
+  .ant-table {
+    border: 1px solid $color-border;
+    .ant-table-thead {
+      display: none;
+    }
+
+    .ant-table-tbody > tr:hover {
+      cursor:  pointer;
+    }
+  }
+}
+.integration {
+  display: flex;
+
+  .integration-info {
+    padding: 0px 16px;
+  }
+  .integration-name {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .integration-icon {
+    margin-top: 3px;
+  }
+  .integration-status {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+
+    .dot {
+      display: inline-block;
+      position: relative;
+      border-radius: 50%;
+      height: 6px;
+      width: 6px;
+      background: rgb(128, 112, 143);
+    }
+    .desc {
+      color: rgb(128, 112, 143);
+      margin-left: 4px;
+      margin-right: 6px;
+    }
+  }
+  .integration-status.installed {
+    .dot {
+      background: rgb(43, 161, 133);
+    }
+    .desc {
+      color: rgb(43, 161, 133);
+    }
+  }
+  .integration-tags {
+    display: block;
+    margin-top: 6px;
+  }
+}
+.integration-configs-table {
+  .ant-table {
+    border: 1px solid $color-border;
+    margin-top: 16px;
+  }
+}
+.integration-form {
+  h3 {
+    font-size: 18px;
+  }
+  .form-label-wrapper {
+    margin-bottom: 12px;
+  }
+  .form-label {
+    margin-bottom: 4px;
+  }
+  .ant-form-item label {
+    font-size: 16px;
+  }
+  small {
+    font-size: 12px;
+    margin-left: 10px;
+  }
+  .ant-form-item {
+    margin-left: 10px;
+  }
+}

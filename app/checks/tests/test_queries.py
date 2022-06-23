@@ -79,8 +79,15 @@ class TestCheckAlertChannels(cases.GraphQLTestCase):
     statement = '''
     query GetCheckAlertChannels {
       checkAlertChannels {
-        label
-        value
+        name
+        handler
+        details {
+          name
+          type
+          label
+          options
+          helpText
+        }
       }
     }
     '''
@@ -90,7 +97,66 @@ class TestCheckAlertChannels(cases.GraphQLTestCase):
         results = results['data'][self.operation]
 
         self.assertEqual(results, [
-            {'label': 'Email', 'value': 'EMAIL'},
+            {
+                'name': 'Email',
+                'handler': 'EMAIL',
+                'details': [
+                    {
+                        'name': 'emails',
+                        'type': 'EmailsField',
+                        'label': 'Emails',
+                        'options': None,
+                        'helpText': 'Where we should send the alert.',
+                    },
+                ],
+            },
+            {
+                'name': 'PagerDuty',
+                'handler': 'PAGERDUTY',
+                'details': [
+                    {
+                        'name': 'integration_id',
+                        'type': 'CharField',
+                        'label': 'Service',
+                        'options': {'maxLength': 40},
+                        'helpText': 'Which PagerDuty service we should send the alert to.',
+                    },
+                    {
+                        'name': 'severity',
+                        'type': 'ChoiceField',
+                        'label': 'Severity',
+                        'options': {'choices': ['critical', 'error', 'warning', 'info']},
+                        'helpText': 'How important this alert is.',
+                    },
+                ],
+            },
+            {
+                'name': 'Slack',
+                'handler': 'SLACK',
+                'details': [
+                    {
+                        'name': 'integration_id',
+                        'type': 'CharField',
+                        'label': 'Workspace',
+                        'options': {'maxLength': 40},
+                        'helpText': 'Which Slack workspace we should send the alert to.',
+                    },
+                    {
+                        'name': 'channel',
+                        'type': 'CharField',
+                        'label': 'Channel',
+                        'options': {'maxLength': 80},
+                        'helpText': 'The Slack channel to send the alert to.',
+                    },
+                    {
+                        'name': 'severity',
+                        'type': 'ChoiceField',
+                        'label': 'Severity',
+                        'options': {'choices': ['critical', 'error', 'warning', 'info']},
+                        'helpText': 'How important this alert is.',
+                    },
+                ],
+            },
         ])
 
 

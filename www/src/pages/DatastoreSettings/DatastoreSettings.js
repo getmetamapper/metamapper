@@ -136,7 +136,6 @@ class DatastoreSettings extends Component {
 }
 
 const withNotFound = withNotFoundHandler(({ datastore }) => {
-  console.log(datastore)
   return !datastore || !datastore.hasOwnProperty("id")
 })
 

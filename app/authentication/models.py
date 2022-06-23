@@ -315,3 +315,11 @@ class Workspace(UUIDModel,
 
         if membership:
             membership.delete()
+
+    def integration_installed(self, integration):
+        """Whether or not an integration is installed for this workspace.
+        """
+        default_integrations = ("EMAIL",)
+        if integration in default_integrations:
+            return True
+        return self.integrations.filter(integration=integration).first() is not None

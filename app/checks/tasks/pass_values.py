@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import metamapper.fields as fields
+
 from django.db.models import Avg, Count, Max, Min, Sum
 
 from app.checks.tasks.base import PassValue
-from app.checks.tasks import fields
 
 from utils.shortcuts import epoch_now, get_module_class_validator, load_class
 
