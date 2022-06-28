@@ -18,6 +18,8 @@ class EngineInterface(object):
 
     definitions_sql = None
 
+    query_history_sql = None
+
     indexes_sql = None
 
     connect_timeout_attr = None
@@ -90,6 +92,10 @@ class EngineInterface(object):
     def has_indexes(self):
         raise NotImplementedError()
 
+    @classmethod
+    def has_query_history(self):
+        return False
+
     def get_last_commit_time_for_table(self, *args, **kwargs):
         """Retrieve the last time a table was modified.
         """
@@ -114,6 +120,11 @@ class EngineInterface(object):
         """Generate SQL statement for getting indexes and constraints.
         """
         return self.indexes_sql.format(excluded=', '.join(['%s'] * len(excluded_schemas)))
+
+    def get_query_history_sql(self, start_date, end_date):
+        """Generate SQL statement for getting query history.
+        """
+        return self.query_history_sql.format(start_date=start_date, end_date=end_date)
 
     def get_tables_and_views(self, *args, **kwargs):
         """Retrieve the full list of table definitions for the provided datastore.
@@ -180,6 +191,14 @@ class EngineInterface(object):
             })
 
         return list(response.values())
+
+    def get_query_history(self, start_date, end_date, *args, **kwargs):
+        """Retrieve past queries for the given date.
+        """
+        for record in self.get_records_batched(
+            self.get_query_history_sql(start_date, end_date)
+        ):
+            yield self.lower_keys(record)
 
     @contextlib.contextmanager
     def execute_query(self, sql, parameters=None):

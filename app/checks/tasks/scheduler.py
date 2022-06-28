@@ -30,6 +30,9 @@ def create_executions(self, countdown_in_minutes=0):
         .filter(is_enabled=True)
     )
 
+    if not len(checks):
+        return
+
     self.log.info(
         'Found {0} checks(s)'.format(len(checks))
     )

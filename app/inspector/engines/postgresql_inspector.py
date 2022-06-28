@@ -5,7 +5,7 @@ import psycopg2
 import psycopg2.extras
 
 
-POSTGRESQL_DEFINITIONS_QUERY = """
+POSTGRESQL_DEFINITIONS_SQL = """
 WITH primary_key AS (
   SELECT c.table_schema, c.table_name, c.column_name
     FROM information_schema.table_constraints tc
@@ -54,7 +54,7 @@ LEFT JOIN primary_key pk
  ORDER BY c.table_schema, c.table_name, c.ordinal_position
 """
 
-POSTGRESQL_INDEXES_QUERY = """
+POSTGRESQL_INDEXES_SQL = """
     SELECT DISTINCT
           ui.schemaname AS schema_name,
           ui.schemaname::regnamespace::oid AS schema_object_id,
@@ -93,9 +93,9 @@ class PostgresqlInspector(interface.EngineInterface):
 
     table_properties = []
 
-    definitions_sql = POSTGRESQL_DEFINITIONS_QUERY
+    definitions_sql = POSTGRESQL_DEFINITIONS_SQL
 
-    indexes_sql = POSTGRESQL_INDEXES_QUERY
+    indexes_sql = POSTGRESQL_INDEXES_SQL
 
     connect_timeout_attr = 'connect_timeout'
 

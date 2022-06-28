@@ -120,6 +120,13 @@ def indexes(datastore, override_host=None, override_port=None):
 
 
 @with_ssh_tunnel()
+def query_history(datastore, start_date, end_date, override_host=None, override_port=None):
+    """Retrieve query history associated with a Datastore.
+    """
+    return get_engine(datastore, override_host, override_port).get_query_history(start_date, end_date)
+
+
+@with_ssh_tunnel()
 def verify_connection(datastore, override_host=None, override_port=None):
     """Verify the ability to connect to the datastore.
     """

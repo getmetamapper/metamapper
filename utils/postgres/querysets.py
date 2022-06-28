@@ -125,6 +125,7 @@ class PostgresQuerySet(models.QuerySet):
                     continue
                 deduped_rows.append(row)
         compiler = self._build_insert_compiler(deduped_rows, using=using, only_fields=only_fields)
+        print(compiler.as_sql())
         objs = compiler.execute_sql(return_id=True)
         if return_model:
             return [

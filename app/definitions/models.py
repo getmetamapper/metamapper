@@ -6,6 +6,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
+from django.db.models import Max
+from django.utils import timezone
 
 from guardian.shortcuts import assign_perm
 from ordered_model.models import OrderedModel
@@ -17,6 +19,7 @@ from app.customfields.models import CustomPropertiesModel
 from utils.delete.models import SoftDeletionModel
 from utils.encrypt.fields import EncryptedCharField
 from utils.managers import SearchManager
+from utils.postgres.managers import PostgresManager
 from utils.mixins.models import (
     StringPrimaryKeyModel, TimestampedModel, AuditableModel
 )
@@ -118,6 +121,8 @@ class Datastore(StringPrimaryKeyModel,
         SQLSERVER,
     ]
 
+    USAGE_WINDOW = 14
+
     REQUIRED_SSH_FIELDS = [
         'ssh_host',
         'ssh_user',
@@ -180,6 +185,8 @@ class Datastore(StringPrimaryKeyModel,
     object_permissions_enabled = models.BooleanField(default=True)
 
     incident_contacts = ArrayField(models.EmailField(), default=list)
+
+    usage_last_synced_at = models.DateTimeField(null=True)
 
     search_objects = SearchManager(fields=['name', 'engine', 'tags'])
 
@@ -272,6 +279,18 @@ class Datastore(StringPrimaryKeyModel,
     @property
     def disabled_custom_fields(self):
         return self.disabled_datastore_properties
+
+    @property
+    def usage_sync_start_date(self):
+        """Date that usage sync should start from.
+        """
+        current_timestamp = timezone.now()
+        latest_usage_date = self.table_usage.aggregate(Max('execution_date'))
+
+        if not latest_usage_date or (current_timestamp - latest_usage_date).days >= self.USAGE_WINDOW:
+            return (current_timestamp - timedelta(days=self.USAGE_WINDOW)).date()
+
+        return latest_usage_date
 
     def connection_was_changed(self):
         """Check if the JDBC connection was updated.
@@ -394,6 +413,11 @@ class Table(AuditableModel,
     properties = models.JSONField(default=dict)
     readme = models.TextField(null=True, blank=True)
 
+    usage_score = ''
+    usage_day_c = ''
+    usage_user_c = ''
+    usage_table_c = ''
+
     search_objects = SearchManager(fields=['name', 'schema__name', 'short_desc'])
 
     class Meta:
@@ -470,6 +494,37 @@ class TableProperty(models.Model):
     class Meta:
         managed = False
         db_table = 'definitions_table_properties'
+
+
+class TableUsage(models.Model):
+    """Granular statistics about how a table is being used.
+    """
+    datastore = models.ForeignKey(
+        to=Datastore,
+        on_delete=models.CASCADE,
+        related_name='table_usage',
+    )
+
+    execution_date = models.DateField()
+
+    db_schema = models.CharField(max_length=256)
+
+    db_table = models.CharField(max_length=256)
+
+    db_user = models.CharField(max_length=256)
+
+    query_count = models.IntegerField(default=0)
+
+    objects = PostgresManager()
+
+    class Meta:
+        db_table = 'definitions_table_usage'
+        unique_together = [
+            ('execution_date', 'datastore', 'db_schema', 'db_table', 'db_user'),
+        ]
+        index_together = [
+            ('datastore', 'db_schema', 'db_table'),
+        ]
 
 
 class Column(AuditableModel,

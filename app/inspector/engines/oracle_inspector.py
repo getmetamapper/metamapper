@@ -4,7 +4,7 @@ import app.inspector.engines.interface as interface
 import cx_Oracle
 
 
-ORACLE_DEFINITIONS_QUERY = """
+ORACLE_DEFINITIONS_SQL = """
 WITH METAMAPPER_USERS AS (
   SELECT u.USER_ID, u.USERNAME
     FROM DBA_USERS u
@@ -61,7 +61,7 @@ SELECT DISTINCT
  ORDER BY T.OWNER, T.OBJECT_NAME, C.COLUMN_ID
 """
 
-ORACLE_INDEXES_QUERY = """
+ORACLE_INDEXES_SQL = """
 WITH METAMAPPER_USERS AS (
   SELECT u.USER_ID, u.USERNAME
     FROM DBA_USERS u
@@ -186,9 +186,9 @@ class OracleInspector(interface.EngineInterface):
 
     table_properties = []
 
-    definitions_sql = ORACLE_DEFINITIONS_QUERY
+    definitions_sql = ORACLE_DEFINITIONS_SQL
 
-    indexes_sql = ORACLE_INDEXES_QUERY
+    indexes_sql = ORACLE_INDEXES_SQL
 
     @classmethod
     def has_indexes(self):

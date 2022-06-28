@@ -4,7 +4,7 @@ import app.inspector.engines.interface as interface
 import snowflake.connector
 
 
-SNOWFLAKE_DEFINITIONS_QUERY = """
+SNOWFLAKE_DEFINITIONS_SQL = """
 SELECT
       LOWER(c.table_schema) AS "table_schema",
       c.table_schema_id AS "schema_object_id",
@@ -41,6 +41,39 @@ WHERE UPPER(t.table_catalog) = '{database}'
 ORDER BY LOWER(c.table_schema), LOWER(c.table_name), c.ordinal_position
 """
 
+SNOWFLAKE_QUERY_HISTORY_SQL = """
+WITH queries AS (
+  SELECT
+    qh.query_text,
+    DATE(qh.end_time) as execution_date,
+    LOWER(qh.database_name) as db_name,
+    COALESCE(LOWER(qh.schema_name), 'public') as db_schema,
+    LOWER(qh.user_name) as db_user
+  FROM snowflake.account_usage.query_history qh
+ WHERE qh.EXECUTION_STATUS = 'SUCCESS'
+   AND qh.query_type = 'SELECT'
+   AND UPPER(qh.database_name) = '{database}'
+   AND DATE(qh.end_time) >= '{start_date}'
+   AND DATE(qh.end_time) <= '{end_date}'
+   AND qh.query_text NOT ILIKE 'CALL%'
+)
+
+SELECT
+    query_text,
+    execution_date,
+    db_schema,
+    db_name,
+    db_user,
+    COUNT(1) as "query_count"
+ FROM queries
+GROUP BY
+    query_text,
+    execution_date,
+    db_schema,
+    db_name,
+    db_user
+"""
+
 
 class SnowflakeInspector(interface.EngineInterface):
     """Access Snowflake database metadata.
@@ -52,13 +85,19 @@ class SnowflakeInspector(interface.EngineInterface):
 
     table_properties = []
 
-    definitions_sql = SNOWFLAKE_DEFINITIONS_QUERY
+    definitions_sql = SNOWFLAKE_DEFINITIONS_SQL
+
+    query_history_sql = SNOWFLAKE_QUERY_HISTORY_SQL
 
     connect_timeout_attr = 'login_timeout'
 
     @classmethod
     def has_indexes(self):
         return False
+
+    @classmethod
+    def has_query_history(self):
+        return True
 
     @property
     def connect_kwargs(self):
@@ -108,6 +147,15 @@ class SnowflakeInspector(interface.EngineInterface):
         return self.definitions_sql.format(
             database=self.database.upper(),
             excluded=', '.join(['%s'] * len(excluded_schemas))
+        )
+
+    def get_query_history_sql(self, start_date, end_date):
+        """Generate SQL statement for getting query history.
+        """
+        return self.query_history_sql.format(
+            database=self.database.upper(),
+            start_date=start_date,
+            end_date=end_date,
         )
 
     def get_indexes(self, *args, **kwargs):

@@ -53,9 +53,15 @@ services:
     command: webserver
     ports:
       - 5050:5050
-  worker:
+  core-worker:
     << : *metamapper_defaults
-    command: worker --concurrency=1
+    command: worker --concurrency=1 -Q default,checks,revisioner
+    depends_on:
+      - database
+      - msgbroker
+  usage-worker:
+    << : *metamapper_defaults
+    command: worker --concurrency=1 -Q usage
     depends_on:
       - database
       - msgbroker
