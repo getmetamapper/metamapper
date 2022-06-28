@@ -7,6 +7,7 @@ const CheckSetupSql = ({
   form: { getFieldDecorator },
   sqlText,
   sqlException,
+  sqlIsRunning,
   queryResults,
   onChange,
 }) => (
@@ -14,9 +15,7 @@ const CheckSetupSql = ({
     {getFieldDecorator(
       "queryId",
       {}
-    )(
-      <Input type="hidden" />
-    )}
+    )(<Input type="hidden" />)}
     <CodeEditor
       mode="sql"
       value={sqlText}
@@ -25,6 +24,7 @@ const CheckSetupSql = ({
     <CheckSqlPreviewResults
       queryResults={queryResults}
       sqlException={sqlException}
+      loading={sqlIsRunning}
     />
   </>
 )

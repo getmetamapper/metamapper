@@ -40,7 +40,7 @@ class ChecksTable extends Component {
       {
         title: "Last Executed",
         align: "left",
-        render: ({ lastExecution }) => lastExecution && <FromNow time={lastExecution.lastExecutedAt} />
+        render: ({ lastExecution }) => lastExecution && <FromNow time={lastExecution.finishedAt} />
       },
     ]
   }

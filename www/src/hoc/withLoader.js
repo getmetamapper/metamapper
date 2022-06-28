@@ -1,5 +1,5 @@
 import React from "react"
-import { Spin } from "antd"
+import { Spin, Icon } from "antd"
 
 const withLoader = (opts = {}) => (ChildComponent) => {
   const withInnerLoader = (props) => {
@@ -23,7 +23,7 @@ export const withPopoverLoader = withLoader({
   size: "small",
   wrapperstyles: {
     textAlign: "center",
-    margin: "16px 40px"
+    margin: "16px 40px",
   },
 })
 

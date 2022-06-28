@@ -16,10 +16,11 @@ class CheckSetupForm extends Component {
     super(props)
     this.state = {
       current: 0,
-      sqlText: "",
       query: null,
       queryResults: null,
       sqlException: null,
+      sqlIsRunning: false,
+      sqlText: "",
     }
 
     this.handleSqlChange = this.handleSqlChange.bind(this)
@@ -74,6 +75,7 @@ class CheckSetupForm extends Component {
           datastore={datastore}
           interval={form.getFieldValue("interval")}
           sqlText={this.state.sqlText}
+          onSubmit={this.handlePreviewSubmit}
           onSuccess={this.handlePreviewSuccess}
         />
       )
@@ -92,6 +94,10 @@ class CheckSetupForm extends Component {
     })
   }
 
+  handlePreviewSubmit = () => {
+    this.setState({ sqlIsRunning: true, sqlException: null })
+  }
+
   handlePreviewSuccess = ({ data: { previewCheckQuery } }) => {
     const {
       errors,
@@ -99,6 +105,8 @@ class CheckSetupForm extends Component {
       queryResults,
       sqlException,
     } = previewCheckQuery
+
+    this.setState({ sqlIsRunning: false })
 
     if (!errors && query) {
       this.props.form.setFieldsValue({ queryId: query.id })
@@ -111,7 +119,12 @@ class CheckSetupForm extends Component {
   }
 
   handleSqlChange = (e) => {
-    this.setState({ sqlText: e.target.value, query: null })
+    this.setState({
+      query: null,
+      sqlText: e.target.value,
+      sqlException: null,
+    })
+
     this.props.form.setFieldsValue({ queryId: null })
   }
 
@@ -123,7 +136,7 @@ class CheckSetupForm extends Component {
       isSubmitting,
       onSubmit,
     } = this.props
-    const { current, query, queryResults, sqlException } = this.state
+    const { current, query, queryResults, sqlException, sqlIsRunning } = this.state
     return (
       <Fragment>
         <Row className="check-setup-form-navbar">
@@ -224,6 +237,7 @@ class CheckSetupForm extends Component {
                     form={form}
                     sqlText={this.state.sqlText}
                     sqlException={sqlException}
+                    sqlIsRunning={sqlIsRunning}
                     queryResults={queryResults}
                     onChange={this.handleSqlChange}
                   />

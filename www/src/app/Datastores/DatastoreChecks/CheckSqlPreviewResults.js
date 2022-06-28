@@ -1,12 +1,13 @@
 import React, { Component } from "react"
-import { Alert, Table } from "antd"
+import { Alert, Icon, Table } from "antd"
 import { first, keys, isEqual } from "lodash"
+import withLoader from "hoc/withLoader"
 
 const defaultColumns = [
   {
-    title: ''
-  }
-];
+    title: '',
+  },
+]
 
 class CheckSqlPreviewResults extends Component {
   shouldComponentUpdate({ queryResults, sqlException }) {
@@ -15,9 +16,10 @@ class CheckSqlPreviewResults extends Component {
 
   getColumns() {
     let columns = keys(first(this.props.queryResults)).map(key => ({
-      title: key,
-      key: key,
       dataIndex: key,
+      key,
+      title: key,
+      width: 250,
     }))
 
     if (columns.length === 0) {
@@ -48,7 +50,7 @@ class CheckSqlPreviewResults extends Component {
           columns={this.getColumns()}
           dataSource={queryResults}
           pagination={false}
-          scroll={{ x: 1500, y: 300 }}
+          scroll={{ x: 'max-content', y: 300 }}
           locale={{ emptyText: this.emptyText() }}
         />
       </div>
@@ -56,4 +58,13 @@ class CheckSqlPreviewResults extends Component {
   }
 }
 
-export default CheckSqlPreviewResults
+export default withLoader({
+  indicator: <Icon type="loading" style={{ fontSize: 24 }} spin />,
+  wrapperstyles: {
+    textAlign: "center",
+    paddingTop: "40px",
+    paddingBottom: "40px",
+    borderTop: "1px solid #e8e8e8",
+    borderLeft: "1px solid #e8e8e8",
+  },
+})(CheckSqlPreviewResults)

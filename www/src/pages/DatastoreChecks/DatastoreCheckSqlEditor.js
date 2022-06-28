@@ -27,6 +27,7 @@ class DatastoreCheckSqlEditor extends Component {
       queryResults: null,
       query: null,
       sqlException: null,
+      sqlIsRunning: false,
     }
 
     this.breadcrumbs = this.breadcrumbs.bind(this)
@@ -65,6 +66,10 @@ class DatastoreCheckSqlEditor extends Component {
     ]
   }
 
+  handlePreviewSubmit = () => {
+    this.setState({ sqlIsRunning: true, sqlException: null })
+  }
+
   handlePreviewSuccess = ({ data: { previewCheckQuery } }) => {
     const {
       errors,
@@ -72,6 +77,8 @@ class DatastoreCheckSqlEditor extends Component {
       queryResults,
       sqlException,
     } = previewCheckQuery
+
+    this.setState({ sqlIsRunning: false })
 
     if (!errors) {
       const { current } = this.state
@@ -124,7 +131,7 @@ class DatastoreCheckSqlEditor extends Component {
     if (!hasPermission) {
       return <PermissionDenied to={this.getRedirectUrl()} />
     }
-    const { queryResults, query, sqlException } = this.state
+    const { queryResults, query, sqlException, sqlIsRunning } = this.state
     return (
       <DatastoreLayout
         breadcrumbs={this.breadcrumbs}
@@ -144,6 +151,7 @@ class DatastoreCheckSqlEditor extends Component {
               sqlText={this.state.current}
               interval={check.interval.value}
               disabled={(query && query.hasOwnProperty("id"))}
+              onSubmit={this.handlePreviewSubmit}
               onSuccess={this.handlePreviewSuccess}
             />
             <UpdateCheckSql
@@ -161,6 +169,7 @@ class DatastoreCheckSqlEditor extends Component {
           <CheckSqlPreviewResults
             queryResults={queryResults}
             sqlException={sqlException}
+            loading={sqlIsRunning}
           />
         </div>
       </DatastoreLayout>

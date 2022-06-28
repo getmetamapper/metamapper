@@ -13,7 +13,7 @@ class UpdateCheckSqlPreview extends Component {
     } = this.props
 
     if (!sqlText) {
-      return;
+      return
     }
 
     const payload = {
@@ -25,6 +25,7 @@ class UpdateCheckSqlPreview extends Component {
       successMessage: null,
     }
 
+    this.props.onSubmit()
     this.props.handleMutation(payload, this.props.onSuccess)
   }
 
