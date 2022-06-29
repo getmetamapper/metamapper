@@ -9,7 +9,7 @@ from django.utils import timezone
 from metamapper.celery import app
 
 from app.inspector import service as inspector
-from app.definitions.models import Datastore, TableUsage
+from app.definitions.models import Datastore
 
 from utils import logging
 from utils.shortcuts import dedupe_by_keys
@@ -17,11 +17,29 @@ from utils.sqlparser import Parser, Session
 
 
 __all__ = [
+    'delete_table_usage_older_than_90_days',
     'queue_table_usage_jobs',
     'get_query_history_results',
     'set_usage_from_query_text',
-    'delete_table_usage_older_than_90_days',
 ]
+
+
+def perform_upsert(rows):
+    """Perform an increasing upsert on the query count field.
+    """
+    statement = '''
+        INSERT INTO definitions_table_usage as t
+            (datastore_id, execution_date, db_schema, db_table, db_user, query_count)
+        VALUES
+            (%(datastore_id)s, %(execution_date)s, %(db_schema)s, %(db_table)s, %(db_user)s, %(query_count)s)
+        ON CONFLICT
+            (datastore_id, execution_date, db_schema, db_table, db_user)
+        DO UPDATE SET
+            query_count = (t.query_count + EXCLUDED.query_count);
+    '''
+
+    with connection.cursor() as cursor:
+        cursor.executemany(statement, rows)
 
 
 @app.task(bind=True)
@@ -38,12 +56,12 @@ def queue_table_usage_jobs(self, countdown_in_minutes=0):
         .filter(Q(usage_last_synced_at__lte=expression) | Q(usage_last_synced_at__isnull=True))
     )
 
-    if not len(datastores):
-        return
-
     self.log.info(
         'Found {0} datastores(s)'.format(len(datastores))
     )
+
+    if not len(datastores):
+        return
 
     for datastore in datastores.distinct():
         async_kwargs = {
@@ -122,8 +140,7 @@ def set_usage_from_query_text(
 
         upsert_data.append(result_kwargs)
 
-    # Cannot just upsert, need to increment.
-    TableUsage.objects.bulk_upsert(upsert_cols, dedupe_by_keys(upsert_data, upsert_cols))
+    perform_upsert(dedupe_by_keys(upsert_data, upsert_cols))
 
 
 @app.task(bind=True)

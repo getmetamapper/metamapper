@@ -38,12 +38,12 @@ def create_runs(self, datastore_slug=None, *args, **kwargs):
     else:
         datastores = datastores.filter(Q(last_run_ts__lte=expression) | Q(last_run_ts__isnull=True))
 
-    if not len(datastores):
-        return
-
     self.log.info(
         'Found {0} datastore(s)'.format(len(datastores))
     )
+
+    if not len(datastores):
+        return
 
     processed_datastores = []
     runs_to_be_processed = []
@@ -78,7 +78,9 @@ def queue_runs(self, datastore_slug=None, countdown_in_minutes=15, *args, **kwar
     if datastore_slug:
         runs = runs.filter(datastore__slug__iexact=datastore_slug)
 
-    self.log.info(f'Found {len(runs)} run(s)')
+    self.log.info(
+        f'Found {len(runs)} run(s)'
+    )
 
     if not len(runs):
         return

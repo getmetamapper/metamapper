@@ -286,6 +286,7 @@ class Datastore(StringPrimaryKeyModel,
         """
         current_timestamp = timezone.now()
         latest_usage_date = self.table_usage.aggregate(Max('execution_date'))
+        latest_usage_date = latest_usage_date['execution_date__max']
 
         if not latest_usage_date or (current_timestamp - latest_usage_date).days >= self.USAGE_WINDOW:
             return (current_timestamp - timedelta(days=self.USAGE_WINDOW)).date()
@@ -413,10 +414,8 @@ class Table(AuditableModel,
     properties = models.JSONField(default=dict)
     readme = models.TextField(null=True, blank=True)
 
-    usage_score = ''
-    usage_day_c = ''
-    usage_user_c = ''
-    usage_table_c = ''
+    usage_total_queries = models.IntegerField(null=True, default=None)
+    usage_total_users = models.IntegerField(null=True, default=None)
 
     search_objects = SearchManager(fields=['name', 'schema__name', 'short_desc'])
 
