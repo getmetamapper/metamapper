@@ -29,7 +29,7 @@ const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading, hi
 
 class DatastoreLayout extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     const {
       config,
@@ -54,44 +54,53 @@ class DatastoreLayout extends Component {
 
   getLinks() {
     const baseUri = this.getBaseUri()
-
-    return [
+    const { datastore } = this.props
+    const links = [
       {
         icon: "dashboard",
         label: "Overview",
         to: baseUri,
+        visible: true,
       },
       {
         icon: "read",
         label: "Assets",
         to: `${baseUri}/assets`,
+        visible: true,
       },
       {
         icon: "check-circle",
         label: "Checks",
         to: `${baseUri}/checks`,
+        visible: datastore.supportedFeatures.checks,
       },
       {
         icon: "sync",
         label: "Run History",
         to: `${baseUri}/runs`,
+        visible: true,
       },
       {
         icon: "database",
         label: "Connection",
         to: `${baseUri}/connection`,
+        visible: true,
       },
       {
         icon: "user",
         label: "Access",
         to: `${baseUri}/access`,
+        visible: true,
       },
       {
         icon: "setting",
         label: "Settings",
         to: `${baseUri}/settings`,
+        visible: true,
       },
     ]
+
+    return links.filter((l) => l.visible)
   }
 
   render() {

@@ -361,6 +361,12 @@ class TestGetDatastoreBySlug(cases.GraphQLTestCase):
       datastoreBySlug(slug: $slug) {
         name
         isEnabled
+        supportedFeatures {
+            checks
+            indexes
+            partitions
+            usage
+        }
       }
     }
     '''
@@ -369,7 +375,7 @@ class TestGetDatastoreBySlug(cases.GraphQLTestCase):
     def test_query(self):
         """It returns the datastore object.
         """
-        datastore = self.factory(workspace=self.workspace)
+        datastore = self.factory(workspace=self.workspace, engine=models.Datastore.SNOWFLAKE)
 
         results = self.execute(self.statement, variables={'slug': datastore.slug})
         results = results['data'][self.operation]
@@ -377,13 +383,19 @@ class TestGetDatastoreBySlug(cases.GraphQLTestCase):
         self.assertEqual(results, {
             'name': datastore.name,
             'isEnabled': datastore.is_enabled,
+            'supportedFeatures': {
+                'checks': True,
+                'indexes': False,
+                'partitions': False,
+                'usage': True,
+            },
         })
 
     @decorators.as_someone(['MEMBER', 'READONLY'])
     def test_query_with_object_permissions(self):
         """It returns the datastore object.
         """
-        datastore = self.factory(workspace=self.workspace, object_permissions_enabled=True)
+        datastore = self.factory(workspace=self.workspace, engine=models.Datastore.GLUE, object_permissions_enabled=True)
 
         datastore.assign_perm(self.user, 'definitions.view_datastore')
 
@@ -393,6 +405,12 @@ class TestGetDatastoreBySlug(cases.GraphQLTestCase):
         self.assertEqual(results, {
             'name': datastore.name,
             'isEnabled': datastore.is_enabled,
+            'supportedFeatures': {
+                'checks': False,
+                'indexes': False,
+                'partitions': True,
+                'usage': False,
+            },
         })
 
     @decorators.as_someone(['MEMBER', 'READONLY'])

@@ -22,6 +22,9 @@ class SnowflakeInspectorTests(unittest.TestCase):
         }
         self.engine = engine.SnowflakeInspector(**self.connection)
 
+    def test_has_operational_error(self):
+        assert engine.SnowflakeInspector.operational_error
+
     def test_not_have_indexes_sql(self):
         """It should NOT have `indexes_sql` attribute defined.
         """
@@ -82,10 +85,17 @@ class SnowflakeInspectorTests(unittest.TestCase):
             'account_usage',
         }
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_checks_value(self):
+        assert engine.SnowflakeInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert not engine.SnowflakeInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert not engine.SnowflakeInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert engine.SnowflakeInspector.has_usage()
 
     def test_get_indexes(self):
         """It should return an empty list.

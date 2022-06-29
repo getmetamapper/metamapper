@@ -12,6 +12,7 @@ from django.forms.models import model_to_dict
 from graphene_django import DjangoObjectType
 from graphene.types.generic import GenericScalar
 
+from app.inspector.service import get_inspector_class
 from app.revisioner.schema import RunType
 
 from app.authorization.mixins import AuthNode
@@ -220,11 +221,22 @@ class DatastoreIntervalType(graphene.ObjectType):
         return value
 
 
+class DatastoreSupportedFeaturesType(graphene.ObjectType):
+    """Metamapper features that this datastore has access to.
+    """
+    checks = graphene.Boolean()
+    indexes = graphene.Boolean()
+    partitions = graphene.Boolean()
+    usage = graphene.Boolean()
+
+
 class DatastoreType(AuthNode, DjangoObjectType):
     """GraphQL representation of a Datastore.
     """
     permission_classes = (WorkspaceTeamMembersOnly,)
     scope_to_workspace = True
+
+    supported_features = graphene.Field(DatastoreSupportedFeaturesType)
 
     jdbc_connection = graphene.Field(JdbcConnectionType)
 
@@ -253,6 +265,7 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'interval',
             'short_desc',
             'tags',
+            'supported_features',
             'jdbc_connection',
             'object_permissions_enabled',
             'disabled_datastore_properties',
@@ -261,6 +274,17 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'created_at',
             'updated_at',
         )
+
+    def resolve_supported_features(instance, info):
+        """Get dict of feature supported by this datastore.
+        """
+        inspector_class = get_inspector_class(instance.engine)
+        return {
+            'checks': inspector_class.has_checks(),
+            'indexes': inspector_class.has_indexes(),
+            'partitions': inspector_class.has_partitions(),
+            'usage': inspector_class.has_usage(),
+        }
 
     def resolve_jdbc_connection(instance, info):
         """Returns JDBC connection information as a separate object.

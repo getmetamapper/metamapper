@@ -57,8 +57,20 @@ class SnowflakeInspector(interface.EngineInterface):
     connect_timeout_attr = 'login_timeout'
 
     @classmethod
+    def has_checks(self):
+        return True
+
+    @classmethod
     def has_indexes(self):
         return False
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
+        return True
 
     @property
     def connect_kwargs(self):

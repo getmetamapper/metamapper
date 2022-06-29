@@ -87,7 +87,15 @@ class EngineInterface(object):
         return (self.operational_error, self.programming_error, OutOfMemoryError)
 
     @classmethod
+    def has_checks(self):
+        raise NotImplementedError()
+
+    @classmethod
     def has_indexes(self):
+        raise NotImplementedError()
+
+    @classmethod
+    def has_usage(self):
         raise NotImplementedError()
 
     def get_last_commit_time_for_table(self, *args, **kwargs):
@@ -311,6 +319,18 @@ class AmazonInspectorMixin(object):
                 region_name=self.region,
             )
         return self._client
+
+    @classmethod
+    def has_checks(self):
+        return False
+
+    @classmethod
+    def has_indexes(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
+        return False
 
     @property
     def iam_role(self):
