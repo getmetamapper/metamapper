@@ -44,6 +44,7 @@ class DatastoreAccessPrivilegesTable extends Component {
   state = { editingKey: '' }
 
   getColumns = () => {
+    const { datastore } = this.props
     const columns = [
       {
         title: "Name",

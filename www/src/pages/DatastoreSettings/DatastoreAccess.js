@@ -129,13 +129,11 @@ const withNotFound = withNotFoundHandler(({ datastore }) => {
   return !datastore || !datastore.hasOwnProperty("id")
 })
 
-const enhance = compose(
+export default compose(
   withForm,
   withRouter,
   withWriteAccess,
   withGetDatastoreSettings,
   withLargeLoader,
-  withNotFound,
-)
-
-export default enhance(DatastoreAccess)
+  withNotFound
+)(DatastoreAccess)
