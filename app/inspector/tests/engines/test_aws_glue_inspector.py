@@ -26,10 +26,20 @@ class AwsGlueInspectorTests(unittest.TestCase):
         }
         self.engine = engine.AwsGlueInspector(**self.connection)
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_operational_error(self):
+        assert engine.AwsGlueInspector.operational_error
+
+    def test_has_checks_value(self):
+        assert not engine.AwsGlueInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert not engine.AwsGlueInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert engine.AwsGlueInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.AwsGlueInspector.has_usage()
 
     def test_get_indexes(self):
         """It should return an empty list.

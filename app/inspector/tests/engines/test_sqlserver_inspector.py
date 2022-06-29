@@ -26,6 +26,9 @@ class SQLServerInspectorTests(test.TestCase):
         }
         self.engine = engine.SQLServerInspector(**self.connection)
 
+    def test_has_operational_error(self):
+        assert engine.SQLServerInspector.operational_error
+
     def test_has_indexes_sql(self):
         """It should have `indexes_sql` attribute defined.
         """
@@ -86,10 +89,17 @@ class SQLServerInspectorTests(test.TestCase):
             'sys',
         }
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_checks_value(self):
+        assert engine.SQLServerInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert engine.SQLServerInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert not engine.SQLServerInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.SQLServerInspector.has_usage()
 
     @mock.patch.object(engine.SQLServerInspector, 'get_first', return_value={'version': '9.6.0'})
     def test_get_db_version(self, get_first):

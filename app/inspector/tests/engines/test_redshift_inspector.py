@@ -32,6 +32,9 @@ class RedshiftInspectorTests(test.TestCase):
         }
         self.engine = engine.RedshiftInspector(**self.connection)
 
+    def test_has_operational_error(self):
+        assert engine.RedshiftInspector.operational_error
+
     def test_not_have_indexes_sql(self):
         """It should NOT have `indexes_sql` attribute defined.
         """
@@ -84,10 +87,17 @@ class RedshiftInspectorTests(test.TestCase):
             'pg_internal',
         }
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_checks_value(self):
+        assert engine.RedshiftInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert not engine.RedshiftInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert not engine.RedshiftInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.RedshiftInspector.has_usage()
 
     def test_get_indexes(self):
         """It should return an empty list.

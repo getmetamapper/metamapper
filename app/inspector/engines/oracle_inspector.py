@@ -191,8 +191,20 @@ class OracleInspector(interface.EngineInterface):
     indexes_sql = ORACLE_INDEXES_SQL
 
     @classmethod
+    def has_checks(self):
+        return True
+
+    @classmethod
     def has_indexes(self):
         return True
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
+        return False
 
     @property
     def connector(self):

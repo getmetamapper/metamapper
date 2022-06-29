@@ -19,6 +19,12 @@ export default gql`
       disabledDatastoreProperties
       disabledTableProperties
       incidentContacts
+      supportedFeatures {
+        checks
+        indexes
+        partitions
+        usage
+      }
       jdbcConnection {
         engine
         host

@@ -11,16 +11,34 @@ class AwsAthenaInspector(interface.AmazonInspectorMixin):
     aws_client_type = 'athena'
 
     @classmethod
-    def has_indexes(self):
-        """bool: Athena does not have indexes, so we default this to False.
-        """
+    def has_checks(self):
         return False
+
+    @classmethod
+    def has_indexes(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
+        return False
+
+    @classmethod
+    def has_partitions(self):
+        return True
 
     @property
     def version(self):
         """str: The version of the Athena module that we're working with.
         """
         return boto3.__version__
+
+    @property
+    def operational_error(self):
+        return exceptions.ClientError
+
+    @property
+    def catchable_errors(self):
+        return (self.operational_error, exceptions.NoCredentialsError, exceptions.ParamValidationError)
 
     def get_last_commit_time_for_table(self, *args, **kwargs):
         """Retrieve the last time a table was modified.

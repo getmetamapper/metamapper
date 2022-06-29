@@ -50,12 +50,7 @@ class DatastoreCheck extends Component {
   }
 
   render() {
-    const {
-      check,
-      expectations,
-      datastore,
-      loading,
-    } = this.props
+    const { check, expectations, datastore, loading } = this.props
     return (
       <DatastoreLayout
         breadcrumbs={this.breadcrumbs}
@@ -74,10 +69,7 @@ class DatastoreCheck extends Component {
             <Divider />
             <div className="check-query">
               <h2>SQL Statement</h2>
-              <CheckQueryText
-                hasFooter
-                sqlText={check.query.sqlText}
-              />
+              <CheckQueryText hasFooter sqlText={check.query.sqlText} />
             </div>
             <CheckExpectations
               check={check}
@@ -85,14 +77,8 @@ class DatastoreCheck extends Component {
               queryColumns={check.query.columns}
               loading={loading}
             />
-            <CheckAlertRules
-              check={check}
-              loading={loading}
-            />
-            <CheckExecutions
-              check={check}
-              loading={loading}
-            />
+            <CheckAlertRules check={check} loading={loading} />
+            <CheckExecutions check={check} loading={loading} />
           </Col>
         </Row>
       </DatastoreLayout>
@@ -109,5 +95,5 @@ export default compose(
   withGetDatastoreCheck,
   withGetCheckExpectations,
   withLargeLoader,
-  withNotFound,
+  withNotFound
 )(DatastoreCheck)

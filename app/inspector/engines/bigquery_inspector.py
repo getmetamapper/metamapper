@@ -4,6 +4,7 @@ from hashlib import md5
 
 from google.auth.exceptions import GoogleAuthError
 from google.cloud import bigquery
+from google.cloud.bigquery.dbapi.exceptions import DatabaseError, OperationalError
 from google.oauth2 import service_account
 
 
@@ -24,6 +25,14 @@ class BigQueryInspector(object):
         self.threads = 5
 
     @property
+    def operational_error(self):
+        return OperationalError
+
+    @property
+    def catchable_errors(self):
+        return (self.operational_error, DatabaseError, GoogleAuthError)
+
+    @property
     def project(self):
         return self.database
 
@@ -32,9 +41,19 @@ class BigQueryInspector(object):
         return self.extras.get('credentials', {})
 
     @classmethod
+    def has_checks(self):
+        return True
+
+    @classmethod
     def has_indexes(self):
-        """bool: BigQuery does not have indexes, so we default this to False.
-        """
+        return False
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
         return False
 
     @property

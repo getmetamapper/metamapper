@@ -26,10 +26,20 @@ class BigQueryInspectorTests(unittest.TestCase):
         }
         self.engine = engine.BigQueryInspector(**self.connection)
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_operational_error(self):
+        assert engine.BigQueryInspector.operational_error
+
+    def test_has_checks_value(self):
+        assert engine.BigQueryInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert not engine.BigQueryInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert not engine.BigQueryInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.BigQueryInspector.has_usage()
 
     def test_get_indexes(self):
         """It should return an empty list.

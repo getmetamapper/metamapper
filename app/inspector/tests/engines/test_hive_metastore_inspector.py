@@ -30,6 +30,9 @@ class HiveMetastoreInspectorTests(test.TestCase):
             **self.connection,
         )
 
+    def test_has_operational_error(self):
+        assert engine.HiveMetastoreInspector.operational_error
+
     def test_inspector_attribute(self):
         """It should inherit the provided inspector class.
         """
@@ -65,10 +68,17 @@ class HiveMetastoreInspectorTests(test.TestCase):
         assert set(self.engine.sys_schemas) == set()
         assert set(self.engine.inspector.sys_schemas) == set()
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_checks_value(self):
+        assert not engine.HiveMetastoreInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert not engine.HiveMetastoreInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert not engine.HiveMetastoreInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.HiveMetastoreInspector.has_usage()
 
     def test_get_indexes(self):
         """It should return an empty list.

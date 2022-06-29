@@ -106,8 +106,20 @@ class MySQLInspector(interface.EngineInterface):
     connect_timeout_attr = 'connect_timeout'
 
     @classmethod
+    def has_checks(self):
+        return True
+
+    @classmethod
     def has_indexes(self):
         return True
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
+        return False
 
     @property
     def connector(self):

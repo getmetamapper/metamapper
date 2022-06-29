@@ -155,7 +155,19 @@ class HiveMetastoreInspector(interface.EngineInterface):
         self._version = None
 
     @classmethod
+    def has_checks(self):
+        return False
+
+    @classmethod
     def has_indexes(self):
+        return False
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
         return False
 
     @property

@@ -82,12 +82,15 @@ class DatastoreChecks extends Component {
 }
 
 const withNotFound = withNotFoundHandler(({ datastore }) => {
-  return !datastore || !datastore.hasOwnProperty("id")
+  if (!datastore || !datastore.hasOwnProperty("id")) {
+    return true
+  }
+  return !datastore.supportedFeatures.checks
 })
 
 export default compose(
   withGetDatastoreSettings,
   withGetDatastoreChecks,
   withLargeLoader,
-  withNotFound,
+  withNotFound
 )(DatastoreChecks)
