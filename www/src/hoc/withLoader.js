@@ -1,5 +1,5 @@
 import React from "react"
-import { Spin, Icon } from "antd"
+import { Spin } from "antd"
 
 const withLoader = (opts = {}) => (ChildComponent) => {
   const withInnerLoader = (props) => {

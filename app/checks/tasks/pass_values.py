@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import metamapper.fields as fields
 
-from django.db.models import Avg, Count, Max, Min, Sum
+from django.db.models import Avg, Max, Min, Sum
 
 from app.checks.tasks.base import PassValue
 
@@ -13,7 +13,6 @@ __all__ = ['Constant', 'Rollup']
 
 AGGREGATOR_MAPPING = {
     'average': Avg,
-    'count': Count,
     'maximum': Max,
     'minimum': Min,
     'sum': Sum,
