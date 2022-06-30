@@ -23,6 +23,7 @@ export default gql`
       owners {
         id
         type
+        classification
         order
         owner {
           id

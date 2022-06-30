@@ -50,13 +50,14 @@ class TableOwners extends Component {
 
   handleReposition = (fromIndex, toIndex) => {
     const owners = [...this.state.owners]
-    const item = owners.splice(fromIndex, 1)[0];
-    owners.splice(toIndex, 0, item);
+    const item = owners.splice(fromIndex, 1)[0]
+    owners.splice(toIndex, 0, item)
     this.setState({ owners, orderChanged: Math.random() })
 
     const payload = {
       variables: { id: item.id, order: toIndex },
       successMessage: null,
+      refetchQueries: ["GetTableDefinitionWithOwners"],
     }
 
     this.props.handleMutation(payload)
@@ -84,13 +85,14 @@ class TableOwners extends Component {
         }>
           {isEmpty && !isEditing ? ( <div className="empty-text">No owners assigned.</div> ) : (
             <DraggableList enabled={isEditing} {...this.draggableProps}>
-              {map(owners, ({ id, type, order, owner }) => (
+              {map(owners, ({ id, type, classification, order, owner }) => (
                 <li className={isEditing ? 'table-owner editing' : 'table-owner'}>
                   <TableOwnerInput
+                    isEditing={isEditing}
                     ownerId={id}
                     owner={owner}
                     type={type}
-                    isEditing={isEditing}
+                    classification={classification}
                   />
                 </li>
               ))}
@@ -102,4 +104,7 @@ class TableOwners extends Component {
   }
 }
 
-export default compose(graphql(UpdateAssetOwner), withGraphQLMutation)(TableOwners)
+export default compose(
+  graphql(UpdateAssetOwner),
+  withGraphQLMutation
+)(TableOwners)

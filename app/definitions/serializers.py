@@ -727,9 +727,11 @@ class AssetOwnerSerializer(MetamapperSerializer, serializers.Serializer):
 
     order = serializers.IntegerField(min_value=0, required=False, allow_null=True)
 
+    classification = serializers.ChoiceField(choices=models.AssetOwner.CLASSIFICATION_CHOICES)
+
     class Meta:
         model = models.AssetOwner
-        fields = ('content_object', 'owner', 'order',)
+        fields = ('classification', 'content_object', 'owner', 'order',)
 
     def validate_owner(self, owner):
         """The owner must be part of the provided workspace.

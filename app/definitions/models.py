@@ -40,6 +40,14 @@ def make_audit_kwargs(instance):
 class AssetOwner(OrderedModel, TimestampedModel):
     """Represents an owner of a data asset.
     """
+    BUSINESS = 'BUSINESS'
+    TECHNICAL = 'TECHNICAL'
+
+    CLASSIFICATION_CHOICES = (
+        (BUSINESS, 'Business'),
+        (TECHNICAL, 'Technical'),
+    )
+
     workspace = models.ForeignKey(
         to=Workspace,
         on_delete=models.CASCADE,
@@ -61,6 +69,8 @@ class AssetOwner(OrderedModel, TimestampedModel):
         related_name='+',
     )
     owner = GenericForeignKey('owner_type', 'owner_id')
+
+    classification = models.CharField(max_length=12, choices=CLASSIFICATION_CHOICES, default=BUSINESS)
 
     order_with_respect_to = ('object_id', 'content_type')
 

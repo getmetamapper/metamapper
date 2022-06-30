@@ -1274,7 +1274,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         """
         group = factories.GroupFactory(workspace=self.workspace)
 
-        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1}
+        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1, 'classification': 'TECHNICAL'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertTrue(serializer.is_valid())
@@ -1287,7 +1287,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         """
         group = factories.GroupFactory()
 
-        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1}
+        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1, 'classification': 'BUSINESS'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertFalse(serializer.is_valid())
@@ -1305,7 +1305,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         user = factories.UserFactory()
         self.workspace.grant_membership(user, 'MEMBER')
 
-        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1}
+        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1, 'classification': 'BUSINESS'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertTrue(serializer.is_valid())
@@ -1318,7 +1318,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         """
         user = factories.UserFactory()
 
-        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1}
+        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1, 'classification': 'BUSINESS'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertFalse(serializer.is_valid())
@@ -1343,7 +1343,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
 
         group = factories.GroupFactory(workspace=self.workspace)
 
-        attributes = {'owner': group, 'content_object': content_object, 'order': 3}
+        attributes = {'owner': group, 'content_object': content_object, 'order': 3, 'classification': 'TECHNICAL'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertTrue(serializer.is_valid())

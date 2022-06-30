@@ -191,11 +191,19 @@
   }
 }
 .table-owner-search-wrapper .ant-btn {
-  margin-left: 12px;
   height: 36px;
   line-height: 36px;
 }
-
+.table-owner-search-wrapper .ant-select {
+  width: 100%;
+}
+.table-owner-search-wrapper .ant-select {
+  margin-bottom: 12px;
+}
+.table-owner-search-wrapper .ant-select-selection__placeholder,
+.table-owner-search-wrapper .ant-select::placeholder {
+  font-size: 15px;
+}
 .table-owner-search-dropdown .ant-select-dropdown-menu-item-group-title {
   color: #666;
   font-weight: bold;

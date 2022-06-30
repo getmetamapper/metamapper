@@ -5,6 +5,7 @@ import graphene.relay as relay
 import app.authorization.permissions as permissions
 import app.definitions.permissions as definition_permissions
 
+import app.definitions.models as models
 import app.definitions.tasks as tasks
 import app.definitions.schema as schema
 import app.definitions.serializers as serializers
@@ -363,6 +364,7 @@ class CreateAssetOwner(mixins.CreateMutationMixin, relay.ClientIDMutation):
     class Input:
         object_id = graphene.ID(required=True)
         owner_id = graphene.ID(required=True)
+        classification = graphene.String(required=True, default_value=models.AssetOwner.BUSINESS)
         order = graphene.Int(required=False)
 
     class Meta:
@@ -381,6 +383,7 @@ class CreateAssetOwner(mixins.CreateMutationMixin, relay.ClientIDMutation):
         return {
             "instance": None,
             "data": {
+                "classification": data["classification"],
                 "content_object": cls.get_content_object(info, data["object_id"]),
                 "order": data["order"],
                 "owner": cls.get_content_object(info, data["owner_id"]),

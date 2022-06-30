@@ -84,6 +84,7 @@ class AssetOwnerType(AuthNode, DjangoObjectType):
     scope_to_workspace = True
 
     type = graphene.String()
+    classification = graphene.String()
 
     owner = graphene.Field(OwnerType)
 

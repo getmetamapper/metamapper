@@ -1384,11 +1384,13 @@ class TestCreateAssetOwner(cases.GraphQLTestCase):
     mutation CreateAssetOwner(
       $objectId: ID!
       $ownerId: ID!
+      $classification: String!
       $order: Int
     ) {
       createAssetOwner(input: {
         objectId: $objectId,
         ownerId: $ownerId,
+        classification: $classification,
         order: $order,
       }) {
         assetOwner {
@@ -1397,6 +1399,7 @@ class TestCreateAssetOwner(cases.GraphQLTestCase):
             id
             name
           }
+          classification
         }
         errors {
           resource
@@ -1420,6 +1423,7 @@ class TestCreateAssetOwner(cases.GraphQLTestCase):
         variables = {
             'objectId': self.object_id,
             'ownerId': helpers.to_global_id(owner_type, owner.id),
+            'classification': 'TECHNICAL',
         }
 
         response = self.execute(variables=variables)
@@ -1432,6 +1436,7 @@ class TestCreateAssetOwner(cases.GraphQLTestCase):
                     'id': variables['ownerId'],
                     'name': owner.name,
                 },
+                'classification': variables['classification'],
             },
             'errors': None
         })
@@ -1477,6 +1482,7 @@ class TestCreateAssetOwner(cases.GraphQLTestCase):
         variables = {
             'objectId': self.object_id,
             'ownerId': helpers.to_global_id('UserType', self.user.id),
+            'classification': 'TECHNICAL',
         }
 
         response = self.execute(variables=variables)
@@ -1490,6 +1496,7 @@ class TestCreateAssetOwner(cases.GraphQLTestCase):
         variables = {
             'objectId': self.object_id,
             'ownerId': helpers.to_global_id('UserType', self.user.id),
+            'classification': 'TECHNICAL',
         }
 
         self.assertPermissionDenied(self.execute(variables=variables))
