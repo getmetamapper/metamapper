@@ -72,6 +72,7 @@ GROUP BY
     db_schema,
     db_name,
     db_user
+ORDER BY execution_date
 """
 
 

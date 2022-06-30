@@ -12,7 +12,7 @@ import UpdateDatastoreMetadataMutation from "graphql/mutations/UpdateDatastoreMe
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGetDatastoreIntervalOptions from "graphql/withGetDatastoreIntervalOptions"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 
 class DatastoreSettings extends Component {
   constructor(props) {

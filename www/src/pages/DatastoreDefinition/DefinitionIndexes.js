@@ -3,7 +3,7 @@ import { compose } from "react-apollo"
 import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"
 import IndexDefinitionTable from "app/Datastores/DatastoreDefinition/IndexDefinitionTable"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableIndexes from "graphql/withGetTableIndexes"
 

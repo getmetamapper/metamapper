@@ -8,6 +8,7 @@ import { withLargeLoader } from "hoc/withLoader"
 import BooleanStatus from "app/Common/BooleanStatus"
 import FromNow from "app/Common/FromNow"
 import StatusBadge from "app/Common/StatusBadge"
+import UserAvatar from "app/Common/UserAvatar"
 
 class ChecksTable extends Component {
   constructor(props) {
@@ -23,8 +24,10 @@ class ChecksTable extends Component {
       {
         title: "Created By",
         dataIndex: "creator",
-        align: "left",
-        render: creator => creator.name,
+        align: "center",
+        render: (creator) => (
+          <UserAvatar tooltip={creator.name} {...creator} />
+        )
       },
       {
         title: "Status",

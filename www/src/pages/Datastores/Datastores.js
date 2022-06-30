@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom"
 import { withUserContext } from "context/UserContext"
 import { Button, Col, Form, Row } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 import qs from "query-string"
 import Link from "app/Navigation/Link"
 import DatastoreList from "app/Datastores/DatastoreList"

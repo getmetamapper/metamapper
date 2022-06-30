@@ -4,7 +4,7 @@ import { Card } from "antd"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableDefinition from "graphql/withGetTableDefinition"
 import CreateComment from "app/Comments/CreateComment"

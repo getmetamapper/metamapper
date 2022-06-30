@@ -10,7 +10,7 @@ import ApiTokenPreview from "app/WorkspaceSettings/Api/ApiTokenPreview"
 import withGetWorkspaceBySlug from "graphql/withGetWorkspaceBySlug"
 import withGetApiTokens from "graphql/withGetApiTokens"
 import RestrictedButton from "app/Common/RestrictedButton"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 
 const breadcrumbs = ({ slug }) => {
   return [

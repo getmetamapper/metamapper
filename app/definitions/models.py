@@ -121,7 +121,7 @@ class Datastore(StringPrimaryKeyModel,
         SQLSERVER,
     ]
 
-    USAGE_WINDOW = 14
+    USAGE_WINDOW = 30
 
     REQUIRED_SSH_FIELDS = [
         'ssh_host',
@@ -288,7 +288,7 @@ class Datastore(StringPrimaryKeyModel,
         latest_usage_date = self.table_usage.aggregate(Max('execution_date'))
         latest_usage_date = latest_usage_date['execution_date__max']
 
-        if not latest_usage_date or (current_timestamp - latest_usage_date).days >= self.USAGE_WINDOW:
+        if not latest_usage_date or (current_timestamp.date() - latest_usage_date).days >= self.USAGE_WINDOW:
             return (current_timestamp - timedelta(days=self.USAGE_WINDOW)).date()
 
         return latest_usage_date
@@ -414,6 +414,8 @@ class Table(AuditableModel,
     properties = models.JSONField(default=dict)
     readme = models.TextField(null=True, blank=True)
 
+    usage_score = models.IntegerField(default=0)
+    usage_window = models.IntegerField(null=True, default=None)
     usage_total_queries = models.IntegerField(null=True, default=None)
     usage_total_users = models.IntegerField(null=True, default=None)
 
@@ -524,6 +526,17 @@ class TableUsage(models.Model):
         index_together = [
             ('datastore', 'db_schema', 'db_table'),
         ]
+
+
+class TableUsageExists(models.Model):
+    """Tracks if a query has been processed for table usage.
+    """
+    id = models.CharField(primary_key=True, max_length=32)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'definitions_table_usage_exists'
 
 
 class Column(AuditableModel,

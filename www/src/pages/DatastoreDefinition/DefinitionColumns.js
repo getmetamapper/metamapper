@@ -7,7 +7,7 @@ import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"
 import qs from "query-string"
 import ColumnDefinitionTable from "app/Datastores/DatastoreDefinition/ColumnDefinitionTable"
 import ColumnDefinitionDetails from "app/Datastores/DatastoreDefinition/ColumnDefinitionDetails"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableColumns from "graphql/withGetTableColumns"
 

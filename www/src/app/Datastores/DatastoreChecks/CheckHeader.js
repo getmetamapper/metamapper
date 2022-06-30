@@ -16,7 +16,7 @@ const CheckHeader = ({ check, datastore }) => (
           <BooleanStatus isEnabled={check.isEnabled} />
           <span class="dot"></span>
           <span>
-            Created by {check.creator.name} {moment(check.createdAt).fromNow()}
+            Created by <Link to={`/settings/users/${check.creator.id}`}>{check.creator.name}</Link> {moment(check.createdAt).fromNow()}
           </span>
         </p>
       </Col>

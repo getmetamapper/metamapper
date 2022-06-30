@@ -31,6 +31,12 @@ export default gql`
           avatarUrl
         }
       }
+      usage {
+        popularityScore
+        totalQueries
+        totalUsers
+        windowInDays
+      }
     }
   }
 `
