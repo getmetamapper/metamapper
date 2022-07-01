@@ -147,6 +147,8 @@ class PreviewCheckQuery(mixins.CreateMutationMixin, relay.ClientIDMutation):
             info.context.dataframe = serializer.get_dataframe()
         except catchable_errors as e:
             return cls(query=None, query_results=None, sql_exception=str(e))
+        except Exception:
+            return cls(query=None, query_results=None, sql_exception='An unexpected error has occurred.')
 
         instance, errors = (
             super().perform_mutate(serializer, info, **data)

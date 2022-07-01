@@ -234,12 +234,13 @@ class EngineInterface(object):
         """
         data = []
         with self.execute_query(sql, parameters) as cursor:
-            dataframe = pd.DataFrame(columns=[i[0] for i in cursor.description])
+            columns = self._cursor_columns(cursor)
+            dataframe = pd.DataFrame(columns=columns)
             while True:
                 done = True
                 for r in cursor.fetchmany(self.records_per_batch):
                     done = False
-                    data.append(r)
+                    data.append(self._cursor_row(r, columns))
                     if record_limit and len(data) >= record_limit:
                         break
                     if byte_limit and sys.getsizeof(data) >= byte_limit:
@@ -299,8 +300,14 @@ class EngineInterface(object):
     def override_sys_schema(self, schemas):
         self.sys_schemas = schemas
 
+    def _cursor_columns(self, cursor):
+        return [i[0] for i in cursor.description]
 
-class AmazonInspectorMixin(object):
+    def _cursor_row(self, row, cols):
+        return row
+
+
+class AmazonInspectorInterface(EngineInterface):
     """Adds some common funcitonality for inspectors that hit the Amazon API.
     """
     aws_client_type = None
@@ -347,6 +354,10 @@ class AmazonInspectorMixin(object):
     def has_usage(self):
         return False
 
+    @classmethod
+    def has_partitions(self):
+        return True
+
     @property
     def iam_role(self):
         return self.extras.get('role')
@@ -355,7 +366,21 @@ class AmazonInspectorMixin(object):
     def region(self):
         return self.extras.get('region')
 
+    @property
+    def work_group(self):
+        return self.extras.get('work_group')
+
     def _to_oid(self, *items):
         """str: We create a consistent hash of items to create a `pseudo` object identifier.
         """
         return hashlib.md5(''.join(map(str, items)).encode('utf-8')).hexdigest()
+
+    def get_indexes(self, *args, **kwargs):
+        """list: Retrieve indexes from the database.
+        """
+        return []
+
+    def get_query_history(self, start_date, end_date, *args, **kwargs):
+        """list: Retrieve past queries for the given date.
+        """
+        return []

@@ -5,26 +5,10 @@ import botocore.exceptions as exceptions
 import app.inspector.engines.interface as interface
 
 
-class AwsAthenaInspector(interface.AmazonInspectorMixin):
+class AwsAthenaInspector(interface.AmazonInspectorInterface):
     """Access Athena database metadata via AWS API.
     """
     aws_client_type = 'athena'
-
-    @classmethod
-    def has_checks(self):
-        return False
-
-    @classmethod
-    def has_indexes(self):
-        return False
-
-    @classmethod
-    def has_usage(self):
-        return False
-
-    @classmethod
-    def has_partitions(self):
-        return True
 
     @property
     def version(self):
@@ -65,11 +49,6 @@ class AwsAthenaInspector(interface.AmazonInspectorMixin):
                     dataset['Name'],
                     table_metadata,
                 )
-
-    def get_indexes(self, *args, **kwargs):
-        """list: Retrieve indexes from the database.
-        """
-        return []
 
     def _list_data_catalogs(self):
         """List the available data catalogs via API

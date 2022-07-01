@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime as dt
+import json
+
 import rest_framework.serializers as serializers
 
 import app.audit.decorators as audit
@@ -79,6 +81,17 @@ class BigQueryConnectionSerializer(JdbcCredentialsSerializer):
 
     extras = serializers.JSONField(required=True)
 
+    def sanitize_extras(self, extras):
+        """We expect some specific fields associated with this connection type:
+        """
+        output = super().sanitize_extras(extras)
+        credentials = output.pop('credentials')
+
+        if isinstance(credentials, str):
+            output['credentials'] = json.loads(credentials)
+
+        return output
+
     def validate_host(self, host):
         """Return a dummy host, since we do not need this field.
         """
@@ -118,7 +131,7 @@ class BigQueryConnectionSerializer(JdbcCredentialsSerializer):
 class AwsConnectionSerializer(JdbcCredentialsSerializer):
     """Validates connectivity to AWS Athena or Glue through IAM role and region.
     """
-    allowed_extra_fields = ['role', 'region']
+    allowed_extra_fields = ['role', 'region', 'work_group']
 
     extras = serializers.JSONField(required=True)
 
@@ -153,6 +166,9 @@ class AwsConnectionSerializer(JdbcCredentialsSerializer):
 
         if not extras['role'] or not extras['region']:
             raise serializers.ValidationError('Amazon account information is an invalid format.')
+
+        # if not extras['work_group']:
+        #     raise serializers.ValidationError('Valid work group is required.')
 
         return extras
 
@@ -210,7 +226,6 @@ class JdbcConnectionSerializer(MetamapperSerializer, JdbcCredentialsSerializer):
         }
 
         validator_class = validators.get(engine)
-
         if validator_class:
             validator = validator_class(self.instance, data=data, partial=self.partial)
             validator.is_valid(raise_exception=True)
