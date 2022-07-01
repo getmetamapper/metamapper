@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-import boto3
 import contextlib
 import pandas as pd
 import numpy as np
 import hashlib
 import sys
 
+from app.inspector.aws import get_aws_client
+from app.inspector.dbapi2 import aws_athena
 from app.inspector.errors import OutOfMemoryError
 
 
@@ -324,27 +325,17 @@ class AmazonInspectorInterface(EngineInterface):
     @property
     def client(self):
         if not self._client:
-            sts = boto3.client('sts', region_name=self.region)
-
-            assumed_role_object = sts.assume_role(
-                RoleArn=self.iam_role,
-                RoleSessionName=f'metamapper_{self.region}_{self.database}'
-            )
-
-            credentials = assumed_role_object['Credentials']
-
-            self._client = boto3.client(
-                self.aws_client_type,
-                aws_access_key_id=credentials['AccessKeyId'],
-                aws_secret_access_key=credentials['SecretAccessKey'],
-                aws_session_token=credentials['SessionToken'],
-                region_name=self.region,
+            self._client = get_aws_client(
+                client_type=self.aws_client_type,
+                role_arn=self.iam_role,
+                role_session_name=f'metamapper_{self.region}_{self.database}',
+                region=self.region,
             )
         return self._client
 
     @classmethod
     def has_checks(self):
-        return False
+        return True
 
     @classmethod
     def has_indexes(self):
@@ -368,12 +359,15 @@ class AmazonInspectorInterface(EngineInterface):
 
     @property
     def work_group(self):
-        return self.extras.get('work_group')
+        return self.extras.get('workgroup')
 
-    def _to_oid(self, *items):
-        """str: We create a consistent hash of items to create a `pseudo` object identifier.
-        """
-        return hashlib.md5(''.join(map(str, items)).encode('utf-8')).hexdigest()
+    @property
+    def connector(self):
+        return aws_athena
+
+    @property
+    def cursor_kwargs(self):
+        return {}
 
     def get_indexes(self, *args, **kwargs):
         """list: Retrieve indexes from the database.
@@ -384,3 +378,21 @@ class AmazonInspectorInterface(EngineInterface):
         """list: Retrieve past queries for the given date.
         """
         return []
+
+    @contextlib.contextmanager
+    def execute_query(self, sql, parameters=None):
+        if sys.version_info[0] < 3:
+            sql = sql.encode('utf-8')
+
+        with contextlib.closing(self.get_connection()) as conn:
+            with contextlib.closing(self.get_cursor(conn)) as cursor:
+                if parameters is not None:
+                    cursor.execute(sql, tuple(parameters))
+                else:
+                    cursor.execute(sql)
+                yield cursor
+
+    def _to_oid(self, *items):
+        """str: We create a consistent hash of items to create a `pseudo` object identifier.
+        """
+        return hashlib.md5(''.join(map(str, items)).encode('utf-8')).hexdigest()

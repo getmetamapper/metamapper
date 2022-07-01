@@ -1,7 +1,8 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { Alert, Icon, Table } from "antd"
 import { first, keys, isEqual } from "lodash"
 import withLoader from "hoc/withLoader"
+import Timer from "app/Common/Timer"
 
 const defaultColumns = [
   {
@@ -59,11 +60,16 @@ class CheckSqlPreviewResults extends Component {
 }
 
 export default withLoader({
-  indicator: <Icon type="loading" style={{ fontSize: 24 }} spin />,
+  indicator: (
+    <Fragment>
+      <Icon type="loading" style={{ fontSize: 24 }} spin />
+      <Timer isActive />
+    </Fragment>
+  ),
   wrapperstyles: {
     textAlign: "center",
-    paddingTop: "40px",
-    paddingBottom: "40px",
+    paddingTop: "60px",
+    paddingBottom: "60px",
     borderTop: "1px solid #e8e8e8",
     borderLeft: "1px solid #e8e8e8",
   },

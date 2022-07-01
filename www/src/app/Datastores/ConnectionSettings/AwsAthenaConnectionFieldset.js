@@ -42,7 +42,21 @@ const AwsAthenaConnectionFieldset = ({
         )}
       </Form.Item>
       <Form.Item>
-        <FormLabel label="Database" required />
+        <FormLabel label="Work Group" required />
+        {getFieldDecorator("extras.workgroup", {
+          initialValue: jdbcConnection.extras.workgroup,
+          rules: [],
+        })(
+          <Input
+            type="text"
+            onChange={onChange}
+            disabled={!hasPermission}
+            data-test="ConnectionSettingsFieldset.WorkGroup"
+          />
+        )}
+      </Form.Item>
+      <Form.Item>
+        <FormLabel label="Data Source" required />
         {getFieldDecorator("database", {
           initialValue: jdbcConnection.database,
           rules: [],
@@ -51,7 +65,7 @@ const AwsAthenaConnectionFieldset = ({
             type="text"
             onChange={onChange}
             disabled={!hasPermission}
-            data-test="ConnectionSettingsFieldset.Database"
+            data-test="ConnectionSettingsFieldset.DataSource"
           />
         )}
       </Form.Item>

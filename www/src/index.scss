@@ -20,6 +20,9 @@ $color-dark: rgba(0, 0, 0, 0.65);
   background-color: $color-primary-light !important;
   border: 1px solid $color-primary !important;
 }
+.timer {
+  margin: 20px 0;
+}
 .boolean-status {
   .text {
     margin-left: 6px;

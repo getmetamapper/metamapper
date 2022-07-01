@@ -42,6 +42,20 @@ const AwsGlueConnectionFieldset = ({
         )}
       </Form.Item>
       <Form.Item>
+        <FormLabel label="Work Group" required />
+        {getFieldDecorator("extras.workgroup", {
+          initialValue: jdbcConnection.extras.workgroup,
+          rules: [],
+        })(
+          <Input
+            type="text"
+            onChange={onChange}
+            disabled={!hasPermission}
+            data-test="ConnectionSettingsFieldset.WorkGroup"
+          />
+        )}
+      </Form.Item>
+      <Form.Item>
         <FormLabel label="Account ID" required />
         {getFieldDecorator("database", {
           initialValue: jdbcConnection.database,

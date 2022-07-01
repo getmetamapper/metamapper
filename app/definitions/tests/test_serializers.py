@@ -325,6 +325,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             'extras': {
                 'role': 'arn:aws:iam::123456789012:role/default',
                 'region': 'us-west-2',
+                'workgroup': 'metamapper',
                 'invalid': 'this_will_be_stripped_off',
             },
         }
@@ -337,7 +338,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertEqual(instance.host, 'api.amazonaws.com')
         self.assertEqual(instance.username, 'amazonapis')
         self.assertEqual(instance.port, 443)
-        self.assertEqual(list(instance.extras.keys()), ['role', 'region'])
+        self.assertEqual(list(instance.extras.keys()), ['role', 'region', 'workgroup'])
         self.assertEqual(instance.extras['role'], extras['extras']['role'])
         self.assertEqual(instance.extras['region'], extras['extras']['region'])
 
@@ -678,6 +679,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
                 'extras': {
                     'role': 'arn:aws:iam::123456789012:role/other',
                     'region': 'us-east-1',
+                    'workgroup': 'metamapper',
                 }
             },
             partial=True,
@@ -689,7 +691,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         instance.refresh_from_db()
 
         self.assertEqual(instance.host, 'athena.amazonaws.com')
-        self.assertEqual(list(instance.extras.keys()), ['role', 'region'])
+        self.assertEqual(list(instance.extras.keys()), ['role', 'region', 'workgroup'])
         self.assertEqual(instance.extras['role'], 'arn:aws:iam::123456789012:role/other')
         self.assertEqual(instance.extras['region'], 'us-east-1')
 
@@ -713,6 +715,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
                 'extras': {
                     'iam_role': 'arn:aws:iam::123456789012:role/other',
                     'region': 'us-west-2',
+                    'workgroup': 'metamapper',
                 }
             },
             partial=True,
