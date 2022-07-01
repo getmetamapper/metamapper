@@ -5,12 +5,16 @@ import { Link, withRouter } from "react-router-dom"
 import { map } from "lodash"
 import { withUserContext } from "context/UserContext"
 import { Avatar, Col, Row, Icon, Layout, Menu, Tooltip } from "antd"
-import { withLargeLoader } from "hoc/withLoader"
 import Breadcrumbs from "app/Navigation/Breadcrumbs"
 import DatastoreEngineIcon from "app/Datastores/DatastoreEngineIcon"
 import TableSchemaSelector from "app/Datastores/DatastoreDefinition/TableSchemaSelector"
 
-const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading, hideSchemaSelector }) => (
+const InnerDatastoreLayout = ({
+  children,
+  datastore,
+  loading,
+  hideSchemaSelector,
+}) => (
   <Row>
     <Col span={hideSchemaSelector ? 24 : 20}>
       <div className="inner-datastore-layout">{children}</div>
@@ -25,7 +29,7 @@ const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading, hi
       </Col>
     )}
   </Row>
-))
+)
 
 class DatastoreLayout extends Component {
   constructor(props) {
@@ -163,7 +167,10 @@ class DatastoreLayout extends Component {
                 </Menu>
               </Col>
               <Col span={23} className="pull-right">
-                <div className="breadcrumbs-wrapper fixed" data-test="DatastoreLayout.Breadcrumbs">
+                <div
+                  className="breadcrumbs-wrapper fixed"
+                  data-test="DatastoreLayout.Breadcrumbs"
+                >
                   <Breadcrumbs breadcrumbs={breadcrumbs(datastore)} />
                 </div>
                 <Layout.Content className={className}>

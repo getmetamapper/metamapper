@@ -20,7 +20,7 @@ class DatastoreAssetsTable extends Component {
       currentWorkspace: { slug },
     } = props
 
-    this.columns = [
+    const columns = [
       {
         title: "Popularity",
         key: "popularity",
@@ -39,12 +39,14 @@ class DatastoreAssetsTable extends Component {
             windowInDays={windowInDays}
           />
         ),
+        visible: datastore.supportedFeatures.usage,
       },
       {
         title: "Schema Name",
         key: "schema",
         sorter: true,
         render: ({ schema }) => <span title={schema.name}>{schema.name}</span>,
+        visible: true,
       },
       {
         title: "Asset Name",
@@ -58,14 +60,18 @@ class DatastoreAssetsTable extends Component {
             {tablename}
           </Link>
         ),
+        visible: true,
       },
       {
         title: "Description",
         dataIndex: "shortDesc",
         key: "shortDesc",
         editable: true,
+        visible: true,
       },
     ]
+
+    this.columns = columns.filter((c) => c.visible)
 
     window.onscroll = debounce(() => {
       // Bails early if:

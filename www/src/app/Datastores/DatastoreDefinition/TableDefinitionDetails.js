@@ -9,10 +9,11 @@ import TableDefinitionTags from "./TableDefinitionTags"
 import TablePopularityBadge from "./TablePopularityBadge"
 
 const TableDefinitionDetails = ({
-  table,
-  schema,
+  datastore,
   lastCommitTimestamp,
   loading,
+  schema,
+  table,
 }) => (
   <Card className="table-definition-details">
     <Row>
@@ -32,12 +33,14 @@ const TableDefinitionDetails = ({
       <TableDescription table={table} />
     </p>
     <p className="mb-0">
-      <TablePopularityBadge
-        popularityScore={table.usage.popularityScore}
-        totalQueries={table.usage.totalQueries}
-        totalUsers={table.usage.totalUsers}
-        windowInDays={table.usage.windowInDays}
-      />
+      {datastore.supportedFeatures.usage && (
+        <TablePopularityBadge
+          popularityScore={table.usage.popularityScore}
+          totalQueries={table.usage.totalQueries}
+          totalUsers={table.usage.totalUsers}
+          windowInDays={table.usage.windowInDays}
+        />
+      )}
       <TableDefinitionTags table={table} />
     </p>
   </Card>

@@ -135,8 +135,8 @@ class DatastoreSettings extends Component {
   }
 }
 
-const withNotFound = withNotFoundHandler(({ datastore }) => {
-  return !datastore || !datastore.hasOwnProperty("id")
+const withNotFound = withNotFoundHandler(({ datastore, loading }) => {
+  return !loading && (!datastore || !datastore.hasOwnProperty("id"))
 })
 
 const enhance = compose(
@@ -144,11 +144,11 @@ const enhance = compose(
   withRouter,
   withWriteAccess,
   withGetDatastoreSettings,
-  withGetDatastoreIntervalOptions,
-  graphql(UpdateDatastoreMetadataMutation),
-  withGraphQLMutation,
   withLargeLoader,
   withNotFound,
+  withGetDatastoreIntervalOptions,
+  graphql(UpdateDatastoreMetadataMutation),
+  withGraphQLMutation
 )
 
 export default enhance(DatastoreSettings)
