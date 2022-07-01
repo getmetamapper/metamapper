@@ -152,25 +152,25 @@ class Datastore(StringPrimaryKeyModel,
         'ssh_user',
     ]
 
-    name = models.CharField(max_length=255, null=False, blank=False)
-    slug = models.CharField(max_length=300, null=False, blank=False)
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=300, unique=True)
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
     is_enabled = models.BooleanField(default=True)
-    version = models.CharField(max_length=255, null=True, blank=False)
+    version = models.CharField(max_length=255, null=True)
     interval = models.DurationField(default=timedelta(hours=24))
 
-    engine = models.CharField(max_length=16, choices=ENGINE_CHOICES, null=False, blank=False)
-    host = models.CharField(max_length=255, null=False, blank=False)
-    username = models.CharField(max_length=128, null=False, blank=False)
-    password = EncryptedCharField(max_length=128, null=False, blank=False)
-    database = models.CharField(max_length=128, null=False, blank=False)
-    port = models.PositiveIntegerField(null=False, blank=False, validators=[MaxValueValidator(65535)])
+    engine = models.CharField(max_length=16, choices=ENGINE_CHOICES)
+    host = models.CharField(max_length=255)
+    username = models.CharField(max_length=128)
+    password = EncryptedCharField(max_length=128)
+    database = models.CharField(max_length=128)
+    port = models.PositiveIntegerField(null=False, validators=[MaxValueValidator(65535)])
     extras = models.JSONField(default=dict)
 
     ssh_enabled = models.BooleanField(default=False)
-    ssh_host = models.CharField(max_length=128, null=True, blank=False)
-    ssh_port = models.PositiveIntegerField(null=True, blank=False, validators=[MaxValueValidator(65535)])
-    ssh_user = models.CharField(max_length=128, null=True, blank=False)
+    ssh_host = models.CharField(max_length=128, null=True)
+    ssh_port = models.PositiveIntegerField(null=True, validators=[MaxValueValidator(65535)])
+    ssh_user = models.CharField(max_length=128, null=True)
 
     short_desc = models.CharField(max_length=140, null=True, blank=True)
 
@@ -345,7 +345,7 @@ class Schema(AuditableModel,
         related_name='+',
     )
 
-    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
+    name = models.CharField(db_index=True, max_length=256)
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
 
     search_objects = SearchManager(fields=['name'])
@@ -405,9 +405,9 @@ class Table(AuditableModel,
         related_name='+',
     )
 
-    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
+    name = models.CharField(db_index=True, max_length=256)
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
-    kind = models.CharField(max_length=100, null=False, blank=False)
+    kind = models.CharField(max_length=100)
 
     db_comment = models.TextField(null=True, blank=True)
     short_desc = models.TextField(null=True, blank=True)
@@ -484,6 +484,7 @@ class Table(AuditableModel,
             'label': self.search_label,
             'description': self.short_desc,
             'datastore_id': self.datastore_id,
+            'tags': self.tags,
         }
 
 
@@ -570,9 +571,9 @@ class Column(AuditableModel,
         related_name='+',
     )
 
-    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
-    ordinal_position = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
-    data_type = models.CharField(max_length=255, null=False, blank=False)
+    name = models.CharField(db_index=True, max_length=256)
+    ordinal_position = models.IntegerField(null=False, validators=[MinValueValidator(1)])
+    data_type = models.CharField(max_length=255)
     max_length = models.IntegerField(null=True)
     numeric_scale = models.IntegerField(null=True)
     is_primary = models.BooleanField(null=False, default=False)
@@ -629,6 +630,7 @@ class Column(AuditableModel,
             'label': self.search_label,
             'description': self.short_desc,
             'datastore_id': self.datastore_id,
+            'tags': self.tags,
         }
 
     def to_doc(self):
@@ -642,7 +644,7 @@ class Column(AuditableModel,
             'name': self.name,
             'exact_name': self.search_label,
             'description': self.short_desc,
-            'tags': self.table.tags,
+            'tags': self.table.tags + self.tags,
         }
 
     @property

@@ -27,6 +27,7 @@ query GetSearchResults(
         label
         description
         pathname
+        tags
       }
     }
     elapsed

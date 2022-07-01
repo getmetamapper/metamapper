@@ -112,6 +112,7 @@ class Comment(StringPrimaryKeyModel,
             'label': self.search_label,
             'description': self.text,
             'datastore_id': self.content_object.datastore_id,
+            'tags': [],
         }
 
     def to_doc(self):
