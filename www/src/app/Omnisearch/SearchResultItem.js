@@ -18,20 +18,24 @@ const relevance = (score) => {
 
 const SearchResultItem = ({
   datastore,
-  engines,
   score,
   modelName,
-  searchResult: { label, description, pathname },
+  searchResult: { label, description, pathname, tags },
 }) => (
   <List.Item className="search-result" data-test="SearchResultItem">
     <div className="search-result-content">
       <p className="label">
-        <Link to={pathname}><b>{label}</b></Link>
+        <Link to={pathname}>
+          <b>{label}</b>
+        </Link>
       </p>
       <p>
         <Tag>{modelName}</Tag>
         <Tag>{datastore.engineName}</Tag>
         <Tag>{datastore.name}</Tag>
+      </p>
+      <p>
+        {tags.map(tag => <Tag color="blue">{tag}</Tag>)}
       </p>
       <p className="desc">
         {description ? (

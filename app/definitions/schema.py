@@ -110,6 +110,15 @@ class AssetOwnerType(AuthNode, DjangoObjectType):
         return root.owner.__class__.__name__.upper()
 
 
+class TableUsageType(graphene.ObjectType):
+    """GraphQL representation of the usage statistics of a Table.
+    """
+    popularity_score = graphene.Float()
+    total_queries = graphene.Int()
+    total_users = graphene.Int()
+    window_in_days = graphene.Int()
+
+
 class TableType(AuthNode, DjangoObjectType):
     """GraphQL representation of a Table.
     """
@@ -123,12 +132,14 @@ class TableType(AuthNode, DjangoObjectType):
     schema = graphene.Field('app.definitions.schema.SchemaType')
     owners = graphene.List(AssetOwnerType)
 
+    usage = graphene.Field(TableUsageType)
+
     class Meta:
         model = models.Table
         filter_fields = {}
         interfaces = (relay.Node,)
         connection_class = connections.DefaultConnection
-        exclude_fields = []
+        exclude_fields = ['usage_score', 'usage_total_users', 'usage_total_queries', 'usage_window']
 
     @classmethod
     def get_node(cls, info, id):
@@ -140,13 +151,9 @@ class TableType(AuthNode, DjangoObjectType):
         ).first()
 
     def resolve_kind(instance, info):
-        """Capitalize the `kind` attribute.
-        """
         return instance.kind[0].upper() + instance.kind[1:].lower()
 
     def resolve_columns(instance, info):
-        """Should return the associated Columns.
-        """
         return info.context.loaders.table_columns.load(instance.object_id)
 
     def resolve_schema(instance, info):
@@ -154,6 +161,15 @@ class TableType(AuthNode, DjangoObjectType):
 
     def resolve_owners(instance, info):
         return instance.owners.order_by('order').prefetch_related('owner')
+
+    def resolve_usage(instance, info):
+        usage_statistics = {
+            'popularity_score': instance.usage_score,
+            'total_queries': instance.usage_total_queries,
+            'total_users': instance.usage_total_users,
+            'window_in_days': instance.usage_window,
+        }
+        return usage_statistics
 
 
 class SchemaType(AuthNode, DjangoObjectType):

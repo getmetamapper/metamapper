@@ -8,7 +8,7 @@ import ConnectionSettingsForm from "app/Datastores/ConnectionSettings/Connection
 import UpdateDatastoreJdbcConnectionMutation from "graphql/mutations/UpdateDatastoreJdbcConnection"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 
 class ConnectionSettings extends Component {
   constructor(props) {

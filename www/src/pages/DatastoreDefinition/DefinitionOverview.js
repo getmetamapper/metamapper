@@ -4,7 +4,7 @@ import { Col, Row } from "antd"
 import { withWriteAccess } from "hoc/withPermissionsRequired"
 import { withLargeLoader } from "hoc/withLoader"
 import Layout from "app/Datastores/DatastoreDefinition/DefinitionLayout"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
 import withGetTableDefinitionWithOwners from "graphql/withGetTableDefinitionWithOwners"
 import withGetTableCustomProperties from "graphql/withGetTableCustomProperties"

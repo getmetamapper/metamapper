@@ -34,6 +34,9 @@ def create_executions(self, countdown_in_minutes=0):
         'Found {0} checks(s)'.format(len(checks))
     )
 
+    if not len(checks):
+        return
+
     executions_cache = []
     executions_epoch = shortcuts.epoch_now()
 

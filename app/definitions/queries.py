@@ -244,7 +244,7 @@ class Query(graphene.ObjectType):
             deleted_at__isnull=True,
         )
 
-        return queryset.order_by('schema__name', 'name')
+        return queryset
 
     @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
     def resolve_schema_names_by_datastore(self, info, datastore_id, *args, **kwargs):

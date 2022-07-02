@@ -154,6 +154,7 @@ class UpdateDatastoreJdbcConnection(mixins.UpdateMutationMixin, relay.ClientIDMu
         database = graphene.String(required=False)
         host = graphene.String(required=False)
         port = graphene.Int(required=False)
+        extras = utils_scalars.JSONObject(required=False)
 
         ssh_enabled = graphene.Boolean(required=False)
         ssh_host = graphene.String(required=False)

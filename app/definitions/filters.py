@@ -8,6 +8,14 @@ class DataAssetsFilterSet(filters.FilterSet):
     """
     schema = filters.CharFilter(field_name='schema__name', lookup_expr='iexact')
 
+    order_by = filters.OrderingFilter(
+        fields=(
+            ('schema__name', 'schema'),
+            ('name', 'table'),
+            ('usage_score', 'popularity'),
+        )
+    )
+
     class Meta:
         model = models.Table
         fields = []

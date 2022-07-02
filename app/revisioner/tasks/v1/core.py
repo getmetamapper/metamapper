@@ -14,21 +14,10 @@ from django.db import transaction
 from metamapper.celery import app
 
 from utils.postgres.types import ConflictAction
-from utils.shortcuts import model_to_dict
+from utils.shortcuts import dedupe_by_keys, model_to_dict
 
 
 __all__ = ['start_run']
-
-
-def dedupe_by_keys(data, dedupe_by):
-    """Helper function for deduplicating a list of dicts by a set of keys.
-    """
-    output = {}
-
-    for d in data:
-        output["".join([str(v) for k, v in d.items() if k in dedupe_by])] = d
-
-    return list(output.values())
 
 
 def upsert_schemas(schemas, on_conflict=None):

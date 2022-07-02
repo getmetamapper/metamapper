@@ -2,29 +2,14 @@
 import boto3
 import botocore.exceptions as exceptions
 
+import app.inspector.dbapi2.aws_athena as aws_athena
 import app.inspector.engines.interface as interface
 
 
-class AwsGlueInspector(interface.AmazonInspectorMixin):
+class AwsGlueInspector(interface.AmazonInspectorInterface):
     """Access Athena database metadata via AWS API.
     """
     aws_client_type = 'glue'
-
-    @classmethod
-    def has_checks(self):
-        return False
-
-    @classmethod
-    def has_indexes(self):
-        return False
-
-    @classmethod
-    def has_usage(self):
-        return False
-
-    @classmethod
-    def has_partitions(self):
-        return True
 
     @property
     def version(self):
@@ -33,12 +18,28 @@ class AwsGlueInspector(interface.AmazonInspectorMixin):
         return boto3.__version__
 
     @property
+    def connect_kwargs(self):
+        _kwargs = {
+            'role_arn': self.iam_role,
+            'region_name': self.region,
+            'work_group': self.work_group,
+            'catalog_name': 'AwsDataCatalog',
+            'timeout': 120,
+        }
+        return _kwargs
+
+    @property
     def operational_error(self):
         return exceptions.ClientError
 
     @property
     def catchable_errors(self):
-        return (self.operational_error, exceptions.NoCredentialsError, exceptions.ParamValidationError)
+        return (
+            self.operational_error,
+            aws_athena.DatabaseError,
+            exceptions.NoCredentialsError,
+            exceptions.ParamValidationError,
+        )
 
     def get_last_commit_time_for_table(self, *args, **kwargs):
         """Retrieve the last time a table was modified.

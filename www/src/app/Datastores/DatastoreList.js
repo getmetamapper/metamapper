@@ -14,16 +14,14 @@ class DatastoreList extends Component {
     this.columns = [
       {
         width: 45,
-        render: (text, row, index) => <DatastoreEngineIcon datastore={row} />,
+        render: (text, row) => <DatastoreEngineIcon datastore={row} />,
       },
       {
         title: "Name",
         dataIndex: "name",
         key: "name",
         align: "left",
-        render: (text, row, index) => (
-          <span className="datastore-name">{text}</span>
-        ),
+        render: (text) => <span className="datastore-name">{text}</span>,
       },
       {
         title: "Last Synced On",
@@ -58,7 +56,7 @@ class DatastoreList extends Component {
           columns={this.columns}
           onRow={(datastore) => {
             return {
-              onClick: (event) => this.handleNavigate(datastore), // click row
+              onClick: () => this.handleNavigate(datastore)
             }
           }}
         />
@@ -67,4 +65,8 @@ class DatastoreList extends Component {
   }
 }
 
-export default compose(withRouter, withUserContext, withLargeLoader)(DatastoreList)
+export default compose(
+  withRouter,
+  withUserContext,
+  withLargeLoader
+)(DatastoreList)

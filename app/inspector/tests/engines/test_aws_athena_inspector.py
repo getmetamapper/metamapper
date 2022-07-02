@@ -30,7 +30,7 @@ class AwsAthenaInspectorTests(unittest.TestCase):
         assert engine.AwsAthenaInspector.operational_error
 
     def test_has_checks_value(self):
-        assert not engine.AwsAthenaInspector.has_checks()
+        assert engine.AwsAthenaInspector.has_checks()
 
     def test_has_indexes_value(self):
         assert not engine.AwsAthenaInspector.has_indexes()

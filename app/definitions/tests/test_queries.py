@@ -395,8 +395,10 @@ class TestGetDatastoreBySlug(cases.GraphQLTestCase):
     def test_query_with_object_permissions(self):
         """It returns the datastore object.
         """
-        datastore = self.factory(workspace=self.workspace, engine=models.Datastore.GLUE, object_permissions_enabled=True)
-
+        datastore = self.factory(
+            workspace=self.workspace,
+            engine=models.Datastore.GLUE,
+            object_permissions_enabled=True)
         datastore.assign_perm(self.user, 'definitions.view_datastore')
 
         results = self.execute(self.statement, variables={'slug': datastore.slug})
@@ -406,7 +408,7 @@ class TestGetDatastoreBySlug(cases.GraphQLTestCase):
             'name': datastore.name,
             'isEnabled': datastore.is_enabled,
             'supportedFeatures': {
-                'checks': False,
+                'checks': True,
                 'indexes': False,
                 'partitions': True,
                 'usage': False,

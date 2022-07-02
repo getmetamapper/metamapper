@@ -19,6 +19,7 @@ const withGetDatastoreSettings = graphql(GetDatastoreSettings, {
     }
 
     if (!data || data.loading || data.error) {
+      console.log(res.loading)
       return res
     }
 

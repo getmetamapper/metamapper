@@ -4,6 +4,7 @@ import { Layout } from "antd"
 import { Helmet } from "react-helmet"
 import { UserContextProvider } from "context/UserContext"
 import Navbar from "app/Navigation/Navbar"
+import ErrorBoundry from "app/Errors/ErrorBoundry"
 import withSessionRequired from "hoc/withSessionRequired"
 import withOpensourceSetupRedirect from "hoc/withOpensourceSetupRedirect"
 
@@ -20,7 +21,7 @@ export default ({
     Component,
     isProtected,
     ignoreRedirects,
-    shouldRefreshUser,
+    shouldRefreshUser
   )
 
   if (isPublic) {
@@ -41,14 +42,16 @@ export default ({
             />
           </Helmet>
           <UserContextProvider>
-            {!isPublic && <Navbar />}
-            <Layout.Content
-              className={`content ${isPublic ? "public" : "private"}`}
-            >
-              <Layout className={namespace}>
-                <WrappedComponent {...matchProps} />
-              </Layout>
-            </Layout.Content>
+              {!isPublic && <Navbar />}
+              <Layout.Content
+                className={`content ${isPublic ? "public" : "private"}`}
+              >
+                <Layout className={namespace}>
+                  <ErrorBoundry>
+                    <WrappedComponent {...matchProps} />
+                  </ErrorBoundry>
+                </Layout>
+              </Layout.Content>
           </UserContextProvider>
         </Layout>
       )}

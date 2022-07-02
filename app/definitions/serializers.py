@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime as dt
+import json
+
 import rest_framework.serializers as serializers
 
 import app.audit.decorators as audit
@@ -79,6 +81,19 @@ class BigQueryConnectionSerializer(JdbcCredentialsSerializer):
 
     extras = serializers.JSONField(required=True)
 
+    def sanitize_extras(self, extras):
+        """We expect some specific fields associated with this connection type:
+        """
+        output = super().sanitize_extras(extras)
+        credentials = output.pop('credentials')
+
+        if isinstance(credentials, str):
+            output['credentials'] = json.loads(credentials)
+        else:
+            output['credentials'] = credentials
+
+        return output
+
     def validate_host(self, host):
         """Return a dummy host, since we do not need this field.
         """
@@ -118,7 +133,7 @@ class BigQueryConnectionSerializer(JdbcCredentialsSerializer):
 class AwsConnectionSerializer(JdbcCredentialsSerializer):
     """Validates connectivity to AWS Athena or Glue through IAM role and region.
     """
-    allowed_extra_fields = ['role', 'region']
+    allowed_extra_fields = ['role', 'region', 'workgroup']
 
     extras = serializers.JSONField(required=True)
 
@@ -153,6 +168,10 @@ class AwsConnectionSerializer(JdbcCredentialsSerializer):
 
         if not extras['role'] or not extras['region']:
             raise serializers.ValidationError('Amazon account information is an invalid format.')
+
+        # TODO(scruwys): Validate this exists somehow.
+        if not extras['workgroup']:
+            raise serializers.ValidationError('Valid work group is required.')
 
         return extras
 

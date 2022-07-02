@@ -53,9 +53,15 @@ services:
     command: webserver
     ports:
       - 5050:5050
-  worker:
+  core-worker:
     << : *metamapper_defaults
-    command: worker --concurrency=1
+    command: worker --concurrency=1 -Q default,checks,revisioner
+    depends_on:
+      - database
+      - msgbroker
+  usage-worker:
+    << : *metamapper_defaults
+    command: worker --concurrency=1 -Q usage
     depends_on:
       - database
       - msgbroker
@@ -65,6 +71,19 @@ services:
     depends_on:
       - database
       - msgbroker
+  flower:
+    image: mher/flower
+    environment:
+      - CELERY_BROKER_URL=redis://msgbroker:6379/0
+      - FLOWER_PORT=8888
+    ports:
+      - 8888:8888
+    depends_on:
+      - database
+      - elastic
+    networks:
+      - metamapper
+
 volumes:
   metamapper-database:
     driver: local

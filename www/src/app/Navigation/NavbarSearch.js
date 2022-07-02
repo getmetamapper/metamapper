@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { compose } from "react-apollo"
-import { withRouter } from "react-router-dom"
 import { Input, Form } from "antd"
+import { withRouter } from "react-router-dom"
 import { withUserContext } from "context/UserContext"
 import qs from "query-string"
 
@@ -22,8 +22,10 @@ class NavbarSearch extends Component {
     }
 
     const {
-      location: { search },
+      config,
       currentWorkspace: { slug },
+      location: { search },
+      history,
     } = this.props
 
     const params = {
@@ -31,7 +33,13 @@ class NavbarSearch extends Component {
       ...{ q: value },
     }
 
-    this.props.history.push(`/${slug}/search/results?${qs.stringify(params)}`)
+    const datastoreSlug = config.getDatastoreSlug()
+
+    if (datastoreSlug) {
+      params.datastores = datastoreSlug
+    }
+
+    history.push(`/${slug}/search/results?${qs.stringify(params)}`)
   }
 
   handleChange = (e) => {

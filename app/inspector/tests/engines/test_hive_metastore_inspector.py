@@ -49,7 +49,7 @@ class HiveMetastoreInspectorTests(test.TestCase):
         """
         self.assertEqual(
             self.engine.inspector.get_tables_and_views_sql([]),
-            engine.HIVE_METASTORE_DEFINITIONS_QUERY,
+            engine.HIVE_METASTORE_DEFINITIONS_SQL,
         )
 
     @mock.patch.object(engine.MySQLInspector, 'get_first', return_value={'version': '5.7.0'})

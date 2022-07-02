@@ -12,7 +12,7 @@ import UpdateDatastoreMetadataMutation from "graphql/mutations/UpdateDatastoreMe
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGetDatastoreIntervalOptions from "graphql/withGetDatastoreIntervalOptions"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 
 class DatastoreSettings extends Component {
   constructor(props) {
@@ -135,8 +135,8 @@ class DatastoreSettings extends Component {
   }
 }
 
-const withNotFound = withNotFoundHandler(({ datastore }) => {
-  return !datastore || !datastore.hasOwnProperty("id")
+const withNotFound = withNotFoundHandler(({ datastore, loading }) => {
+  return !loading && (!datastore || !datastore.hasOwnProperty("id"))
 })
 
 const enhance = compose(
@@ -144,11 +144,11 @@ const enhance = compose(
   withRouter,
   withWriteAccess,
   withGetDatastoreSettings,
-  withGetDatastoreIntervalOptions,
-  graphql(UpdateDatastoreMetadataMutation),
-  withGraphQLMutation,
   withLargeLoader,
   withNotFound,
+  withGetDatastoreIntervalOptions,
+  graphql(UpdateDatastoreMetadataMutation),
+  withGraphQLMutation
 )
 
 export default enhance(DatastoreSettings)

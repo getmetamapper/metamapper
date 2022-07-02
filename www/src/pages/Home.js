@@ -6,19 +6,16 @@ import { withUserContext } from "context/UserContext"
 
 class Home extends Component {
   componentWillMount() {
-    const {
-      config,
-      currentWorkspace,
-    } = this.props
+    const { config, currentWorkspace, history } = this.props
 
     const datastoreSlug = config.getDatastoreSlug()
 
     if (!currentWorkspace) {
-      this.props.history.push("/workspaces")
+      history.push("/workspaces")
     } else if (currentWorkspace && datastoreSlug) {
-      this.props.history.push(`/${currentWorkspace.slug}/datastores/${datastoreSlug}`)
+      history.push(`/${currentWorkspace.slug}/datastores/${datastoreSlug}`)
     } else {
-      this.props.history.push(`/${currentWorkspace.slug}/datastores`)
+      history.push(`/${currentWorkspace.slug}/datastores`)
     }
   }
 
@@ -27,7 +24,6 @@ class Home extends Component {
       <div style={{ textAlign: "center" }}>
         <Spin size="large" />
       </div>
-
     )
   }
 }

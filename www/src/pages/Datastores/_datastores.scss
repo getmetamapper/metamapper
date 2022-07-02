@@ -237,10 +237,6 @@
 }
 .ant-card.datastore-details {
   margin-bottom: 24px;
-
-  .data-asset-tags {
-    margin-top: 12px;
-  }
 }
 .datastore-settings-container {
   margin-bottom: 24px;
@@ -346,6 +342,8 @@
   background: #FFFFFF;
   height: 100vh;
   border-left: 1px solid #e8e8e8;
+  position: fixed;
+  right: 0;
 }
 .table-schema-selector-wrapper::-webkit-scrollbar {
   width: 0px;
@@ -373,6 +371,9 @@
 }
 .table-schema-selector {
   background-color: #FFFFFF;
+  height: 100vh;
+  overflow-y: scroll;
+  padding-bottom: 50px;
 
   .loading {
     color: #989898;
@@ -429,6 +430,9 @@
       font-size: 9px;
     }
   }
+}
+.table-schema-selector::-webkit-scrollbar {
+  display: none;
 }
 .table-schema-selector.search .search-result:first-child {
   padding-top: 16px;
@@ -522,6 +526,8 @@
   margin-bottom: 0;
 }
 .data-asset-tags {
+  display: inline-block;
+
   .tags-input {
     width: 500px;
     .ant-select-selection--multiple {

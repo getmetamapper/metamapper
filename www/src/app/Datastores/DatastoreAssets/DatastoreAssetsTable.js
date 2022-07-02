@@ -8,6 +8,7 @@ import { map, debounce } from "lodash"
 import { components } from "app/Common/EditableCell"
 import UpdateTableMetadata from "graphql/mutations/UpdateTableMetadata"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
+import TablePopularityBadge from "app/Datastores/DatastoreDefinition/TablePopularityBadge"
 
 class DatastoreAssetsTable extends Component {
   constructor(props) {
@@ -19,13 +20,38 @@ class DatastoreAssetsTable extends Component {
       currentWorkspace: { slug },
     } = props
 
-    this.columns = [
+    const columns = [
+      {
+        title: "Popularity",
+        key: "popularity",
+        dataIndex: "usage",
+        sorter: true,
+        render: ({
+          popularityScore,
+          totalQueries,
+          totalUsers,
+          windowInDays,
+        }) => (
+          <TablePopularityBadge
+            popularityScore={popularityScore}
+            totalQueries={totalQueries}
+            totalUsers={totalUsers}
+            windowInDays={windowInDays}
+          />
+        ),
+        visible: datastore.supportedFeatures.usage,
+      },
       {
         title: "Schema Name",
+        key: "schema",
+        sorter: true,
         render: ({ schema }) => <span title={schema.name}>{schema.name}</span>,
+        visible: true,
       },
       {
         title: "Asset Name",
+        key: "table",
+        sorter: true,
         render: ({ schema, name: tablename }) => (
           <Link
             to={`/${slug}/datastores/${datastore.slug}/definition/${schema.name}/${tablename}/overview`}
@@ -34,30 +60,34 @@ class DatastoreAssetsTable extends Component {
             {tablename}
           </Link>
         ),
+        visible: true,
       },
       {
         title: "Description",
         dataIndex: "shortDesc",
         key: "shortDesc",
         editable: true,
+        visible: true,
       },
     ]
+
+    this.columns = columns.filter((c) => c.visible)
 
     window.onscroll = debounce(() => {
       // Bails early if:
       // * it's already loading
       // * there's nothing left to load
-      if (this.state.loading || !this.props.hasNextPage) return;
+      if (this.state.loading || !this.props.hasNextPage) return
 
       // Checks that the page has scrolled to the bottom
       if (
-        document.documentElement.scrollTop + document.documentElement.offsetHeight
-        >= (document.documentElement.scrollHeight * 0.985)
+        document.documentElement.scrollTop +
+          document.documentElement.offsetHeight >=
+        document.documentElement.scrollHeight * 0.985
       ) {
         this.fetchNextPage()
       }
-    }, 100);
-
+    }, 100)
 
     this.state = {
       dataSource,
@@ -65,22 +95,33 @@ class DatastoreAssetsTable extends Component {
     }
   }
 
+  componentWillReceiveProps({ dataSource }) {
+    this.setState({ dataSource, nonce: Math.random() })
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.dataSource.length !== this.state.dataSource.length || nextState.loading !== this.state.loading || nextState.nonce !== this.state.nonce
+    const { dataSource, loading, nonce } = this.state
+    return (
+      nextState.dataSource.length !== dataSource.length ||
+      nextState.loading !== loading ||
+      nextState.nonce !== nonce
+    )
   }
 
   fetchNextPage = () => {
     this.setState({ loading: true })
 
     this.props.fetchNextPage().then(({ data }) => {
-      const { datastoreAssets: { edges } } = data
+      const {
+        datastoreAssets: { edges },
+      } = data
 
       this.setState({
         loading: false,
         dataSource: [
           ...this.state.dataSource,
           ...map(edges, ({ node }) => node),
-        ]
+        ],
       })
     })
   }
@@ -107,6 +148,16 @@ class DatastoreAssetsTable extends Component {
       ...row,
     })
     this.setState({ dataSource: newData, nonce: Math.random() })
+  }
+
+  handleTableChange = (pagination, filters, sorter) => {
+    const { fetch } = this.props
+    const { columnKey, order } = sorter
+    let orderBy = "schema,table"
+    if (order) {
+      orderBy = `${order === "ascend" ? "" : "-"}${columnKey}`
+    }
+    fetch({ orderBy })
   }
 
   render() {
@@ -138,6 +189,7 @@ class DatastoreAssetsTable extends Component {
           columns={columns}
           pagination={false}
           loading={loading}
+          onChange={this.handleTableChange}
         />
       </div>
     )
@@ -154,7 +206,7 @@ const enhance = compose(
   withRouter,
   withWriteAccess,
   graphql(UpdateTableMetadata),
-  withGraphQLMutation,
+  withGraphQLMutation
 )
 
 export default enhance(DatastoreAssetsTable)

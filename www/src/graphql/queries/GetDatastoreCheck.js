@@ -16,6 +16,7 @@ query GetDatastoreCheck(
       value
     }
     creator {
+      id
       name
       email
     }

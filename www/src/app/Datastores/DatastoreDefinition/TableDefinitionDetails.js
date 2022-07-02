@@ -1,16 +1,19 @@
 import React from "react"
+import { compose } from "react-apollo"
 import { Card, Col, Row } from "antd"
 import { withRouter } from "react-router-dom"
+import withGetTableLastCommitTimestamp from "graphql/withGetTableLastCommitTimestamp"
 import TableDescription from "./TableDescription"
 import TableLastCommitTimestamp from "./TableLastCommitTimestamp"
 import TableDefinitionTags from "./TableDefinitionTags"
-import withGetTableLastCommitTimestamp from "graphql/withGetTableLastCommitTimestamp"
+import TablePopularityBadge from "./TablePopularityBadge"
 
 const TableDefinitionDetails = ({
-  table,
-  schema,
+  datastore,
   lastCommitTimestamp,
   loading,
+  schema,
+  table,
 }) => (
   <Card className="table-definition-details">
     <Row>
@@ -30,9 +33,17 @@ const TableDefinitionDetails = ({
       <TableDescription table={table} />
     </p>
     <p className="mb-0">
+      {datastore.supportedFeatures.usage && (
+        <TablePopularityBadge
+          popularityScore={table.usage.popularityScore}
+          totalQueries={table.usage.totalQueries}
+          totalUsers={table.usage.totalUsers}
+          windowInDays={table.usage.windowInDays}
+        />
+      )}
       <TableDefinitionTags table={table} />
     </p>
   </Card>
 )
 
-export default withRouter(withGetTableLastCommitTimestamp(TableDefinitionDetails))
+export default compose(withRouter, withGetTableLastCommitTimestamp)(TableDefinitionDetails)

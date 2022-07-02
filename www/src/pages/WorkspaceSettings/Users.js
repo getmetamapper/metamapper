@@ -5,7 +5,7 @@ import WorkspaceLayout from "app/WorkspaceSettings/WorkspaceLayout"
 import WorkspaceUsersTable from "app/WorkspaceSettings/Users/WorkspaceUsersTable"
 import InviteUserToWorkspace from "app/WorkspaceSettings/Users/InviteUserToWorkspace"
 import { withLargeLoader } from "hoc/withLoader"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetWorkspaceBySlug from "graphql/withGetWorkspaceBySlug"
 import withGetWorkspaceUsers from "graphql/withGetWorkspaceUsers"
 

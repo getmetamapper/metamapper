@@ -25,7 +25,6 @@ def create_runs(self, datastore_slug=None, *args, **kwargs):
     """Scheduled task to create a record for each new run. Runs every 30 minutes.
     """
     expression = ExpressionWrapper(Now() - F('interval'), output_field=DateTimeField())
-    runs_cache = []
     datastores = (
         Datastore
         .objects
@@ -43,12 +42,16 @@ def create_runs(self, datastore_slug=None, *args, **kwargs):
         'Found {0} datastore(s)'.format(len(datastores))
     )
 
+    if not len(datastores):
+        return
+
     processed_datastores = []
+    runs_to_be_processed = []
 
     for datastore in datastores.distinct():
         if datastore.pk in processed_datastores:
             continue
-        runs_cache.append(
+        runs_to_be_processed.append(
             Run(datastore=datastore, workspace_id=datastore.workspace_id)
         )
         self.log.info(
@@ -56,7 +59,7 @@ def create_runs(self, datastore_slug=None, *args, **kwargs):
         )
         processed_datastores.append(datastore.pk)
 
-    runs = Run.objects.bulk_create(runs_cache, ignore_conflicts=True)
+    runs = Run.objects.bulk_create(runs_to_be_processed, ignore_conflicts=True)
 
     self.log.info(
         'Created {0} run(s)'.format(len(runs))
@@ -75,7 +78,12 @@ def queue_runs(self, datastore_slug=None, countdown_in_minutes=15, *args, **kwar
     if datastore_slug:
         runs = runs.filter(datastore__slug__iexact=datastore_slug)
 
-    self.log.info(f'Found {len(runs)} run(s)')
+    self.log.info(
+        f'Found {len(runs)} run(s)'
+    )
+
+    if not len(runs):
+        return
 
     for run in runs:
         self.log.info(

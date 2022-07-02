@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Helmet } from "react-helmet"
 import { compose } from "react-apollo"
-import { map, filter, uniqBy } from "lodash"
+import { map, filter } from "lodash"
 import { Button, Card, Col, Form, Row } from "antd"
 import { withLargeLoader } from "hoc/withLoader"
 import { withRouter } from "react-router-dom"
@@ -48,20 +48,7 @@ class OmnisearchResults extends Component {
       filter(
         this.props.datastores, ({ pk }) => buckets.indexOf(pk) > -1
       ),
-      ({ pk, name }) => ({ label: name, value: pk }),
-    )
-  }
-
-  getEngines = () => {
-    const buckets = map(this.props.facets.datastores.buckets, 'key')
-    return uniqBy(
-      map(
-        filter(
-          this.props.datastores, ({ pk }) => buckets.indexOf(pk) > -1
-        ),
-        ({ engineName, jdbcConnection: { engine } }) => ({ label: engineName, value: engine })
-      ),
-      'value'
+      ({ slug, name }) => ({ label: name, value: slug }),
     )
   }
 
@@ -80,30 +67,25 @@ class OmnisearchResults extends Component {
   }
 
   render() {
+    const { query } = this.state
     const { datastores, form, results, elapsed } = this.props
     return (
       <Row>
         <Helmet>
-          <title>{this.state.query} – Search – Metamapper</title>
+          <title>{query} – Search – Metamapper</title>
         </Helmet>
         <Col span={6} offset={2} className="omnisearch-sidebar">
           <Card title="Filters" extra={
-              <div className="omnisearch-sidebar-actions">
-                <Button type="default" size="small" onClick={this.handleClear}>Clear</Button>
-                <Button type="primary" size="small" onClick={this.handleSubmit}>Apply Changes</Button>
-              </div>
+            <div className="omnisearch-sidebar-actions">
+              <Button type="default" size="small" onClick={this.handleClear}>Clear</Button>
+              <Button type="primary" size="small" onClick={this.handleSubmit}>Apply Changes</Button>
+            </div>
           }>
             <FacetCheckboxWidget
               title="Datastores"
               form={form}
               name="datastores"
               options={this.getDatastores()}
-            />
-            <FacetCheckboxWidget
-              title="Engines"
-              form={form}
-              name="engines"
-              options={this.getEngines()}
             />
             <FacetCheckboxWidget
               title="Schema"
@@ -146,5 +128,5 @@ export default compose(
   withGetDatastoreFacet,
   withGetOmnisearchResults,
   withNotFound,
-  withLargeLoader,
+  withLargeLoader
 )(OmnisearchResults)

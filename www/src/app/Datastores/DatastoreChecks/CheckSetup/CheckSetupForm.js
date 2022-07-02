@@ -114,7 +114,7 @@ class CheckSetupForm extends Component {
     }
 
     if (sqlException) {
-      this.setState({ sqlException })
+      this.setState({ sqlException, queryResults: [] })
     }
   }
 

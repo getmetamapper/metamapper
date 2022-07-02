@@ -31,5 +31,5 @@ const SearchResults = ({ datastores, results, elapsed }) => {
 
 export default compose(
   withRouter,
-  withLargeLoader,
+  withLargeLoader
 )(SearchResults)

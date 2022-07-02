@@ -30,7 +30,7 @@ class AwsGlueInspectorTests(unittest.TestCase):
         assert engine.AwsGlueInspector.operational_error
 
     def test_has_checks_value(self):
-        assert not engine.AwsGlueInspector.has_checks()
+        assert engine.AwsGlueInspector.has_checks()
 
     def test_has_indexes_value(self):
         assert not engine.AwsGlueInspector.has_indexes()
