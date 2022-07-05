@@ -19,21 +19,19 @@ class ChecksTable extends Component {
         title: "Name",
         dataIndex: "name",
         align: "left",
-        render: name => <b title={name}>{ellipsis(name, 42)}</b>,
+        render: (name) => <b title={name}>{ellipsis(name, 42)}</b>,
       },
       {
         title: "Created By",
         dataIndex: "creator",
         align: "center",
-        render: (creator) => (
-          <UserAvatar tooltip={creator.name} {...creator} />
-        )
+        render: (creator) => <UserAvatar tooltip={creator.name} {...creator} />
       },
       {
         title: "Status",
         dataIndex: "isEnabled",
         align: "left",
-        render: isEnabled => <BooleanStatus isEnabled={isEnabled} />
+        render: (isEnabled) => <BooleanStatus isEnabled={isEnabled} />
       },
       {
         title: "Lastest Execution",

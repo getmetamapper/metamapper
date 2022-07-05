@@ -4,13 +4,13 @@ import hashlib
 import random
 
 from django.db import connection
-from django.db.models import Q, Count, Sum, Min
+from django.db.models import Q
 from django.utils import timezone
 
 from metamapper.celery import app
 
 from app.inspector import service as inspector
-from app.definitions.models import Datastore, Table, TableUsage, TableUsageExists
+from app.definitions.models import Datastore, TableUsageExists
 
 from utils import logging
 from utils.shortcuts import dedupe_by_keys
@@ -112,7 +112,7 @@ def get_query_history_results(self, datastore_id, start_date, end_date):
         'Queued {0} queries to be processed.'.format(resultcnt)
     )
 
-    update_table_usage_metrics.apply_async(args=[datastore.datastore_id], countdown=(60 * 60 * 1))
+    update_table_usage_metrics.apply_async(args=[datastore.datastore_id], countdown=(60 * 30))
 
 
 @app.task(bind=True)
