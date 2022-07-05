@@ -19,7 +19,6 @@ query GetDatastoreCheck(
       id
       name
       email
-      avatarUrl
     }
     query {
       columns

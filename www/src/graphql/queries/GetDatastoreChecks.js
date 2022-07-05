@@ -12,6 +12,8 @@ query GetDatastoreChecks(
         isEnabled
         creator {
           name
+          email
+          avatarUrl
         }
         lastExecution {
           status
