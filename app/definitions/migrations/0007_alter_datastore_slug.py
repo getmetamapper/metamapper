@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('definitions', '0006_auto_20220630_2210'),
+        ('definitions', '0005_datastore_interval'),
     ]
 
     operations = [
