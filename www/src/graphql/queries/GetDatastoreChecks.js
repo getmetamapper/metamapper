@@ -10,6 +10,7 @@ query GetDatastoreChecks(
         pk
         name
         isEnabled
+        tags
         creator {
           name
           email

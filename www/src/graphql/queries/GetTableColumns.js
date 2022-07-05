@@ -19,6 +19,12 @@ export default gql`
       schema {
         name
       }
+      usage {
+        popularityScore
+        totalQueries
+        totalUsers
+        windowInDays
+      }
       columns {
         edges {
           node {

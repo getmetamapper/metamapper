@@ -21,9 +21,9 @@ const DatastoreDetails = ({ datastore }) => (
         )}
       </Col>
     </Row>
-    <>
+    <div className="mb-16">
       <DatastoreDescription datastore={datastore} />
-    </>
+    </div>
     <div className="mb-0">
       <DatastoreTags datastore={datastore} />
     </div>
