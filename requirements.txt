@@ -141,7 +141,7 @@ jmespath==1.0.0
     #   botocore
 kombu==4.6.11
     # via celery
-lxml==4.5.1
+lxml==4.9.1
     # via xmlsec
 mysql-connector-python==8.0.20
     # via -r requirements.in
