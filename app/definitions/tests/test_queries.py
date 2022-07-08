@@ -7,6 +7,8 @@ import testutils.decorators as decorators
 import testutils.factories as factories
 import testutils.helpers as helpers
 
+from django.utils import timezone
+
 
 class TestDatastoreIntervalOptions(cases.GraphQLTestCase):
     """Test retrieval of the check interval options.
@@ -375,7 +377,11 @@ class TestGetDatastoreBySlug(cases.GraphQLTestCase):
     def test_query(self):
         """It returns the datastore object.
         """
-        datastore = self.factory(workspace=self.workspace, engine=models.Datastore.SNOWFLAKE)
+        datastore = self.factory(
+            workspace=self.workspace,
+            engine=models.Datastore.SNOWFLAKE,
+            usage_last_synced_at=timezone.now(),
+        )
 
         results = self.execute(self.statement, variables={'slug': datastore.slug})
         results = results['data'][self.operation]

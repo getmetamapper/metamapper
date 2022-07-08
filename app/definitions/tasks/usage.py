@@ -176,12 +176,12 @@ def delete_table_usage_older_than_90_days(self, *args, **kwargs):
     with connection.cursor() as cursor:
         cursor.execute('''
             DELETE FROM definitions_table_usage
-                  WHERE to_timestamp(execution_date) < NOW() - INTERVAL '90 days'
+                  WHERE execution_date::timestamp < NOW() - INTERVAL '90 days'
         ''')
 
         cursor.execute('''
             DELETE FROM definitions_table_usage_exists
-                  WHERE to_timestamp(created_at) < NOW() - INTERVAL '90 days'
+                  WHERE created_at::timestamp < NOW() - INTERVAL '90 days'
         ''')
 
 

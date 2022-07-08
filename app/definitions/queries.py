@@ -240,8 +240,8 @@ class Query(graphene.ObjectType):
 
         queryset = models.Table.search_objects.execute(
             search=search,
-            schema__datastore_id=datastore.id,
             deleted_at__isnull=True,
+            schema__datastore_id=datastore.id,
         )
 
         return queryset

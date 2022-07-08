@@ -234,6 +234,24 @@
 }
 .datastores .datastore-asset-search {
   margin-bottom: 24px;
+
+  .ant-select-selection--multiple {
+    padding-bottom: 1px;
+    margin-left: 12px;
+    line-height: 40px;
+  }
+
+  .ant-select-selection--multiple .ant-select-selection__rendered > ul > li {
+    margin-top: 8px;
+  }
+
+  .ant-btn {
+    margin-left: 12px;
+  }
+
+  .ant-col-2 {
+    line-height: 40px;
+  }
 }
 .ant-card.datastore-details {
   margin-bottom: 24px;
