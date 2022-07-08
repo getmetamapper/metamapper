@@ -393,7 +393,7 @@ class TestGetDatastoreBySlug(cases.GraphQLTestCase):
                 'checks': True,
                 'indexes': False,
                 'partitions': False,
-                'usage': True,
+                'usage': False,
             },
         })
 

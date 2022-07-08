@@ -300,7 +300,7 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'checks': inspector_class.has_checks(),
             'indexes': inspector_class.has_indexes(),
             'partitions': inspector_class.has_partitions(),
-            'usage': inspector_class.has_usage() and instance.usage_last_synced_at is not None,
+            'usage': False,  # inspector_class.has_usage() and instance.usage_last_synced_at is not None,
         }
 
     def resolve_jdbc_connection(instance, info):
