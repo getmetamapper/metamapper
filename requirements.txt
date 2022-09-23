@@ -156,7 +156,7 @@ promise==2.3
     #   graphene-django
     #   graphql-core
     #   graphql-relay
-protobuf==3.12.2
+protobuf==3.18.3
     # via
     #   google-api-core
     #   googleapis-common-protos
