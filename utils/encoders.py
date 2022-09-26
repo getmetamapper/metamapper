@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import datetime as dt
 import json
 import uuid
+from decimal import Decimal
 
 from django.db import models
 
@@ -15,6 +17,8 @@ class DjangoPartialModelJsonEncoder(json.JSONEncoder):
             return {'pk': str(obj.pk), 'type': obj.__class__.__name__}
         if isinstance(obj, (bytes,)):
             return obj.decode()
+        if isinstance(obj, (uuid.UUID, dt.date, dt.datetime, Decimal)):
+            return str(obj)
         return json.JSONEncoder.default(self, obj)
 
 
