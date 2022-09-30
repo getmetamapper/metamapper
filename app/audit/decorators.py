@@ -3,7 +3,7 @@ from functools import wraps
 from app.audit import tasks
 
 
-def capture_activity(verb, hydrater, capture_changes=False, logger=None):
+def capture_activity(verb, hydrater, capture_changes=False):
     """Decorator to capture audit activities.
     """
     def the_decorator(func):

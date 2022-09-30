@@ -10,7 +10,7 @@ import DatastoreAssetsSearch from "app/Datastores/DatastoreAssets/DatastoreAsset
 import DatastoreAssetsTable from "app/Datastores/DatastoreAssets/DatastoreAssetsTable"
 import withGetDatastoreAssets from "graphql/withGetDatastoreAssets"
 import withGetDatastoreDefinition from "graphql/withGetDatastoreDefinition"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 
 class DatastoreAssets extends Component {
   constructor(props) {
@@ -71,6 +71,7 @@ class DatastoreAssets extends Component {
     const {
       assets,
       datastore,
+      fetch,
       fetchNextPage,
       form,
       hasNextPage,
@@ -97,10 +98,11 @@ class DatastoreAssets extends Component {
                 />
                 <DatastoreAssetsTable
                   dataSource={assets}
-                  hasNextPage={hasNextPage}
                   datastore={datastore}
-                  loading={loading}
+                  fetch={fetch}
                   fetchNextPage={fetchNextPage}
+                  hasNextPage={hasNextPage}
+                  loading={loading}
                 />
               </Fragment>
             )}
@@ -113,9 +115,7 @@ class DatastoreAssets extends Component {
 
 const withSearchQuery = (ChildComponent) => {
   const ComposedComponent = (props) => {
-    const {
-      search, schema,
-    } = qs.parse(window.location.search)
+    const { search, schema } = qs.parse(window.location.search)
     return <ChildComponent search={search} schema={schema} {...props} />
   }
   return ComposedComponent
@@ -134,5 +134,5 @@ export default compose(
   withGetDatastoreDefinition,
   withGetDatastoreAssets,
   withLargeLoader,
-  withNotFound,
+  withNotFound
 )(DatastoreAssets)

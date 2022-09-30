@@ -20,6 +20,12 @@ export default gql`
       schema {
         name
       }
+      usage {
+        popularityScore
+        totalQueries
+        totalUsers
+        windowInDays
+      }
     }
   }
 `

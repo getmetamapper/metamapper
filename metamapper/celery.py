@@ -20,7 +20,9 @@ app.conf.task_default_queue = 'default'
 
 app.conf.task_queues = (
     Queue('default', Exchange('default'), routing_key='default'),
+    Queue('checks', Exchange('checks'), routing_key='checks'),
     Queue('revisioner', Exchange('revisioner'), routing_key='revisioner'),
+    Queue('usage', Exchange('usage'), routing_key='usage'),
 )
 
 app.conf.beat_schedule = {
@@ -36,6 +38,22 @@ app.conf.beat_schedule = {
         'task': 'app.revisioner.tasks.v1.scheduler.queue_runs',
         'schedule': crontab(minute='15,45'),
     },
+    'detect-revisioner-run-timeouts': {
+        'task': 'app.revisioner.tasks.v1.scheduler.detect_run_timeouts',
+        'schedule': crontab(minute='0', hour='*/1'),
+    },
+    'create-check-executions': {
+        'task': 'app.checks.tasks.scheduler.create_executions',
+        'schedule': crontab(minute='*/1'),
+    },
+    'queue-table-usage-jobs': {
+        'task': 'app.definitions.tasks.usage.queue_table_usage_jobs',
+        'schedule': crontab(minute='*/1'),
+    },
+    'delete-90-day-table-usage': {
+        'task': 'app.definitions.tasks.usage.delete_table_usage_older_than_90_days',
+        'schedule': crontab(hour='*/12'),
+    },
     'queue-domain-verification': {
         'task': 'app.sso.tasks.queue_domain_verifications',
         'schedule': crontab(minute='*/20'),
@@ -47,5 +65,7 @@ app.conf.beat_schedule = {
 }
 
 app.conf.task_routes = {
-    'app.revisioner.tasks.core.*': {'queue': 'revisioner'},
+    'app.checks.tasks.*': {'queue': 'checks'},
+    'app.revisioner.tasks.*': {'queue': 'revisioner'},
+    'app.definitions.tasks.usage.*': {'queue': 'usage'},
 }

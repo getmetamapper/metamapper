@@ -27,6 +27,9 @@ class PostgresInspectorTests(test.TestCase):
         }
         self.engine = engine.PostgresqlInspector(**self.connection)
 
+    def test_has_operational_error(self):
+        assert engine.PostgresqlInspector.operational_error
+
     def test_has_indexes_sql(self):
         """It should have `indexes_sql` attribute defined.
         """
@@ -85,10 +88,17 @@ class PostgresInspectorTests(test.TestCase):
             'pg_toast',
         }
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_checks_value(self):
+        assert engine.PostgresqlInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert engine.PostgresqlInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert not engine.PostgresqlInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.PostgresqlInspector.has_usage()
 
     @mock.patch.object(engine.PostgresqlInspector, 'get_first', return_value={'server_version': '9.6.0'})
     def test_get_db_version(self, get_first):

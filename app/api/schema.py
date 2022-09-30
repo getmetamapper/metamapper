@@ -7,13 +7,13 @@ import utils.connections as connections
 from graphene_django import DjangoObjectType
 
 from app.authorization.mixins import AuthNode
-from app.authorization.permissions import WorkspaceOwnersOnly
+from app.authorization.permissions import WorkspaceTeamMembersOnly
 
 
 class ApiTokenType(AuthNode, DjangoObjectType):
     """GraphQL representation of an API token.
     """
-    permission_classes = (WorkspaceOwnersOnly,)
+    permission_classes = (WorkspaceTeamMembersOnly,)
     scope_to_workspace = True
 
     class Meta:

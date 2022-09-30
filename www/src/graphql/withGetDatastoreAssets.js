@@ -6,11 +6,18 @@ const withGetDatastoreAssets = graphql(GetDatastoreAssets, {
   options: ({
     search,
     schema,
-    match: { params: { datastoreSlug } },
+    match: {
+      params: { datastoreSlug },
+    },
   }) => {
     return {
       fetchPolicy: "network-only",
-      variables: { datastoreSlug, schema, search },
+      variables: {
+        datastoreSlug,
+        schema,
+        search,
+        orderBy: ["schema", "table"].join(","),
+      },
     }
   },
   props: ({ data }) => {
@@ -39,6 +46,7 @@ const withGetDatastoreAssets = graphql(GetDatastoreAssets, {
     return {
       assets: map(edges, ({ node }) => node),
       hasNextPage,
+      fetch: res.refetch,
       fetchNextPage: () =>
         fetchMore({
           variables: { after: endCursor },

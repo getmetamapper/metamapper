@@ -12,12 +12,6 @@ class Command(BaseCommand):
             '--datastore_slug',
             help='Datastore slug (if applicable)',
         )
-        parser.add_argument(
-            '--hours',
-            type=int,
-            default=24,
-            help='Hours since the last run',
-        )
 
     def handle(self, *args, **options):
         """Execute the command.

@@ -5,10 +5,19 @@ export default gql`
     $id: ID!
     $name: String
     $tags: [String]
+    $incidentContacts: [String]
     $isEnabled: Boolean
+    $interval: String
   ) {
     updateDatastoreMetadata(
-      input: { id: $id, name: $name, tags: $tags, isEnabled: $isEnabled }
+      input: {
+        id: $id,
+        name: $name,
+        tags: $tags,
+        incidentContacts: $incidentContacts,
+        isEnabled: $isEnabled
+        interval: $interval
+      }
     ) {
       datastore {
         id

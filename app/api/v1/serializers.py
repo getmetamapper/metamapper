@@ -117,7 +117,8 @@ class CustomPropertiesSerializer(serializers.Serializer):
     def validate_enum(self, value, customfield):
         """Validators for ENUM type.
         """
-        if value and value not in customfield.validators.get('choices', []):
+        choices = customfield.validators.get('choices', [])
+        if value and value not in choices:
             return 'The provided value is invalid.'
         return None
 
@@ -128,6 +129,16 @@ class CustomPropertiesSerializer(serializers.Serializer):
             return 'The provided group does not exist.'
         return None
 
+    def validate_multi(self, value, customfield):
+        """Validators for MULTI type.
+        """
+        choices = customfield.validators.get('choices', [])
+        if value is not None and not isinstance(value, list):
+            return 'The provided value must be a list.'
+        if value is not None and not all(v in choices for v in value):
+            return 'The provided value is invalid.'
+        return None
+
     def validate_properties(self, properties):
         """Perform property-level validation.
         """
@@ -136,6 +147,7 @@ class CustomPropertiesSerializer(serializers.Serializer):
             CustomField.GROUP: self.validate_group,
             CustomField.TEXT: self.validate_text,
             CustomField.USER: self.validate_user,
+            CustomField.MULTI: self.validate_multi,
         }
 
         custom_fields = {

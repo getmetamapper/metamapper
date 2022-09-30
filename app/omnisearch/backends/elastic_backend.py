@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import collections
 import time
 
 from django.conf import settings
@@ -13,8 +12,6 @@ from elasticsearch_dsl import Search, A
 
 import app.definitions.permissions as definition_permissions
 import app.definitions.models as definition_models
-
-from django.utils.functional import cached_property
 
 
 class ElasticBackend(base.BaseSearchBackend):
@@ -67,7 +64,7 @@ class ElasticBackend(base.BaseSearchBackend):
         if not self.user.is_owner(self.workspace.id):
             datastores = definition_permissions.get_datastores_for_user(datastores, self.user)
 
-        return self.workspace.id, [datastore.id for datastore in datastores]
+        return self.workspace.id, [datastore for datastore in datastores]
 
     def bulk_insert(self, actions, as_list=True, **kwargs):
         response = parallel_bulk(self.client, actions, **kwargs)
@@ -76,15 +73,18 @@ class ElasticBackend(base.BaseSearchBackend):
         return response
 
     def execute(self, query, types=None, datastores=None, start=0, size=100, **facets):
-        workspace_id, datastore_ids = self.user_permission_ids()
+        workspace_id, workspace_datastores = self.user_permission_ids()
 
-        if not datastore_ids:
+        if not workspace_datastores:
             # User has no access to any datastores.
             return []
 
-        # Filter out datastores that the User does not have access to.
-        if datastores:
-            datastore_ids = [d for d in datastores if d in datastore_ids]
+        datastore_ids = []
+
+        for datastore in workspace_datastores:
+            if datastores and (datastore.id not in datastores and datastore.slug not in datastores):
+                continue
+            datastore_ids.append(datastore.id)
 
         index = [t for t in (types or []) if t in self.possible_indexes]
 
@@ -94,13 +94,13 @@ class ElasticBackend(base.BaseSearchBackend):
             'simple_query_string',
             fields=[
                 'exact_name^100',
+                'tags^60',
                 'name.raw^30',
                 'name^10',
                 'table^5',
                 'schema^3',
                 'description^3',
                 'text^1.1',
-                'tags',
             ],
             query=query,
         ).filter(

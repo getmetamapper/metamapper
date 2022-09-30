@@ -75,6 +75,14 @@ class Run(UUIDModel):
         return self.finished_at is not None
 
     @property
+    def failed_tasks(self):
+        return self.tasks.filter(status=RunTask.FAILURE)
+
+    @property
+    def failed(self):
+        return self.status in [Run.FAILURE, Run.PARTIAL]
+
+    @property
     def is_datastore_first_run(self):
         """Check is this run is the first run ever for the datastore.
         """
@@ -91,7 +99,7 @@ class Run(UUIDModel):
         """Mark the run as finished.
         """
         self.tasks_count = self.tasks.count()
-        self.fails_count = self.tasks.filter(status=RunTask.FAILURE).count()
+        self.fails_count = self.failed_tasks.count()
         self.finished_at = timezone.now()
 
         if save:

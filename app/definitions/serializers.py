@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import datetime as dt
+import json
+
 import rest_framework.serializers as serializers
 
 import app.audit.decorators as audit
@@ -78,6 +81,19 @@ class BigQueryConnectionSerializer(JdbcCredentialsSerializer):
 
     extras = serializers.JSONField(required=True)
 
+    def sanitize_extras(self, extras):
+        """We expect some specific fields associated with this connection type:
+        """
+        output = super().sanitize_extras(extras)
+        credentials = output.pop('credentials')
+
+        if isinstance(credentials, str):
+            output['credentials'] = json.loads(credentials)
+        else:
+            output['credentials'] = credentials
+
+        return output
+
     def validate_host(self, host):
         """Return a dummy host, since we do not need this field.
         """
@@ -117,7 +133,7 @@ class BigQueryConnectionSerializer(JdbcCredentialsSerializer):
 class AwsConnectionSerializer(JdbcCredentialsSerializer):
     """Validates connectivity to AWS Athena or Glue through IAM role and region.
     """
-    allowed_extra_fields = ['role', 'region']
+    allowed_extra_fields = ['role', 'region', 'workgroup']
 
     extras = serializers.JSONField(required=True)
 
@@ -152,6 +168,10 @@ class AwsConnectionSerializer(JdbcCredentialsSerializer):
 
         if not extras['role'] or not extras['region']:
             raise serializers.ValidationError('Amazon account information is an invalid format.')
+
+        # TODO(scruwys): Validate this exists somehow.
+        if not extras['workgroup']:
+            raise serializers.ValidationError('Valid work group is required.')
 
         return extras
 
@@ -277,12 +297,21 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         required=False,
     )
 
+    interval = serializers.DurationField(default=dt.timedelta(hours=24))
+
     is_enabled = serializers.BooleanField(default=True)
     short_desc = serializers.CharField(
         max_length=140,
         allow_null=True,
         allow_blank=True,
         trim_whitespace=True,
+        required=False,
+    )
+
+    incident_contacts = serializers.ListField(
+        child=serializers.EmailField(),
+        allow_empty=True,
+        allow_null=True,
         required=False,
     )
 
@@ -296,6 +325,8 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
             'tags',
             'is_enabled',
             'short_desc',
+            'interval',
+            'incident_contacts',
             'engine',
             'username',
             'password',
@@ -323,6 +354,18 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         """
         return list(set(tags)) if isinstance(tags, (list,)) else []
 
+    def validate_incident_contacts(self, emails):
+        """We should remove any duplicate contacts that exist.
+        """
+        return list(set(emails)) if isinstance(emails, (list,)) else []
+
+    def validate_interval(self, interval):
+        """We should confirm that the interval is acceptable.
+        """
+        if interval not in models.Datastore.INTERVAL_CHOICES:
+            raise serializers.ValidationError('Interval is not valid.')
+        return interval
+
     def validate(self, data):
         """Run some validation checks against the payload as a whole.
         """
@@ -339,13 +382,14 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         """
         creator = validated_data.pop('creator')
         with transaction.atomic():
-            datastore = models.Datastore.objects.create(**validated_data)
+            datastore = models.Datastore.objects.create(
+                incident_contacts=[creator.email],
+                **validated_data)
             if datastore.pk:
                 datastore.assign_all_perms(creator)
                 run = datastore.run_history.create(
                     workspace_id=datastore.workspace_id,
-                    started_at=timezone.now(),
-                )
+                    started_at=timezone.now())
                 coretasks.start_run.apply_async(args=[run.id])
         return datastore
 
@@ -361,6 +405,8 @@ class DatastoreSerializer(JdbcConnectionSerializer, serializers.ModelSerializer)
         instance.tags = validated_data.get('tags', instance.tags)
         instance.is_enabled = validated_data.get('is_enabled', instance.is_enabled)
         instance.short_desc = validated_data.get('short_desc', instance.short_desc)
+        instance.interval = validated_data.get('interval', instance.interval)
+        instance.incident_contacts = validated_data.get('incident_contacts', instance.incident_contacts)
 
         instance.username = validated_data.get('username', instance.username)
         instance.password = validated_data.get('password', instance.password)
@@ -700,9 +746,11 @@ class AssetOwnerSerializer(MetamapperSerializer, serializers.Serializer):
 
     order = serializers.IntegerField(min_value=0, required=False, allow_null=True)
 
+    classification = serializers.ChoiceField(choices=models.AssetOwner.CLASSIFICATION_CHOICES)
+
     class Meta:
         model = models.AssetOwner
-        fields = ('content_object', 'owner', 'order',)
+        fields = ('classification', 'content_object', 'owner', 'order',)
 
     def validate_owner(self, owner):
         """The owner must be part of the provided workspace.

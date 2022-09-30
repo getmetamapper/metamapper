@@ -32,7 +32,7 @@ class TestGetApiTokens(cases.GraphQLTestCase):
             workspace=self.workspace,
         )
 
-    @decorators.as_someone(['OWNER'])
+    @decorators.as_someone(['OWNER', 'MEMBER', 'READONLY'])
     def test_query_when_authorized(self):
         results = self.execute(self.statement)
         results = results['data'][self.operation]
@@ -49,7 +49,7 @@ class TestGetApiTokens(cases.GraphQLTestCase):
             msg="Node count should equal totalCount field."
         )
 
-    @decorators.as_someone(['MEMBER', 'READONLY', 'OUTSIDER'])
+    @decorators.as_someone(['OUTSIDER'])
     def test_query_when_not_authorized(self):
         """Outside users should not be able to access this resource.
         """

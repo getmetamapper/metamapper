@@ -1,15 +1,16 @@
 import React, { Component } from "react"
-import { Button, Divider } from "antd"
+import { Divider } from "antd"
 import { compose } from "react-apollo"
 import { withSuperUserAccess } from "hoc/withPermissionsRequired"
+import { withLargeLoader } from "hoc/withLoader"
 import WorkspaceLayout from "app/WorkspaceSettings/WorkspaceLayout"
 import ApiTokensTable from "app/WorkspaceSettings/Api/ApiTokensTable"
 import ApiTokenSetup from "app/WorkspaceSettings/Api/ApiTokenSetup"
 import ApiTokenPreview from "app/WorkspaceSettings/Api/ApiTokenPreview"
 import withGetWorkspaceBySlug from "graphql/withGetWorkspaceBySlug"
 import withGetApiTokens from "graphql/withGetApiTokens"
-import { withLargeLoader } from "hoc/withLoader"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import RestrictedButton from "app/Common/RestrictedButton"
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 
 const breadcrumbs = ({ slug }) => {
   return [
@@ -27,7 +28,6 @@ const breadcrumbs = ({ slug }) => {
     },
   ]
 }
-
 
 class Api extends Component {
   constructor(props) {
@@ -89,13 +89,15 @@ class Api extends Component {
           <p>
             Access tokens allow for authentication when using the Metamapper API.
           </p>
-          {hasPermission && (
-            <div className="api-token-setup-btn">
-              <Button type="primary" onClick={this.onOpenSetupForm}>
-                Create Access Token
-              </Button>
-            </div>
-          )}
+          <div className="api-token-setup-btn">
+            <RestrictedButton
+              type="primary"
+              hasPermission={hasPermission}
+              onClick={this.onOpenSetupForm}
+            >
+              Create Access Token
+            </RestrictedButton>
+          </div>
           <ApiTokensTable
             apiTokens={apiTokens}
             loading={loading}

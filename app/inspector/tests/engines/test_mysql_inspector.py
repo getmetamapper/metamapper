@@ -27,6 +27,9 @@ class MySQLInspectorInterfaceTests(test.TestCase):
         }
         self.engine = engine.MySQLInspector(**self.connection)
 
+    def test_has_operational_error(self):
+        assert engine.MySQLInspector.operational_error
+
     def test_has_indexes_sql(self):
         """It should have `indexes_sql` attribute defined.
         """
@@ -92,10 +95,17 @@ class MySQLInspectorInterfaceTests(test.TestCase):
             'sys',
         }
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_checks_value(self):
+        assert engine.MySQLInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert engine.MySQLInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert not engine.MySQLInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.MySQLInspector.has_usage()
 
     @mock.patch.object(engine.MySQLInspector, 'get_first', return_value={'version': '9.6.0'})
     def test_get_db_version(self, get_first):

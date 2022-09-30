@@ -23,7 +23,6 @@ const withGetDatastoresList = graphql(GetDatastores, {
     }
 
     return {
-      loading: false,
       datastores: map(datastores.edges, ({ node }) => node),
     }
   },

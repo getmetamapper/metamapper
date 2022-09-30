@@ -15,7 +15,7 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     {
         "type": "modified",
         "filters": (
-            lambda row: row['table_object_id'] == 16501
+            lambda row: row["table_object_id"] == 16501
         ),
         "metadata": {
             "field": "table_name",
@@ -25,10 +25,10 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     {
         "type": "modified",
         "filters": (
-            lambda row: row['table_object_id'] == 16501
+            lambda row: row["table_object_id"] == 16501
         ),
         "column_filters": (
-            lambda col: col['column_name'] == "priceeach"
+            lambda col: col["column_name"] == "priceeach"
         ),
         "metadata": {
             "field": "columns.is_nullable",
@@ -38,10 +38,10 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     {
         "type": "modified",
         "filters": (
-            lambda row: row['table_object_id'] == 16501
+            lambda row: row["table_object_id"] == 16501
         ),
         "column_filters": (
-            lambda col: col['column_name'] == "priceeach"
+            lambda col: col["column_name"] == "priceeach"
         ),
         "metadata": {
             "field": "columns.numeric_scale",
@@ -51,10 +51,10 @@ inspected_tables = mutate_inspected(inspected.tables_and_views, [
     {
         "type": "modified",
         "filters": (
-            lambda row: row['table_object_id'] == 16501
+            lambda row: row["table_object_id"] == 16501
         ),
         "column_filters": (
-            lambda col: col['column_name'] == "priceeach"
+            lambda col: col["column_name"] == "priceeach"
         ),
         "metadata": {
             "field": "columns.column_name",
@@ -77,6 +77,11 @@ test_cases = [
                 "pass_value": "order_details",
             },
             {
+                "summarized": "It should keep the same created timestamp.",
+                "evaluation": lambda datastore, table: table.created_at.__str__(),
+                "pass_value": "2020-02-27 17:25:55.341915+00:00",
+            },
+            {
                 "summarized": "It should not modify metadata about the Table.",
                 "evaluation": lambda datastore, table: table.short_desc,
                 "pass_value": "Details about an order",
@@ -86,7 +91,6 @@ test_cases = [
                 "evaluation": lambda datastore, table: table.object_id,
                 "pass_value": "d3b1a0e8bebc6de5627c7ab7d4361d2e",
             },
-            # TODO(scruwys): This fails.
             {
                 "summarized": "It should not update the Table primary key.",
                 "evaluation": lambda datastore, table: table.id,

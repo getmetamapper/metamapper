@@ -104,6 +104,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertTrue(serializer.is_valid())
         instance = serializer.save(workspace=self.workspace, creator=self.user)
         self.assertTrue(self.user.has_perm('view_datastore', instance))
+        self.assertTrue(instance.incident_contacts == [self.user.email])
 
     @mock.patch('app.revisioner.tasks.v1.core.start_run.apply_async')
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
@@ -324,6 +325,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             'extras': {
                 'role': 'arn:aws:iam::123456789012:role/default',
                 'region': 'us-west-2',
+                'workgroup': 'metamapper',
                 'invalid': 'this_will_be_stripped_off',
             },
         }
@@ -336,7 +338,7 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
         self.assertEqual(instance.host, 'api.amazonaws.com')
         self.assertEqual(instance.username, 'amazonapis')
         self.assertEqual(instance.port, 443)
-        self.assertEqual(list(instance.extras.keys()), ['role', 'region'])
+        self.assertEqual(list(instance.extras.keys()), ['role', 'region', 'workgroup'])
         self.assertEqual(instance.extras['role'], extras['extras']['role'])
         self.assertEqual(instance.extras['region'], extras['extras']['region'])
 
@@ -452,6 +454,9 @@ class DatastoreSerializerCreateTests(cases.SerializerTestCase):
             'is_enabled': [
                 {'code': 'nulled', 'value': None},
             ],
+            'interval': [
+                {'code': 'invalid', 'value': '01:30:00'},
+            ],
             'short_desc': [
                 {
                     'code': 'max_length',
@@ -508,6 +513,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             'name': 'Data Warehouse',
             'username': 'scott',
             'port': 1234,
+            'incident_contacts': [],
         }
 
         serializer = self.serializer_class(
@@ -618,7 +624,9 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
 
         self.assertEqual(instance.database, attributes['database'])
         self.assertEqual(list(instance.extras.keys()), ['credentials'])
-        self.assertEqual(instance.extras['credentials']['project_id'], attributes['extras']['credentials']['project_id'])
+        self.assertEqual(
+            instance.extras['credentials']['project_id'],
+            attributes['extras']['credentials']['project_id'])
 
     @mock.patch.object(inspector, 'verify_connection', return_value=True)
     def test_with_google_bigquery_invalid(self, verify_connection):
@@ -671,6 +679,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
                 'extras': {
                     'role': 'arn:aws:iam::123456789012:role/other',
                     'region': 'us-east-1',
+                    'workgroup': 'metamapper',
                 }
             },
             partial=True,
@@ -682,7 +691,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
         instance.refresh_from_db()
 
         self.assertEqual(instance.host, 'athena.amazonaws.com')
-        self.assertEqual(list(instance.extras.keys()), ['role', 'region'])
+        self.assertEqual(list(instance.extras.keys()), ['role', 'region', 'workgroup'])
         self.assertEqual(instance.extras['role'], 'arn:aws:iam::123456789012:role/other')
         self.assertEqual(instance.extras['region'], 'us-east-1')
 
@@ -706,6 +715,7 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
                 'extras': {
                     'iam_role': 'arn:aws:iam::123456789012:role/other',
                     'region': 'us-west-2',
+                    'workgroup': 'metamapper',
                 }
             },
             partial=True,
@@ -769,6 +779,28 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             {'code': 'invalid', 'field': 'extras', 'resource': 'Datastore'}
         ])
 
+    @mock.patch.object(inspector, 'verify_connection', return_value=True)
+    def test_validate_incident_contacts(self, verify_connection):
+        """It should update the provided attributes.
+        """
+        attributes = {
+            'incident_contacts': [
+                'test1@metamapper.io',
+                'test2@metamapper.io',
+                'test3@metamapper.io',
+            ],
+        }
+
+        serializer = self.serializer_class(
+            instance=self.instance,
+            data=attributes,
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())
+        self.assertInstanceUpdated(self.instance, **attributes)
+
     def test_drf_validation_rules(self):
         """It should return error messages when DRF validation fails.
         """
@@ -814,6 +846,9 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
             'is_enabled': [
                 {'code': 'nulled', 'value': None},
             ],
+            'interval': [
+                {'code': 'invalid', 'value': '01:30:00'},
+            ],
             'short_desc': [
                 {
                     'code': 'max_length',
@@ -828,6 +863,15 @@ class DatastoreSerializerUpdateTests(cases.SerializerTestCase):
                 {
                     'code': 'max_length',
                     'value': [str(i) for i in range(15)],
+                },
+            ],
+            'incident_contacts': [
+                {
+                    'code': 'item_invalid',
+                    'value': [
+                        'bugs.bunny@acmecorp.com',
+                        'not-an-email',
+                    ],
                 },
             ],
         }
@@ -1233,7 +1277,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         """
         group = factories.GroupFactory(workspace=self.workspace)
 
-        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1}
+        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1, 'classification': 'TECHNICAL'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertTrue(serializer.is_valid())
@@ -1246,7 +1290,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         """
         group = factories.GroupFactory()
 
-        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1}
+        attributes = {'owner': group, 'content_object': self.content_object, 'order': 1, 'classification': 'BUSINESS'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertFalse(serializer.is_valid())
@@ -1264,7 +1308,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         user = factories.UserFactory()
         self.workspace.grant_membership(user, 'MEMBER')
 
-        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1}
+        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1, 'classification': 'BUSINESS'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertTrue(serializer.is_valid())
@@ -1277,7 +1321,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
         """
         user = factories.UserFactory()
 
-        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1}
+        attributes = {'owner': user, 'content_object': self.content_object, 'order': 1, 'classification': 'BUSINESS'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertFalse(serializer.is_valid())
@@ -1302,7 +1346,7 @@ class AssetOwnerSerializerCreateTests(cases.SerializerTestCase):
 
         group = factories.GroupFactory(workspace=self.workspace)
 
-        attributes = {'owner': group, 'content_object': content_object, 'order': 3}
+        attributes = {'owner': group, 'content_object': content_object, 'order': 3, 'classification': 'TECHNICAL'}
         serializer = self.serializer_class(data=attributes, context={'request': self.request})
 
         self.assertTrue(serializer.is_valid())

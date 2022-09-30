@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
-import boto3
 import contextlib
+import pandas as pd
+import numpy as np
 import hashlib
 import sys
+
+from app.inspector.aws import get_aws_client
+from app.inspector.dbapi2 import aws_athena
+from app.inspector.errors import OutOfMemoryError
 
 
 class EngineInterface(object):
@@ -13,6 +18,8 @@ class EngineInterface(object):
     table_properties = []
 
     definitions_sql = None
+
+    query_history_sql = None
 
     indexes_sql = None
 
@@ -74,8 +81,24 @@ class EngineInterface(object):
     def operational_error(self):
         return self.connector.OperationalError
 
+    @property
+    def programming_error(self):
+        return self.connector.ProgrammingError
+
+    @property
+    def catchable_errors(self):
+        return (self.operational_error, self.programming_error, OutOfMemoryError)
+
+    @classmethod
+    def has_checks(self):
+        raise NotImplementedError()
+
     @classmethod
     def has_indexes(self):
+        raise NotImplementedError()
+
+    @classmethod
+    def has_usage(self):
         raise NotImplementedError()
 
     def get_last_commit_time_for_table(self, *args, **kwargs):
@@ -102,6 +125,11 @@ class EngineInterface(object):
         """Generate SQL statement for getting indexes and constraints.
         """
         return self.indexes_sql.format(excluded=', '.join(['%s'] * len(excluded_schemas)))
+
+    def get_query_history_sql(self, start_date, end_date):
+        """Generate SQL statement for getting query history.
+        """
+        return self.query_history_sql.format(start_date=start_date, end_date=end_date)
 
     def get_tables_and_views(self, *args, **kwargs):
         """Retrieve the full list of table definitions for the provided datastore.
@@ -169,6 +197,14 @@ class EngineInterface(object):
 
         return list(response.values())
 
+    def get_query_history(self, start_date, end_date, *args, **kwargs):
+        """Retrieve past queries for the given date.
+        """
+        for record in self.get_records_batched(
+            self.get_query_history_sql(start_date, end_date)
+        ):
+            yield self.lower_keys(record)
+
     @contextlib.contextmanager
     def execute_query(self, sql, parameters=None):
         if sys.version_info[0] < 3:
@@ -193,6 +229,29 @@ class EngineInterface(object):
                     yield r
                 if done:
                     return
+
+    def get_dataframe(self, sql, byte_limit=None, record_limit=None, parameters=None):
+        """Executes the sql and returns a set of records.
+        """
+        data = []
+        with self.execute_query(sql, parameters) as cursor:
+            columns = self._cursor_columns(cursor)
+            dataframe = pd.DataFrame(columns=columns)
+            while True:
+                done = True
+                for r in cursor.fetchmany(self.records_per_batch):
+                    done = False
+                    data.append(self._cursor_row(r, columns))
+                    if record_limit and len(data) >= record_limit:
+                        break
+                    if byte_limit and sys.getsizeof(data) >= byte_limit:
+                        raise OutOfMemoryError()
+                if done:
+                    break
+        dataframe = dataframe.append(data, ignore_index=True, sort=False)
+        dataframe = dataframe.replace({np.nan: None})
+        dataframe.columns = dataframe.columns.str.lower()
+        return dataframe
 
     def get_records(self, sql, parameters=None):
         """Executes the sql and returns a set of records.
@@ -242,8 +301,14 @@ class EngineInterface(object):
     def override_sys_schema(self, schemas):
         self.sys_schemas = schemas
 
+    def _cursor_columns(self, cursor):
+        return [i[0] for i in cursor.description]
 
-class AmazonInspectorMixin(object):
+    def _cursor_row(self, row, cols):
+        return row
+
+
+class AmazonInspectorInterface(EngineInterface):
     """Adds some common funcitonality for inspectors that hit the Amazon API.
     """
     aws_client_type = None
@@ -260,23 +325,29 @@ class AmazonInspectorMixin(object):
     @property
     def client(self):
         if not self._client:
-            sts = boto3.client('sts', region_name=self.region)
-
-            assumed_role_object = sts.assume_role(
-                RoleArn=self.iam_role,
-                RoleSessionName=f'metamapper_{self.region}_{self.database}'
-            )
-
-            credentials = assumed_role_object['Credentials']
-
-            self._client = boto3.client(
-                self.aws_client_type,
-                aws_access_key_id=credentials['AccessKeyId'],
-                aws_secret_access_key=credentials['SecretAccessKey'],
-                aws_session_token=credentials['SessionToken'],
-                region_name=self.region,
+            self._client = get_aws_client(
+                client_type=self.aws_client_type,
+                role_arn=self.iam_role,
+                role_session_name=f'metamapper_{self.region}_{self.database}',
+                region=self.region,
             )
         return self._client
+
+    @classmethod
+    def has_checks(self):
+        return True
+
+    @classmethod
+    def has_indexes(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
+        return False
+
+    @classmethod
+    def has_partitions(self):
+        return True
 
     @property
     def iam_role(self):
@@ -285,6 +356,41 @@ class AmazonInspectorMixin(object):
     @property
     def region(self):
         return self.extras.get('region')
+
+    @property
+    def work_group(self):
+        return self.extras.get('workgroup')
+
+    @property
+    def connector(self):
+        return aws_athena
+
+    @property
+    def cursor_kwargs(self):
+        return {}
+
+    def get_indexes(self, *args, **kwargs):
+        """list: Retrieve indexes from the database.
+        """
+        return []
+
+    def get_query_history(self, start_date, end_date, *args, **kwargs):
+        """list: Retrieve past queries for the given date.
+        """
+        return []
+
+    @contextlib.contextmanager
+    def execute_query(self, sql, parameters=None):
+        if sys.version_info[0] < 3:
+            sql = sql.encode('utf-8')
+
+        with contextlib.closing(self.get_connection()) as conn:
+            with contextlib.closing(self.get_cursor(conn)) as cursor:
+                if parameters is not None:
+                    cursor.execute(sql, tuple(parameters))
+                else:
+                    cursor.execute(sql)
+                yield cursor
 
     def _to_oid(self, *items):
         """str: We create a consistent hash of items to create a `pseudo` object identifier.

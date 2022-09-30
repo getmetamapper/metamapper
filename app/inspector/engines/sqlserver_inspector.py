@@ -4,7 +4,7 @@ import app.inspector.engines.interface as interface
 import pymssql
 
 
-SQLSERVER_DEFINITION_QUERY = """
+SQLSERVER_DEFINITION_SQL = """
 WITH primary_key AS (
   SELECT c.table_schema, c.table_name, c.column_name
     FROM information_schema.table_constraints tc
@@ -61,7 +61,7 @@ LEFT JOIN SYS.EXTENDED_PROPERTIES PROP_COL
 """
 
 
-SQLSERVER_INDEXES_QUERY = """
+SQLSERVER_INDEXES_SQL = """
   SELECT DISTINCT
     SCHEMA_NAME(t.schema_id) as schema_name,
     t.schema_id as schema_object_id,
@@ -98,15 +98,27 @@ class SQLServerInspector(interface.EngineInterface):
 
     table_properties = []
 
-    definitions_sql = SQLSERVER_DEFINITION_QUERY
+    definitions_sql = SQLSERVER_DEFINITION_SQL
 
-    indexes_sql = SQLSERVER_INDEXES_QUERY
+    indexes_sql = SQLSERVER_INDEXES_SQL
 
     connect_timeout_attr = 'login_timeout'
 
     @classmethod
+    def has_checks(self):
+        return True
+
+    @classmethod
     def has_indexes(self):
         return True
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
+        return False
 
     @property
     def connector(self):

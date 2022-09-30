@@ -3,6 +3,8 @@ import Workspaces from "pages/Workspaces/Workspaces"
 import General from "pages/WorkspaceSettings/General"
 import Users from "pages/WorkspaceSettings/Users"
 import UserProfile from "pages/WorkspaceSettings/UserProfile"
+import Integration from "pages/WorkspaceSettings/Integration"
+import Integrations from "pages/WorkspaceSettings/Integrations"
 import Api from "pages/WorkspaceSettings/Api"
 import Authentication from "pages/WorkspaceSettings/Authentication"
 import AuthenticationEditSaml from "pages/WorkspaceSettings/AuthenticationEditSaml"
@@ -59,6 +61,17 @@ export default [
   {
     component: Api,
     path: "/:workspaceSlug/settings/api",
+    namespace: "workspace",
+  },
+  {
+    component: Integrations,
+    path: "/:workspaceSlug/settings/integrations",
+    namespace: "workspace",
+    exact: true,
+  },
+  {
+    component: Integration,
+    path: "/:workspaceSlug/settings/integrations/:integration",
     namespace: "workspace",
   },
   {

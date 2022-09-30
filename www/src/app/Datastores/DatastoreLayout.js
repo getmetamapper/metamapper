@@ -5,29 +5,35 @@ import { Link, withRouter } from "react-router-dom"
 import { map } from "lodash"
 import { withUserContext } from "context/UserContext"
 import { Avatar, Col, Row, Icon, Layout, Menu, Tooltip } from "antd"
-import { withLargeLoader } from "hoc/withLoader"
 import Breadcrumbs from "app/Navigation/Breadcrumbs"
 import DatastoreEngineIcon from "app/Datastores/DatastoreEngineIcon"
 import TableSchemaSelector from "app/Datastores/DatastoreDefinition/TableSchemaSelector"
 
-const InnerDatastoreLayout = withLargeLoader(({ children, datastore, loading }) => (
+const InnerDatastoreLayout = ({
+  children,
+  datastore,
+  loading,
+  hideSchemaSelector,
+}) => (
   <Row>
-    <Col span={20}>
+    <Col span={hideSchemaSelector ? 24 : 20}>
       <div className="inner-datastore-layout">{children}</div>
     </Col>
-    <Col span={4} className="table-schema-selector-wrapper">
-      <TableSchemaSelector
-        currentTable={{ name: null }}
-        datastore={datastore}
-        loading={loading}
-      />
-    </Col>
+    {!hideSchemaSelector && (
+      <Col span={4} className="table-schema-selector-wrapper">
+        <TableSchemaSelector
+          currentTable={{ name: null }}
+          datastore={datastore}
+          loading={loading}
+        />
+      </Col>
+    )}
   </Row>
-))
+)
 
 class DatastoreLayout extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     const {
       config,
@@ -39,7 +45,7 @@ class DatastoreLayout extends Component {
     config.setDatastoreSlug(datastoreSlug)
   }
 
-  getLinks() {
+  getBaseUri() {
     const {
       currentWorkspace: { slug },
       match: {
@@ -47,40 +53,58 @@ class DatastoreLayout extends Component {
       },
     } = this.props
 
-    const baseUri = `/${slug}/datastores/${datastoreSlug}`
+    return `/${slug}/datastores/${datastoreSlug}`
+  }
 
-    return [
+  getLinks() {
+    const baseUri = this.getBaseUri()
+    const { datastore } = this.props
+    const links = [
       {
         icon: "dashboard",
         label: "Overview",
         to: baseUri,
+        visible: true,
       },
       {
         icon: "read",
         label: "Assets",
         to: `${baseUri}/assets`,
+        visible: true,
+      },
+      {
+        icon: "check-circle",
+        label: "Checks",
+        to: `${baseUri}/checks`,
+        visible: datastore.supportedFeatures.checks,
       },
       {
         icon: "sync",
         label: "Run History",
         to: `${baseUri}/runs`,
+        visible: true,
       },
       {
         icon: "database",
         label: "Connection",
         to: `${baseUri}/connection`,
+        visible: true,
       },
       {
         icon: "user",
         label: "Access",
         to: `${baseUri}/access`,
+        visible: true,
       },
       {
         icon: "setting",
         label: "Settings",
         to: `${baseUri}/settings`,
+        visible: true,
       },
     ]
+
+    return links.filter((l) => l.visible)
   }
 
   render() {
@@ -91,6 +115,7 @@ class DatastoreLayout extends Component {
       datastore,
       loading,
       title,
+      hideSchemaSelector,
     } = this.props
     const {
       location: { pathname },
@@ -103,7 +128,7 @@ class DatastoreLayout extends Component {
         <Col span={24}>
           <div className="datastores-inner">
             <Row>
-              <Col span={4} className="fixed">
+              <Col span={1} className="fixed">
                 <div className="datastore-sidebar-header-wrapper">
                   {loading ? (
                     <>
@@ -120,12 +145,9 @@ class DatastoreLayout extends Component {
                       </div>
                     </>
                   ) : (
-                    <>
+                    <Link to={this.getBaseUri()}>
                       <DatastoreEngineIcon datastore={datastore} noTooltip />
-                      <div className="datastore-sidebar-header-name">
-                        <Tooltip title={datastore.name}>{datastore.name}</Tooltip>
-                      </div>
-                    </>
+                    </Link>
                   )}
                 </div>
                 <Menu
@@ -135,15 +157,20 @@ class DatastoreLayout extends Component {
                 >
                   {map(this.getLinks(), (link) => (
                     <Menu.Item key={link.to}>
-                      <Link to={link.to}>
-                        <Icon type={link.icon} /> {link.label}
-                      </Link>
+                      <Tooltip title={link.label} placement="right">
+                        <Link to={link.to}>
+                          <Icon type={link.icon} />
+                        </Link>
+                      </Tooltip>
                     </Menu.Item>
                   ))}
                 </Menu>
               </Col>
-              <Col span={20} className="pull-right">
-                <div className="breadcrumbs-wrapper fixed" data-test="DatastoreLayout.Breadcrumbs">
+              <Col span={23} className="pull-right">
+                <div
+                  className="breadcrumbs-wrapper fixed"
+                  data-test="DatastoreLayout.Breadcrumbs"
+                >
                   <Breadcrumbs breadcrumbs={breadcrumbs(datastore)} />
                 </div>
                 <Layout.Content className={className}>
@@ -151,6 +178,7 @@ class DatastoreLayout extends Component {
                     children={children}
                     datastore={datastore}
                     loading={loading}
+                    hideSchemaSelector={hideSchemaSelector}
                   />
                 </Layout.Content>
               </Col>
@@ -164,8 +192,7 @@ class DatastoreLayout extends Component {
 
 DatastoreLayout.defaultProps = {
   className: "datastores-content",
+  hideSchemaSelector: false,
 }
 
-const enhance = compose(withRouter, withUserContext)
-
-export default enhance(DatastoreLayout)
+export default compose(withRouter, withUserContext)(DatastoreLayout)

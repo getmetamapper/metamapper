@@ -9,7 +9,7 @@ from app.inspector.engines.mysql_inspector import MySQLInspector
 from app.inspector.engines.sqlserver_inspector import SQLServerInspector
 
 
-HIVE_METASTORE_DEFINITIONS_QUERY = """
+HIVE_METASTORE_DEFINITIONS_SQL = """
 SELECT source.* FROM
 (
     SELECT
@@ -55,7 +55,7 @@ ORDER by table_schema, table_name, ordinal_position
 """
 
 
-HIVE_METASTORE_VERSION_QUERY = """
+HIVE_METASTORE_VERSION_SQL = """
 SELECT SCHEMA_VERSION FROM VERSION
 """
 
@@ -63,7 +63,7 @@ SELECT SCHEMA_VERSION FROM VERSION
 # The default Hive upgrade migrations create Postgres tables in quotes. This is done to
 # force them uppercase. If we start seeing users with downcased tables, we can make the query
 # routing process a bit more intelligent.
-HIVE_METASTORE_DEFINITIONS_QUERY_WITH_QUOTES = """
+HIVE_METASTORE_DEFINITIONS_SQL_WITH_QUOTES = """
 SELECT source.* FROM
 (
     SELECT
@@ -109,7 +109,7 @@ ORDER by table_schema, table_name, ordinal_position
 """
 
 
-HIVE_METASTORE_VERSION_QUERY_WITH_QUOTES = """
+HIVE_METASTORE_VERSION_SQL_WITH_QUOTES = """
 SELECT "SCHEMA_VERSION" FROM "VERSION"
 """
 
@@ -122,15 +122,15 @@ supported_external_metastores = {
 
 
 supported_external_metastores_definitions_sql = {
-    Datastore.MYSQL: HIVE_METASTORE_DEFINITIONS_QUERY,
-    Datastore.POSTGRESQL: HIVE_METASTORE_DEFINITIONS_QUERY_WITH_QUOTES,
-    Datastore.SQLSERVER: HIVE_METASTORE_DEFINITIONS_QUERY,
+    Datastore.MYSQL: HIVE_METASTORE_DEFINITIONS_SQL,
+    Datastore.POSTGRESQL: HIVE_METASTORE_DEFINITIONS_SQL_WITH_QUOTES,
+    Datastore.SQLSERVER: HIVE_METASTORE_DEFINITIONS_SQL,
 }
 
 supported_external_metastores_version_sql = {
-    Datastore.MYSQL: HIVE_METASTORE_VERSION_QUERY,
-    Datastore.POSTGRESQL: HIVE_METASTORE_VERSION_QUERY_WITH_QUOTES,
-    Datastore.SQLSERVER: HIVE_METASTORE_VERSION_QUERY,
+    Datastore.MYSQL: HIVE_METASTORE_VERSION_SQL,
+    Datastore.POSTGRESQL: HIVE_METASTORE_VERSION_SQL_WITH_QUOTES,
+    Datastore.SQLSERVER: HIVE_METASTORE_VERSION_SQL,
 }
 
 
@@ -155,7 +155,19 @@ class HiveMetastoreInspector(interface.EngineInterface):
         self._version = None
 
     @classmethod
+    def has_checks(self):
+        return False
+
+    @classmethod
     def has_indexes(self):
+        return False
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
         return False
 
     @property

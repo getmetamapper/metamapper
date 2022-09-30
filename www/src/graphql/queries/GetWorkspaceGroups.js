@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getWorkspaceGroups {
+  query GetWorkspaceGroups {
     workspaceGroups {
       edges {
         node {

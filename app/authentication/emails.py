@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-import logging
-
 import app.notifications.tasks as email
-
-
-logger = logging.getLogger(__name__)
 
 
 def reset_password(to_email, uid, token):
@@ -22,7 +17,7 @@ def reset_password(to_email, uid, token):
         }
     }
 
-    logger.info(
+    email.log.info(
         'Attempting to deliver email({template}) to {to_email}'.format(**mailer_kwargs)
     )
 
@@ -42,7 +37,7 @@ def password_was_reset(to_email):
         }
     }
 
-    logger.info(
+    email.log.info(
         'Attempting to deliver email({template}) to {to_email}'.format(**mailer_kwargs)
     )
 

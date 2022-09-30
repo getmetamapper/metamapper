@@ -12,7 +12,7 @@ class Query(graphene.ObjectType):
     """
     api_tokens = AuthConnectionField(ApiTokenType)
 
-    @auth_perms.permissions_required((auth_perms.WorkspaceOwnersOnly,))
+    @auth_perms.permissions_required((auth_perms.WorkspaceTeamMembersOnly,))
     def resolve_api_tokens(self, info, *args, **kwargs):
         """Retrieve the API tokens associated with this workspace.
         """

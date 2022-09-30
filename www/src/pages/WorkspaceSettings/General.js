@@ -6,7 +6,7 @@ import UpdateWorkspace from "app/WorkspaceSettings/General/UpdateWorkspace"
 import DeleteWorkspace from "app/WorkspaceSettings/General/DeleteWorkspace"
 import withGetWorkspaceBySlug from "graphql/withGetWorkspaceBySlug"
 import { withLargeLoader } from "hoc/withLoader"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 
 const breadcrumbs = ({ slug }) => {
   return [

@@ -69,6 +69,7 @@
     "fields": {
       "workspace_id": "f4bb0aabc51d458a9eab58ed80fa2d6c",
       "name": "New York",
+      "description": "Employees from New York",
       "created_at": "2020-01-01 00:00:00Z",
       "updated_at": "2020-01-01 00:00:00Z"
     },

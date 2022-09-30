@@ -24,3 +24,18 @@ export const emailValidator = (rule, value, callback) => {
   }
   callback()
 }
+
+export const arrayOfEmailsValidator = (rule, value, callback) => {
+  let violations = [];
+  for (var i = 0; i < value.length; i++) {
+    if (!isEmail(value[i])) {
+      violations.push(value[i])
+    }
+  }
+
+  if (violations.length > 0) {
+    callback(`Email(s) are invalid: ${violations.join(', ')}`);
+  } else {
+    callback();
+  }
+}

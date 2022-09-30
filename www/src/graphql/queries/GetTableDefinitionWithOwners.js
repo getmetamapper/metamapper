@@ -23,6 +23,7 @@ export default gql`
       owners {
         id
         type
+        classification
         order
         owner {
           id
@@ -30,6 +31,12 @@ export default gql`
           name
           avatarUrl
         }
+      }
+      usage {
+        popularityScore
+        totalQueries
+        totalUsers
+        windowInDays
       }
     }
   }

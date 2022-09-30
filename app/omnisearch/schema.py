@@ -13,6 +13,8 @@ class OmnisearchResultType(graphene.ObjectType):
 
     pathname = graphene.String()
 
+    tags = graphene.List(graphene.String)
+
 
 class OmnisearchResultListType(graphene.ObjectType):
     """GraphQL representation of a series of search results.

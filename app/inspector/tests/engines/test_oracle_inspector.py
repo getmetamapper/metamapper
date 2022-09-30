@@ -26,6 +26,9 @@ class OracleInspectorTests(test.TestCase):
         }
         self.engine = engine.OracleInspector(**self.connection)
 
+    def test_has_operational_error(self):
+        assert engine.OracleInspector.operational_error
+
     def test_has_indexes_sql(self):
         """It should have `indexes_sql` attribute defined.
         """
@@ -112,10 +115,17 @@ class OracleInspectorTests(test.TestCase):
             'xdb',
         }
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_checks_value(self):
+        assert engine.OracleInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert engine.OracleInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert not engine.OracleInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.OracleInspector.has_usage()
 
     @mock.patch.object(engine.OracleInspector, 'get_first', return_value={'banner': '9.6.0'})
     def test_get_db_version(self, get_first):

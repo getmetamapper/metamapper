@@ -134,13 +134,13 @@ class UpdateCustomProperties(mixins.UpdateMutationMixin, relay.ClientIDMutation)
         }
 
         return {
-            "instance": instance,
-            "data": {
-                "properties": properties,
+            'instance': instance,
+            'data': {
+                'properties': properties,
             },
-            "partial": True,
-            "context": {
-                "request": info.context,
+            'partial': True,
+            'context': {
+                'request': info.context,
             },
         }
 

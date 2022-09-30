@@ -215,9 +215,9 @@ class DeleteWorkspace(mixins.DeleteMutationMixin, relay.ClientIDMutation):
         """
         return [
             {
-                "function": tasks.hard_delete_workspace.delay,
-                "arguments": {
-                    "workspace_id": instance.id,
+                'function': tasks.hard_delete_workspace.delay,
+                'arguments': {
+                    'workspace_id': instance.id,
                 },
             }
         ]

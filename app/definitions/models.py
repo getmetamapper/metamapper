@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
+
 from django.contrib.contenttypes.fields import ContentType, GenericRelation
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.postgres.fields import ArrayField
-
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
+from django.db.models import Max
+from django.utils import timezone
 
 from guardian.shortcuts import assign_perm
 from ordered_model.models import OrderedModel
@@ -16,6 +19,7 @@ from app.customfields.models import CustomPropertiesModel
 from utils.delete.models import SoftDeletionModel
 from utils.encrypt.fields import EncryptedCharField
 from utils.managers import SearchManager
+from utils.postgres.managers import PostgresManager
 from utils.mixins.models import (
     StringPrimaryKeyModel, TimestampedModel, AuditableModel
 )
@@ -39,6 +43,14 @@ def make_audit_kwargs(instance):
 class AssetOwner(OrderedModel, TimestampedModel):
     """Represents an owner of a data asset.
     """
+    BUSINESS = 'BUSINESS'
+    TECHNICAL = 'TECHNICAL'
+
+    CLASSIFICATION_CHOICES = (
+        (BUSINESS, 'Business'),
+        (TECHNICAL, 'Technical'),
+    )
+
     workspace = models.ForeignKey(
         to=Workspace,
         on_delete=models.CASCADE,
@@ -60,6 +72,8 @@ class AssetOwner(OrderedModel, TimestampedModel):
         related_name='+',
     )
     owner = GenericForeignKey('owner_type', 'owner_id')
+
+    classification = models.CharField(max_length=12, choices=CLASSIFICATION_CHOICES, default=BUSINESS)
 
     order_with_respect_to = ('object_id', 'content_type')
 
@@ -102,11 +116,22 @@ class Datastore(StringPrimaryKeyModel,
         (HIVE, 'Hive Metastore'),
     )
 
+    INTERVAL_CHOICES = [
+        timedelta(hours=1),
+        timedelta(hours=2),
+        timedelta(hours=3),
+        timedelta(hours=6),
+        timedelta(hours=12),
+        timedelta(hours=24),
+    ]
+
     SUPPORTED_HIVE_EXTERNAL_METASTORES = [
         MYSQL,
         POSTGRESQL,
         SQLSERVER,
     ]
+
+    USAGE_WINDOW = 30
 
     REQUIRED_SSH_FIELDS = [
         'ssh_host',
@@ -137,24 +162,25 @@ class Datastore(StringPrimaryKeyModel,
         'ssh_user',
     ]
 
-    name = models.CharField(max_length=255, null=False, blank=False)
-    slug = models.CharField(max_length=300, null=False, blank=False)
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=300, unique=True)
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
     is_enabled = models.BooleanField(default=True)
-    version = models.CharField(max_length=255, null=True, blank=False)
+    version = models.CharField(max_length=255, null=True)
+    interval = models.DurationField(default=timedelta(hours=24))
 
-    engine = models.CharField(max_length=16, choices=ENGINE_CHOICES, null=False, blank=False)
-    host = models.CharField(max_length=255, null=False, blank=False)
-    username = models.CharField(max_length=128, null=False, blank=False)
-    password = EncryptedCharField(max_length=128, null=False, blank=False)
-    database = models.CharField(max_length=128, null=False, blank=False)
-    port = models.PositiveIntegerField(null=False, blank=False, validators=[MaxValueValidator(65535)])
+    engine = models.CharField(max_length=16, choices=ENGINE_CHOICES)
+    host = models.CharField(max_length=255)
+    username = models.CharField(max_length=128)
+    password = EncryptedCharField(max_length=128)
+    database = models.CharField(max_length=128)
+    port = models.PositiveIntegerField(null=False, validators=[MaxValueValidator(65535)])
     extras = models.JSONField(default=dict)
 
     ssh_enabled = models.BooleanField(default=False)
-    ssh_host = models.CharField(max_length=128, null=True, blank=False)
-    ssh_port = models.PositiveIntegerField(null=True, blank=False, validators=[MaxValueValidator(65535)])
-    ssh_user = models.CharField(max_length=128, null=True, blank=False)
+    ssh_host = models.CharField(max_length=128, null=True)
+    ssh_port = models.PositiveIntegerField(null=True, validators=[MaxValueValidator(65535)])
+    ssh_user = models.CharField(max_length=128, null=True)
 
     short_desc = models.CharField(max_length=140, null=True, blank=True)
 
@@ -168,6 +194,10 @@ class Datastore(StringPrimaryKeyModel,
     # and its objects. Permissions default to the workspace level.
     object_permissions_enabled = models.BooleanField(default=True)
 
+    incident_contacts = ArrayField(models.EmailField(), default=list)
+
+    usage_last_synced_at = models.DateTimeField(null=True)
+
     search_objects = SearchManager(fields=['name', 'engine', 'tags'])
 
     class Meta:
@@ -180,6 +210,7 @@ class Datastore(StringPrimaryKeyModel,
             ('change_datastore_settings', 'Change datastore settings'),
             ('change_datastore_connection', 'Change datastore connection'),
             ('change_datastore_access', 'Change datastore access'),
+            ('change_datastore_checks', 'Change datastore checks'),
             ('comment_on_datastore', 'Comment on datastore'),
         )
 
@@ -259,6 +290,19 @@ class Datastore(StringPrimaryKeyModel,
     def disabled_custom_fields(self):
         return self.disabled_datastore_properties
 
+    @property
+    def usage_sync_start_date(self):
+        """Date that usage sync should start from.
+        """
+        current_timestamp = timezone.now()
+        latest_usage_date = self.table_usage.aggregate(Max('execution_date'))
+        latest_usage_date = latest_usage_date['execution_date__max']
+
+        if not latest_usage_date or (current_timestamp.date() - latest_usage_date).days >= self.USAGE_WINDOW:
+            return (current_timestamp - timedelta(days=self.USAGE_WINDOW)).date()
+
+        return latest_usage_date
+
     def connection_was_changed(self):
         """Check if the JDBC connection was updated.
         """
@@ -311,7 +355,7 @@ class Schema(AuditableModel,
         related_name='+',
     )
 
-    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
+    name = models.CharField(db_index=True, max_length=256)
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
 
     search_objects = SearchManager(fields=['name'])
@@ -371,14 +415,19 @@ class Table(AuditableModel,
         related_name='+',
     )
 
-    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
+    name = models.CharField(db_index=True, max_length=256)
     tags = ArrayField(models.CharField(max_length=32, blank=True), default=list)
-    kind = models.CharField(max_length=100, null=False, blank=False)
+    kind = models.CharField(max_length=100)
 
     db_comment = models.TextField(null=True, blank=True)
     short_desc = models.TextField(null=True, blank=True)
     properties = models.JSONField(default=dict)
     readme = models.TextField(null=True, blank=True)
+
+    usage_score = models.IntegerField(default=0)
+    usage_window = models.IntegerField(null=True, default=None)
+    usage_total_queries = models.IntegerField(null=True, default=None)
+    usage_total_users = models.IntegerField(null=True, default=None)
 
     search_objects = SearchManager(fields=['name', 'schema__name', 'short_desc'])
 
@@ -445,6 +494,7 @@ class Table(AuditableModel,
             'label': self.search_label,
             'description': self.short_desc,
             'datastore_id': self.datastore_id,
+            'tags': self.tags,
         }
 
 
@@ -456,6 +506,48 @@ class TableProperty(models.Model):
     class Meta:
         managed = False
         db_table = 'definitions_table_properties'
+
+
+class TableUsage(models.Model):
+    """Granular statistics about how a table is being used.
+    """
+    datastore = models.ForeignKey(
+        to=Datastore,
+        on_delete=models.CASCADE,
+        related_name='table_usage',
+    )
+
+    execution_date = models.DateField()
+
+    db_schema = models.CharField(max_length=256)
+
+    db_table = models.CharField(max_length=256)
+
+    db_user = models.CharField(max_length=256)
+
+    query_count = models.IntegerField(default=0)
+
+    objects = PostgresManager()
+
+    class Meta:
+        db_table = 'definitions_table_usage'
+        unique_together = [
+            ('execution_date', 'datastore', 'db_schema', 'db_table', 'db_user'),
+        ]
+        index_together = [
+            ('datastore', 'db_schema', 'db_table'),
+        ]
+
+
+class TableUsageExists(models.Model):
+    """Tracks if a query has been processed for table usage.
+    """
+    id = models.CharField(primary_key=True, max_length=32)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'definitions_table_usage_exists'
 
 
 class Column(AuditableModel,
@@ -489,9 +581,9 @@ class Column(AuditableModel,
         related_name='+',
     )
 
-    name = models.CharField(db_index=True, max_length=256, null=False, blank=False)
-    ordinal_position = models.IntegerField(null=False, blank=False, validators=[MinValueValidator(1)])
-    data_type = models.CharField(max_length=255, null=False, blank=False)
+    name = models.CharField(db_index=True, max_length=256)
+    ordinal_position = models.IntegerField(null=False, validators=[MinValueValidator(1)])
+    data_type = models.CharField(max_length=255)
     max_length = models.IntegerField(null=True)
     numeric_scale = models.IntegerField(null=True)
     is_primary = models.BooleanField(null=False, default=False)
@@ -548,6 +640,7 @@ class Column(AuditableModel,
             'label': self.search_label,
             'description': self.short_desc,
             'datastore_id': self.datastore_id,
+            'tags': self.tags,
         }
 
     def to_doc(self):
@@ -561,7 +654,7 @@ class Column(AuditableModel,
             'name': self.name,
             'exact_name': self.search_label,
             'description': self.short_desc,
-            'tags': self.table.tags,
+            'tags': self.table.tags + self.tags,
         }
 
     @property

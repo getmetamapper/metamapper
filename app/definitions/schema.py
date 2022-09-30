@@ -12,6 +12,7 @@ from django.forms.models import model_to_dict
 from graphene_django import DjangoObjectType
 from graphene.types.generic import GenericScalar
 
+from app.inspector.service import get_inspector_class
 from app.revisioner.schema import RunType
 
 from app.authorization.mixins import AuthNode
@@ -38,7 +39,7 @@ class ColumnType(AuthNode, DjangoObjectType):
 
     @classmethod
     def get_node(cls, info, id):
-        """We should only return tables related to the current workspace.
+        """We should only return columns related to the current workspace.
         """
         return models.Column.objects.filter(
             workspace=info.context.workspace,
@@ -83,6 +84,7 @@ class AssetOwnerType(AuthNode, DjangoObjectType):
     scope_to_workspace = True
 
     type = graphene.String()
+    classification = graphene.String()
 
     owner = graphene.Field(OwnerType)
 
@@ -108,6 +110,15 @@ class AssetOwnerType(AuthNode, DjangoObjectType):
         return root.owner.__class__.__name__.upper()
 
 
+class TableUsageType(graphene.ObjectType):
+    """GraphQL representation of the usage statistics of a Table.
+    """
+    popularity_score = graphene.Float()
+    total_queries = graphene.Int()
+    total_users = graphene.Int()
+    window_in_days = graphene.Int()
+
+
 class TableType(AuthNode, DjangoObjectType):
     """GraphQL representation of a Table.
     """
@@ -121,12 +132,14 @@ class TableType(AuthNode, DjangoObjectType):
     schema = graphene.Field('app.definitions.schema.SchemaType')
     owners = graphene.List(AssetOwnerType)
 
+    usage = graphene.Field(TableUsageType)
+
     class Meta:
         model = models.Table
         filter_fields = {}
         interfaces = (relay.Node,)
         connection_class = connections.DefaultConnection
-        exclude_fields = []
+        exclude_fields = ['usage_score', 'usage_total_users', 'usage_total_queries', 'usage_window']
 
     @classmethod
     def get_node(cls, info, id):
@@ -138,13 +151,9 @@ class TableType(AuthNode, DjangoObjectType):
         ).first()
 
     def resolve_kind(instance, info):
-        """Capitalize the `kind` attribute.
-        """
         return instance.kind[0].upper() + instance.kind[1:].lower()
 
     def resolve_columns(instance, info):
-        """Should return the associated Columns.
-        """
         return info.context.loaders.table_columns.load(instance.object_id)
 
     def resolve_schema(instance, info):
@@ -152,6 +161,15 @@ class TableType(AuthNode, DjangoObjectType):
 
     def resolve_owners(instance, info):
         return instance.owners.order_by('order').prefetch_related('owner')
+
+    def resolve_usage(instance, info):
+        usage_statistics = {
+            'popularity_score': instance.usage_score,
+            'total_queries': instance.usage_total_queries,
+            'total_users': instance.usage_total_users,
+            'window_in_days': instance.usage_window,
+        }
+        return usage_statistics
 
 
 class SchemaType(AuthNode, DjangoObjectType):
@@ -207,17 +225,43 @@ class SSHTunnelConfigType(graphene.ObjectType):
     public_key = graphene.String()
 
 
+class DatastoreIntervalType(graphene.ObjectType):
+    """GraphQL representation of a Datastore interval.
+    """
+    label = graphene.String()
+    value = graphene.String()
+
+    def resolve_label(value, info):
+        return shortcuts.humanize_timedelta(value)
+
+    def resolve_value(value, info):
+        return value
+
+
+class DatastoreSupportedFeaturesType(graphene.ObjectType):
+    """Metamapper features that this datastore has access to.
+    """
+    checks = graphene.Boolean()
+    indexes = graphene.Boolean()
+    partitions = graphene.Boolean()
+    usage = graphene.Boolean()
+
+
 class DatastoreType(AuthNode, DjangoObjectType):
     """GraphQL representation of a Datastore.
     """
     permission_classes = (WorkspaceTeamMembersOnly,)
     scope_to_workspace = True
 
+    supported_features = graphene.Field(DatastoreSupportedFeaturesType)
+
     jdbc_connection = graphene.Field(JdbcConnectionType)
 
     ssh_config = graphene.Field(SSHTunnelConfigType)
 
     schemas = graphene.List(SchemaType, first=graphene.Int(required=False))
+
+    interval = graphene.Field(DatastoreIntervalType)
 
     latest_run = graphene.Field(RunType)
 
@@ -235,15 +279,29 @@ class DatastoreType(AuthNode, DjangoObjectType):
             'slug',
             'is_enabled',
             'version',
+            'interval',
             'short_desc',
             'tags',
+            'supported_features',
             'jdbc_connection',
             'object_permissions_enabled',
             'disabled_datastore_properties',
             'disabled_table_properties',
+            'incident_contacts',
             'created_at',
             'updated_at',
         )
+
+    def resolve_supported_features(instance, info):
+        """Get dict of feature supported by this datastore.
+        """
+        inspector_class = get_inspector_class(instance.engine)
+        return {
+            'checks': inspector_class.has_checks(),
+            'indexes': inspector_class.has_indexes(),
+            'partitions': inspector_class.has_partitions(),
+            'usage': False,  # inspector_class.has_usage() and instance.usage_last_synced_at is not None,
+        }
 
     def resolve_jdbc_connection(instance, info):
         """Returns JDBC connection information as a separate object.
@@ -298,7 +356,7 @@ class DatastoreUserGranteeType(graphene.ObjectType):
     def resolve_type(instance, info):
         """The class type of the object.
         """
-        return "user"
+        return 'user'
 
     def resolve_privileges(instance, info):
         return sorted(instance['privileges'])

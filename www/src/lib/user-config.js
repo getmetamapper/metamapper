@@ -34,7 +34,6 @@ export class UserConfiguration {
     this.storage.remove("lastDatastore")
     return null
   }
-
 }
 
 export default UserConfiguration

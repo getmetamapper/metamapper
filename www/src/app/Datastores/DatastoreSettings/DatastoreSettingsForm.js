@@ -5,6 +5,7 @@ import DatastoreSettingsFieldset from "./DatastoreSettingsFieldset"
 
 const DatastoreSettingsForm = ({
   datastore,
+  datastoreIntervalOptions,
   form,
   hasPermission,
   isSubmitting,
@@ -14,6 +15,7 @@ const DatastoreSettingsForm = ({
     <DatastoreSettingsFieldset
       form={form}
       datastore={datastore}
+      datastoreIntervalOptions={datastoreIntervalOptions}
       hasPermission={hasPermission}
     />
     <Form.Item>

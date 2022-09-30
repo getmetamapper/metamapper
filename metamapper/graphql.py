@@ -6,9 +6,11 @@ import app.authentication.graphql as authentication
 import app.authorization.graphql as authorization
 import app.api.graphql as api
 import app.audit.graphql as audit
+import app.checks.graphql as checks
 import app.comments.graphql as comments
 import app.customfields.graphql as customfields
 import app.definitions.graphql as definitions
+import app.integrations.graphql as integrations
 import app.omnisearch.graphql as omnisearch
 import app.sso.graphql as sso
 import app.revisioner.graphql as revisioner
@@ -29,9 +31,11 @@ class Query(authentication.Query,
             authorization.Query,
             api.Query,
             audit.Query,
+            checks.Query,
             comments.Query,
             customfields.Query,
             definitions.Query,
+            integrations.Query,
             omnisearch.Query,
             sso.Query,
             revisioner.Query,
@@ -52,10 +56,13 @@ class Query(authentication.Query,
 class Mutation(authentication.Mutation,
                authorization.Mutation,
                api.Mutation,
+               checks.Mutation,
                comments.Mutation,
                customfields.Mutation,
                definitions.Mutation,
+               integrations.Mutation,
                sso.Mutation,
+               revisioner.Mutation,
                graphene.ObjectType):
     """Global Mutation accessor.
     """

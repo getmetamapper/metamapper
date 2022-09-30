@@ -1,5 +1,5 @@
 import React from "react"
-import { Avatar } from "antd"
+import { Avatar, Tooltip } from "antd"
 import { coalesce } from "lib/utilities"
 
 const avatarColors = [
@@ -12,15 +12,17 @@ const avatarColors = [
   { color: "#6a00f5", backgroundColor: "#e3cffd" }, // purple
 ]
 
-const UserAvatar = ({ pk, name, email, avatarUrl, noColor, size }) => (
+const UserAvatar = ({ pk, name, email, tooltip, avatarUrl, noColor, size }) => (
   <div className="avatar">
-    <Avatar
-      src={avatarUrl}
-      style={noColor ? { backgroundColor: "#cccccc" } : avatarColors[pk % avatarColors.length]}
-      size={size}
-    >
-      {coalesce(name, email)[0].toUpperCase()}
-    </Avatar>
+    <Tooltip title={tooltip} placement="right">
+      <Avatar
+        src={avatarUrl}
+        style={noColor ? { backgroundColor: "#cccccc" } : avatarColors[pk % avatarColors.length]}
+        size={size}
+      >
+        {coalesce(name, email)[0].toUpperCase()}
+      </Avatar>
+    </Tooltip>
   </div>
 )
 
@@ -29,6 +31,7 @@ UserAvatar.defaultProps = {
   name: null,
   noColor: false,
   size: 32,
+  tooltip: null,
 }
 
 export default UserAvatar

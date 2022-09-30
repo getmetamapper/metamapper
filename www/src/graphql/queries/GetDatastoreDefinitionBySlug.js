@@ -13,6 +13,12 @@ export default gql`
       jdbcConnection {
         engine
       }
+      supportedFeatures {
+        checks
+        indexes
+        partitions
+        usage
+      }
       firstRunIsPending
     }
   }

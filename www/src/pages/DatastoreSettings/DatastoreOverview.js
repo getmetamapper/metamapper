@@ -6,7 +6,7 @@ import DatastoreLayout from "app/Datastores/DatastoreLayout"
 import DatastoreActivity from "app/Datastores/DatastoreOverview/DatastoreActivity"
 import DatastoreDetails from "app/Datastores/DatastoreOverview/DatastoreDetails"
 import UpdateCustomProperties from "app/Datastores/CustomProperties/UpdateCustomProperties"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
 import withGetDatastoreCustomProperties from "graphql/withGetDatastoreCustomProperties"
 import withGetRecentDatastoreActivities from "graphql/withGetRecentDatastoreActivities"

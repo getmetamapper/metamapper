@@ -6,7 +6,7 @@ import RestrictedButton from "app/Common/RestrictedButton"
 
 const AddUserToGroupForm = ({
   users,
-  form: { getFieldDecorator, getFieldValue },
+  form: { getFieldDecorator },
   hasPermission,
   onSubmit,
   isSubmitting,
@@ -22,9 +22,9 @@ const AddUserToGroupForm = ({
           placeholder="Enter a team members name"
           data-test="AddUserToGroupForm.Input"
           filterOption={(input, option) =>
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
-         >
+        >
           {map(users, (user) => (
             <Select.Option value={user.userId}>
               {coalesce(user.name, user.email)}

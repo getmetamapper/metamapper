@@ -10,10 +10,21 @@ export default gql`
       tags
       version
       isEnabled
+      interval {
+        label
+        value
+      }
       objectPermissionsEnabled
       shortDesc
       disabledDatastoreProperties
       disabledTableProperties
+      incidentContacts
+      supportedFeatures {
+        checks
+        indexes
+        partitions
+        usage
+      }
       jdbcConnection {
         engine
         host

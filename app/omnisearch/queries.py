@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import graphene
-import time
 
 from app.omnisearch import schema
 from app.omnisearch.backends import get_search_backend

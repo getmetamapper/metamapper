@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
+import sys
+import contextlib
+
+import app.inspector.engines.interface as interface
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from hashlib import md5
 
+from google.api_core.exceptions import Forbidden
 from google.auth.exceptions import GoogleAuthError
 from google.cloud import bigquery
+from google.cloud.bigquery import dbapi
+from google.cloud.bigquery.dbapi.exceptions import DatabaseError, OperationalError
 from google.oauth2 import service_account
 
 
-class BigQueryInspector(object):
+class BigQueryInspector(interface.EngineInterface):
     """Access BigQuery database metadata via Google API.
     """
     scopes = ['https://www.googleapis.com/auth/cloud-platform']
@@ -24,6 +32,14 @@ class BigQueryInspector(object):
         self.threads = 5
 
     @property
+    def operational_error(self):
+        return OperationalError
+
+    @property
+    def catchable_errors(self):
+        return (self.operational_error, DatabaseError, GoogleAuthError, Forbidden)
+
+    @property
     def project(self):
         return self.database
 
@@ -32,9 +48,19 @@ class BigQueryInspector(object):
         return self.extras.get('credentials', {})
 
     @classmethod
+    def has_checks(self):
+        return True
+
+    @classmethod
     def has_indexes(self):
-        """bool: BigQuery does not have indexes, so we default this to False.
-        """
+        return False
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
         return False
 
     @property
@@ -93,10 +119,39 @@ class BigQueryInspector(object):
         """
         return []
 
+    def get_connection(self):
+        """Returns a connection object based on the connector property.
+        """
+        return dbapi.Connection(self.client)
+
+    def get_cursor(self, connection):
+        """Wrapper function around Connection.cursor so we can run pre-SQL if needed.
+        """
+        return connection.cursor()
+
+    @contextlib.contextmanager
+    def execute_query(self, sql, parameters=None):
+        if sys.version_info[0] < 3:
+            sql = sql.encode('utf-8')
+
+        with contextlib.closing(self.get_connection()) as conn:
+            with contextlib.closing(self.get_cursor(conn)) as cursor:
+                if parameters is not None:
+                    cursor.execute(sql, tuple(parameters))
+                else:
+                    cursor.execute(sql)
+                yield cursor
+
     def _to_oid(self, *items):
         """str: We create a consistent hash of items to create a `pseudo` object identifier.
         """
         return md5(''.join(map(str, items)).encode('utf-8')).hexdigest()
+
+    def _cursor_columns(self, cursor):
+        return [i.name for i in cursor.description]
+
+    def _cursor_row(self, row, cols):
+        return {c: getattr(row, c) for c in cols}
 
     def _list_datasets(self, as_reference=False, **extras):
         """List the datasets that this BigQuery service account has access to.

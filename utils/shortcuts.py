@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import bleach
+import importlib
+import os
 
 from itertools import chain
 from hashlib import md5
@@ -7,11 +9,56 @@ from hashlib import md5
 from django.db import connection, models
 from django.contrib.auth import get_user_model
 from django.shortcuts import _get_queryset
+from django.utils import timezone
 from django.utils.text import slugify
 
 from graphql_relay import to_global_id, from_global_id as _from_global_id  # noqa: F401
 
 from utils.errors import NotFound
+
+
+def epoch_now(*args, **kwargs):
+    return round(timezone.now().timestamp())
+
+
+def dedupe_by_keys(data, dedupe_by):
+    """Helper function for deduplicating a list of dicts by a set of keys.
+    """
+    output = {}
+
+    for d in data:
+        output["".join([str(v) for k, v in d.items() if k in dedupe_by])] = d
+
+    return list(output.values())
+
+
+def humanize_timedelta(delta):
+    """Returns human-readable timedelta.
+    """
+    d = delta.days
+    h, s = divmod(delta.seconds, 3600)
+    m, s = divmod(s, 60)
+    labels = ['day', 'hour', 'minute', 'second']
+    dhms = [
+        '%s %s%s' % (i, lbl, 's' if i != 1 else '')
+        for i, lbl in zip([d, h, m, s], labels)
+    ]
+    for start in range(len(dhms)):
+        if not dhms[start].startswith('0'):
+            break
+    for end in range(len(dhms) - 1, -1, -1):
+        if not dhms[end].startswith('0'):
+            break
+    r = ', '.join(dhms[start:end + 1])
+    return '24 hours' if r == '1 day' else r
+
+
+def load_class(module_name, class_name):
+    """Load class from module and class name.
+    """
+    if class_name.startswith('.'):
+        class_name = class_name[1:]
+    return getattr(importlib.import_module(module_name), class_name)
 
 
 def get_object_or_404(klass, message=None, exception_class=NotFound, *args, **kwargs):
@@ -157,3 +204,42 @@ def clean_html(txt):
         'ul',
     ]
     return bleach.clean(txt, tags=tags, attributes={'span': ['class', 'data-id'], 'a': ['href']})
+
+
+class ModuleClassValidator(object):
+    """docstring for ModuleClassValidator
+    """
+    def __init__(self, module_name, possible_classes):
+        self.module_name = module_name
+        self.possible_classes = possible_classes
+
+    def is_valid_class(self, handler_class):
+        """bool: Confirm if provided class path is a valid class.
+        """
+        if not handler_class:
+            return False
+
+        module_name, class_name = os.path.splitext(handler_class)
+
+        if module_name != self.module_name or class_name[1:] not in self.possible_classes:
+            return False
+
+        try:
+            load_class(module_name, class_name)
+        except (AttributeError, ValueError, ModuleNotFoundError):
+            return False
+        return True
+
+    def get_class(self, handler_class):
+        """Load the class into memory.
+        """
+        if not self.is_valid_class(handler_class):
+            raise TypeError('Provided class is invalid: %s' % handler_class)
+
+        return load_class(*os.path.splitext(handler_class))
+
+
+def get_module_class_validator(module_name, possible_class_names):
+    """Returns a curried function for determining if the a provided class is valid given certain parameters.
+    """
+    return ModuleClassValidator(module_name, possible_class_names)

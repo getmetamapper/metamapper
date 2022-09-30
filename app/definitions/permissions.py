@@ -75,6 +75,12 @@ def get_datastore_from_global_id(attributes, attribute_lookup_field):
         lookup_field = 'schemas__tables__pk'
     elif nodetype == 'ColumnType':
         lookup_field = 'schemas__tables__columns__pk'
+    elif nodetype == 'CheckType':
+        lookup_field = 'checks__pk'
+    elif nodetype == 'CheckAlertRuleType':
+        lookup_field = 'checks__alert_rules__pk'
+    elif nodetype == 'CheckExpectationType':
+        lookup_field = 'checks__expectations__pk'
     elif nodetype == 'AssetOwnerType':
         asset_owner = models.AssetOwner.objects.filter(pk=pk).first()
         if not asset_owner:
@@ -112,6 +118,10 @@ CanUpdateDatastoreSettings = CanPerformDatastoreMutation('change_datastore_setti
 CanUpdateDatastoreConnection = CanPerformDatastoreMutation('change_datastore_connection')
 
 CanUpdateDatastoreAccess = CanPerformDatastoreMutation('change_datastore_access', ignore_limited_access_check=True)
+
+CanCreateDatastoreChecks = CanPerformDatastoreMutation('change_datastore_checks', 'datastore_id')
+
+CanManageDatastoreChecks = CanPerformDatastoreMutation('change_datastore_checks')
 
 CanDeleteDatastore = CanPerformDatastoreMutation('change_datastore_connection')
 

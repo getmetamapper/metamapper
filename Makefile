@@ -17,36 +17,36 @@ help:
 	@echo "See contents of Makefile for more targets."
 	@echo ""
 
-setup: install-npm-pkgs build-assets build-docker initdb
+setup: npm-install npm-build build init-db
 
-install-npm-pkgs:
+npm-install:
 	@npm install --prefix www --loglevel silent
 
-build-assets:
+npm-build:
 	@npm run build --prefix www --loglevel silent
 
-build-docker:
+build:
 	@docker-compose -f docker-development.yml build --build-arg env=development
 
-initdb:
-	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py initdb --noinput --verbosity 0
+init-db:
+	@docker-compose -f docker-development.yml run --rm webserver python manage.py initdb --noinput --verbosity 0
 
-upgradedb:
-	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py makemigrations
+migrations:
+	@docker-compose -f docker-development.yml run --rm webserver python manage.py makemigrations
 
 migrate:
-	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py migrate
+	@docker-compose -f docker-development.yml run --rm webserver python manage.py migrate
 
 reindex:
-	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py reindex
+	@docker-compose -f docker-development.yml run --rm webserver python manage.py reindex
 
-seeddb:
-	@docker-compose -f docker-development.yml run -e DB_SETUP=1 --rm webserver python manage.py seeddata www/cypress/fixtures/definitions.spec.json
+seed-db:
+	@docker-compose -f docker-development.yml run --rm webserver python manage.py seeddata www/cypress/fixtures/definitions.spec.json
 
-resetdb:
+reset-db:
 	@docker-compose -f docker-development.yml run --rm webserver bash www/cypress/cmd/resetdb.sh
 
-rebuilddb: stop
+rebuild-db: stop
 	@docker-compose -f docker-development.yml start database
 	@docker-compose -f docker-development.yml exec database dropdb metamapper -U postgres
 	@docker-compose -f docker-development.yml exec database createdb metamapper -U postgres

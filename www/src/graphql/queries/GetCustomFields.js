@@ -1,7 +1,7 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query getCustomFields($contentType: String!) {
+  query GetCustomFields($contentType: String!) {
     customFields(contentType: $contentType) {
       edges {
         node {

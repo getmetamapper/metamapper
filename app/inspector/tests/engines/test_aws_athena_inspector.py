@@ -26,10 +26,20 @@ class AwsAthenaInspectorTests(unittest.TestCase):
         }
         self.engine = engine.AwsAthenaInspector(**self.connection)
 
-    def test_has_indexes(self):
-        """It should have indexes.
-        """
+    def test_has_operational_error(self):
+        assert engine.AwsAthenaInspector.operational_error
+
+    def test_has_checks_value(self):
+        assert engine.AwsAthenaInspector.has_checks()
+
+    def test_has_indexes_value(self):
         assert not engine.AwsAthenaInspector.has_indexes()
+
+    def test_has_partitions_value(self):
+        assert engine.AwsAthenaInspector.has_partitions()
+
+    def test_has_usage_value(self):
+        assert not engine.AwsAthenaInspector.has_usage()
 
     def test_get_indexes(self):
         """It should return an empty list.

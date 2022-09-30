@@ -1,26 +1,18 @@
 import React, { Component } from "react"
-import { Table, Tag } from "antd"
+import { Table } from "antd"
 import moment from "moment"
 import prettyMs from "pretty-ms"
+import StatusBadge from "app/Common/StatusBadge"
 
 class RunHistoryTable extends Component {
   constructor(props) {
-    super(props)
-
-    this.statusColors = {
-      SUCCESS: "green",
-      PENDING: "orange",
-      FAILURE: "red",
-      PARTIAL: "volcano",
-    }
+    super(props);
 
     this.columns = [
       {
         title: "Status",
         dataIndex: "status",
-        render: (status, { error }) => (
-          <Tag color={this.statusColors[status]}>{status}</Tag>
-        ),
+        render: (status, { error }) => <StatusBadge status={status} />
       },
       {
         title: "Start Time",
@@ -31,9 +23,7 @@ class RunHistoryTable extends Component {
         title: "Duration",
         render: ({ startedAt, finishedAt }) => (
           <>
-            {finishedAt && (
-              <span>{prettyMs(moment(finishedAt).diff(startedAt))}</span>
-            )}
+            {finishedAt && prettyMs(moment(finishedAt).diff(startedAt))}
           </>
         ),
       },

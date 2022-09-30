@@ -95,7 +95,6 @@ class PostgresInsertCompiler(SQLInsertCompiler):
     def _rewrite_insert_on_conflict(self, sql, params, conflict_action, returning):
         """Rewrites a normal SQL INSERT query to add the 'ON CONFLICT' clause.
         """
-
         update_columns = ", ".join(
             [
                 "{0} = EXCLUDED.{0}".format(self.qn(field.column))

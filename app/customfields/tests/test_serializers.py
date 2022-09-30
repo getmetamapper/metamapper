@@ -88,6 +88,44 @@ class CustomFieldSerializerCreateTests(cases.SerializerTestCase):
             }
         ])
 
+    def test_invalid_multi_nulled(self):
+        """It should throw an error if the validator is not correct.
+        """
+        attributes = self._get_attributes(
+            field_type=models.CustomField.MULTI,
+            validators={},
+        )
+
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {
+                'resource': 'CustomField',
+                'field': 'choices',
+                'code': 'required',
+            }
+        ])
+
+    def test_invalid_multi_empty(self):
+        """It should throw an error if the validator is not correct.
+        """
+        attributes = self._get_attributes(
+            field_type=models.CustomField.MULTI,
+            validators={'choices': []},
+        )
+
+        serializer = self.serializer_class(data=attributes)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {
+                'resource': 'CustomField',
+                'field': 'choices',
+                'code': 'empty',
+            }
+        ])
+
     def test_drf_validation_rules(self):
         """It should return error messages when DRF validation fails.
         """
@@ -239,6 +277,12 @@ class CustomPropertiesSerializerTests(cases.SerializerTestCase):
                 field_type=models.CustomField.GROUP,
                 **cls.attributes,
             ),
+            factories.CustomFieldFactory(
+                field_name='Region',
+                field_type=models.CustomField.MULTI,
+                validators={'choices': ['us-west-2', 'eu-west-1', 'ap-northeast-2', 'us-east-1']},
+                **cls.attributes,
+            ),
         ]
         cls.request = collections.namedtuple(
             'Request',
@@ -252,6 +296,7 @@ class CustomPropertiesSerializerTests(cases.SerializerTestCase):
             'properties': {
                 self.customfields[1].pk: 'Data',
                 self.customfields[2].pk: 'Product',
+                self.customfields[4].pk: ['us-west-2', 'eu-west-1'],
             },
         }
 
@@ -400,3 +445,29 @@ class CustomPropertiesSerializerTests(cases.SerializerTestCase):
         self.assertSerializerErrorsEqual(serializer, [
             {'resource': 'CustomField', 'field': 'properties', 'code': 'invalid'}
         ])
+
+    def test_multi_field(self):
+        """It should NOT be able to create the resource.
+        """
+        serializer = self.serializer_class(
+            instance=self.datastore,
+            data={'properties': {self.customfields[4].pk: ['us‑east‑2']}},
+            partial=True,
+        )
+
+        self.assertFalse(serializer.is_valid())
+        self.assertSerializerErrorsEqual(serializer, [
+            {'resource': 'CustomField', 'field': 'properties', 'code': 'invalid'}
+        ])
+
+    def test_multi_field_empty(self):
+        """It should be able to create the resource.
+        """
+        serializer = self.serializer_class(
+            instance=self.datastore,
+            data={'properties': {self.customfields[4].pk: []}},
+            partial=True,
+        )
+
+        self.assertTrue(serializer.is_valid())
+        self.assertTrue(serializer.save())

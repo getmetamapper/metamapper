@@ -44,11 +44,13 @@ class DatastoreAccessPrivilegesTable extends Component {
   state = { editingKey: '' }
 
   getColumns = () => {
+    const { datastore } = this.props
     const columns = [
       {
         title: "Name",
         sorter: (a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0),
         render: (record) => <span>{record.name}</span>,
+        visible: true,
       },
       {
         title: 'View',
@@ -59,6 +61,7 @@ class DatastoreAccessPrivilegesTable extends Component {
         render: (privileges) => (
           <BooleanIndicator value={privileges.indexOf('view_datastore') > -1} />
         ),
+        visible: true,
       },
       {
         title: 'Configure',
@@ -69,6 +72,7 @@ class DatastoreAccessPrivilegesTable extends Component {
         render: (privileges) => (
           <BooleanIndicator value={privileges.indexOf('change_datastore_settings') > -1} />
         ),
+        visible: true,
       },
       {
         title: 'Connection',
@@ -79,6 +83,7 @@ class DatastoreAccessPrivilegesTable extends Component {
         render: (privileges) => (
           <BooleanIndicator value={privileges.indexOf('change_datastore_connection') > -1} />
         ),
+        visible: true,
       },
       {
         title: 'Metadata',
@@ -89,6 +94,18 @@ class DatastoreAccessPrivilegesTable extends Component {
         render: (privileges) => (
           <BooleanIndicator value={privileges.indexOf('change_datastore_metadata') > -1} />
         ),
+        visible: true,
+      },
+      {
+        title: 'Checks',
+        dataIndex: 'privileges',
+        align: 'center',
+        editable: true,
+        permission: 'change_datastore_checks',
+        render: (privileges) => (
+          <BooleanIndicator value={privileges.indexOf('change_datastore_checks') > -1} />
+        ),
+        visible: datastore.supportedFeatures.checks,
       },
       {
         title: 'Comment',
@@ -99,6 +116,7 @@ class DatastoreAccessPrivilegesTable extends Component {
         render: (privileges) => (
           <BooleanIndicator value={privileges.indexOf('comment_on_datastore') > -1} />
         ),
+        visible: true,
       },
       {
         title: 'Access',
@@ -109,6 +127,7 @@ class DatastoreAccessPrivilegesTable extends Component {
         render: (privileges) => (
           <BooleanIndicator value={privileges.indexOf('change_datastore_access') > -1} />
         ),
+        visible: true,
       },
     ];
 
@@ -142,10 +161,11 @@ class DatastoreAccessPrivilegesTable extends Component {
             )}
           </Fragment>
         ),
+        visible: true,
       })
     }
 
-    return columns
+    return columns.filter((c) => c.visible)
   }
 
   handleSubmit = (record) => {

@@ -1,10 +1,13 @@
 import React from "react"
-import { Card, Col, Form, Input, Row, Switch } from "antd"
+import { Card, Col, Form, Input, Row, Select, Switch } from "antd"
+import { arrayOfEmailsValidator } from "lib/validators"
 import FormLabel from "app/Common/FormLabel"
 import TagsInput from "app/Common/TagsInput"
 
 const DatastoreSettingsFieldset = ({
   datastore,
+  datastoreIntervalOptions,
+  intervalOptions,
   form: { getFieldDecorator },
   hasPermission,
 }) => (
@@ -39,12 +42,70 @@ const DatastoreSettingsFieldset = ({
     </Form.Item>
     {datastore && datastore.hasOwnProperty("isEnabled") && (
       <Form.Item>
+        <FormLabel
+          label="Datastore ID"
+          helpText="Unique reference of this datastore. Useful for API interactions."
+        />
+        <Input
+          type="text"
+          disabled={true}
+          value={datastore.pk}
+          data-test="DatastoreSettingsFieldset.DatastoreId"
+        />
+      </Form.Item>
+    )}
+    {datastore && datastore.hasOwnProperty("isEnabled") && (
+      <Form.Item>
+        <FormLabel
+          label="Incident Contacts"
+          helpText="We will notify these people when an issue occurs, such as your datastore is not syncing properly."
+        />
+        {getFieldDecorator("incidentContacts", {
+          initialValue: datastore.incidentContacts,
+          rules: [
+            { validator: arrayOfEmailsValidator },
+          ],
+        })(
+          <TagsInput
+            className="full-width"
+            disabled={!hasPermission}
+            data-test="DatastoreSettingsFieldset.IncidentContacts"
+          />
+        )}
+      </Form.Item>
+    )}
+    {datastore && datastore.hasOwnProperty("isEnabled") && (
+      <Form.Item>
+        <FormLabel
+          label="Schedule Interval"
+          helpText="How often we will sync this datastore."
+        />
+        {getFieldDecorator("interval", {
+          initialValue: datastore.interval.value,
+          rules: [],
+        })(
+          <Select
+            type="text"
+            disabled={!hasPermission}
+            data-test="DatastoreSettingsFieldset.ScheduleInterval"
+          >
+            {datastoreIntervalOptions.map(({ label, value }) => (
+              <Select.Option key={value}>
+                {label}
+              </Select.Option>
+            ))}
+          </Select>
+        )}
+      </Form.Item>
+    )}
+    {datastore && datastore.hasOwnProperty("isEnabled") && (
+      <Form.Item>
         <Card className="datastore-crawling-enabled">
           <Row>
             <Col span={18}>
-              <span className="label">Enable Crawling</span>
+              <span className="label">Enable Syncing</span>
               <small>
-                No definitions will be updated when crawling is disabled.
+                No definitions will be updated when syncing is disabled.
               </small>
             </Col>
             <Col span={6}>
@@ -70,6 +131,7 @@ const DatastoreSettingsFieldset = ({
 
 DatastoreSettingsFieldset.defaultProps = {
   datastore: {},
+  datastoreIntervalOptions: [],
 }
 
 export default DatastoreSettingsFieldset

@@ -27,6 +27,11 @@ class WorkspaceLayout extends Component {
         to: `/${slug}/settings/users`,
       },
       {
+        icon: "cloud",
+        label: "Integrations",
+        to: `/${slug}/settings/integrations`,
+      },
+      {
         icon: "api",
         label: "API",
         to: `/${slug}/settings/api`,

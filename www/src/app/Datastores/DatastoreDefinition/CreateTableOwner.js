@@ -15,13 +15,13 @@ class CreateTableOwner extends React.Component {
     super(props)
 
     this.state = {
+      classification: 'BUSINESS',
       workspaceUsers: [],
       workspaceGroups: [],
     }
 
     this.handleClearOnClose = this.handleClearOnClose.bind(this)
   }
-
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.open === false) {
@@ -48,7 +48,7 @@ class CreateTableOwner extends React.Component {
   handleSubmit = (evt) => {
     evt.preventDefault()
 
-    const { value: { key: ownerId } } = this.state
+    const { value: { key: ownerId }, classification } = this.state
     const { objectId } = this.props
 
     const payload = {
@@ -56,8 +56,9 @@ class CreateTableOwner extends React.Component {
       variables: {
         ownerId,
         objectId,
+        classification,
       },
-      refetchQueries: ['GetTableDefinitionWithOwners'],
+      refetchQueries: ["GetTableDefinitionWithOwners"],
     }
 
     this.props.handleMutation(payload, this.handleSubmitSuccess)
@@ -77,15 +78,15 @@ class CreateTableOwner extends React.Component {
   }
 
   handleChange = (value) => {
-    let typedValue;
+    let typedValue
     if (value) {
       typedValue = value
     }
     this.setState({
       value,
       typedValue,
-    });
-  };
+    })
+  }
 
   render() {
     const { typedValue } = this.state
@@ -132,9 +133,24 @@ class CreateTableOwner extends React.Component {
             ))
           }
         </Select>
-        <Button type="primary" size="small" onClick={this.handleSubmit} disabled={submitting} data-test="CreateAssetOwner.Submit">
-          <Icon type={submitting ? 'loading' : 'check'} />
-        </Button>
+        <div>
+          <Select value={this.state.classification} onChange={(classification) => this.setState({ classification })}>
+            <Select.Option value="TECHNICAL">Technical</Select.Option>
+            <Select.Option value="BUSINESS">Business</Select.Option>
+          </Select>
+        </div>
+        <div>
+          <Button
+            block
+            type="primary"
+            size="small"
+            onClick={this.handleSubmit}
+            disabled={submitting}
+            data-test="CreateAssetOwner.Submit"
+          >
+            <Icon type={submitting ? 'loading' : 'check'} />
+          </Button>
+        </div>
       </div>
     )
   }

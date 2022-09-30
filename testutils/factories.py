@@ -10,14 +10,16 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.text import slugify
 
+import app.api.models as api_models
 import app.authentication.models as authentication_models
 import app.authorization.models as authorization_models
-import app.api.models as api_models
+import app.checks.models as check_models
 import app.comments.models as comment_models
-import app.sso.models as sso_models
 import app.customfields.models as customfields_models
 import app.definitions.models as definition_models
+import app.integrations.models as integration_models
 import app.revisioner.models as revisioner_models
+import app.sso.models as sso_models
 import app.votes.models as vote_models
 
 
@@ -92,6 +94,12 @@ def allDataTypes(instance):
     return random.choice(choices)
 
 
+def uniqueName(instance):
+    """Generate a unique name.
+    """
+    return factory.Faker('company').generate() + str(random.randint(5, 1500))
+
+
 def underscoreObject(instance):
     """Create an underscore domain_word version.
     """
@@ -136,7 +144,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class WorkspaceFactory(factory.django.DjangoModelFactory):
-    name = factory.Faker('company')
+    name = factory.LazyAttribute(uniqueName)
     slug = factory.LazyAttribute(lambda i: slugify(i.name))
     creator = factory.LazyAttribute(lambda i: UserFactory())
 
@@ -146,8 +154,7 @@ class WorkspaceFactory(factory.django.DjangoModelFactory):
 
 class GroupFactory(factory.django.DjangoModelFactory):
     workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
-
-    name = factory.Faker('company')
+    name = factory.LazyAttribute(uniqueName)
     description = factory.Faker('text', max_nb_chars=25)
 
     class Meta:
@@ -307,3 +314,73 @@ class ApiTokenFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = api_models.ApiToken
+
+
+class CheckQueryFactory(factory.django.DjangoModelFactory):
+    key = factory.LazyAttribute(lambda i: hashlib.md5(i.sql_text.encode()).hexdigest())
+    sql_text = factory.LazyAttribute(lambda i: "SELECT COUNT(1) FROM workspaces WHERE id = '%s'" % get_random_string())
+    datastore = factory.LazyAttribute(lambda i: DatastoreFactory())
+    workspace = factory.LazyAttribute(lambda i: i.datastore.workspace)
+
+    class Meta:
+        model = check_models.CheckQuery
+
+
+class CheckFactory(factory.django.DjangoModelFactory):
+    datastore = factory.LazyAttribute(lambda i: DatastoreFactory())
+    workspace = factory.LazyAttribute(lambda i: i.datastore.workspace)
+    creator = factory.LazyAttribute(lambda i: UserFactory())
+    query = factory.LazyAttribute(lambda i: CheckQueryFactory(datastore=i.datastore))
+    name = factory.Faker('sentence')
+    tags = factory.LazyAttribute(allTags)
+    interval = dt.timedelta(hours=1)
+
+    class Meta:
+        model = check_models.Check
+
+
+class CheckExpectationFactory(factory.django.DjangoModelFactory):
+    job = factory.LazyAttribute(lambda i: CheckFactory())
+    workspace = factory.LazyAttribute(lambda i: i.job.workspace)
+
+    handler_class = 'app.checks.tasks.expectations.AssertRowCountToBe'
+    handler_input = {'op': 'equal to'}
+
+    pass_value_class = 'app.checks.tasks.pass_values.Constant'
+    pass_value_input = {'value': 0}
+
+    class Meta:
+        model = check_models.CheckExpectation
+
+
+class CheckExecutionFactory(factory.django.DjangoModelFactory):
+    job = factory.LazyAttribute(lambda i: CheckFactory())
+    workspace = factory.LazyAttribute(lambda i: i.job.workspace)
+    query = factory.LazyAttribute(lambda i: CheckQueryFactory(workspace=i.workspace))
+
+    class Meta:
+        model = check_models.CheckExecution
+
+
+class CheckAlertRuleFactory(factory.django.DjangoModelFactory):
+    job = factory.LazyAttribute(lambda i: CheckFactory())
+    workspace = factory.LazyAttribute(lambda i: i.job.workspace)
+    name = factory.LazyAttribute(uniqueName)
+    channel = "EMAIL"
+    channel_config = {"emails": ["test@metamapper.io"]}
+
+    class Meta:
+        model = check_models.CheckAlertRule
+
+
+class IntegrationConfigFactory(factory.django.DjangoModelFactory):
+    workspace = factory.LazyAttribute(lambda i: WorkspaceFactory())
+    user = factory.LazyAttribute(lambda i: UserFactory())
+    integration = "SLACK"
+    displayable = factory.LazyAttribute(uniqueName)
+
+    meta = factory.LazyAttribute(lambda i: {"bot_name": "RoboAlert", "workspace": i.displayable})
+    auth = make_password("meowmeowmeow")
+
+    class Meta:
+        model = integration_models.IntegrationConfig

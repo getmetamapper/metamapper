@@ -23,7 +23,7 @@ export const withPopoverLoader = withLoader({
   size: "small",
   wrapperstyles: {
     textAlign: "center",
-    margin: "16px 40px"
+    margin: "16px 40px",
   },
 })
 

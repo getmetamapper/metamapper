@@ -56,7 +56,7 @@ jobs:
       - checkout
       - restore_cache:
           key: npm-{{ checksum "./www/package-lock.json" }}
-      - run: make install-npm-pkgs
+      - run: make npm-install
       - save_cache:
           key: npm-{{ checksum "./www/package-lock.json" }}
           paths:

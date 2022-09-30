@@ -8,7 +8,7 @@ import app.inspector.engines.interface as interface
 
 MYSQL_V5_REGEXP = re.compile(r'5\.[0-9]{1,3}\.[0-9]{1,3}')
 
-MYSQL_DEFINITIONS_QUERY = """
+MYSQL_DEFINITIONS_SQL = """
     SELECT
         c.table_schema,
         CAST(MD5(c.table_schema) AS CHAR) AS schema_object_id,
@@ -55,7 +55,7 @@ LEFT JOIN (
 ORDER BY c.table_schema, c.table_name, c.ordinal_position
 """
 
-MYSQL_INDEXES_QUERY = """
+MYSQL_INDEXES_SQL = """
   SELECT DISTINCT
           t.table_schema as schema_name,
           CAST(MD5(t.table_schema) AS CHAR) AS schema_object_id,
@@ -99,15 +99,27 @@ class MySQLInspector(interface.EngineInterface):
 
     table_properties = []
 
-    definitions_sql = MYSQL_DEFINITIONS_QUERY
+    definitions_sql = MYSQL_DEFINITIONS_SQL
 
-    indexes_sql = MYSQL_INDEXES_QUERY
+    indexes_sql = MYSQL_INDEXES_SQL
 
     connect_timeout_attr = 'connect_timeout'
 
     @classmethod
+    def has_checks(self):
+        return True
+
+    @classmethod
     def has_indexes(self):
         return True
+
+    @classmethod
+    def has_partitions(self):
+        return False
+
+    @classmethod
+    def has_usage(self):
+        return False
 
     @property
     def connector(self):

@@ -25,21 +25,21 @@ class DefinitionLayout extends Component {
       {
         to: `${baseUri}/overview`,
         label: "Overview",
-        isDisplayed: true,
+        visible: true,
       },
       {
         to: `${baseUri}/notes`,
         label: "Notes",
-        isDisplayed: true,
+        visible: true,
       },
       {
         to: `${baseUri}/columns`,
         label: "Columns",
-        isDisplayed: true,
+        visible: true,
       },
     ]
 
-    this.links = filter(this.links, { isDisplayed: true })
+    this.links = filter(this.links, { visible: true })
     this.breadcrumbs = this.breadcrumbs.bind(this)
   }
 
@@ -79,13 +79,7 @@ class DefinitionLayout extends Component {
   }
 
   render() {
-    const {
-      children,
-      datastore,
-      table,
-      lastCrumb,
-      loading,
-    } = this.props
+    const { children, datastore, table, lastCrumb, loading } = this.props
     return (
       <DatastoreLayout
         breadcrumbs={this.breadcrumbs}
@@ -125,5 +119,5 @@ class DefinitionLayout extends Component {
 export default compose(
   withRouter,
   withUserContext,
-  withLargeLoader,
+  withLargeLoader
 )(DefinitionLayout)

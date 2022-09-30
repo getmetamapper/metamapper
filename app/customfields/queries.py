@@ -2,8 +2,6 @@
 import graphene
 import graphene.relay as relay
 
-import utils.shortcuts as shortcuts
-
 from app.customfields.models import CustomField
 from app.customfields.schema import CustomFieldType
 from app.customfields.scalars import CustomPropScalar
@@ -20,7 +18,6 @@ class Query(graphene.ObjectType):
         object_id=graphene.ID(required=True),
     )
 
-    custom_field = relay.Node.Field(CustomFieldType)
     custom_fields = AuthConnectionField(
         type=CustomFieldType,
         content_type=graphene.String(required=True),
@@ -36,17 +33,6 @@ class Query(graphene.ObjectType):
             return None
 
         return resource.get_custom_properties()
-
-    @login_required
-    def resolve_custom_field(self, info, id, *args, **kwargs):
-        """Retrieve a specific custom field instance.
-        """
-        _type, pk = shortcuts.from_global_id(id)
-        get_kwargs = {
-            'workspace': info.context.workspace,
-            'pk': pk,
-        }
-        return shortcuts.get_object_or_404(CustomField, **get_kwargs)
 
     @login_required
     def resolve_custom_fields(self, info, content_type, *args, **kwargs):

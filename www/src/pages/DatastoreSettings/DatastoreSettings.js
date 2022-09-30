@@ -10,8 +10,9 @@ import DatastoreSettingsForm from "app/Datastores/DatastoreSettings/DatastoreSet
 import AllowedCustomPropertySettings from "app/Datastores/DatastoreSettings/AllowedCustomPropertySettings"
 import UpdateDatastoreMetadataMutation from "graphql/mutations/UpdateDatastoreMetadata"
 import withGetDatastoreSettings from "graphql/withGetDatastoreSettings"
+import withGetDatastoreIntervalOptions from "graphql/withGetDatastoreIntervalOptions"
 import withGraphQLMutation from "hoc/withGraphQLMutation"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 
 class DatastoreSettings extends Component {
   constructor(props) {
@@ -81,7 +82,14 @@ class DatastoreSettings extends Component {
   }
 
   render() {
-    const { datastore, form, hasPermission, loading, submitting } = this.props
+    const {
+      datastore,
+      datastoreIntervalOptions,
+      form,
+      hasPermission,
+      loading,
+      submitting,
+    } = this.props
     return (
       <DatastoreLayout
         breadcrumbs={this.breadcrumbs}
@@ -89,7 +97,7 @@ class DatastoreSettings extends Component {
         loading={loading}
         title={`Datastore Settings - ${datastore.slug} - Metamapper`}
       >
-        <Row>
+        <Row className="datastore-settings-container">
           <Col span={16} offset={4}>
             <Card className="datastore-settings">
               <div className="datastore-settings-header">
@@ -97,8 +105,9 @@ class DatastoreSettings extends Component {
                 <Divider />
               </div>
               <DatastoreSettingsForm
-                datastore={datastore}
                 form={form}
+                datastore={datastore}
+                datastoreIntervalOptions={datastoreIntervalOptions}
                 hasPermission={hasPermission}
                 isSubmitting={submitting}
                 onSubmit={this.handleSubmit}
@@ -126,21 +135,20 @@ class DatastoreSettings extends Component {
   }
 }
 
-const withForm = Form.create()
-
-const withNotFound = withNotFoundHandler(({ datastore }) => {
-  return !datastore || !datastore.hasOwnProperty("id")
+const withNotFound = withNotFoundHandler(({ datastore, loading }) => {
+  return !loading && (!datastore || !datastore.hasOwnProperty("id"))
 })
 
 const enhance = compose(
-  withForm,
+  Form.create(),
   withRouter,
   withWriteAccess,
   withGetDatastoreSettings,
-  graphql(UpdateDatastoreMetadataMutation),
-  withGraphQLMutation,
   withLargeLoader,
   withNotFound,
+  withGetDatastoreIntervalOptions,
+  graphql(UpdateDatastoreMetadataMutation),
+  withGraphQLMutation
 )
 
 export default enhance(DatastoreSettings)

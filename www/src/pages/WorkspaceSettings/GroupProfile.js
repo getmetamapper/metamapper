@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet"
 import { compose } from "react-apollo"
 import { Card, Col, Row } from "antd"
 import withGetWorkspaceGroup from "graphql/withGetWorkspaceGroup"
-import withNotFoundHandler from 'hoc/withNotFoundHandler'
+import withNotFoundHandler from "hoc/withNotFoundHandler"
 import { withLargeLoader } from "hoc/withLoader"
 import ManageGroupUsersTable from "app/WorkspaceSettings/Groups/ManageGroupUsersTable"
 import Breadcrumbs from "app/Navigation/Breadcrumbs"

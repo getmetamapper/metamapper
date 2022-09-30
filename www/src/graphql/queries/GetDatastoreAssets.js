@@ -1,13 +1,20 @@
 import gql from "graphql-tag"
 
 export default gql`
-  query GetDatastoreAssets($datastoreSlug: String!, $search: String, $schema: String, $after: String) {
+  query GetDatastoreAssets(
+    $datastoreSlug: String!
+    $schema: String
+    $after: String
+    $search: String
+    $orderBy: String
+  ) {
     datastoreAssets(
       slug: $datastoreSlug
-      search: $search
-      first: 100
       schema: $schema
+      search: $search
       after: $after
+      first: 100
+      orderBy: $orderBy
     ) {
       edges {
         node {
@@ -17,6 +24,12 @@ export default gql`
           shortDesc
           schema {
             name
+          }
+          usage {
+            popularityScore
+            totalQueries
+            totalUsers
+            windowInDays
           }
         }
       }

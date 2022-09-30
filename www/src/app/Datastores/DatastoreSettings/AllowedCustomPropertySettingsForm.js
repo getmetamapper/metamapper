@@ -19,12 +19,13 @@ const AllowedCustomPropertySettingsForm = ({
 }) => (
   <Form onSubmit={onSubmit} className="custom-property-settings-form">
     <Alert message={
-      <span>
-        Metamapper allows you to add globally-defined <CustomFieldLink />
-        to certain datastore objects. Use this section to disable
-        a property specifically for the <b>{datastore.name}</b> datastore.
-      </span>
-    }/>
+        <span>
+          Metamapper allows you to add globally-defined <CustomFieldLink />
+          to certain datastore objects. Use this section to disable
+          a property specifically for the <b>{datastore.name}</b> datastore.
+        </span>
+      }
+    />
     <AllowedCustomPropertySettingsFieldset
       form={form}
       customDatastoreFields={customDatastoreFields}
