@@ -11,7 +11,7 @@ django-graphql-jwt
 django-guardian
 django-ordered-model
 django-storages
-django==3.2.12
+django==3.2.15
 djangorestframework
 djangorestframework-jwt
 dnspython
