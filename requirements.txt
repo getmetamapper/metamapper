@@ -162,7 +162,7 @@ jmespath==1.0.0
     #   botocore
 kombu==4.6.11
     # via celery
-lxml==4.6.5
+lxml==4.9.1
     # via
     #   python3-saml
     #   xmlsec
