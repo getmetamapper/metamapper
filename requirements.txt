@@ -96,7 +96,7 @@ elasticsearch==7.9.1
     #   elasticsearch-dsl
 elasticsearch-dsl==7.3.0
     # via -r requirements.in
-future==0.18.2
+future==0.18.3
     # via celery
 google-api-core[grpc]==2.7.2
     # via
