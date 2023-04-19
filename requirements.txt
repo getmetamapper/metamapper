@@ -280,7 +280,7 @@ snowflake-connector-python==2.7.3
     # via -r requirements.in
 sql-metadata==2.6.0
     # via -r requirements.in
-sqlparse==0.4.2
+sqlparse==0.4.4
     # via
     #   -r requirements.in
     #   django
