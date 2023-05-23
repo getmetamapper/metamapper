@@ -246,7 +246,7 @@ pytz==2022.1
     #   snowflake-connector-python
 redis==4.2.2
     # via celery
-requests==2.27.1
+requests==2.31.0
     # via
     #   google-api-core
     #   google-cloud-bigquery
