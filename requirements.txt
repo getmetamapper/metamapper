@@ -47,7 +47,7 @@ charset-normalizer==2.0.12
     # via
     #   requests
     #   snowflake-connector-python
-cryptography==36.0.2
+cryptography==41.0.0
     # via
     #   -r requirements.in
     #   paramiko
