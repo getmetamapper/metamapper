@@ -276,7 +276,7 @@ six==1.16.0
     #   pyopenssl
     #   python-dateutil
     #   singledispatch
-snowflake-connector-python==2.7.3
+snowflake-connector-python==3.0.2
     # via -r requirements.in
 sql-metadata==2.6.0
     # via -r requirements.in
