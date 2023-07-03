@@ -59,7 +59,7 @@ cython==0.29.21
     # via -r requirements.in
 deprecated==1.2.13
     # via redis
-django==3.2.12
+django==3.2.20
     # via
     #   -r requirements.in
     #   django-cors-headers
