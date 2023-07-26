@@ -32,7 +32,7 @@ cachetools==5.0.0
     # via google-auth
 celery[redis]==4.4.6
     # via -r requirements.in
-certifi==2021.10.8
+certifi==2023.7.22
     # via
     #   elasticsearch
     #   requests
