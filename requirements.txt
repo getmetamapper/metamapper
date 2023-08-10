@@ -135,7 +135,7 @@ graphql-core==2.3.2
     #   graphql-relay
 graphql-relay==2.0.1
     # via graphene
-grpcio==1.44.0
+grpcio==1.53.2
     # via
     #   google-api-core
     #   google-cloud-bigquery
