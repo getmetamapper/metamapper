@@ -29,7 +29,7 @@
     "query-string": "^6.12.1",
     "quill-emoji": "^0.1.8",
     "quill-magic-url": "^2.0.2",
-    "quill-mention": "^3.0.0",
+    "quill-mention": "^4.0.0",
     "react": "^16.11.0",
     "react-apollo": "^2.4.1",
     "react-csv": "^2.0.3",
