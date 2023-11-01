@@ -216,7 +216,7 @@ pycparser==2.21
     # via cffi
 pycryptodomex==3.14.1
     # via snowflake-connector-python
-pyjwt==1.7.1
+pyjwt==2.4.0
     # via
     #   django-graphql-jwt
     #   djangorestframework-jwt
