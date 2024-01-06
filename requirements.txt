@@ -214,7 +214,7 @@ pyasn1-modules==0.2.8
     # via google-auth
 pycparser==2.21
     # via cffi
-pycryptodomex==3.14.1
+pycryptodomex==3.19.1
     # via snowflake-connector-python
 pyjwt==1.7.1
     # via
