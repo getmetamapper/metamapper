@@ -144,7 +144,7 @@ grpcio-status==1.44.0
     # via google-api-core
 gunicorn==20.1.0
     # via -r requirements.in
-idna==3.3
+idna==3.7
     # via
     #   requests
     #   snowflake-connector-python
