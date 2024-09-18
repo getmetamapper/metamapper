@@ -41,7 +41,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.3",
     "react-sparklines": "^1.7.0",
-    "sass": "^1.26.10",
+    "sass": "^1.79.0",
     "store2": "^2.10.0"
   },
   "scripts": {
