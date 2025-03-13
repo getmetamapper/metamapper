@@ -59,7 +59,7 @@ cython==0.29.21
     # via -r requirements.in
 deprecated==1.2.13
     # via redis
-django==3.2.12
+django==4.2.20
     # via
     #   -r requirements.in
     #   django-cors-headers
@@ -154,7 +154,7 @@ importlib-metadata==4.11.3
     #   redis
 isodate==0.6.1
     # via python3-saml
-jinja2==3.1.1
+jinja2==3.1.6
     # via -r requirements.in
 jmespath==1.0.0
     # via
