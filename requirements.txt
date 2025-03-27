@@ -135,14 +135,14 @@ graphql-core==2.3.2
     #   graphql-relay
 graphql-relay==2.0.1
     # via graphene
-grpcio==1.44.0
+grpcio==1.58.3
     # via
     #   google-api-core
     #   google-cloud-bigquery
     #   grpcio-status
 grpcio-status==1.44.0
     # via google-api-core
-gunicorn==20.1.0
+gunicorn==23.0.0
     # via -r requirements.in
 idna==3.3
     # via
