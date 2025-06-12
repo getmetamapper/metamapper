@@ -59,7 +59,7 @@ cython==0.29.21
     # via -r requirements.in
 deprecated==1.2.13
     # via redis
-django==3.2.12
+django==4.2.22
     # via
     #   -r requirements.in
     #   django-cors-headers
@@ -246,7 +246,7 @@ pytz==2022.1
     #   snowflake-connector-python
 redis==4.2.2
     # via celery
-requests==2.27.1
+requests==2.32.4
     # via
     #   google-api-core
     #   google-cloud-bigquery
