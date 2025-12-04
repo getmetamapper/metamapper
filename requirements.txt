@@ -59,7 +59,7 @@ cython==0.29.21
     # via -r requirements.in
 deprecated==1.2.13
     # via redis
-django==3.2.12
+django==4.2.27
     # via
     #   -r requirements.in
     #   django-cors-headers
@@ -280,7 +280,7 @@ snowflake-connector-python==2.7.3
     # via -r requirements.in
 sql-metadata==2.6.0
     # via -r requirements.in
-sqlparse==0.4.2
+sqlparse==0.5.4
     # via
     #   -r requirements.in
     #   django
